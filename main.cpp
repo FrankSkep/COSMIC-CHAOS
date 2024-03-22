@@ -4,6 +4,8 @@
 
 // prueba push xd
 
+// nuevo
+
 // dimensiones pantalla
 #define screenWidth 1600 // ALTO  (X)
 #define screenHeight 900 // ANCHO (Y)
