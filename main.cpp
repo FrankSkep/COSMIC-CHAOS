@@ -2,18 +2,18 @@
 #include <stdlib.h>
 #include <math.h> // HOLA MUNDO
 
-            // prueba push xd
+// prueba push xd
 
 // dimensiones pantalla
-#define screenWidth 1600  //ALTO  (X)
-#define screenHeight 900  //ANCHO (Y)
+#define screenWidth 1600 // ALTO  (X)
+#define screenHeight 900 // ANCHO (Y)
 
-#define MAX_GREEN_BALLS 30     // Maximo de bolas verdes en pantalla
-#define GREEN_BALL_RADIUS 70   // radio
+#define MAX_GREEN_BALLS 30    // Maximo de bolas verdes en pantalla
+#define GREEN_BALL_RADIUS 70  // radio
 #define GREEN_BALL_SPEED 7.0f // velocidad de caida
 
-#define MAX_BROWN_BALLS 10     // Maximo de bolas verdes en pantalla
-#define BROWN_BALL_RADIUS 40   // radio
+#define MAX_BROWN_BALLS 10    // Maximo de bolas verdes en pantalla
+#define BROWN_BALL_RADIUS 40  // radio
 #define BROWN_BALL_SPEED 9.0f // velocidad de caida
 
 #define MAX_YELLOW_BALLS 2
@@ -41,7 +41,7 @@ Ball RedBalls[MAX_RED_BALLS];
 float elapsedTime = 0.0f;         //
 const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de esferas verdes
 
-int score = 0; // inicio del puntaje
+int score = 0;  // inicio del puntaje
 int lives = 10; // vidas
 
 void drawMainMenu();
@@ -109,13 +109,21 @@ int main(void)
 
                 // Control del jugador
                 if (IsKeyDown(KEY_RIGHT) && playPosition.x + playRadius < screenWidth)
+                {
                     playPosition.x += ballSpeed;
+                }
                 if (IsKeyDown(KEY_LEFT) && playPosition.x - playRadius > 0)
+                {
                     playPosition.x -= ballSpeed;
+                }
                 if (IsKeyDown(KEY_UP))
+                {
                     playPosition.y -= ballSpeed;
+                }
                 if (IsKeyDown(KEY_DOWN))
+                {
                     playPosition.y += ballSpeed;
+                }
 
                 // Generar esferas
                 if (elapsedTime >= spawnInterval)
@@ -135,7 +143,6 @@ int main(void)
                             InitGreenBall(&brownBalls[i]);
                             break;
                         }
-
                     }
                     for (int i = 0; i < MAX_YELLOW_BALLS; i++)
                     {
@@ -156,8 +163,6 @@ int main(void)
 
                     elapsedTime = 0.0f; // Reiniciar el temporizador
                 }
-
-
 
                 // Actualiza caida de esfera verde
                 for (int i = 0; i < MAX_GREEN_BALLS; i++)
@@ -264,7 +269,7 @@ int main(void)
             DrawText(TextFormat("SCORE: %04i", score), screenWidth - 400, 20, 50, WHITE);
 
             //
-            // Dibujar jugador         
+            // Dibujar jugador
             DrawCircleV(playPosition, playRadius, MAROON);
             //  FUNCIONES DE DIBUJO DE ESFERAS   // 21/03  10:03 pm
             dibujarVerde(rotation);
@@ -284,9 +289,9 @@ int main(void)
                     lives = 5;
                     score = 0;
                 }
-                if  (IsKeyPressed(KEY_Q))
+                if (IsKeyPressed(KEY_Q))
                 {
-                    isPlaying =false;
+                    isPlaying = false;
                 }
             }
 
@@ -367,12 +372,12 @@ void dibujarVerde(float rotation) // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv// 21/0
     }
 }
 
-void dibujarCafe(float rotation) 
+void dibujarCafe(float rotation)
 {
     // Velocidad de rotacion
     rotation += 2.5f;
     // Dibujar esferas verdes
-    for (int i = 0; i < MAX_BROWN_BALLS/2; i++)
+    for (int i = 0; i < MAX_BROWN_BALLS / 2; i++)
     {
         if (brownBalls[i].active)
         {
@@ -415,15 +420,13 @@ void vidas()
     for (int i = lives; i < 5; i++)
     {
         DrawText(" - ", screenWidth - 350 + (i * 60), screenHeight - 60, 50, RED); // Corazón vacío
-    }                         //  Horizontal, Espaciado,         Altura, Tamaño
- 
+    }                                                                              //  Horizontal, Espaciado,         Altura, Tamaño
 }
 void gameOverInterface()
 {
-        // Dibujar ventana de "Game Over"
+    // Dibujar ventana de "Game Over"
     DrawText("GAME OVER", screenWidth / 2 - MeasureText("GAME OVER", 100) / 2, screenHeight / 2 - 90, 100, RED);
     DrawText(TextFormat("Puntaje: %04i", score), screenWidth / 2 - MeasureText(TextFormat("Puntaje: %04i", score), 70) / 2, screenHeight / 2, 70, RAYWHITE);
     DrawText("Presione Esc para salir", screenWidth / 2 - MeasureText("Presione Esc para salir", 50) / 2, screenHeight / 2 + 80, 50, RAYWHITE);
     DrawText("Enter para reiniciar", screenWidth / 2 - MeasureText("Enter para reiniciar", 50) / 2, screenHeight / 2 + 120, 50, RAYWHITE);
-
 }
