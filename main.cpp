@@ -1,10 +1,6 @@
 #include "raylib.h"
 #include <stdlib.h>
-#include <math.h> // HOLA MUNDO
-
-// prueba push xd
-
-// nuevo
+#include <math.h>
 
 // dimensiones pantalla
 #define screenWidth 1600 // ALTO  (X)
