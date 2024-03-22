@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include <stdlib.h>
-#include <math.h> // Necesario para la función sqrt()
+#include <math.h> // HOLA MUNDO
 
 // dimensiones pantalla
 #define screenWidth 1600  //ALTO  (X)
