@@ -4,7 +4,7 @@
 int main(void)
 {
     /******** VARIABLES *********/
-    const int playRadius = 50;     // tamaño del jugador
+    const int playRadius = 45;     // tamaño del jugador
     const float ballSpeed = 15.0f; // velocidad del jugador
     bool gameOver = false;         // controla gameover
     bool istutorial = true;        // INICIAR EN TUTORIAL
@@ -50,6 +50,9 @@ int main(void)
         UpdateMusicStream(gameMusic);
         UpdateMusicStream(gameover);
 
+        // Calcula y actualiza la posición del centro de la nave
+        Vector2 shipCenter = {playPosition.x - ship.width / 2, playPosition.y - ship.height / 2};
+
         if (istutorial)
         {
             StopMusicStream(gameover);
@@ -64,8 +67,8 @@ int main(void)
 
             if (!isPlaying) // Si isPlaying es falso vuelve al menu principal
             {
-                drawMainMenu(menu);
-                StopMusicStream(gameover);
+                drawMainMenu(menu); // Muestra menu principal
+                StopMusicStream(gameover); // Detiene musica
 
                 if (IsKeyPressed(KEY_ENTER))
                 {
@@ -231,22 +234,9 @@ int main(void)
                 BeginDrawing();
 
                 // --------------------------------Background -------------------------------22/03
-                DrawTexture(game, 0, 0, WHITE);
 
-                // Dibujar vidas
-                vidas(lives);
-                DrawText(TextFormat("SCORE: %04i", score), screenWidth - 400, 20, 50, WHITE);
-
-                // Dibujar jugador
-                DrawTextureV(ship, playPosition, WHITE);
-                // DrawCircleV(playPosition, playRadius, MAROON);
-
-                // DIBUJAR LOS OBJETOS   // 21/03  10:03 pm
-                dibujarVerde(rotation);
-                dibujarCafe(rotation);
-                dibujarAmarillo();
-                dibujarRojo();
-                //  ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^// 21/03  10:03 pm
+                // Dibuja interfaz y elementos de la partida
+                gameInterface(game, ship, shipCenter, lives, score, rotation);
 
                 if (gameOver)
                 {
@@ -264,6 +254,7 @@ int main(void)
                         lives = 5;
                         score = 0;
                     }
+                    // Vuelve al menu al presionar Q
                     if (IsKeyPressed(KEY_Q))
                     {
                         isPlaying = false;

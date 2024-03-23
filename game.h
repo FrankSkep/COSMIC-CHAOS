@@ -43,6 +43,7 @@ Vector2 playPosition = {(float)screenWidth / 2, (float)screenHeight / 1.1f};
 /******** PROTOTIPOS DE FUNCIONES *********/
 void Tutorial();
 void drawMainMenu(Texture2D background);
+void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation);
 void InitGreenBall(Ball *ball);
 void InitBrownBall(Ball *ball);
 void InitYellowBall(Ball *ball);
@@ -74,17 +75,36 @@ void drawMainMenu(Texture2D background) // PANTALLA DE MENU
     DrawTexture(background, 0, 0, WHITE);
 
     DrawText("COSMIC-CHAOS", screenWidth / 2 - MeasureText("COSMIC-CHAOS", 180) / 2, 200, 186, DARKBLUE);
-    DrawText("COSMIC-CHAOS", screenWidth / 2+6 - MeasureText("COSMIC-CHAOS", 180) / 2+3, 195, 183, DARKBLUE);
-    DrawText("COSMIC-CHAOS", screenWidth / 2+12 - MeasureText("COSMIC-CHAOS", 180) / 2+6, 190, 180, BLUE);
-
+    DrawText("COSMIC-CHAOS", screenWidth / 2 + 6 - MeasureText("COSMIC-CHAOS", 180) / 2 + 3, 195, 183, DARKBLUE);
+    DrawText("COSMIC-CHAOS", screenWidth / 2 + 12 - MeasureText("COSMIC-CHAOS", 180) / 2 + 6, 190, 180, BLUE);
 
     int sizeStartTxt = MeasureText("(Enter) Start", 60);
     int sizeExitText = MeasureText("(ESC) Exit", 60);
-    DrawText("(Enter) Start", screenWidth / 2 +2 - sizeStartTxt / 2+2, screenHeight / 2 + 82, 60, GREEN);
+    DrawText("(Enter) Start", screenWidth / 2 + 2 - sizeStartTxt / 2 + 2, screenHeight / 2 + 82, 60, GREEN);
     DrawText("(Enter) Start", screenWidth / 2 - sizeStartTxt / 2, screenHeight / 2 + 80, 60, LIME);
-    DrawText("(ESC) Exit", screenWidth / 2 +2- sizeExitText / 2+2, screenHeight / 2 + 152, 60, WHITE);
+    DrawText("(ESC) Exit", screenWidth / 2 + 2 - sizeExitText / 2 + 2, screenHeight / 2 + 152, 60, WHITE);
     DrawText("(ESC) Exit", screenWidth / 2 - sizeExitText / 2, screenHeight / 2 + 150, 60, YELLOW);
     EndDrawing();
+}
+
+void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation)
+{
+    DrawTexture(gamebg, 0, 0, WHITE);
+
+    // Dibujar vidas
+    vidas(lives);
+
+    // Dibujar puntaje
+    DrawText(TextFormat("SCORE: %04i", score), screenWidth - 400, 20, 50, WHITE);
+
+    // Dibujar jugador (nave)
+    DrawTextureV(ship, shipPosicion, WHITE);
+
+    // Dibujar los objetos   // 21/03  10:03 pm
+    dibujarVerde(rotation);
+    dibujarCafe(rotation);
+    dibujarAmarillo();
+    dibujarRojo();
 }
 
 void InitGreenBall(Ball *ball)
@@ -184,7 +204,7 @@ void vidas(int lives)
     for (int i = lives; i < 5; i++)
     {
         DrawText(" - ", screenWidth - 350 + (i * 60), screenHeight - 60, 50, RED); // Corazón vacío
-    }                         //  Horizontal, Espaciado,         Altura, Tamaño
+    }                                                                              //  Horizontal, Espaciado,         Altura, Tamaño
 }
 void gameOverInterface(Texture2D background, int score)
 {
@@ -194,14 +214,14 @@ void gameOverInterface(Texture2D background, int score)
     int width = screenWidth;
     int height = screenHeight;
     // Dibujar ventana de "Game Over"
-    DrawText("GAME OVER", width / 2 +2 - MeasureText("GAME OVER", 130) / 2+2, height / 2 - 218, 130, WHITE);
+    DrawText("GAME OVER", width / 2 + 2 - MeasureText("GAME OVER", 130) / 2 + 2, height / 2 - 218, 130, WHITE);
     DrawText("GAME OVER", width / 2 - MeasureText("GAME OVER", 130) / 2, height / 2 - 220, 130, RED);
     DrawText(TextFormat("Score: %04i", score), width / 2 - MeasureText(TextFormat("Score: %04i", score), 70) / 2, height / 2 - 50, 70, RAYWHITE);
-    DrawText("(ENTER) Play Again", width / 2+2 - MeasureText("(ENTER) Play Again", 70) / 2+2, height / 2 + 130+2, 70, LIME);
+    DrawText("(ENTER) Play Again", width / 2 + 2 - MeasureText("(ENTER) Play Again", 70) / 2 + 2, height / 2 + 130 + 2, 70, LIME);
     DrawText("(ENTER) Play Again", width / 2 - MeasureText("(ENTER) Play Again", 70) / 2, height / 2 + 130, 70, GREEN);
-    DrawText("(Q) Back to menu", width / 2+2 - MeasureText("(Q) Back to menu", 70) / 2+2, height / 2 + 200+2, 70, WHITE);
+    DrawText("(Q) Back to menu", width / 2 + 2 - MeasureText("(Q) Back to menu", 70) / 2 + 2, height / 2 + 200 + 2, 70, WHITE);
     DrawText("(Q) Back to menu", width / 2 - MeasureText("(Q) Back to menu", 70) / 2, height / 2 + 200, 70, MAGENTA);
-    DrawText("(Esc) Exit.", width / 2+2 - MeasureText("(Q) Exit", 90) / 2+2, height / 2 + 270+2, 70, WHITE);
+    DrawText("(Esc) Exit.", width / 2 + 2 - MeasureText("(Q) Exit", 90) / 2 + 2, height / 2 + 270 + 2, 70, WHITE);
     DrawText("(Esc) Exit.", width / 2 - MeasureText("(Q) Exit", 90) / 2, height / 2 + 270, 70, RED);
 }
 
