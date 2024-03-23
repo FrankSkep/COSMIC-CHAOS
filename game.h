@@ -62,10 +62,11 @@ void gameOverInterface(int score);
 void Tutorial()
 {
     BeginDrawing();
-    DrawText("COMO SE JUEGA:", screenWidth / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 220, 100, RED);
-    DrawText("(ENTER) Play Again", screenWidth / 2 - MeasureText("(ENTER) Play Again", 50) / 2, screenHeight / 2 + 110, 50, GREEN);
-    DrawText("(Q) Back to menu", screenWidth / 2 - MeasureText("(Q) Back to menu", 50) / 2, screenHeight / 2 + 180, 50, ORANGE);
-    DrawText("(Q) Exit", screenWidth / 2 - MeasureText("(Q) Exit", 50) / 2, screenHeight / 2 + 250, 50, RED);
+    DrawText("COMO SE JUEGA:", screenWidth / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 100, 100, BLUE);
+    DrawText("- MUEVETE CON LAS FLECHAS   <-  ->", 40 , screenHeight / 2 + 40, 50, WHITE);
+    DrawText("- EVITA COLISIONAR CON LOS ASTEROIDES", 40 , screenHeight / 2 + 110, 50, GRAY);
+    DrawText("- RECOLECTA PUNTOS ", 40, screenHeight / 2 + 180, 50, YELLOW);
+    DrawText("- SOBREVIVE RECOLECTANTO VIDAS", 40, screenHeight / 2 + 250, 50, RED);
     EndDrawing();
 
 
