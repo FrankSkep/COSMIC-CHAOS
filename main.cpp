@@ -163,7 +163,7 @@ int main(void)
                             }
                         }
                     }
-                    // --------- METEORO CAFE
+                    // Meteoro cafe
                     for (int i = 0; i < MAX_BROWN_BALLS; i++)
                     {
                         if (brownBalls[i].active)
@@ -187,7 +187,7 @@ int main(void)
                         }
                     }
 
-                    // Actualiza caida de esfera amarilla
+                    // Esfera amarilla
                     for (int i = 0; i < MAX_YELLOW_BALLS; i++)
                     {
                         if (yellowBalls[i].active)
@@ -206,7 +206,7 @@ int main(void)
                             }
                         }
                     }
-                    // Actualiza caida de esfera Roja
+                    // Esfera Roja
                     for (int i = 0; i < MAX_RED_BALLS; i++)
                     {
                         if (RedBalls[i].active)
