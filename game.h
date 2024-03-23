@@ -25,9 +25,6 @@
 #define RED_BALL_RADIUS 20  // Tamaño
 #define RED_BALL_SPEED 9.0f // Velocidad de caida
 
-#define NUM_STARS 200 // Número de estrellas en el fondo
-#define STAR_RADIUS 2 // Radio de las estrellas
-
 /******** STRUCT *********/
 typedef struct
 {
@@ -56,7 +53,7 @@ void dibujarCafe(float rotation);
 void dibujarAmarillo();
 void dibujarRojo();
 void vidas(int lives);
-void gameOverInterface(int score);
+void gameOverInterface(Texture2D background, int score);
 
 /******** DESARROLLO DE FUNCIONES *********/
 void Tutorial()
@@ -189,8 +186,11 @@ void vidas(int lives)
         DrawText(" - ", screenWidth - 350 + (i * 60), screenHeight - 60, 50, RED); // Corazón vacío
     }                         //  Horizontal, Espaciado,         Altura, Tamaño
 }
-void gameOverInterface(int score)
+void gameOverInterface(Texture2D background, int score)
 {
+    // Fondo gameover
+    DrawTexture(background, 0, 0, WHITE);
+
     int width = screenWidth;
     int height = screenHeight;
     // Dibujar ventana de "Game Over"
