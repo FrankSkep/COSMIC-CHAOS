@@ -3,3 +3,7 @@
 3-  visual
 4-  
 5-
+
+git add .
+git commit -m "Pendientes"
+git push origin main  
