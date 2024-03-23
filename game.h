@@ -188,7 +188,7 @@ void vidas(int lives)
     for (int i = lives; i < 5; i++)
     {
         DrawText(" - ", screenWidth - 350 + (i * 60), screenHeight - 60, 50, RED); // Corazón vacío
-    }                                                                              //  Horizontal, Espaciado,         Altura, Tamaño
+    }                         //  Horizontal, Espaciado,         Altura, Tamaño
 }
 void gameOverInterface(int score)
 {
