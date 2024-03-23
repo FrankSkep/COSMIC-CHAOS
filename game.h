@@ -38,6 +38,7 @@ Ball brownBalls[MAX_BROWN_BALLS];
 Ball yellowBalls[MAX_YELLOW_BALLS];
 Ball RedBalls[MAX_RED_BALLS];
 
+// Posicion jugador
 Vector2 playPosition = {(float)screenWidth / 2, (float)screenHeight / 1.1f};
 
 /******** PROTOTIPOS DE FUNCIONES *********/

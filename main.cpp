@@ -230,7 +230,7 @@ int main(void)
                         }
                     }
                 }
-
+                
                 BeginDrawing();
 
                 // Dibuja interfaz y elementos de la partida
@@ -245,6 +245,9 @@ int main(void)
 
                     gameOverInterface(gameoverT, score); // INTERFAZ DE JUEGO TERMINADO
 
+                    // Reiniciar posicion de la nave
+                    playPosition = {(float)screenWidth / 2, (float)screenHeight / 1.1f};
+
                     // Reiniciar el juego si se presiona Enter
                     if (IsKeyDown(KEY_ENTER))
                     {
@@ -258,8 +261,7 @@ int main(void)
                         isPlaying = false;
                     }
                 }
-
-                DrawFPS(0, 0);
+                DrawFPS(20, 20);
                 EndDrawing();
             }
         }
