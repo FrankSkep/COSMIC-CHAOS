@@ -45,7 +45,7 @@ Vector2 playPosition = {(float)screenWidth / 2, (float)screenHeight / 1.1f};
 
 /******** PROTOTIPOS DE FUNCIONES *********/
 void Tutorial();
-void drawMainMenu();
+void drawMainMenu(Texture2D background);
 void InitGreenBall(Ball *ball);
 void InitBrownBall(Ball *ball);
 void InitYellowBall(Ball *ball);
@@ -63,18 +63,18 @@ void Tutorial()
 {
     BeginDrawing();
     DrawText("COMO SE JUEGA:", screenWidth / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 100, 100, BLUE);
-    DrawText("- MUEVETE CON LAS FLECHAS   <-  ->", 40 , screenHeight / 2 + 40, 50, WHITE);
-    DrawText("- EVITA COLISIONAR CON LOS ASTEROIDES", 40 , screenHeight / 2 + 110, 50, GRAY);
+    DrawText("- MUEVETE CON LAS FLECHAS   <-  ->", 40, screenHeight / 2 + 40, 50, WHITE);
+    DrawText("- EVITA COLISIONAR CON LOS ASTEROIDES", 40, screenHeight / 2 + 110, 50, GRAY);
     DrawText("- RECOLECTA PUNTOS ", 40, screenHeight / 2 + 180, 50, YELLOW);
     DrawText("- SOBREVIVE RECOLECTANTO VIDAS ⏎", 40, screenHeight / 2 + 250, 50, RED);
     EndDrawing();
+}
 
-
-} 
-
-void drawMainMenu()     // PANTALLA DE MENU
+void drawMainMenu(Texture2D background) // PANTALLA DE MENU
 {
     BeginDrawing();
+
+    DrawTexture(background, 0, 0, WHITE);
 
     const char *title = "COSMIC CHAOS";
 

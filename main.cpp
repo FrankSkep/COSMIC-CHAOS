@@ -1,14 +1,13 @@
 #include "raylib.h"
 #include "game.h"
 
-
 int main(void)
 {
     /******** VARIABLES *********/
     const int playRadius = 25;     // tamaño del jugador
     const float ballSpeed = 15.0f; // velocidad del jugador
     bool gameOver = false;         // controla gameover
-    bool istutorial=true;          // INICIAR EN TUTORIAL
+    bool istutorial = true;        // INICIAR EN TUTORIAL
     bool isPlaying = false;        // determina si esta en juego
     float elapsedTime = 0.0f;
     const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de esferas verdes
@@ -19,6 +18,26 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "BETA 0.09");
     SetTargetFPS(60);
 
+    // Imagen y textura del fondo menu principal
+    Image menuImg = LoadImage("resources/images/menu.png");
+    Texture2D menu = LoadTextureFromImage(menuImg);
+    UnloadImage(menuImg);
+
+    // Imagen y textura del fondo del juego
+    Image gameImg = LoadImage("resources/images/game.png");
+    Texture2D game = LoadTextureFromImage(gameImg);
+    UnloadImage(gameImg);
+
+    // Imagen y textura de gameover
+    Image gameOvImg = LoadImage("resources/images/gameover.png");
+    Texture2D gameoverT = LoadTextureFromImage(gameOvImg);
+    UnloadImage(gameOvImg);
+
+    /************** Inicializar audio **************/
+    InitAudioDevice();
+    Music gameMusic = LoadMusicStream("resources/sounds/music.mp3");
+    Music gameover = LoadMusicStream("resources/sounds/gameover.mp3");
+
     // Vector fondo
     Vector2 stars[NUM_STARS];
     for (int i = 0; i < NUM_STARS; i++)
@@ -26,26 +45,28 @@ int main(void)
         stars[i].x = GetRandomValue(0, screenWidth);
         stars[i].y = GetRandomValue(0, screenHeight);
     }
-    
+
     while (!WindowShouldClose())
     {
+        // Actualizar buffers de audio
+        UpdateMusicStream(gameMusic);
+        UpdateMusicStream(gameover);
         if (istutorial)
         {
+            StopMusicStream(gameover);
             Tutorial();
             if (IsKeyPressed(KEY_ENTER))
             {
-                istutorial=false;
+                istutorial = false;
             }
-            
         }
         else
         {
- 
+
             if (!isPlaying) // Si isPlaying es falso vuelve al menu principal
             {
-                
-                ClearBackground(BLACK);
-                drawMainMenu();
+                drawMainMenu(menu);
+                StopMusicStream(gameover);
                 // STARS
                 for (int i = 0; i < NUM_STARS; i++)
                 {
@@ -64,6 +85,8 @@ int main(void)
 
                 if (!gameOver)
                 {
+                    StopMusicStream(gameover);
+                    PlayMusicStream(gameMusic);
                     // Actualizar temporizador
                     elapsedTime += GetFrameTime();
 
@@ -171,6 +194,14 @@ int main(void)
                         }
                     }
 
+                    // Detener musica
+                    if (gameOver)
+                    {
+                        DrawTexture(gameoverT, 0, 0, WHITE);
+                        StopMusicStream(gameMusic);
+                        PlayMusicStream(gameover);
+                    }
+
                     // Actualiza caida de esfera amarilla
                     for (int i = 0; i < MAX_YELLOW_BALLS; i++)
                     {
@@ -214,14 +245,7 @@ int main(void)
                 BeginDrawing();
 
                 // --------------------------------Background -------------------------------22/03
-                ClearBackground(BLACK);
-
-                // Dibujar las estrellas
-                for (int i = 0; i < NUM_STARS; i++)
-                {
-                    DrawCircleV(stars[i], STAR_RADIUS, WHITE);
-                }
-                // ---^-^-^-^-^-^-^-^-^-^-^-^-^---------- CORNEJO
+                DrawTexture(game, 0, 0, WHITE);
 
                 // Dibujar vidas
                 vidas(lives);
@@ -239,8 +263,7 @@ int main(void)
 
                 if (gameOver)
                 {
-                    DrawRectangleGradientV(0, 0, screenWidth, screenHeight, DARKGRAY, BLACK);
-
+                    DrawTexture(gameoverT, 0, 0, WHITE);
                     gameOverInterface(score); // INTERFAZ DE JUEGO TERMINADO
 
                     // Reiniciar el juego si se presiona Enter
@@ -259,7 +282,7 @@ int main(void)
                 DrawFPS(0, 0);
                 EndDrawing();
             }
-        } 
+        }
     }
     CloseWindow();
     return 0;
