@@ -25,9 +25,6 @@
 #define RED_BALL_RADIUS 20  // Tamaño
 #define RED_BALL_SPEED 9.0f // Velocidad de caida
 
-#define NUM_STARS 200 // Número de estrellas en el fondo
-#define STAR_RADIUS 2 // Radio de las estrellas
-
 /******** STRUCT *********/
 typedef struct
 {

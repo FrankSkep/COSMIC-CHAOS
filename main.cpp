@@ -44,19 +44,12 @@ int main(void)
     Music gameMusic = LoadMusicStream("resources/sounds/music.mp3");
     Music gameover = LoadMusicStream("resources/sounds/gameover.mp3");
 
-    // Vector fondo
-    Vector2 stars[NUM_STARS];
-    for (int i = 0; i < NUM_STARS; i++)
-    {
-        stars[i].x = GetRandomValue(0, screenWidth);
-        stars[i].y = GetRandomValue(0, screenHeight);
-    }
-
     while (!WindowShouldClose())
     {
         // Actualizar buffers de audio
         UpdateMusicStream(gameMusic);
         UpdateMusicStream(gameover);
+
         if (istutorial)
         {
             StopMusicStream(gameover);
@@ -73,11 +66,6 @@ int main(void)
             {
                 drawMainMenu(menu);
                 StopMusicStream(gameover);
-                // STARS
-                for (int i = 0; i < NUM_STARS; i++)
-                {
-                    DrawCircleV(stars[i], STAR_RADIUS, WHITE);
-                }
 
                 if (IsKeyPressed(KEY_ENTER))
                 {
