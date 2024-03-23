@@ -18,20 +18,26 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "BETA 0.10");
     SetTargetFPS(75);
 
-    // Imagen y textura del fondo menu principal
+    /************** Imagenes y texturas **************/
+    // Fondo menu principal
     Image menuImg = LoadImage("resources/images/menu.png");
     Texture2D menu = LoadTextureFromImage(menuImg);
     UnloadImage(menuImg);
 
-    // Imagen y textura del fondo del juego
+    // Fondo partida
     Image gameImg = LoadImage("resources/images/game.png");
     Texture2D game = LoadTextureFromImage(gameImg);
     UnloadImage(gameImg);
 
-    // Imagen y textura de gameover
+    // Fondo gameover
     Image gameOvImg = LoadImage("resources/images/gameover.png");
     Texture2D gameoverT = LoadTextureFromImage(gameOvImg);
     UnloadImage(gameOvImg);
+    
+    // Nave
+    Image shipImg = LoadImage("resources/images/nave_01.png");
+    Texture2D ship = LoadTextureFromImage(shipImg);
+    UnloadImage(shipImg);
 
     /************** Inicializar audio **************/
     InitAudioDevice();
@@ -252,7 +258,8 @@ int main(void)
                 DrawText(TextFormat("SCORE: %04i", score), screenWidth - 400, 20, 50, WHITE);
 
                 // Dibujar jugador
-                DrawCircleV(playPosition, playRadius, MAROON);
+                DrawTextureV(ship, playPosition, WHITE);
+                //DrawCircleV(playPosition, playRadius, MAROON);
 
                 // DIBUJAR LOS OBJETOS   // 21/03  10:03 pm
                 dibujarVerde(rotation);
