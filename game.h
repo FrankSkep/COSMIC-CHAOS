@@ -37,13 +37,15 @@ Ball greenBalls[MAX_GREEN_BALLS];
 Ball brownBalls[MAX_BROWN_BALLS];
 Ball yellowBalls[MAX_YELLOW_BALLS];
 Ball RedBalls[MAX_RED_BALLS];
-
+// Posicion jugador
 Vector2 playPosition = {(float)screenWidth / 2, (float)screenHeight / 1.1f};
 
 /******** PROTOTIPOS DE FUNCIONES *********/
 void Tutorial();
 void drawMainMenu(Texture2D background);
 void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation);
+void Levels (int score, int level, float elapsedTime);
+void clearBalls();
 void InitGreenBall(Ball *ball);
 void InitBrownBall(Ball *ball);
 void InitYellowBall(Ball *ball);
@@ -105,6 +107,61 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     dibujarCafe(rotation);
     dibujarAmarillo();
     dibujarRojo();
+}
+
+void Levels (int score, int level, float elapsedTime)
+{
+    if (score >= 30 && level == 1)
+    {
+        level = 2;
+        // Limpiar la pantalla y mostrar "Nivel 2" en el centro
+        ClearBackground(BLACK);
+        DrawText("Nivel 2", screenWidth / 2 - MeasureText("Nivel 2", 40) / 2, screenHeight / 2 - 20, 40, WHITE);
+        // Esperar un momento para que el jugador vea el mensaje
+        WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
+        // Reiniciar el temporizador y otras variables relevantes
+        elapsedTime = 0.0f;
+        score = 0;
+        // Limpiar todas las esferas en la pantalla
+        clearBalls();
+    }
+
+    // Verificar si el jugador ha alcanzado el nivel 3
+    if (score >= 100 && level == 2)
+    {
+        level = 3;
+        // Limpiar la pantalla y mostrar "Nivel 3" en el centro
+        ClearBackground(BLACK);
+        DrawText("Nivel 3", screenWidth / 2 - MeasureText("Nivel 3", 40) / 2, screenHeight / 2 - 20, 40, WHITE);
+        // Esperar un momento para que el jugador vea el mensaje
+        WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
+        // Reiniciar el temporizador y otras variables relevantes
+        elapsedTime = 0.0f;
+        score = 0;
+        // Limpiar todas las esferas en la pantalla
+        clearBalls();
+    }
+}
+
+// Función para limpiar todas las esferas en la pantalla
+void clearBalls()
+{
+    for (int i = 0; i < MAX_GREEN_BALLS; i++)
+    {
+        greenBalls[i].active = false;
+    }
+    for (int i = 0; i < MAX_BROWN_BALLS; i++)
+    {
+        brownBalls[i].active = false;
+    }
+    for (int i = 0; i < MAX_YELLOW_BALLS; i++)
+    {
+        yellowBalls[i].active = false;
+    }
+    for (int i = 0; i < MAX_RED_BALLS; i++)
+    {
+        RedBalls[i].active = false;
+    }
 }
 
 void InitGreenBall(Ball *ball)

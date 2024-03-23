@@ -14,6 +14,7 @@ int main(void)
     float rotation = 0.0f;
     int score = 0; // inicio del puntaje
     int lives = 5; // vidas
+    //int level = 1; // inicio nivel
 
     InitWindow(screenWidth, screenHeight, "BETA 0.10");
     SetTargetFPS(75);
@@ -35,9 +36,16 @@ int main(void)
     UnloadImage(gameOvImg);
 
     // Nave
-    Image shipImg = LoadImage("resources/images/nave_01.png");
-    Texture2D ship = LoadTextureFromImage(shipImg);
-    UnloadImage(shipImg);
+    Texture2D shipTextures[] = 
+    {
+        LoadTexture("resources/images/nave_01.png"),
+        LoadTexture("resources/images/nave_02.png"),
+        LoadTexture("resources/images/nave_03.png")
+    };
+    int currentFrame = 0; // indice de la textura actual
+    float frameTimeCounter = 0.0f; 
+    float frameSpeed = 1.0f / 4.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
+
 
     /************** Inicializar audio **************/
     InitAudioDevice();
@@ -49,9 +57,23 @@ int main(void)
         // Actualizar buffers de audio
         UpdateMusicStream(gameMusic);
         UpdateMusicStream(gameover);
+        if (isPlaying)
+        {
+            frameTimeCounter += GetFrameTime();
+
+            // pasado el tiempo, cambia la imagen de la nave
+            if (frameTimeCounter >= frameSpeed)
+            {
+                currentFrame = (currentFrame + 1) % 3; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
+                frameTimeCounter = 0.0f; // Reiniciar el contador de tiempo
+            }
+
+            // Dibujar la nave con la textura actual
+            DrawTexture(shipTextures[currentFrame], playPosition.x, playPosition.y, WHITE);
+        }
 
         // Calcula y actualiza la posición del centro de la nave
-        Vector2 shipCenter = {playPosition.x - ship.width / 2, playPosition.y - ship.height / 2};
+        Vector2 shipCenter = {playPosition.x - shipTextures[currentFrame].width / 2, playPosition.y - shipTextures[currentFrame].height / 2};
 
         if (istutorial)
         {
@@ -105,6 +127,7 @@ int main(void)
                         playPosition.y += ballSpeed;
                     }
 
+                    
                     // Generar meteoros y objetos
                     if (elapsedTime >= spawnInterval)
                     {
@@ -207,6 +230,7 @@ int main(void)
                             {
                                 yellowBalls[i].active = false;
                                 score += 10; // Aumentar el puntaje
+
                             }
                         }
                     }
@@ -234,7 +258,7 @@ int main(void)
                 BeginDrawing();
 
                 // Dibuja interfaz y elementos de la partida
-                gameInterface(game, ship, shipCenter, lives, score, rotation);
+                gameInterface(game, shipTextures[currentFrame], shipCenter, lives, score, rotation);
 
                 if (gameOver)
                 {
@@ -245,6 +269,8 @@ int main(void)
 
                     gameOverInterface(gameoverT, score); // INTERFAZ DE JUEGO TERMINADO
 
+                    // Reiniciar posicion de la nave
+                    playPosition = {(float)screenWidth / 2, (float)screenHeight / 1.1f};
                     // Reiniciar el juego si se presiona Enter
                     if (IsKeyDown(KEY_ENTER))
                     {
@@ -259,10 +285,15 @@ int main(void)
                     }
                 }
 
-                DrawFPS(0, 0);
+                DrawFPS(20, 20);
                 EndDrawing();
             }
         }
+    }
+        // Ddscargar texturas
+    for (int i = 0; i < 3; i++)
+    {
+        UnloadTexture(shipTextures[i]);
     }
     CloseWindow();
     return 0;
