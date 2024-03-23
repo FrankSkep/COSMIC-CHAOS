@@ -13,10 +13,10 @@ int main(void)
     const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de esferas verdes
     float rotation = 0.0f;
     int score = 0;  // inicio del puntaje
-    int lives = 10; // vidas
+    int lives = 5; // vidas
 
-    InitWindow(screenWidth, screenHeight, "BETA 0.09");
-    SetTargetFPS(60);
+    InitWindow(screenWidth, screenHeight, "BETA 0.10");
+    SetTargetFPS(75);
 
     // Imagen y textura del fondo menu principal
     Image menuImg = LoadImage("resources/images/menu.png");

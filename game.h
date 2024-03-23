@@ -62,7 +62,7 @@ void gameOverInterface(int score);
 void Tutorial()
 {
     BeginDrawing();
-    DrawText("COMO SE JUEGA:", screenWidth / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 100, 100, BLUE);
+    DrawText("COMO SE JUEGA:", screenWidth / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 100, 100, DARKBLUE);
     DrawText("- MUEVETE CON LAS FLECHAS   <-  ->", 40, screenHeight / 2 + 40, 50, WHITE);
     DrawText("- EVITA COLISIONAR CON LOS ASTEROIDES", 40, screenHeight / 2 + 110, 50, GRAY);
     DrawText("- RECOLECTA PUNTOS ", 40, screenHeight / 2 + 180, 50, YELLOW);
@@ -76,18 +76,17 @@ void drawMainMenu(Texture2D background) // PANTALLA DE MENU
 
     DrawTexture(background, 0, 0, WHITE);
 
-    const char *title = "COSMIC CHAOS";
+    DrawText("COSMIC-CHAO", screenWidth / 2 - MeasureText("COSMIC-CHAO", 200) / 2, 200, 206, DARKBLUE);
+    DrawText("COSMIC-CHAO", screenWidth / 2+6 - MeasureText("COSMIC-CHAO", 200) / 2+3, 195, 203, DARKBLUE);
+    DrawText("COSMIC-CHAO", screenWidth / 2+12 - MeasureText("COSMIC-CHAO", 200) / 2+6, 190, 200, BLUE);
 
-    // Calcula la anchura del texto con la fuente
-    int titleWidth = MeasureText(title, 80);
-
-    // Dibuja titulo y opciones
-    DrawText(title, screenWidth / 2 - titleWidth / 2, screenHeight - (screenHeight * 0.80), 80, GREEN);
 
     int sizeStartTxt = MeasureText("(Enter) Start", 60);
     int sizeExitText = MeasureText("(ESC) Exit", 60);
-    DrawText("(Enter) Start", screenWidth / 2 - sizeStartTxt / 2, screenHeight / 2 + 50, 60, YELLOW);
-    DrawText("(ESC) Exit", screenWidth / 2 - sizeExitText / 2, screenHeight / 2 + 120, 60, GREEN);
+    DrawText("(Enter) Start", screenWidth / 2 +2 - sizeStartTxt / 2+2, screenHeight / 2 + 82, 60, GREEN);
+    DrawText("(Enter) Start", screenWidth / 2 - sizeStartTxt / 2, screenHeight / 2 + 80, 60, LIME);
+    DrawText("(ESC) Exit", screenWidth / 2 +2- sizeExitText / 2+2, screenHeight / 2 + 152, 60, WHITE);
+    DrawText("(ESC) Exit", screenWidth / 2 - sizeExitText / 2, screenHeight / 2 + 150, 60, YELLOW);
     EndDrawing();
 }
 
@@ -192,12 +191,18 @@ void vidas(int lives)
 }
 void gameOverInterface(int score)
 {
+    int width = screenWidth;
+    int height = screenHeight;
     // Dibujar ventana de "Game Over"
-    DrawText("GAME OVER", screenWidth / 2 - MeasureText("GAME OVER", 100) / 2, screenHeight / 2 - 220, 100, RED);
-    DrawText(TextFormat("Score: %04i", score), screenWidth / 2 - MeasureText(TextFormat("Score: %04i", score), 70) / 2, screenHeight / 2 - 50, 70, RAYWHITE);
-    DrawText("(ENTER) Play Again", screenWidth / 2 - MeasureText("(ENTER) Play Again", 50) / 2, screenHeight / 2 + 110, 50, GREEN);
-    DrawText("(Q) Back to menu", screenWidth / 2 - MeasureText("(Q) Back to menu", 50) / 2, screenHeight / 2 + 180, 50, ORANGE);
-    DrawText("(Q) Exit", screenWidth / 2 - MeasureText("(Q) Exit", 50) / 2, screenHeight / 2 + 250, 50, RED);
+    DrawText("GAME OVER", width / 2 +2 - MeasureText("GAME OVER", 130) / 2+2, height / 2 - 218, 130, WHITE);
+    DrawText("GAME OVER", width / 2 - MeasureText("GAME OVER", 130) / 2, height / 2 - 220, 130, RED);
+    DrawText(TextFormat("Score: %04i", score), width / 2 - MeasureText(TextFormat("Score: %04i", score), 70) / 2, height / 2 - 50, 70, RAYWHITE);
+    DrawText("(ENTER) Play Again", width / 2+2 - MeasureText("(ENTER) Play Again", 70) / 2+2, height / 2 + 130+2, 70, LIME);
+    DrawText("(ENTER) Play Again", width / 2 - MeasureText("(ENTER) Play Again", 70) / 2, height / 2 + 130, 70, GREEN);
+    DrawText("(Q) Back to menu", width / 2+2 - MeasureText("(Q) Back to menu", 70) / 2+2, height / 2 + 200+2, 70, WHITE);
+    DrawText("(Q) Back to menu", width / 2 - MeasureText("(Q) Back to menu", 70) / 2, height / 2 + 200, 70, MAGENTA);
+    DrawText("(Esc) Exit.", width / 2+2 - MeasureText("(Q) Exit", 90) / 2+2, height / 2 + 270+2, 70, WHITE);
+    DrawText("(Esc) Exit.", width / 2 - MeasureText("(Q) Exit", 90) / 2, height / 2 + 270, 70, RED);
 }
 
 #endif
