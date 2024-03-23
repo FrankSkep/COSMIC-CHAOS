@@ -76,9 +76,9 @@ void drawMainMenu(Texture2D background) // PANTALLA DE MENU
 
     DrawTexture(background, 0, 0, WHITE);
 
-    DrawText("COSMIC-CHAO", screenWidth / 2 - MeasureText("COSMIC-CHAO", 200) / 2, 200, 206, DARKBLUE);
-    DrawText("COSMIC-CHAO", screenWidth / 2+6 - MeasureText("COSMIC-CHAO", 200) / 2+3, 195, 203, DARKBLUE);
-    DrawText("COSMIC-CHAO", screenWidth / 2+12 - MeasureText("COSMIC-CHAO", 200) / 2+6, 190, 200, BLUE);
+    DrawText("COSMIC-CHAOS", screenWidth / 2 - MeasureText("COSMIC-CHAOS", 180) / 2, 200, 186, DARKBLUE);
+    DrawText("COSMIC-CHAOS", screenWidth / 2+6 - MeasureText("COSMIC-CHAOS", 180) / 2+3, 195, 183, DARKBLUE);
+    DrawText("COSMIC-CHAOS", screenWidth / 2+12 - MeasureText("COSMIC-CHAOS", 180) / 2+6, 190, 180, BLUE);
 
 
     int sizeStartTxt = MeasureText("(Enter) Start", 60);
