@@ -4,7 +4,7 @@
 int main(void)
 {
     /******** VARIABLES *********/
-    const int playRadius = 25;     // tamaño del jugador
+    const int playRadius = 50;     // tamaño del jugador
     const float ballSpeed = 15.0f; // velocidad del jugador
     bool gameOver = false;         // controla gameover
     bool istutorial = true;        // INICIAR EN TUTORIAL
@@ -12,7 +12,7 @@ int main(void)
     float elapsedTime = 0.0f;
     const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de esferas verdes
     float rotation = 0.0f;
-    int score = 0;  // inicio del puntaje
+    int score = 0; // inicio del puntaje
     int lives = 5; // vidas
 
     InitWindow(screenWidth, screenHeight, "BETA 0.10");
@@ -33,7 +33,7 @@ int main(void)
     Image gameOvImg = LoadImage("resources/images/gameover.png");
     Texture2D gameoverT = LoadTextureFromImage(gameOvImg);
     UnloadImage(gameOvImg);
-    
+
     // Nave
     Image shipImg = LoadImage("resources/images/nave_01.png");
     Texture2D ship = LoadTextureFromImage(shipImg);
@@ -141,7 +141,7 @@ int main(void)
                         elapsedTime = 0.0f; // Reiniciar el temporizador
                     }
 
-                    // ACTUALIZA CAIDA DE METEORO
+                    // Meteoro amarillo
                     for (int i = 0; i < MAX_GREEN_BALLS; i++)
                     {
                         if (greenBalls[i].active)
@@ -186,14 +186,6 @@ int main(void)
                                 }
                             }
                         }
-                    }
-
-                    // Detener musica
-                    if (gameOver)
-                    {
-                        DrawTexture(gameoverT, 0, 0, WHITE);
-                        StopMusicStream(gameMusic);
-                        PlayMusicStream(gameover);
                     }
 
                     // Actualiza caida de esfera amarilla
@@ -247,7 +239,7 @@ int main(void)
 
                 // Dibujar jugador
                 DrawTextureV(ship, playPosition, WHITE);
-                //DrawCircleV(playPosition, playRadius, MAROON);
+                // DrawCircleV(playPosition, playRadius, MAROON);
 
                 // DIBUJAR LOS OBJETOS   // 21/03  10:03 pm
                 dibujarVerde(rotation);
@@ -258,8 +250,12 @@ int main(void)
 
                 if (gameOver)
                 {
-                    DrawTexture(gameoverT, 0, 0, WHITE);
-                    gameOverInterface(score); // INTERFAZ DE JUEGO TERMINADO
+                    // Detener musica partida
+                    StopMusicStream(gameMusic);
+                    // Reproducir musica gameover
+                    PlayMusicStream(gameover);
+
+                    gameOverInterface(gameoverT, score); // INTERFAZ DE JUEGO TERMINADO
 
                     // Reiniciar el juego si se presiona Enter
                     if (IsKeyDown(KEY_ENTER))
