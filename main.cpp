@@ -233,8 +233,6 @@ int main(void)
 
                 BeginDrawing();
 
-                // --------------------------------Background -------------------------------22/03
-
                 // Dibuja interfaz y elementos de la partida
                 gameInterface(game, ship, shipCenter, lives, score, rotation);
 
