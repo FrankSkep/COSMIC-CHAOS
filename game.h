@@ -57,7 +57,6 @@ void dibujarRojo();
 void vidas(int lives);
 void gameOverInterface(int score);
 
-
 /******** DESARROLLO DE FUNCIONES *********/
 void drawMainMenu()
 {
@@ -180,10 +179,11 @@ void vidas(int lives)
 void gameOverInterface(int score)
 {
     // Dibujar ventana de "Game Over"
-    DrawText("GAME OVER", screenWidth / 2 - MeasureText("GAME OVER", 100) / 2, screenHeight / 2 - 90, 100, RED);
-    DrawText(TextFormat("Puntaje: %04i", score), screenWidth / 2 - MeasureText(TextFormat("Puntaje: %04i", score), 70) / 2, screenHeight / 2, 70, RAYWHITE);
-    DrawText("Presione Esc para salir", screenWidth / 2 - MeasureText("Presione Esc para salir", 50) / 2, screenHeight / 2 + 80, 50, RAYWHITE);
-    DrawText("Enter para reiniciar", screenWidth / 2 - MeasureText("Enter para reiniciar", 50) / 2, screenHeight / 2 + 120, 50, RAYWHITE);
+    DrawText("GAME OVER", screenWidth / 2 - MeasureText("GAME OVER", 100) / 2, screenHeight / 2 - 220, 100, RED);
+    DrawText(TextFormat("Score: %04i", score), screenWidth / 2 - MeasureText(TextFormat("Score: %04i", score), 70) / 2, screenHeight / 2 - 50, 70, RAYWHITE);
+    DrawText("(ENTER) Play Again", screenWidth / 2 - MeasureText("(ENTER) Play Again", 50) / 2, screenHeight / 2 + 110, 50, GREEN);
+    DrawText("(Q) Back to menu", screenWidth / 2 - MeasureText("(Q) Back to menu", 50) / 2, screenHeight / 2 + 180, 50, ORANGE);
+    DrawText("(Q) Exit", screenWidth / 2 - MeasureText("(Q) Exit", 50) / 2, screenHeight / 2 + 250, 50, RED);
 }
 
 #endif
