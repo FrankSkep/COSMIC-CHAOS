@@ -66,11 +66,11 @@ void Tutorial()
     DrawText("- MUEVETE CON LAS FLECHAS   <-  ->", 40 , screenHeight / 2 + 40, 50, WHITE);
     DrawText("- EVITA COLISIONAR CON LOS ASTEROIDES", 40 , screenHeight / 2 + 110, 50, GRAY);
     DrawText("- RECOLECTA PUNTOS ", 40, screenHeight / 2 + 180, 50, YELLOW);
-    DrawText("- SOBREVIVE RECOLECTANTO VIDAS", 40, screenHeight / 2 + 250, 50, RED);
+    DrawText("- SOBREVIVE RECOLECTANTO VIDAS ⏎", 40, screenHeight / 2 + 250, 50, RED);
     EndDrawing();
 
 
-}
+} 
 
 void drawMainMenu()     // PANTALLA DE MENU
 {
