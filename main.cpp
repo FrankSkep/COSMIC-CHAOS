@@ -1,12 +1,14 @@
 #include "raylib.h"
 #include "game.h"
 
+
 int main(void)
 {
     /******** VARIABLES *********/
     const int playRadius = 25;     // tamaño del jugador
     const float ballSpeed = 15.0f; // velocidad del jugador
     bool gameOver = false;         // controla gameover
+    bool istutorial=true;          // INICIAR EN TUTORIAL
     bool isPlaying = false;        // determina si esta en juego
     float elapsedTime = 0.0f;
     const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de esferas verdes
@@ -14,7 +16,7 @@ int main(void)
     int score = 0;  // inicio del puntaje
     int lives = 10; // vidas
 
-    InitWindow(screenWidth, screenHeight, "BETA 0.08");
+    InitWindow(screenWidth, screenHeight, "BETA 0.09");
     SetTargetFPS(60);
 
     // Vector fondo
@@ -24,225 +26,240 @@ int main(void)
         stars[i].x = GetRandomValue(0, screenWidth);
         stars[i].y = GetRandomValue(0, screenHeight);
     }
-
+    
     while (!WindowShouldClose())
     {
-        if (!isPlaying) // Si isPlaying es falso vuelve al menu principal
+        if (istutorial)
         {
-            ClearBackground(BLACK);
-            drawMainMenu();
-            // STARS
-            for (int i = 0; i < NUM_STARS; i++)
-            {
-                DrawCircleV(stars[i], STAR_RADIUS, WHITE);
-            }
-
+            Tutorial();
             if (IsKeyPressed(KEY_ENTER))
             {
-                isPlaying = true;
+                istutorial=false;
             }
+            
         }
         else
         {
-            // Velocidad de rotacion meteoros
-            rotation += 1.5f;
-
-            if (!gameOver)
+ 
+            if (!isPlaying) // Si isPlaying es falso vuelve al menu principal
             {
-                // Actualizar temporizador
-                elapsedTime += GetFrameTime();
-
-                // Control del jugador
-                if (IsKeyDown(KEY_RIGHT) && playPosition.x + playRadius < screenWidth)
+                
+                ClearBackground(BLACK);
+                drawMainMenu();
+                // STARS
+                for (int i = 0; i < NUM_STARS; i++)
                 {
-                    playPosition.x += ballSpeed;
-                }
-                if (IsKeyDown(KEY_LEFT) && playPosition.x - playRadius > 0)
-                {
-                    playPosition.x -= ballSpeed;
-                }
-                if (IsKeyDown(KEY_UP))
-                {
-                    playPosition.y -= ballSpeed;
-                }
-                if (IsKeyDown(KEY_DOWN))
-                {
-                    playPosition.y += ballSpeed;
+                    DrawCircleV(stars[i], STAR_RADIUS, WHITE);
                 }
 
-                // Generar meteoros y objetos
-                if (elapsedTime >= spawnInterval)
+                if (IsKeyPressed(KEY_ENTER))
                 {
+                    isPlaying = true;
+                }
+            }
+            else
+            {
+                // Velocidad de rotacion meteoros
+                rotation += 1.5f;
+
+                if (!gameOver)
+                {
+                    // Actualizar temporizador
+                    elapsedTime += GetFrameTime();
+
+                    // Control del jugador
+                    if (IsKeyDown(KEY_RIGHT) && playPosition.x + playRadius < screenWidth)
+                    {
+                        playPosition.x += ballSpeed;
+                    }
+                    if (IsKeyDown(KEY_LEFT) && playPosition.x - playRadius > 0)
+                    {
+                        playPosition.x -= ballSpeed;
+                    }
+                    if (IsKeyDown(KEY_UP))
+                    {
+                        playPosition.y -= ballSpeed;
+                    }
+                    if (IsKeyDown(KEY_DOWN))
+                    {
+                        playPosition.y += ballSpeed;
+                    }
+
+                    // Generar meteoros y objetos
+                    if (elapsedTime >= spawnInterval)
+                    {
+                        for (int i = 0; i < MAX_GREEN_BALLS; i++)
+                        {
+                            if (!greenBalls[i].active)
+                            {
+                                InitGreenBall(&greenBalls[i]);
+                                break;
+                            }
+                        }
+                        for (int i = 0; i < MAX_BROWN_BALLS; i++)
+                        {
+                            if (!brownBalls[i].active)
+                            {
+                                InitGreenBall(&brownBalls[i]);
+                                break;
+                            }
+                        }
+                        for (int i = 0; i < MAX_YELLOW_BALLS; i++)
+                        {
+                            if (!yellowBalls[i].active)
+                            {
+                                InitYellowBall(&yellowBalls[i]);
+                                break;
+                            }
+                        }
+                        for (int i = 0; i < MAX_RED_BALLS; i++)
+                        {
+                            if (!RedBalls[i].active)
+                            {
+                                InitRedBall(&RedBalls[i]);
+                                break;
+                            }
+                        }
+
+                        elapsedTime = 0.0f; // Reiniciar el temporizador
+                    }
+
+                    // ACTUALIZA CAIDA DE METEORO
                     for (int i = 0; i < MAX_GREEN_BALLS; i++)
                     {
-                        if (!greenBalls[i].active)
+                        if (greenBalls[i].active)
                         {
-                            InitGreenBall(&greenBalls[i]);
-                            break;
+                            greenBalls[i].position.y += GREEN_BALL_SPEED;
+                            if (greenBalls[i].position.y > screenHeight + GREEN_BALL_RADIUS * 2)
+                            {
+                                greenBalls[i].active = false;
+                            }
+
+                            // Detectar colisión con jugador
+                            if (CheckCollision(playPosition, playRadius, greenBalls[i].position, GREEN_BALL_RADIUS))
+                            {
+                                greenBalls[i].active = false; // Eliminar la esfera tocada
+                                lives--;                      // Pierde una vida
+                                if (lives <= 0)
+                                {
+                                    gameOver = true;
+                                }
+                            }
                         }
                     }
+                    // --------- METEORO CAFE
                     for (int i = 0; i < MAX_BROWN_BALLS; i++)
                     {
-                        if (!brownBalls[i].active)
+                        if (brownBalls[i].active)
                         {
-                            InitGreenBall(&brownBalls[i]);
-                            break;
+                            brownBalls[i].position.y += BROWN_BALL_SPEED;
+                            if (brownBalls[i].position.y > screenHeight + BROWN_BALL_RADIUS * 2)
+                            {
+                                brownBalls[i].active = false;
+                            }
+
+                            // Detectar colisión con jugador
+                            if (CheckCollision(playPosition, playRadius, brownBalls[i].position, BROWN_BALL_RADIUS))
+                            {
+                                brownBalls[i].active = false; // Eliminar la esfera tocada
+                                lives--;                      // Pierde una vida
+                                if (lives <= 0)
+                                {
+                                    gameOver = true;
+                                }
+                            }
                         }
                     }
+
+                    // Actualiza caida de esfera amarilla
                     for (int i = 0; i < MAX_YELLOW_BALLS; i++)
                     {
-                        if (!yellowBalls[i].active)
+                        if (yellowBalls[i].active)
                         {
-                            InitYellowBall(&yellowBalls[i]);
-                            break;
+                            yellowBalls[i].position.y += YELLOW_BALL_SPEED;
+                            if (yellowBalls[i].position.y > screenHeight + YELLOW_BALL_RADIUS * 2)
+                            {
+                                yellowBalls[i].active = false;
+                            }
+
+                            // Detectar colisión con jugador y aumentar el contador de puntos
+                            if (CheckCollision(playPosition, playRadius, yellowBalls[i].position, YELLOW_BALL_RADIUS))
+                            {
+                                yellowBalls[i].active = false;
+                                score += 10; // Aumentar el puntaje
+                            }
                         }
                     }
+                    // Actualiza caida de esfera Roja
                     for (int i = 0; i < MAX_RED_BALLS; i++)
                     {
-                        if (!RedBalls[i].active)
+                        if (RedBalls[i].active)
                         {
-                            InitRedBall(&RedBalls[i]);
-                            break;
-                        }
-                    }
-
-                    elapsedTime = 0.0f; // Reiniciar el temporizador
-                }
-
-                // ACTUALIZA CAIDA DE METEORO
-                for (int i = 0; i < MAX_GREEN_BALLS; i++)
-                {
-                    if (greenBalls[i].active)
-                    {
-                        greenBalls[i].position.y += GREEN_BALL_SPEED;
-                        if (greenBalls[i].position.y > screenHeight + GREEN_BALL_RADIUS * 2)
-                        {
-                            greenBalls[i].active = false;
-                        }
-
-                        // Detectar colisión con jugador
-                        if (CheckCollision(playPosition, playRadius, greenBalls[i].position, GREEN_BALL_RADIUS))
-                        {
-                            greenBalls[i].active = false; // Eliminar la esfera tocada
-                            lives--;                      // Pierde una vida
-                            if (lives <= 0)
+                            RedBalls[i].position.y += RED_BALL_SPEED;
+                            if (RedBalls[i].position.y > screenHeight + RED_BALL_RADIUS * 2)
                             {
-                                gameOver = true;
+                                RedBalls[i].active = false;
                             }
-                        }
-                    }
-                }
-                // --------- METEORO CAFE
-                for (int i = 0; i < MAX_BROWN_BALLS; i++)
-                {
-                    if (brownBalls[i].active)
-                    {
-                        brownBalls[i].position.y += BROWN_BALL_SPEED;
-                        if (brownBalls[i].position.y > screenHeight + BROWN_BALL_RADIUS * 2)
-                        {
-                            brownBalls[i].active = false;
-                        }
 
-                        // Detectar colisión con jugador
-                        if (CheckCollision(playPosition, playRadius, brownBalls[i].position, BROWN_BALL_RADIUS))
-                        {
-                            brownBalls[i].active = false; // Eliminar la esfera tocada
-                            lives--;                      // Pierde una vida
-                            if (lives <= 0)
+                            // Detectar colisión con jugador
+                            if (CheckCollision(playPosition, playRadius, RedBalls[i].position, RED_BALL_RADIUS))
                             {
-                                gameOver = true;
+                                RedBalls[i].active = false; // Eliminar la esfera tocada
+                                lives++;                    // Gana una vida
                             }
                         }
                     }
                 }
 
-                // Actualiza caida de esfera amarilla
-                for (int i = 0; i < MAX_YELLOW_BALLS; i++)
-                {
-                    if (yellowBalls[i].active)
-                    {
-                        yellowBalls[i].position.y += YELLOW_BALL_SPEED;
-                        if (yellowBalls[i].position.y > screenHeight + YELLOW_BALL_RADIUS * 2)
-                        {
-                            yellowBalls[i].active = false;
-                        }
+                BeginDrawing();
 
-                        // Detectar colisión con jugador y aumentar el contador de puntos
-                        if (CheckCollision(playPosition, playRadius, yellowBalls[i].position, YELLOW_BALL_RADIUS))
-                        {
-                            yellowBalls[i].active = false;
-                            score += 10; // Aumentar el puntaje
-                        }
+                // --------------------------------Background -------------------------------22/03
+                ClearBackground(BLACK);
+
+                // Dibujar las estrellas
+                for (int i = 0; i < NUM_STARS; i++)
+                {
+                    DrawCircleV(stars[i], STAR_RADIUS, WHITE);
+                }
+                // ---^-^-^-^-^-^-^-^-^-^-^-^-^---------- CORNEJO
+
+                // Dibujar vidas
+                vidas(lives);
+                DrawText(TextFormat("SCORE: %04i", score), screenWidth - 400, 20, 50, WHITE);
+
+                // Dibujar jugador
+                DrawCircleV(playPosition, playRadius, MAROON);
+
+                // DIBUJAR LOS OBJETOS   // 21/03  10:03 pm
+                dibujarVerde(rotation);
+                dibujarCafe(rotation);
+                dibujarAmarillo();
+                dibujarRojo();
+                //  ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^// 21/03  10:03 pm
+
+                if (gameOver)
+                {
+                    DrawRectangleGradientV(0, 0, screenWidth, screenHeight, DARKGRAY, BLACK);
+
+                    gameOverInterface(score); // INTERFAZ DE JUEGO TERMINADO
+
+                    // Reiniciar el juego si se presiona Enter
+                    if (IsKeyDown(KEY_ENTER))
+                    {
+                        gameOver = false;
+                        lives = 5;
+                        score = 0;
+                    }
+                    if (IsKeyPressed(KEY_Q))
+                    {
+                        isPlaying = false;
                     }
                 }
-                // Actualiza caida de esfera Roja
-                for (int i = 0; i < MAX_RED_BALLS; i++)
-                {
-                    if (RedBalls[i].active)
-                    {
-                        RedBalls[i].position.y += RED_BALL_SPEED;
-                        if (RedBalls[i].position.y > screenHeight + RED_BALL_RADIUS * 2)
-                        {
-                            RedBalls[i].active = false;
-                        }
 
-                        // Detectar colisión con jugador
-                        if (CheckCollision(playPosition, playRadius, RedBalls[i].position, RED_BALL_RADIUS))
-                        {
-                            RedBalls[i].active = false; // Eliminar la esfera tocada
-                            lives++;                    // Gana una vida
-                        }
-                    }
-                }
+                DrawFPS(0, 0);
+                EndDrawing();
             }
-
-            BeginDrawing();
-
-            // --------------------------------Background -------------------------------22/03
-            ClearBackground(BLACK);
-            DrawRectangleGradientV(0, 0, screenWidth, screenHeight, DARKGRAY, BLACK);
-
-            // Dibujar las estrellas
-            for (int i = 0; i < NUM_STARS; i++)
-            {
-                DrawCircleV(stars[i], STAR_RADIUS, WHITE);
-            }
-            // ---^-^-^-^-^-^-^-^-^-^-^-^-^---------- CORNEJO
-
-            // Dibujar vidas
-            vidas(lives);
-            DrawText(TextFormat("SCORE: %04i", score), screenWidth - 400, 20, 50, WHITE);
-
-            // Dibujar jugador
-            DrawCircleV(playPosition, playRadius, MAROON);
-
-            // DIBUJAR LOS OBJETOS   // 21/03  10:03 pm
-            dibujarVerde(rotation);
-            dibujarCafe(rotation);
-            dibujarAmarillo();
-            dibujarRojo();
-            //  ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^// 21/03  10:03 pm
-
-            if (gameOver)
-            {
-                gameOverInterface(score); // INTERFAZ DE JUEGO TERMINADO
-
-                // Reiniciar el juego si se presiona Enter
-                if (IsKeyDown(KEY_ENTER))
-                {
-                    gameOver = false;
-                    lives = 5;
-                    score = 0;
-                }
-                if (IsKeyPressed(KEY_Q))
-                {
-                    isPlaying = false;
-                }
-            }
-
-            DrawFPS(0, 0);
-            EndDrawing();
-        }
+        } 
     }
     CloseWindow();
     return 0;

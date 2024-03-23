@@ -44,6 +44,7 @@ Ball RedBalls[MAX_RED_BALLS];
 Vector2 playPosition = {(float)screenWidth / 2, (float)screenHeight / 1.1f};
 
 /******** PROTOTIPOS DE FUNCIONES *********/
+void Tutorial();
 void drawMainMenu();
 void InitGreenBall(Ball *ball);
 void InitBrownBall(Ball *ball);
@@ -58,7 +59,19 @@ void vidas(int lives);
 void gameOverInterface(int score);
 
 /******** DESARROLLO DE FUNCIONES *********/
-void drawMainMenu()
+void Tutorial()
+{
+    BeginDrawing();
+    DrawText("COMO SE JUEGA:", screenWidth / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 220, 100, RED);
+    DrawText("(ENTER) Play Again", screenWidth / 2 - MeasureText("(ENTER) Play Again", 50) / 2, screenHeight / 2 + 110, 50, GREEN);
+    DrawText("(Q) Back to menu", screenWidth / 2 - MeasureText("(Q) Back to menu", 50) / 2, screenHeight / 2 + 180, 50, ORANGE);
+    DrawText("(Q) Exit", screenWidth / 2 - MeasureText("(Q) Exit", 50) / 2, screenHeight / 2 + 250, 50, RED);
+    EndDrawing();
+
+
+}
+
+void drawMainMenu()     // PANTALLA DE MENU
 {
     BeginDrawing();
 
