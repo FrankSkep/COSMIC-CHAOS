@@ -46,27 +46,11 @@ int main(void)
     /*************** BUCLE DEL JUEGO ***************/
     while (!WindowShouldClose())
     {
-        if (isPlaying)
-        {
-            frameTimeCounter += GetFrameTime();
-
-            // pasado el tiempo, cambia la imagen de la nave
-            if (frameTimeCounter >= frameSpeed)
-            {
-                currentFrame = (currentFrame + 1) % 3; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
-                frameTimeCounter = 0.0f;               // Reiniciar el contador de tiempo
-            }
-
-            // Dibujar la nave con la textura actual
-            DrawTexture(shipTextures[currentFrame], playPosition.x, playPosition.y, WHITE);
-        }
-
         // Calcula y actualiza la posición del centro de la nave
         Vector2 shipCenter = {playPosition.x - shipTextures[currentFrame].width / 2, playPosition.y - shipTextures[currentFrame].height / 2};
 
         if (istutorial)
         {
-            StopMusicStream(gameover);
             Tutorial();
             if (IsKeyPressed(KEY_Q))
             {
@@ -75,7 +59,6 @@ int main(void)
         }
         else
         {
-
             if (!isPlaying) // Si isPlaying es falso vuelve al menu principal
             {
                 drawMainMenu(menu);        // Muestra menu principal
@@ -93,6 +76,18 @@ int main(void)
             else
             {
                 UpdateMusicStream(gameMusic);
+
+                /***** SPRITE NAVE *****/
+                frameTimeCounter += GetFrameTime();
+                // pasado el tiempo, cambia la imagen de la nave
+                if (frameTimeCounter >= frameSpeed)
+                {
+                    currentFrame = (currentFrame + 1) % 3; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
+                    frameTimeCounter = 0.0f;               // Reiniciar el contador de tiempo
+                }
+                // Dibujar la nave con la textura actual
+                DrawTexture(shipTextures[currentFrame], playPosition.x, playPosition.y, WHITE);
+
                 // Velocidad de rotacion meteoros
                 rotation += 1.5f;
 
