@@ -17,11 +17,11 @@
 #define BROWN_METEOR_RADIUS 40  // Tamaño
 #define BROWN_METEOR_SPEED 9.0f // Velocidad de caida
 
-#define MAX_COINS 2     // Maximo de bolas amarilla
+#define MAX_COINS 2      // Maximo de bolas amarilla
 #define COINS_RADIUS 20  // Tamaño
 #define COINS_SPEED 8.0f // Velocidad de caida
 
-#define MAX_HEARTS 1     // Maximo bolas rojas
+#define MAX_HEARTS 1      // Maximo bolas rojas
 #define HEARTS_RADIUS 20  // Tamaño
 #define HEARTS_SPEED 9.0f // Velocidad de caida
 
@@ -128,7 +128,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition)
         ClearBackground(BLACK);
         DrawText("Nivel 2", SCR_WIDTH / 2 - MeasureText("Nivel 2", 40) / 2, SCR_HEIGHT / 2 - 20, 40, WHITE);
         // Esperar un momento para que el jugador vea el mensaje
-        //WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
+        // WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
         // Reiniciar el temporizador y otras variables relevantes
         *elapsedTime = 0.0f;
         *score = 0;
@@ -144,7 +144,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition)
         ClearBackground(BLACK);
         DrawText("Nivel 3", SCR_WIDTH / 2 - MeasureText("Nivel 3", 40) / 2, SCR_HEIGHT / 2 - 20, 40, WHITE);
         // Esperar un momento para que el jugador vea el mensaje
-        //WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
+        // WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
         // Reiniciar el temporizador y otras variables relevantes
         *elapsedTime = 0.0f;
         *score = 0;
@@ -211,7 +211,7 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
     return (distance < (playerRadius + playRadius));
 }
 
-void drawGrayMeteor(float rotation) // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv// 21/03  10:03 pm
+void drawGrayMeteor(float rotation)
 {
     // Velocidad de rotacion
     rotation += 2.5f;

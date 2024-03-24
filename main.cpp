@@ -13,9 +13,9 @@ int main(void)
     float rotation = 0.0f;
     int score = 0; // inicio del puntaje
     int lives = 5; // vidas
-    int level = 1; // inicio nivel
+    // int level = 1; // inicio nivel
 
-    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.10"); 
+    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.10");
     SetTargetFPS(75);
 
     /************** Texturas **************/
@@ -75,7 +75,6 @@ int main(void)
             }
             else
             {
-                Levels(&score, &level, &elapsedTime, &playPosition);
                 UpdateMusicStream(gameMusic);
 
                 /***** SPRITE NAVE *****/
@@ -170,7 +169,7 @@ int main(void)
                             if (CheckCollision(playPosition, playRadius, grayMeteors[i].position, GRAY_METEOR_RADIUS))
                             {
                                 grayMeteors[i].active = false; // Eliminar la esfera tocada
-                                lives--;                      // Pierde una vida
+                                lives--;                       // Pierde una vida
                                 if (lives <= 0)
                                 {
                                     gameOver = true;
@@ -193,7 +192,7 @@ int main(void)
                             if (CheckCollision(playPosition, playRadius, brownMeteors[i].position, BROWN_METEOR_RADIUS))
                             {
                                 brownMeteors[i].active = false; // Eliminar la esfera tocada
-                                lives--;                      // Pierde una vida
+                                lives--;                        // Pierde una vida
                                 if (lives <= 0)
                                 {
                                     gameOver = true;
