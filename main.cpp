@@ -6,7 +6,7 @@ int main(void)
     const int playRadius = 45;     // tamaño del jugador
     const float ballSpeed = 15.0f; // velocidad del jugador
     bool gameOver = false;         // controla gameover
-    bool istutorial = false;        // INICIAR EN TUTORIAL
+    bool istutorial = false;       // INICIAR EN TUTORIAL
     bool isPlaying = false;        // determina si esta en juego
     float elapsedTime = 0.0f;
     const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de esferas verdes
@@ -46,9 +46,6 @@ int main(void)
     /*************** BUCLE DEL JUEGO ***************/
     while (!WindowShouldClose())
     {
-        // Actualizar buffers de audio
-        UpdateMusicStream(gameMusic);
-        UpdateMusicStream(gameover);
         if (isPlaying)
         {
             frameTimeCounter += GetFrameTime();
@@ -88,13 +85,14 @@ int main(void)
                 {
                     isPlaying = true;
                 }
-                if(IsKeyPressed(KEY_A))
+                if (IsKeyPressed(KEY_A))
                 {
                     istutorial = true;
                 }
             }
             else
             {
+                UpdateMusicStream(gameMusic);
                 // Velocidad de rotacion meteoros
                 rotation += 1.5f;
 
@@ -257,7 +255,8 @@ int main(void)
                 if (gameOver)
                 {
                     StopMusicStream(gameMusic); // Detener musica partida
-                    PlayMusicStream(gameover);  // Reproducir musica gameover
+                    UpdateMusicStream(gameover);
+                    PlayMusicStream(gameover); // Reproducir musica gameover
 
                     gameOverInterface(gameoverT, score); // Dibujar interfaz juego terminado
 
@@ -292,7 +291,10 @@ int main(void)
     UnloadTexture(game);
     UnloadTexture(gameoverT);
     UnloadTexture(menu);
+    UnloadMusicStream(gameMusic);
+    UnloadMusicStream(gameover);
 
+    CloseAudioDevice();
     CloseWindow();
     return 0;
 }
