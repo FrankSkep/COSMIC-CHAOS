@@ -42,6 +42,7 @@ int main(void)
     InitAudioDevice();
     Music gameMusic = LoadMusicStream("resources/sounds/music.mp3");
     Music gameover = LoadMusicStream("resources/sounds/gameover.mp3");
+    Music soundcoin = LoadMusicStream("resources/sounds/coin.wav");
 
     // Posicion jugador
     Vector2 playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
@@ -218,6 +219,8 @@ int main(void)
                             {
                                 coins[i].active = false;
                                 score += 10; // Aumentar el puntaje
+                                UpdateMusicStream(soundcoin);
+                                PlayMusicStream(soundcoin);
                             }
                         }
                     }
