@@ -15,7 +15,7 @@ int main(void)
     int lives = 5; // vidas
     // int level = 1; // inicio nivel
 
-    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.10");
+    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.10"); 
     SetTargetFPS(75);
 
     /************** Texturas **************/
