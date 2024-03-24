@@ -18,21 +18,15 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "BETA 0.10");
     SetTargetFPS(75);
 
-    /************** Imagenes y texturas **************/
-    // Fondo menu principal
-    Image menuImg = LoadImage("resources/images/menu.png");
-    Texture2D menu = LoadTextureFromImage(menuImg);
-    UnloadImage(menuImg);
+    /************** Texturas **************/
+    // Fondo menu principal;
+    Texture2D menu = LoadTexture("resources/images/menu.png");
 
     // Fondo partida
-    Image gameImg = LoadImage("resources/images/game.png");
-    Texture2D game = LoadTextureFromImage(gameImg);
-    UnloadImage(gameImg);
+    Texture2D game = LoadTexture("resources/images/game.png");
 
     // Fondo gameover
-    Image gameOvImg = LoadImage("resources/images/gameover.png");
-    Texture2D gameoverT = LoadTextureFromImage(gameOvImg);
-    UnloadImage(gameOvImg);
+    Texture2D gameoverT = LoadTexture("resources/images/gameover.png");
 
     // Nave
     Texture2D shipTextures[] =
