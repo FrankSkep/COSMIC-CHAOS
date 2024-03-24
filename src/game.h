@@ -122,12 +122,17 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
     if (*score >= 30 && *level == 1)
     {
         *level = 2;
-        // Limpiar la pantalla y mostrar "Nivel 2" en el centro
-        DrawText("Nivel 2", SCR_WIDTH / 2 - MeasureText("Nivel 2", 100) / 2, SCR_HEIGHT / 2 - 20, 100, WHITE);
-        ClearBackground(BLACK);
-        long delay = *milliseconds * (CLOCKS_PER_SEC / 1000);
-        long start_time = clock();
-        while (clock() < start_time + delay);
+        double startTime = GetTime(); // Obtener el tiempo de inicio
+        
+        while (GetTime() - startTime < *milliseconds / 1000.0)
+        {
+            // Limpiar la pantalla y mostrar "Nivel 2" en el centro
+            ClearBackground(BLACK);
+            DrawText("Nivel 2", SCR_WIDTH / 2 - MeasureText("Nivel 2", 200) / 2, SCR_HEIGHT / 2-200, 200, WHITE);
+            // Actualizar la pantalla
+            EndDrawing();
+        }
+
         *elapsedTime = 0.0f;
         *score = 0;
         // Limpiar todas las esferas en la pantalla
@@ -135,16 +140,20 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
     }
 
     // Verificar si el jugador ha alcanzado el nivel 3
-    if (*score >= 100 && *level == 2)
+    if (*score >= 20 && *level == 2)
     {
         *level = 3;
-        // Limpiar la pantalla y mostrar "Nivel 3" en el centro
-        resetGame(playPosition);
-        ClearBackground(BLACK);
-        DrawText("Nivel 3", SCR_WIDTH / 2 - MeasureText("Nivel 3", 40) / 2, SCR_HEIGHT / 2 - 20, 40, WHITE);
-        // Esperar un momento para que el jugador vea el mensaje
-        // WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
-        // Reiniciar el temporizador y otras variables relevantes
+        double startTime = GetTime(); // Obtener el tiempo de inicio
+        
+        while (GetTime() - startTime < *milliseconds / 1000.0)
+        {
+            // Limpiar la pantalla y mostrar "Nivel 2" en el centro
+            ClearBackground(BLACK);
+            DrawText("Nivel 3", SCR_WIDTH / 2 - MeasureText("Nivel 2", 200) / 2, SCR_HEIGHT / 2, 200, WHITE);
+            // Actualizar la pantalla
+            EndDrawing();
+        }
+
         *elapsedTime = 0.0f;
         *score = 0;
         // Limpiar todas las esferas en la pantalla

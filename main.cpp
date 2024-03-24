@@ -274,7 +274,6 @@ int main(void)
                 }
                 Levels(&score, &level, &elapsedTime, &playPosition, &milliseconds);
 
-
                 DrawFPS(20, 20);
                 EndDrawing();
             }
