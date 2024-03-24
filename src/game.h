@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include <math.h>
+#include <time.h>
 
 /******** DIMENSIONES PANTALLA *********/
 #define SCR_WIDTH 1600 // ALTO  (X)
@@ -42,7 +43,7 @@ Ball hearts[MAX_HEARTS];
 void Tutorial();
 void drawMainMenu(Texture2D background);
 void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation);
-void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition);
+void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *milliseconds);
 void resetGame(Vector2 *playPosition);
 void InitGrayMeteor(Ball *ball);
 void InitBrownMeteor(Ball *ball);
@@ -116,17 +117,17 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     drawHearts();
 }
 
-void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition)
+void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *milliseconds)
 {
     if (*score >= 30 && *level == 1)
     {
         *level = 2;
         // Limpiar la pantalla y mostrar "Nivel 2" en el centro
+        DrawText("Nivel 2", SCR_WIDTH / 2 - MeasureText("Nivel 2", 100) / 2, SCR_HEIGHT / 2 - 20, 100, WHITE);
         ClearBackground(BLACK);
-        DrawText("Nivel 2", SCR_WIDTH / 2 - MeasureText("Nivel 2", 40) / 2, SCR_HEIGHT / 2 - 20, 40, WHITE);
-        // Esperar un momento para que el jugador vea el mensaje
-        // WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
-        // Reiniciar el temporizador y otras variables relevantes
+        long delay = *milliseconds * (CLOCKS_PER_SEC / 1000);
+        long start_time = clock();
+        while (clock() < start_time + delay);
         *elapsedTime = 0.0f;
         *score = 0;
         // Limpiar todas las esferas en la pantalla
@@ -138,6 +139,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition)
     {
         *level = 3;
         // Limpiar la pantalla y mostrar "Nivel 3" en el centro
+        resetGame(playPosition);
         ClearBackground(BLACK);
         DrawText("Nivel 3", SCR_WIDTH / 2 - MeasureText("Nivel 3", 40) / 2, SCR_HEIGHT / 2 - 20, 40, WHITE);
         // Esperar un momento para que el jugador vea el mensaje

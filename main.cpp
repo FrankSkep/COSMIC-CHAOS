@@ -13,9 +13,10 @@ int main(void)
     float rotation = 0.0f;
     int score = 0; // inicio del puntaje
     int lives = 5; // vidas
-    // int level = 1; // inicio nivel
+    int level = 1; // inicio nivel
+    int milliseconds = 2000;
 
-    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.10");
+    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.12");
     SetTargetFPS(75);
 
     /************** Texturas **************/
@@ -271,6 +272,8 @@ int main(void)
                         isPlaying = false;
                     }
                 }
+                Levels(&score, &level, &elapsedTime, &playPosition, &milliseconds);
+
 
                 DrawFPS(20, 20);
                 EndDrawing();
