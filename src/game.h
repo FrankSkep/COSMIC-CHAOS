@@ -128,7 +128,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition)
         ClearBackground(BLACK);
         DrawText("Nivel 2", SCR_WIDTH / 2 - MeasureText("Nivel 2", 40) / 2, SCR_HEIGHT / 2 - 20, 40, WHITE);
         // Esperar un momento para que el jugador vea el mensaje
-        WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
+        //WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
         // Reiniciar el temporizador y otras variables relevantes
         *elapsedTime = 0.0f;
         *score = 0;
@@ -144,7 +144,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition)
         ClearBackground(BLACK);
         DrawText("Nivel 3", SCR_WIDTH / 2 - MeasureText("Nivel 3", 40) / 2, SCR_HEIGHT / 2 - 20, 40, WHITE);
         // Esperar un momento para que el jugador vea el mensaje
-        WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
+        //WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
         // Reiniciar el temporizador y otras variables relevantes
         *elapsedTime = 0.0f;
         *score = 0;

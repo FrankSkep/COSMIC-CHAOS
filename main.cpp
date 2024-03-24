@@ -13,7 +13,7 @@ int main(void)
     float rotation = 0.0f;
     int score = 0; // inicio del puntaje
     int lives = 5; // vidas
-    // int level = 1; // inicio nivel
+    int level = 1; // inicio nivel
 
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.10"); 
     SetTargetFPS(75);
@@ -75,6 +75,7 @@ int main(void)
             }
             else
             {
+                Levels(&score, &level, &elapsedTime, &playPosition);
                 UpdateMusicStream(gameMusic);
 
                 /***** SPRITE NAVE *****/
