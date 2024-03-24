@@ -45,8 +45,8 @@ Vector2 playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
 void Tutorial();
 void drawMainMenu(Texture2D background);
 void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation);
-void Levels(int *score, int *level, float *elapsedTime);
-void clearBalls();
+void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition);
+void clearBalls(Vector2 *playPosition);
 void InitGreenBall(Ball *ball);
 void InitBrownBall(Ball *ball);
 void InitYellowBall(Ball *ball);
@@ -119,7 +119,7 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     dibujarRojo();
 }
 
-void Levels(int *score, int *level, float *elapsedTime)
+void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition)
 {
     if (*score >= 30 && *level == 1)
     {
@@ -133,7 +133,7 @@ void Levels(int *score, int *level, float *elapsedTime)
         *elapsedTime = 0.0f;
         *score = 0;
         // Limpiar todas las esferas en la pantalla
-        clearBalls();
+        clearBalls(playPosition);
     }
 
     // Verificar si el jugador ha alcanzado el nivel 3
@@ -149,13 +149,17 @@ void Levels(int *score, int *level, float *elapsedTime)
         *elapsedTime = 0.0f;
         *score = 0;
         // Limpiar todas las esferas en la pantalla
-        clearBalls();
+        clearBalls(playPosition);
     }
 }
 
 // Función para limpiar todas las esferas en la pantalla
-void clearBalls()
+void clearBalls(Vector2 *playPosition)
 {
+    // Reiniciar posicion nave
+    *playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
+
+    // Limpiar meteoros
     for (int i = 0; i < MAX_GRAY_METEORS; i++)
     {
         grayMeteors[i].active = false;

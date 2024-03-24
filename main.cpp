@@ -255,13 +255,12 @@ int main(void)
 
                     gameOverInterface(gameoverT, score); // Dibujar interfaz juego terminado
 
-                    // Reiniciar posicion de la nave
-                    playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
+                    // Reiniciar posicion de la nave y limpiar meteoros
+                    clearBalls(&playPosition);
 
                     // Reiniciar el juego al presiona Enter
                     if (IsKeyDown(KEY_ENTER))
                     {
-                        clearBalls();
                         gameOver = false;
                         lives = 5;
                         score = 0;
@@ -269,7 +268,6 @@ int main(void)
                     // Vuelve al menu al presionar Q
                     if (IsKeyPressed(KEY_Q))
                     {
-                        clearBalls();
                         isPlaying = false;
                     }
                 }
