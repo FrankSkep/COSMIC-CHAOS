@@ -261,6 +261,7 @@ int main(void)
                     // Reiniciar el juego al presiona Enter
                     if (IsKeyDown(KEY_ENTER))
                     {
+                        clearBalls();
                         gameOver = false;
                         lives = 5;
                         score = 0;
@@ -268,6 +269,7 @@ int main(void)
                     // Vuelve al menu al presionar Q
                     if (IsKeyPressed(KEY_Q))
                     {
+                        clearBalls();
                         isPlaying = false;
                     }
                 }
