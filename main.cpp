@@ -1,5 +1,4 @@
-#include "raylib.h"
-#include "game.h"
+#include "src/game.h"
 
 int main(void)
 {
@@ -7,14 +6,14 @@ int main(void)
     const int playRadius = 45;     // tamaño del jugador
     const float ballSpeed = 15.0f; // velocidad del jugador
     bool gameOver = false;         // controla gameover
-    bool istutorial = true;        // INICIAR EN TUTORIAL
+    bool istutorial = false;        // INICIAR EN TUTORIAL
     bool isPlaying = false;        // determina si esta en juego
     float elapsedTime = 0.0f;
     const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de esferas verdes
     float rotation = 0.0f;
     int score = 0; // inicio del puntaje
     int lives = 5; // vidas
-    //int level = 1; // inicio nivel
+    // int level = 1; // inicio nivel
 
     InitWindow(screenWidth, screenHeight, "BETA 0.10");
     SetTargetFPS(75);
@@ -36,22 +35,21 @@ int main(void)
     UnloadImage(gameOvImg);
 
     // Nave
-    Texture2D shipTextures[] = 
-    {
-        LoadTexture("resources/images/nave_01.png"),
-        LoadTexture("resources/images/nave_02.png"),
-        LoadTexture("resources/images/nave_03.png")
-    };
+    Texture2D shipTextures[] =
+        {
+            LoadTexture("resources/images/nave_01.png"),
+            LoadTexture("resources/images/nave_02.png"),
+            LoadTexture("resources/images/nave_03.png")};
     int currentFrame = 0; // indice de la textura actual
-    float frameTimeCounter = 0.0f; 
+    float frameTimeCounter = 0.0f;
     float frameSpeed = 1.0f / 4.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
-
 
     /************** Inicializar audio **************/
     InitAudioDevice();
     Music gameMusic = LoadMusicStream("resources/sounds/music.mp3");
     Music gameover = LoadMusicStream("resources/sounds/gameover.mp3");
 
+    /*************** BUCLE DEL JUEGO ***************/
     while (!WindowShouldClose())
     {
         // Actualizar buffers de audio
@@ -65,7 +63,7 @@ int main(void)
             if (frameTimeCounter >= frameSpeed)
             {
                 currentFrame = (currentFrame + 1) % 3; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
-                frameTimeCounter = 0.0f; // Reiniciar el contador de tiempo
+                frameTimeCounter = 0.0f;               // Reiniciar el contador de tiempo
             }
 
             // Dibujar la nave con la textura actual
@@ -79,7 +77,7 @@ int main(void)
         {
             StopMusicStream(gameover);
             Tutorial();
-            if (IsKeyPressed(KEY_ENTER))
+            if (IsKeyPressed(KEY_Q))
             {
                 istutorial = false;
             }
@@ -89,12 +87,16 @@ int main(void)
 
             if (!isPlaying) // Si isPlaying es falso vuelve al menu principal
             {
-                drawMainMenu(menu); // Muestra menu principal
+                drawMainMenu(menu);        // Muestra menu principal
                 StopMusicStream(gameover); // Detiene musica
 
                 if (IsKeyPressed(KEY_ENTER))
                 {
                     isPlaying = true;
+                }
+                if(IsKeyPressed(KEY_A))
+                {
+                    istutorial = true;
                 }
             }
             else
@@ -104,10 +106,10 @@ int main(void)
 
                 if (!gameOver)
                 {
-                    StopMusicStream(gameover);
-                    PlayMusicStream(gameMusic);
-                    // Actualizar temporizador
-                    elapsedTime += GetFrameTime();
+                    StopMusicStream(gameover);  // Detiene musica de gameover
+                    PlayMusicStream(gameMusic); // Reproduce musica de la partida
+
+                    elapsedTime += GetFrameTime(); // Actualizar temporizador
 
                     // Control del jugador
                     if (IsKeyDown(KEY_RIGHT) && playPosition.x + playRadius < screenWidth)
@@ -118,16 +120,15 @@ int main(void)
                     {
                         playPosition.x -= ballSpeed;
                     }
-                    if (IsKeyDown(KEY_UP))
+                    if (IsKeyDown(KEY_UP) && playPosition.y - playRadius > 0) // Ajuste para la parte superior
                     {
                         playPosition.y -= ballSpeed;
                     }
-                    if (IsKeyDown(KEY_DOWN))
+                    if (IsKeyDown(KEY_DOWN) && playPosition.y + playRadius < screenHeight) // Ajuste para la parte inferior
                     {
                         playPosition.y += ballSpeed;
                     }
 
-                    
                     // Generar meteoros y objetos
                     if (elapsedTime >= spawnInterval)
                     {
@@ -163,11 +164,10 @@ int main(void)
                                 break;
                             }
                         }
-
                         elapsedTime = 0.0f; // Reiniciar el temporizador
                     }
 
-                    // Meteoro amarillo
+                    // Fisicas meteoro grande
                     for (int i = 0; i < MAX_GREEN_BALLS; i++)
                     {
                         if (greenBalls[i].active)
@@ -190,7 +190,7 @@ int main(void)
                             }
                         }
                     }
-                    // Meteoro cafe
+                    // Fisicas meteoro cafe
                     for (int i = 0; i < MAX_BROWN_BALLS; i++)
                     {
                         if (brownBalls[i].active)
@@ -214,7 +214,7 @@ int main(void)
                         }
                     }
 
-                    // Esfera amarilla
+                    // Esfera amarilla (Incrementador de puntos)
                     for (int i = 0; i < MAX_YELLOW_BALLS; i++)
                     {
                         if (yellowBalls[i].active)
@@ -230,11 +230,10 @@ int main(void)
                             {
                                 yellowBalls[i].active = false;
                                 score += 10; // Aumentar el puntaje
-
                             }
                         }
                     }
-                    // Esfera Roja
+                    // Esfera Roja (Vida adicional)
                     for (int i = 0; i < MAX_RED_BALLS; i++)
                     {
                         if (RedBalls[i].active)
@@ -245,7 +244,7 @@ int main(void)
                                 RedBalls[i].active = false;
                             }
 
-                            // Detectar colisión con jugador
+                            // Detectar colisión con jugador y aumentar vidas
                             if (CheckCollision(playPosition, playRadius, RedBalls[i].position, RED_BALL_RADIUS))
                             {
                                 RedBalls[i].active = false; // Eliminar la esfera tocada
@@ -255,6 +254,7 @@ int main(void)
                     }
                 }
 
+                /************** DIBUJO **************/
                 BeginDrawing();
 
                 // Dibuja interfaz y elementos de la partida
@@ -262,16 +262,15 @@ int main(void)
 
                 if (gameOver)
                 {
-                    // Detener musica partida
-                    StopMusicStream(gameMusic);
-                    // Reproducir musica gameover
-                    PlayMusicStream(gameover);
+                    StopMusicStream(gameMusic); // Detener musica partida
+                    PlayMusicStream(gameover);  // Reproducir musica gameover
 
-                    gameOverInterface(gameoverT, score); // INTERFAZ DE JUEGO TERMINADO
+                    gameOverInterface(gameoverT, score); // Dibujar interfaz juego terminado
 
                     // Reiniciar posicion de la nave
                     playPosition = {(float)screenWidth / 2, (float)screenHeight / 1.1f};
-                    // Reiniciar el juego si se presiona Enter
+
+                    // Reiniciar el juego al presiona Enter
                     if (IsKeyDown(KEY_ENTER))
                     {
                         gameOver = false;
@@ -290,12 +289,16 @@ int main(void)
             }
         }
     }
-        // Ddscargar texturas
+
+    // Descargar texturas
     for (int i = 0; i < 3; i++)
     {
         UnloadTexture(shipTextures[i]);
     }
+    UnloadTexture(game);
+    UnloadTexture(gameoverT);
+    UnloadTexture(menu);
+
     CloseWindow();
     return 0;
 }
-

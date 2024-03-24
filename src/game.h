@@ -37,6 +37,7 @@ Ball greenBalls[MAX_GREEN_BALLS];
 Ball brownBalls[MAX_BROWN_BALLS];
 Ball yellowBalls[MAX_YELLOW_BALLS];
 Ball RedBalls[MAX_RED_BALLS];
+
 // Posicion jugador
 Vector2 playPosition = {(float)screenWidth / 2, (float)screenHeight / 1.1f};
 
@@ -44,7 +45,7 @@ Vector2 playPosition = {(float)screenWidth / 2, (float)screenHeight / 1.1f};
 void Tutorial();
 void drawMainMenu(Texture2D background);
 void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation);
-void Levels (int score, int level, float elapsedTime);
+void Levels (int *score, int *level, float *elapsedTime);
 void clearBalls();
 void InitGreenBall(Ball *ball);
 void InitBrownBall(Ball *ball);
@@ -62,11 +63,13 @@ void gameOverInterface(Texture2D background, int score);
 void Tutorial()
 {
     BeginDrawing();
-    DrawText("COMO SE JUEGA:", screenWidth / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 100, 100, DARKBLUE);
+    DrawRectangleGradientV(0, 0, screenWidth, screenHeight, PURPLE, DARKPURPLE);
+    DrawText("COMO SE JUEGA:", screenWidth / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 100, 100, BLUE);
     DrawText("- MUEVETE CON LAS FLECHAS   <-  ->", 40, screenHeight / 2 + 40, 50, WHITE);
     DrawText("- EVITA COLISIONAR CON LOS ASTEROIDES", 40, screenHeight / 2 + 110, 50, GRAY);
     DrawText("- RECOLECTA PUNTOS ", 40, screenHeight / 2 + 180, 50, YELLOW);
     DrawText("- SOBREVIVE RECOLECTANTO VIDAS ⏎", 40, screenHeight / 2 + 250, 50, RED);
+    DrawText("(Q) Exit tutorial", screenWidth / 2 - MeasureText("(Q) Exit tutorial", 50) / 2, screenHeight / 2 + 350, 50, GREEN);
     EndDrawing();
 }
 
@@ -82,15 +85,22 @@ void drawMainMenu(Texture2D background) // PANTALLA DE MENU
 
     int sizeStartTxt = MeasureText("(Enter) Start", 60);
     int sizeExitText = MeasureText("(ESC) Exit", 60);
+    int sizeTuto = MeasureText("(A) Como jugar", 60);
     DrawText("(Enter) Start", screenWidth / 2 + 2 - sizeStartTxt / 2 + 2, screenHeight / 2 + 82, 60, GREEN);
     DrawText("(Enter) Start", screenWidth / 2 - sizeStartTxt / 2, screenHeight / 2 + 80, 60, LIME);
-    DrawText("(ESC) Exit", screenWidth / 2 + 2 - sizeExitText / 2 + 2, screenHeight / 2 + 152, 60, WHITE);
-    DrawText("(ESC) Exit", screenWidth / 2 - sizeExitText / 2, screenHeight / 2 + 150, 60, YELLOW);
+
+    DrawText("(A) Como jugar", screenWidth / 2 + 2 - sizeTuto / 2 + 2, screenHeight / 2 + 152, 60, DARKPURPLE);
+    DrawText("(A) Como jugar", screenWidth / 2 - sizeTuto / 2, screenHeight / 2 + 150, 60, PURPLE);
+
+    DrawText("(ESC) Exit", screenWidth / 2 + 2 - sizeExitText / 2 + 2, screenHeight / 2 + 224, 60, WHITE);
+    DrawText("(ESC) Exit", screenWidth / 2 - sizeExitText / 2, screenHeight / 2 + 222, 60, YELLOW);
+
     EndDrawing();
 }
 
 void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation)
 {
+    // Dibujar fondo
     DrawTexture(gamebg, 0, 0, WHITE);
 
     // Dibujar vidas
@@ -102,42 +112,42 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     // Dibujar jugador (nave)
     DrawTextureV(ship, shipPosicion, WHITE);
 
-    // Dibujar los objetos   // 21/03  10:03 pm
+    // Dibujar los objetos
     dibujarVerde(rotation);
     dibujarCafe(rotation);
     dibujarAmarillo();
     dibujarRojo();
 }
 
-void Levels (int score, int level, float elapsedTime)
+void Levels (int *score, int *level, float *elapsedTime)
 {
-    if (score >= 30 && level == 1)
+    if (*score >= 30 && *level == 1)
     {
-        level = 2;
+        *level = 2;
         // Limpiar la pantalla y mostrar "Nivel 2" en el centro
         ClearBackground(BLACK);
         DrawText("Nivel 2", screenWidth / 2 - MeasureText("Nivel 2", 40) / 2, screenHeight / 2 - 20, 40, WHITE);
         // Esperar un momento para que el jugador vea el mensaje
         WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
         // Reiniciar el temporizador y otras variables relevantes
-        elapsedTime = 0.0f;
-        score = 0;
+        *elapsedTime = 0.0f;
+        *score = 0;
         // Limpiar todas las esferas en la pantalla
         clearBalls();
     }
 
     // Verificar si el jugador ha alcanzado el nivel 3
-    if (score >= 100 && level == 2)
+    if (*score >= 100 && *level == 2)
     {
-        level = 3;
+        *level = 3;
         // Limpiar la pantalla y mostrar "Nivel 3" en el centro
         ClearBackground(BLACK);
         DrawText("Nivel 3", screenWidth / 2 - MeasureText("Nivel 3", 40) / 2, screenHeight / 2 - 20, 40, WHITE);
         // Esperar un momento para que el jugador vea el mensaje
         WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
         // Reiniciar el temporizador y otras variables relevantes
-        elapsedTime = 0.0f;
-        score = 0;
+        *elapsedTime = 0.0f;
+        *score = 0;
         // Limpiar todas las esferas en la pantalla
         clearBalls();
     }
