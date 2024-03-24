@@ -5,8 +5,8 @@
 #include <math.h>
 
 /******** DIMENSIONES PANTALLA *********/
-#define screenWidth 1600 // ALTO  (X)
-#define screenHeight 900 // ANCHO (Y)
+#define SCR_WIDTH 1600 // ALTO  (X)
+#define SCR_HEIGHT 900 // ANCHO (Y)
 
 /******** CONSTANTES *********/
 #define MAX_GREEN_BALLS 30    // Maximo de bolas verde
@@ -39,7 +39,7 @@ Ball yellowBalls[MAX_YELLOW_BALLS];
 Ball RedBalls[MAX_RED_BALLS];
 
 // Posicion jugador
-Vector2 playPosition = {(float)screenWidth / 2, (float)screenHeight / 1.1f};
+Vector2 playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
 
 /******** PROTOTIPOS DE FUNCIONES *********/
 void Tutorial();
@@ -63,13 +63,13 @@ void gameOverInterface(Texture2D background, int score);
 void Tutorial()
 {
     BeginDrawing();
-    DrawRectangleGradientV(0, 0, screenWidth, screenHeight, PURPLE, DARKPURPLE);
-    DrawText("COMO SE JUEGA:", screenWidth / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 100, 100, BLUE);
-    DrawText("- MUEVETE CON LAS FLECHAS   <-  ->", 40, screenHeight / 2 + 40, 50, WHITE);
-    DrawText("- EVITA COLISIONAR CON LOS ASTEROIDES", 40, screenHeight / 2 + 110, 50, GRAY);
-    DrawText("- RECOLECTA PUNTOS ", 40, screenHeight / 2 + 180, 50, YELLOW);
-    DrawText("- SOBREVIVE RECOLECTANTO VIDAS ⏎", 40, screenHeight / 2 + 250, 50, RED);
-    DrawText("(Q) Exit tutorial", screenWidth / 2 - MeasureText("(Q) Exit tutorial", 50) / 2, screenHeight / 2 + 350, 50, GREEN);
+    DrawRectangleGradientV(0, 0, SCR_WIDTH, SCR_HEIGHT, PURPLE, DARKPURPLE);
+    DrawText("COMO SE JUEGA:", SCR_WIDTH / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 100, 100, BLUE);
+    DrawText("- MUEVETE CON LAS FLECHAS   <-  ->", 40, SCR_HEIGHT / 2 + 40, 50, WHITE);
+    DrawText("- EVITA COLISIONAR CON LOS ASTEROIDES", 40, SCR_HEIGHT / 2 + 110, 50, GRAY);
+    DrawText("- RECOLECTA PUNTOS ", 40, SCR_HEIGHT / 2 + 180, 50, YELLOW);
+    DrawText("- SOBREVIVE RECOLECTANTO VIDAS ⏎", 40, SCR_HEIGHT / 2 + 250, 50, RED);
+    DrawText("(Q) Exit tutorial", SCR_WIDTH / 2 - MeasureText("(Q) Exit tutorial", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GREEN);
     EndDrawing();
 }
 
@@ -79,21 +79,21 @@ void drawMainMenu(Texture2D background) // PANTALLA DE MENU
 
     DrawTexture(background, 0, 0, WHITE);
 
-    DrawText("COSMIC-CHAOS", screenWidth / 2 - MeasureText("COSMIC-CHAOS", 180) / 2, 200, 186, DARKBLUE);
-    DrawText("COSMIC-CHAOS", screenWidth / 2 + 6 - MeasureText("COSMIC-CHAOS", 180) / 2 + 3, 195, 183, DARKBLUE);
-    DrawText("COSMIC-CHAOS", screenWidth / 2 + 12 - MeasureText("COSMIC-CHAOS", 180) / 2 + 6, 190, 180, BLUE);
+    DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 - MeasureText("COSMIC-CHAOS", 180) / 2, 200, 186, DARKBLUE);
+    DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 6 - MeasureText("COSMIC-CHAOS", 180) / 2 + 3, 195, 183, DARKBLUE);
+    DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 12 - MeasureText("COSMIC-CHAOS", 180) / 2 + 6, 190, 180, BLUE);
 
     int sizeStartTxt = MeasureText("(Enter) Start", 60);
     int sizeExitText = MeasureText("(ESC) Exit", 60);
     int sizeTuto = MeasureText("(A) Como jugar", 60);
-    DrawText("(Enter) Start", screenWidth / 2 + 2 - sizeStartTxt / 2 + 2, screenHeight / 2 + 82, 60, GREEN);
-    DrawText("(Enter) Start", screenWidth / 2 - sizeStartTxt / 2, screenHeight / 2 + 80, 60, LIME);
+    DrawText("(Enter) Start", SCR_WIDTH / 2 + 2 - sizeStartTxt / 2 + 2, SCR_HEIGHT / 2 + 82, 60, GREEN);
+    DrawText("(Enter) Start", SCR_WIDTH / 2 - sizeStartTxt / 2, SCR_HEIGHT / 2 + 80, 60, LIME);
 
-    DrawText("(A) Como jugar", screenWidth / 2 + 2 - sizeTuto / 2 + 2, screenHeight / 2 + 152, 60, DARKPURPLE);
-    DrawText("(A) Como jugar", screenWidth / 2 - sizeTuto / 2, screenHeight / 2 + 150, 60, PURPLE);
+    DrawText("(A) Como jugar", SCR_WIDTH / 2 + 2 - sizeTuto / 2 + 2, SCR_HEIGHT / 2 + 152, 60, DARKPURPLE);
+    DrawText("(A) Como jugar", SCR_WIDTH / 2 - sizeTuto / 2, SCR_HEIGHT / 2 + 150, 60, PURPLE);
 
-    DrawText("(ESC) Exit", screenWidth / 2 + 2 - sizeExitText / 2 + 2, screenHeight / 2 + 224, 60, WHITE);
-    DrawText("(ESC) Exit", screenWidth / 2 - sizeExitText / 2, screenHeight / 2 + 222, 60, YELLOW);
+    DrawText("(ESC) Exit", SCR_WIDTH / 2 + 2 - sizeExitText / 2 + 2, SCR_HEIGHT / 2 + 224, 60, WHITE);
+    DrawText("(ESC) Exit", SCR_WIDTH / 2 - sizeExitText / 2, SCR_HEIGHT / 2 + 222, 60, YELLOW);
 
     EndDrawing();
 }
@@ -107,7 +107,7 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     vidas(lives);
 
     // Dibujar puntaje
-    DrawText(TextFormat("SCORE: %04i", score), screenWidth - 400, 20, 50, WHITE);
+    DrawText(TextFormat("SCORE: %04i", score), SCR_WIDTH - 400, 20, 50, WHITE);
 
     // Dibujar jugador (nave)
     DrawTextureV(ship, shipPosicion, WHITE);
@@ -126,7 +126,7 @@ void Levels (int *score, int *level, float *elapsedTime)
         *level = 2;
         // Limpiar la pantalla y mostrar "Nivel 2" en el centro
         ClearBackground(BLACK);
-        DrawText("Nivel 2", screenWidth / 2 - MeasureText("Nivel 2", 40) / 2, screenHeight / 2 - 20, 40, WHITE);
+        DrawText("Nivel 2", SCR_WIDTH / 2 - MeasureText("Nivel 2", 40) / 2, SCR_HEIGHT / 2 - 20, 40, WHITE);
         // Esperar un momento para que el jugador vea el mensaje
         WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
         // Reiniciar el temporizador y otras variables relevantes
@@ -142,7 +142,7 @@ void Levels (int *score, int *level, float *elapsedTime)
         *level = 3;
         // Limpiar la pantalla y mostrar "Nivel 3" en el centro
         ClearBackground(BLACK);
-        DrawText("Nivel 3", screenWidth / 2 - MeasureText("Nivel 3", 40) / 2, screenHeight / 2 - 20, 40, WHITE);
+        DrawText("Nivel 3", SCR_WIDTH / 2 - MeasureText("Nivel 3", 40) / 2, SCR_HEIGHT / 2 - 20, 40, WHITE);
         // Esperar un momento para que el jugador vea el mensaje
         WaitTime(2000); // Espera 2 segundos (2000 milisegundos)
         // Reiniciar el temporizador y otras variables relevantes
@@ -263,14 +263,14 @@ void dibujarRojo()
 
 void vidas(int lives)
 {
-    DrawText(TextFormat("Vidas: %d", lives), screenWidth - 250, screenHeight - 140, 50, WHITE);
+    DrawText(TextFormat("Vidas: %d", lives), SCR_WIDTH - 250, SCR_HEIGHT - 140, 50, WHITE);
     for (int i = 0; i < lives; i++)
     {
-        DrawText("<3 ", screenWidth - 350 + (i * 60), screenHeight - 60, 50, RED); // Corazón lleno
+        DrawText("<3 ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón lleno
     }
     for (int i = lives; i < 5; i++)
     {
-        DrawText(" - ", screenWidth - 350 + (i * 60), screenHeight - 60, 50, RED); // Corazón vacío
+        DrawText(" - ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón vacío
     }                                                                              //  Horizontal, Espaciado,         Altura, Tamaño
 }
 void gameOverInterface(Texture2D background, int score)
@@ -278,8 +278,8 @@ void gameOverInterface(Texture2D background, int score)
     // Fondo gameover
     DrawTexture(background, 0, 0, WHITE);
 
-    int width = screenWidth;
-    int height = screenHeight;
+    int width = SCR_WIDTH;
+    int height = SCR_HEIGHT;
     // Dibujar ventana de "Game Over"
     DrawText("GAME OVER", width / 2 + 2 - MeasureText("GAME OVER", 130) / 2 + 2, height / 2 - 218, 130, WHITE);
     DrawText("GAME OVER", width / 2 - MeasureText("GAME OVER", 130) / 2, height / 2 - 220, 130, RED);

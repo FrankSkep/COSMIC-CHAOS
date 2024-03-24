@@ -15,7 +15,7 @@ int main(void)
     int lives = 5; // vidas
     // int level = 1; // inicio nivel
 
-    InitWindow(screenWidth, screenHeight, "BETA 0.10");
+    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.10");
     SetTargetFPS(75);
 
     /************** Texturas **************/
@@ -104,7 +104,7 @@ int main(void)
                     elapsedTime += GetFrameTime(); // Actualizar temporizador
 
                     // Control del jugador
-                    if (IsKeyDown(KEY_RIGHT) && playPosition.x + playRadius < screenWidth)
+                    if (IsKeyDown(KEY_RIGHT) && playPosition.x + playRadius < SCR_WIDTH)
                     {
                         playPosition.x += ballSpeed;
                     }
@@ -116,7 +116,7 @@ int main(void)
                     {
                         playPosition.y -= ballSpeed;
                     }
-                    if (IsKeyDown(KEY_DOWN) && playPosition.y + playRadius < screenHeight) // Ajuste para la parte inferior
+                    if (IsKeyDown(KEY_DOWN) && playPosition.y + playRadius < SCR_HEIGHT) // Ajuste para la parte inferior
                     {
                         playPosition.y += ballSpeed;
                     }
@@ -165,7 +165,7 @@ int main(void)
                         if (greenBalls[i].active)
                         {
                             greenBalls[i].position.y += GREEN_BALL_SPEED;
-                            if (greenBalls[i].position.y > screenHeight + GREEN_BALL_RADIUS * 2)
+                            if (greenBalls[i].position.y > SCR_HEIGHT + GREEN_BALL_RADIUS * 2)
                             {
                                 greenBalls[i].active = false;
                             }
@@ -188,7 +188,7 @@ int main(void)
                         if (brownBalls[i].active)
                         {
                             brownBalls[i].position.y += BROWN_BALL_SPEED;
-                            if (brownBalls[i].position.y > screenHeight + BROWN_BALL_RADIUS * 2)
+                            if (brownBalls[i].position.y > SCR_HEIGHT + BROWN_BALL_RADIUS * 2)
                             {
                                 brownBalls[i].active = false;
                             }
@@ -212,7 +212,7 @@ int main(void)
                         if (yellowBalls[i].active)
                         {
                             yellowBalls[i].position.y += YELLOW_BALL_SPEED;
-                            if (yellowBalls[i].position.y > screenHeight + YELLOW_BALL_RADIUS * 2)
+                            if (yellowBalls[i].position.y > SCR_HEIGHT + YELLOW_BALL_RADIUS * 2)
                             {
                                 yellowBalls[i].active = false;
                             }
@@ -231,7 +231,7 @@ int main(void)
                         if (RedBalls[i].active)
                         {
                             RedBalls[i].position.y += RED_BALL_SPEED;
-                            if (RedBalls[i].position.y > screenHeight + RED_BALL_RADIUS * 2)
+                            if (RedBalls[i].position.y > SCR_HEIGHT + RED_BALL_RADIUS * 2)
                             {
                                 RedBalls[i].active = false;
                             }
@@ -261,7 +261,7 @@ int main(void)
                     gameOverInterface(gameoverT, score); // Dibujar interfaz juego terminado
 
                     // Reiniciar posicion de la nave
-                    playPosition = {(float)screenWidth / 2, (float)screenHeight / 1.1f};
+                    playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
 
                     // Reiniciar el juego al presiona Enter
                     if (IsKeyDown(KEY_ENTER))
