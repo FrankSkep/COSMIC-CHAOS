@@ -21,19 +21,18 @@ int main(void)
     /************** Texturas **************/
     // Fondo menu principal;
     Texture2D menu = LoadTexture("resources/images/menu.png");
-
     // Fondo partida
     Texture2D game = LoadTexture("resources/images/game.png");
-
     // Fondo gameover
     Texture2D gameoverT = LoadTexture("resources/images/gameover.png");
-
     // Nave
     Texture2D shipTextures[] =
         {
             LoadTexture("resources/images/nave_01.png"),
             LoadTexture("resources/images/nave_02.png"),
             LoadTexture("resources/images/nave_03.png")};
+
+    /***** Ajustes textura nave *****/
     int currentFrame = 0; // indice de la textura actual
     float frameTimeCounter = 0.0f;
     float frameSpeed = 1.0f / 4.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
@@ -42,6 +41,9 @@ int main(void)
     InitAudioDevice();
     Music gameMusic = LoadMusicStream("resources/sounds/music.mp3");
     Music gameover = LoadMusicStream("resources/sounds/gameover.mp3");
+
+    // Posicion jugador
+    Vector2 playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
 
     /*************** BUCLE DEL JUEGO ***************/
     while (!WindowShouldClose())
@@ -85,8 +87,6 @@ int main(void)
                     currentFrame = (currentFrame + 1) % 3; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
                     frameTimeCounter = 0.0f;               // Reiniciar el contador de tiempo
                 }
-                // Dibujar la nave con la textura actual
-                DrawTexture(shipTextures[currentFrame], playPosition.x, playPosition.y, WHITE);
 
                 // Velocidad de rotacion meteoros
                 rotation += 1.5f;
@@ -123,7 +123,7 @@ int main(void)
                         {
                             if (!grayMeteors[i].active)
                             {
-                                InitGreenBall(&grayMeteors[i]);
+                                InitGrayMeteor(&grayMeteors[i]);
                                 break;
                             }
                         }
@@ -131,23 +131,23 @@ int main(void)
                         {
                             if (!brownMeteors[i].active)
                             {
-                                InitGreenBall(&brownMeteors[i]);
+                                InitBrownMeteor(&brownMeteors[i]);
                                 break;
                             }
                         }
                         for (int i = 0; i < MAX_COINS; i++)
                         {
-                            if (!yellowBalls[i].active)
+                            if (!coins[i].active)
                             {
-                                InitYellowBall(&yellowBalls[i]);
+                                InitCoin(&coins[i]);
                                 break;
                             }
                         }
                         for (int i = 0; i < MAX_HEARTS; i++)
                         {
-                            if (!RedBalls[i].active)
+                            if (!hearts[i].active)
                             {
-                                InitRedBall(&RedBalls[i]);
+                                InitHearts(&hearts[i]);
                                 break;
                             }
                         }
@@ -204,18 +204,18 @@ int main(void)
                     // Esfera amarilla (Incrementador de puntos)
                     for (int i = 0; i < MAX_COINS; i++)
                     {
-                        if (yellowBalls[i].active)
+                        if (coins[i].active)
                         {
-                            yellowBalls[i].position.y += COINS_SPEED;
-                            if (yellowBalls[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
+                            coins[i].position.y += COINS_SPEED;
+                            if (coins[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
                             {
-                                yellowBalls[i].active = false;
+                                coins[i].active = false;
                             }
 
                             // Detectar colisión con jugador y aumentar el contador de puntos
-                            if (CheckCollision(playPosition, playRadius, yellowBalls[i].position, COINS_RADIUS))
+                            if (CheckCollision(playPosition, playRadius, coins[i].position, COINS_RADIUS))
                             {
-                                yellowBalls[i].active = false;
+                                coins[i].active = false;
                                 score += 10; // Aumentar el puntaje
                             }
                         }
@@ -223,18 +223,18 @@ int main(void)
                     // Esfera Roja (Vida adicional)
                     for (int i = 0; i < MAX_HEARTS; i++)
                     {
-                        if (RedBalls[i].active)
+                        if (hearts[i].active)
                         {
-                            RedBalls[i].position.y += HEARTS_SPEED;
-                            if (RedBalls[i].position.y > SCR_HEIGHT + HEARTS_RADIUS * 2)
+                            hearts[i].position.y += HEARTS_SPEED;
+                            if (hearts[i].position.y > SCR_HEIGHT + HEARTS_RADIUS * 2)
                             {
-                                RedBalls[i].active = false;
+                                hearts[i].active = false;
                             }
 
                             // Detectar colisión con jugador y aumentar vidas
-                            if (CheckCollision(playPosition, playRadius, RedBalls[i].position, HEARTS_RADIUS))
+                            if (CheckCollision(playPosition, playRadius, hearts[i].position, HEARTS_RADIUS))
                             {
-                                RedBalls[i].active = false; // Eliminar la esfera tocada
+                                hearts[i].active = false; // Eliminar la esfera tocada
                                 lives++;                    // Gana una vida
                             }
                         }
