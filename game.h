@@ -282,4 +282,5 @@ void gameOverInterface(Texture2D background, int score)
     DrawText("(Esc) Exit.", width / 2 - MeasureText("(Q) Exit", 90) / 2, height / 2 + 270, 70, RED);
 }
 
+
 #endif
