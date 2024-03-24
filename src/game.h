@@ -17,13 +17,13 @@
 #define BROWN_METEOR_RADIUS 40  // Tamaño
 #define BROWN_METEOR_SPEED 9.0f // Velocidad de caida
 
-#define MAX_YELLOW_BALLS 2     // Maximo de bolas amarilla
-#define YELLOW_BALL_RADIUS 20  // Tamaño
-#define YELLOW_BALL_SPEED 8.0f // Velocidad de caida
+#define MAX_COINS 2     // Maximo de bolas amarilla
+#define COINS_RADIUS 20  // Tamaño
+#define COINS_SPEED 8.0f // Velocidad de caida
 
-#define MAX_RED_BALLS 1     // Maximo bolas rojas
-#define RED_BALL_RADIUS 20  // Tamaño
-#define RED_BALL_SPEED 9.0f // Velocidad de caida
+#define MAX_HEARTS 1     // Maximo bolas rojas
+#define HEARTS_RADIUS 20  // Tamaño
+#define HEARTS_SPEED 9.0f // Velocidad de caida
 
 /******** STRUCT *********/
 typedef struct
@@ -35,8 +35,8 @@ typedef struct
 /******** INSTANCIAS NECESARIAS DE STRUCT 'Ball' *********/
 Ball grayMeteors[MAX_GRAY_METEORS];
 Ball brownMeteors[MAX_BROWN_METEORS];
-Ball yellowBalls[MAX_YELLOW_BALLS];
-Ball RedBalls[MAX_RED_BALLS];
+Ball yellowBalls[MAX_COINS];
+Ball RedBalls[MAX_HEARTS];
 
 // Posicion jugador
 Vector2 playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
@@ -46,16 +46,16 @@ void Tutorial();
 void drawMainMenu(Texture2D background);
 void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation);
 void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition);
-void clearBalls(Vector2 *playPosition);
+void resetGame(Vector2 *playPosition);
 void InitGreenBall(Ball *ball);
 void InitBrownBall(Ball *ball);
 void InitYellowBall(Ball *ball);
 void InitRedBall(Ball *ball);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius);
-void dibujarVerde(float rotation);
-void dibujarCafe(float rotation);
-void dibujarAmarillo();
-void dibujarRojo();
+void drawGrayMeteor(float rotation);
+void drawBrownMeteor(float rotation);
+void drawCoins();
+void drawHearts();
 void vidas(int lives);
 void gameOverInterface(Texture2D background, int score);
 
@@ -113,10 +113,10 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     DrawTextureV(ship, shipPosicion, WHITE);
 
     // Dibujar los objetos
-    dibujarVerde(rotation);
-    dibujarCafe(rotation);
-    dibujarAmarillo();
-    dibujarRojo();
+    drawGrayMeteor(rotation);
+    drawBrownMeteor(rotation);
+    drawCoins();
+    drawHearts();
 }
 
 void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition)
@@ -133,7 +133,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition)
         *elapsedTime = 0.0f;
         *score = 0;
         // Limpiar todas las esferas en la pantalla
-        clearBalls(playPosition);
+        resetGame(playPosition);
     }
 
     // Verificar si el jugador ha alcanzado el nivel 3
@@ -149,12 +149,12 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition)
         *elapsedTime = 0.0f;
         *score = 0;
         // Limpiar todas las esferas en la pantalla
-        clearBalls(playPosition);
+        resetGame(playPosition);
     }
 }
 
 // Función para limpiar todas las esferas en la pantalla
-void clearBalls(Vector2 *playPosition)
+void resetGame(Vector2 *playPosition)
 {
     // Reiniciar posicion nave
     *playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
@@ -168,11 +168,11 @@ void clearBalls(Vector2 *playPosition)
     {
         brownMeteors[i].active = false;
     }
-    for (int i = 0; i < MAX_YELLOW_BALLS; i++)
+    for (int i = 0; i < MAX_COINS; i++)
     {
         yellowBalls[i].active = false;
     }
-    for (int i = 0; i < MAX_RED_BALLS; i++)
+    for (int i = 0; i < MAX_HEARTS; i++)
     {
         RedBalls[i].active = false;
     }
@@ -194,14 +194,14 @@ void InitBrownBall(Ball *ball)
 void InitYellowBall(Ball *ball)
 {
     ball->position.x = GetRandomValue(0, GetScreenWidth());
-    ball->position.y = -YELLOW_BALL_RADIUS * 2;
+    ball->position.y = -COINS_RADIUS * 2;
     ball->active = true;
 }
 
 void InitRedBall(Ball *ball)
 {
     ball->position.x = GetRandomValue(0, GetScreenWidth());
-    ball->position.y = -RED_BALL_RADIUS * 2;
+    ball->position.y = -HEARTS_RADIUS * 2;
     ball->active = true;
 }
 
@@ -211,7 +211,7 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
     return (distance < (playerRadius + playRadius));
 }
 
-void dibujarVerde(float rotation) // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv// 21/03  10:03 pm
+void drawGrayMeteor(float rotation) // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv// 21/03  10:03 pm
 {
     // Velocidad de rotacion
     rotation += 2.5f;
@@ -221,13 +221,13 @@ void dibujarVerde(float rotation) // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv// 21/0
         if (grayMeteors[i].active)
         {
             DrawPoly(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, GRAY);
-            DrawPolyLines(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, DARKGRAY);
-            DrawPolyLinesEx(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, 5, DARKGRAY);
+            DrawPolyLines(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, BLACK);
+            DrawPolyLinesEx(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, 12, DARKGRAY);
         }
     }
 }
 
-void dibujarCafe(float rotation)
+void drawBrownMeteor(float rotation)
 {
     // Velocidad de rotacion
     rotation += 2.5f;
@@ -238,29 +238,29 @@ void dibujarCafe(float rotation)
         {
             DrawPoly(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, rotation, BROWN);
             DrawPolyLines(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, rotation, DARKBROWN);
-            DrawPolyLinesEx(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, rotation, 5, DARKGRAY);
+            DrawPolyLinesEx(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, rotation, 8, DARKGRAY);
         }
     }
 }
-void dibujarAmarillo()
+void drawCoins()
 {
     // Dibujar esferas amarillas
-    for (int i = 0; i < MAX_YELLOW_BALLS; i++)
+    for (int i = 0; i < MAX_COINS; i++)
     {
         if (yellowBalls[i].active)
         {
-            DrawCircleV(yellowBalls[i].position, YELLOW_BALL_RADIUS, YELLOW);
+            DrawCircleV(yellowBalls[i].position, COINS_RADIUS, YELLOW);
         }
     }
 }
-void dibujarRojo()
+void drawHearts()
 {
     // Dibujar esferas Rojas
-    for (int i = 0; i < MAX_RED_BALLS; i++)
+    for (int i = 0; i < MAX_HEARTS; i++)
     {
         if (RedBalls[i].active)
         {
-            DrawCircleV(RedBalls[i].position, RED_BALL_RADIUS, RED);
+            DrawCircleV(RedBalls[i].position, HEARTS_RADIUS, RED);
         }
     }
 } //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  21/03  10:03 pm

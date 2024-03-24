@@ -136,7 +136,7 @@ int main(void)
                                 break;
                             }
                         }
-                        for (int i = 0; i < MAX_YELLOW_BALLS; i++)
+                        for (int i = 0; i < MAX_COINS; i++)
                         {
                             if (!yellowBalls[i].active)
                             {
@@ -144,7 +144,7 @@ int main(void)
                                 break;
                             }
                         }
-                        for (int i = 0; i < MAX_RED_BALLS; i++)
+                        for (int i = 0; i < MAX_HEARTS; i++)
                         {
                             if (!RedBalls[i].active)
                             {
@@ -203,18 +203,18 @@ int main(void)
                     }
 
                     // Esfera amarilla (Incrementador de puntos)
-                    for (int i = 0; i < MAX_YELLOW_BALLS; i++)
+                    for (int i = 0; i < MAX_COINS; i++)
                     {
                         if (yellowBalls[i].active)
                         {
-                            yellowBalls[i].position.y += YELLOW_BALL_SPEED;
-                            if (yellowBalls[i].position.y > SCR_HEIGHT + YELLOW_BALL_RADIUS * 2)
+                            yellowBalls[i].position.y += COINS_SPEED;
+                            if (yellowBalls[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
                             {
                                 yellowBalls[i].active = false;
                             }
 
                             // Detectar colisión con jugador y aumentar el contador de puntos
-                            if (CheckCollision(playPosition, playRadius, yellowBalls[i].position, YELLOW_BALL_RADIUS))
+                            if (CheckCollision(playPosition, playRadius, yellowBalls[i].position, COINS_RADIUS))
                             {
                                 yellowBalls[i].active = false;
                                 score += 10; // Aumentar el puntaje
@@ -222,18 +222,18 @@ int main(void)
                         }
                     }
                     // Esfera Roja (Vida adicional)
-                    for (int i = 0; i < MAX_RED_BALLS; i++)
+                    for (int i = 0; i < MAX_HEARTS; i++)
                     {
                         if (RedBalls[i].active)
                         {
-                            RedBalls[i].position.y += RED_BALL_SPEED;
-                            if (RedBalls[i].position.y > SCR_HEIGHT + RED_BALL_RADIUS * 2)
+                            RedBalls[i].position.y += HEARTS_SPEED;
+                            if (RedBalls[i].position.y > SCR_HEIGHT + HEARTS_RADIUS * 2)
                             {
                                 RedBalls[i].active = false;
                             }
 
                             // Detectar colisión con jugador y aumentar vidas
-                            if (CheckCollision(playPosition, playRadius, RedBalls[i].position, RED_BALL_RADIUS))
+                            if (CheckCollision(playPosition, playRadius, RedBalls[i].position, HEARTS_RADIUS))
                             {
                                 RedBalls[i].active = false; // Eliminar la esfera tocada
                                 lives++;                    // Gana una vida
@@ -257,7 +257,7 @@ int main(void)
                     gameOverInterface(gameoverT, score); // Dibujar interfaz juego terminado
 
                     // Reiniciar posicion de la nave y limpiar meteoros
-                    clearBalls(&playPosition);
+                    resetGame(&playPosition);
 
                     // Reiniciar el juego al presiona Enter
                     if (IsKeyDown(KEY_ENTER))
