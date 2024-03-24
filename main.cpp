@@ -119,19 +119,19 @@ int main(void)
                     // Generar meteoros y objetos
                     if (elapsedTime >= spawnInterval)
                     {
-                        for (int i = 0; i < MAX_GREEN_BALLS; i++)
+                        for (int i = 0; i < MAX_GRAY_METEORS; i++)
                         {
-                            if (!greenBalls[i].active)
+                            if (!grayMeteors[i].active)
                             {
-                                InitGreenBall(&greenBalls[i]);
+                                InitGreenBall(&grayMeteors[i]);
                                 break;
                             }
                         }
-                        for (int i = 0; i < MAX_BROWN_BALLS; i++)
+                        for (int i = 0; i < MAX_BROWN_METEORS; i++)
                         {
-                            if (!brownBalls[i].active)
+                            if (!brownMeteors[i].active)
                             {
-                                InitGreenBall(&brownBalls[i]);
+                                InitGreenBall(&brownMeteors[i]);
                                 break;
                             }
                         }
@@ -155,20 +155,20 @@ int main(void)
                     }
 
                     // Fisicas meteoro grande
-                    for (int i = 0; i < MAX_GREEN_BALLS; i++)
+                    for (int i = 0; i < MAX_GRAY_METEORS; i++)
                     {
-                        if (greenBalls[i].active)
+                        if (grayMeteors[i].active)
                         {
-                            greenBalls[i].position.y += GREEN_BALL_SPEED;
-                            if (greenBalls[i].position.y > SCR_HEIGHT + GREEN_BALL_RADIUS * 2)
+                            grayMeteors[i].position.y += GRAY_METEOR_SPEED;
+                            if (grayMeteors[i].position.y > SCR_HEIGHT + GRAY_METEOR_RADIUS * 2)
                             {
-                                greenBalls[i].active = false;
+                                grayMeteors[i].active = false;
                             }
 
                             // Detectar colisión con jugador
-                            if (CheckCollision(playPosition, playRadius, greenBalls[i].position, GREEN_BALL_RADIUS))
+                            if (CheckCollision(playPosition, playRadius, grayMeteors[i].position, GRAY_METEOR_RADIUS))
                             {
-                                greenBalls[i].active = false; // Eliminar la esfera tocada
+                                grayMeteors[i].active = false; // Eliminar la esfera tocada
                                 lives--;                      // Pierde una vida
                                 if (lives <= 0)
                                 {
@@ -178,20 +178,20 @@ int main(void)
                         }
                     }
                     // Fisicas meteoro cafe
-                    for (int i = 0; i < MAX_BROWN_BALLS; i++)
+                    for (int i = 0; i < MAX_BROWN_METEORS; i++)
                     {
-                        if (brownBalls[i].active)
+                        if (brownMeteors[i].active)
                         {
-                            brownBalls[i].position.y += BROWN_BALL_SPEED;
-                            if (brownBalls[i].position.y > SCR_HEIGHT + BROWN_BALL_RADIUS * 2)
+                            brownMeteors[i].position.y += BROWN_METEOR_SPEED;
+                            if (brownMeteors[i].position.y > SCR_HEIGHT + BROWN_METEOR_RADIUS * 2)
                             {
-                                brownBalls[i].active = false;
+                                brownMeteors[i].active = false;
                             }
 
                             // Detectar colisión con jugador
-                            if (CheckCollision(playPosition, playRadius, brownBalls[i].position, BROWN_BALL_RADIUS))
+                            if (CheckCollision(playPosition, playRadius, brownMeteors[i].position, BROWN_METEOR_RADIUS))
                             {
-                                brownBalls[i].active = false; // Eliminar la esfera tocada
+                                brownMeteors[i].active = false; // Eliminar la esfera tocada
                                 lives--;                      // Pierde una vida
                                 if (lives <= 0)
                                 {

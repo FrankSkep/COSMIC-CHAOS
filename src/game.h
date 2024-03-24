@@ -9,13 +9,13 @@
 #define SCR_HEIGHT 900 // ANCHO (Y)
 
 /******** CONSTANTES *********/
-#define MAX_GREEN_BALLS 30    // Maximo de bolas verde
-#define GREEN_BALL_RADIUS 70  // Tamaño
-#define GREEN_BALL_SPEED 7.0f // Velocidad de caida
+#define MAX_GRAY_METEORS 30    // Maximo de bolas verde
+#define GRAY_METEOR_RADIUS 70  // Tamaño
+#define GRAY_METEOR_SPEED 7.0f // Velocidad de caida
 
-#define MAX_BROWN_BALLS 10    // Maximo de bolas cafe
-#define BROWN_BALL_RADIUS 40  // Tamaño
-#define BROWN_BALL_SPEED 9.0f // Velocidad de caida
+#define MAX_BROWN_METEORS 10    // Maximo de bolas cafe
+#define BROWN_METEOR_RADIUS 40  // Tamaño
+#define BROWN_METEOR_SPEED 9.0f // Velocidad de caida
 
 #define MAX_YELLOW_BALLS 2     // Maximo de bolas amarilla
 #define YELLOW_BALL_RADIUS 20  // Tamaño
@@ -33,8 +33,8 @@ typedef struct
 } Ball;
 
 /******** INSTANCIAS NECESARIAS DE STRUCT 'Ball' *********/
-Ball greenBalls[MAX_GREEN_BALLS];
-Ball brownBalls[MAX_BROWN_BALLS];
+Ball grayMeteors[MAX_GRAY_METEORS];
+Ball brownMeteors[MAX_BROWN_METEORS];
 Ball yellowBalls[MAX_YELLOW_BALLS];
 Ball RedBalls[MAX_RED_BALLS];
 
@@ -45,7 +45,7 @@ Vector2 playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
 void Tutorial();
 void drawMainMenu(Texture2D background);
 void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation);
-void Levels (int *score, int *level, float *elapsedTime);
+void Levels(int *score, int *level, float *elapsedTime);
 void clearBalls();
 void InitGreenBall(Ball *ball);
 void InitBrownBall(Ball *ball);
@@ -119,7 +119,7 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     dibujarRojo();
 }
 
-void Levels (int *score, int *level, float *elapsedTime)
+void Levels(int *score, int *level, float *elapsedTime)
 {
     if (*score >= 30 && *level == 1)
     {
@@ -156,13 +156,13 @@ void Levels (int *score, int *level, float *elapsedTime)
 // Función para limpiar todas las esferas en la pantalla
 void clearBalls()
 {
-    for (int i = 0; i < MAX_GREEN_BALLS; i++)
+    for (int i = 0; i < MAX_GRAY_METEORS; i++)
     {
-        greenBalls[i].active = false;
+        grayMeteors[i].active = false;
     }
-    for (int i = 0; i < MAX_BROWN_BALLS; i++)
+    for (int i = 0; i < MAX_BROWN_METEORS; i++)
     {
-        brownBalls[i].active = false;
+        brownMeteors[i].active = false;
     }
     for (int i = 0; i < MAX_YELLOW_BALLS; i++)
     {
@@ -177,13 +177,13 @@ void clearBalls()
 void InitGreenBall(Ball *ball)
 {
     ball->position.x = GetRandomValue(0, GetScreenWidth());
-    ball->position.y = -GREEN_BALL_RADIUS * 2;
+    ball->position.y = -GRAY_METEOR_RADIUS * 2;
     ball->active = true;
 }
 void InitBrownBall(Ball *ball)
 {
     ball->position.x = GetRandomValue(0, GetScreenWidth());
-    ball->position.y = -BROWN_BALL_RADIUS * 2;
+    ball->position.y = -BROWN_METEOR_RADIUS * 2;
     ball->active = true;
 }
 
@@ -212,13 +212,13 @@ void dibujarVerde(float rotation) // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv// 21/0
     // Velocidad de rotacion
     rotation += 2.5f;
     // Dibujar esferas verdes
-    for (int i = 0; i < MAX_GREEN_BALLS; i++)
+    for (int i = 0; i < MAX_GRAY_METEORS; i++)
     {
-        if (greenBalls[i].active)
+        if (grayMeteors[i].active)
         {
-            DrawPoly(greenBalls[i].position, 5, GREEN_BALL_RADIUS, rotation, GRAY);
-            DrawPolyLines(greenBalls[i].position, 5, GREEN_BALL_RADIUS, rotation, DARKGRAY);
-            DrawPolyLinesEx(greenBalls[i].position, 5, GREEN_BALL_RADIUS, rotation, 5, DARKGRAY);
+            DrawPoly(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, GRAY);
+            DrawPolyLines(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, DARKGRAY);
+            DrawPolyLinesEx(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, 5, DARKGRAY);
         }
     }
 }
@@ -228,13 +228,13 @@ void dibujarCafe(float rotation)
     // Velocidad de rotacion
     rotation += 2.5f;
     // Dibujar esferas verdes
-    for (int i = 0; i < MAX_BROWN_BALLS / 2; i++)
+    for (int i = 0; i < MAX_BROWN_METEORS / 2; i++)
     {
-        if (brownBalls[i].active)
+        if (brownMeteors[i].active)
         {
-            DrawPoly(brownBalls[i].position, 5, BROWN_BALL_RADIUS, rotation, BROWN);
-            DrawPolyLines(brownBalls[i].position, 5, BROWN_BALL_RADIUS, rotation, DARKBROWN);
-            DrawPolyLinesEx(brownBalls[i].position, 5, BROWN_BALL_RADIUS, rotation, 5, DARKGRAY);
+            DrawPoly(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, rotation, BROWN);
+            DrawPolyLines(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, rotation, DARKBROWN);
+            DrawPolyLinesEx(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, rotation, 5, DARKGRAY);
         }
     }
 }
@@ -271,7 +271,7 @@ void vidas(int lives)
     for (int i = lives; i < 5; i++)
     {
         DrawText(" - ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón vacío
-    }                                                                              //  Horizontal, Espaciado,         Altura, Tamaño
+    }                                                                          //  Horizontal, Espaciado,         Altura, Tamaño
 }
 void gameOverInterface(Texture2D background, int score)
 {
@@ -291,6 +291,5 @@ void gameOverInterface(Texture2D background, int score)
     DrawText("(Esc) Exit.", width / 2 + 2 - MeasureText("(Q) Exit", 90) / 2 + 2, height / 2 + 270 + 2, 70, WHITE);
     DrawText("(Esc) Exit.", width / 2 - MeasureText("(Q) Exit", 90) / 2, height / 2 + 270, 70, RED);
 }
-
 
 #endif
