@@ -2,18 +2,18 @@
 
 int main(void)
 {
-    /******** VARIABLES *********/
-    const int playRadius = 45;     // tamaño del jugador
-    const float ballSpeed = 15.0f; // velocidad del jugador
-    bool gameOver = false;         // controla gameover
-    bool istutorial = false;       // INICIAR EN TUTORIAL
-    bool isPlaying = false;        // determina si esta en juego
+    /************ VARIABLES *************/
+    const int playRadius = 45;     // Tamaño del jugador
+    const float ballSpeed = 15.0f; // Velocidad del jugador
+    bool gameOver = false;         // Controla gameover
+    bool istutorial = false;       // Controla cuando entra al tutorial
+    bool isPlaying = false;        // Determina si esta en juego
     float elapsedTime = 0.0f;
     const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de esferas verdes
-    float rotation = 0.0f;
-    int score = 0; // inicio del puntaje
-    int lives = 5; // vidas
-    int level = 1; // inicio nivel
+    float rotation = 0.0f;            // Rotacion de meteoros
+    int score = 0;                    // Inicio del puntaje
+    int lives = 5;                    // Vidas Iniciales
+    int level = 1;                    // Nivel inicial
     int milliseconds = 2000;
 
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.12");
@@ -21,28 +21,39 @@ int main(void)
 
     /************** Texturas **************/
     // Fondo menu principal;
-    Texture2D menu = LoadTexture("resources/images/menu.png");
+    Texture2D menu = LoadTexture("resources/images/backgrounds/menu.png");
     // Fondo partida
-    Texture2D game = LoadTexture("resources/images/game.png");
-    // Fondo gameover
-    Texture2D gameoverT = LoadTexture("resources/images/gameover.png");
+    Texture2D game = LoadTexture("resources/images/backgrounds/game.png");
+    // Fondo gameovership/
+    Texture2D gameoverT = LoadTexture("resources/images/backgrounds/gameover.png");
     // Nave
     Texture2D shipTextures[] =
         {
-            LoadTexture("resources/images/nave_01.png"),
-            LoadTexture("resources/images/nave_02.png"),
-            LoadTexture("resources/images/nave_03.png")};
+            LoadTexture("resources/images/ship/ship01.png"),
+            LoadTexture("resources/images/ship/ship02.png"),
+            LoadTexture("resources/images/ship/ship03.png")};
+
+    Texture2D coinsTx[] = 
+    {
+        LoadTexture("resources/images/coins/coin1.png"),
+        LoadTexture("resources/images/coins/coin2.png"),
+        LoadTexture("resources/images/coins/coin3.png"),
+        LoadTexture("resources/images/coins/coin4.png"),
+        LoadTexture("resources/images/coins/coin5.png"),
+        LoadTexture("resources/images/coins/coin6.png"),
+        LoadTexture("resources/images/coins/coin7.png")
+    };
 
     /***** Ajustes textura nave *****/
     int currentFrame = 0; // indice de la textura actual
     float frameTimeCounter = 0.0f;
     float frameSpeed = 1.0f / 4.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
 
-    /************** Inicializar audio **************/
+    /************** Inicializacion audio **************/
     InitAudioDevice();
     Music gameMusic = LoadMusicStream("resources/sounds/music.mp3");
     Music gameover = LoadMusicStream("resources/sounds/gameover.mp3");
-    Music soundcoin = LoadMusicStream("resources/sounds/coin.wav");
+    Sound soundcoin = LoadSound("resources/sounds/coin.wav");
 
     // Posicion jugador
     Vector2 playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
@@ -58,15 +69,15 @@ int main(void)
             Tutorial();
             if (IsKeyPressed(KEY_Q))
             {
-                istutorial = false;
+                istutorial = false; // Sale del tutorial
             }
         }
         else
         {
-            if (!isPlaying) // Si isPlaying es falso vuelve al menu principal
+            if (!isPlaying) // Si isPlaying es falso, manda a menu principal
             {
-                drawMainMenu(menu);        // Muestra menu principal
-                StopMusicStream(gameover); // Detiene musica
+                drawMainMenu(menu);        // Dibuja menu principal
+                StopMusicStream(gameover); // Detiene musica gameover
 
                 if (IsKeyPressed(KEY_ENTER))
                 {
@@ -156,7 +167,7 @@ int main(void)
                         elapsedTime = 0.0f; // Reiniciar el temporizador
                     }
 
-                    // Fisicas meteoro grande
+                    // Fisicas meteoro gris
                     for (int i = 0; i < MAX_GRAY_METEORS; i++)
                     {
                         if (grayMeteors[i].active)
@@ -203,7 +214,7 @@ int main(void)
                         }
                     }
 
-                    // Esfera amarilla (Incrementador de puntos)
+                    // Fisicas moneda (Incrementador de puntos)
                     for (int i = 0; i < MAX_COINS; i++)
                     {
                         if (coins[i].active)
@@ -219,12 +230,11 @@ int main(void)
                             {
                                 coins[i].active = false;
                                 score += 10; // Aumentar el puntaje
-                                UpdateMusicStream(soundcoin);
-                                PlayMusicStream(soundcoin);
+                                PlaySound(soundcoin);
                             }
                         }
                     }
-                    // Esfera Roja (Vida adicional)
+                    // Fisicas corazon (Vida adicional)
                     for (int i = 0; i < MAX_HEARTS; i++)
                     {
                         if (hearts[i].active)
@@ -239,13 +249,13 @@ int main(void)
                             if (CheckCollision(playPosition, playRadius, hearts[i].position, HEARTS_RADIUS))
                             {
                                 hearts[i].active = false; // Eliminar la esfera tocada
-                                lives++;                    // Gana una vida
+                                lives++;                  // Gana una vida
                             }
                         }
                     }
                 }
 
-                /************** DIBUJO **************/
+                /********************* DIBUJO *********************/
                 BeginDrawing();
 
                 // Dibuja interfaz y elementos de la partida
@@ -259,17 +269,18 @@ int main(void)
 
                     gameOverInterface(gameoverT, score); // Dibujar interfaz juego terminado
 
-                    // Reiniciar posicion de la nave y limpiar meteoros
+                    // Reiniciar posicion de la nave, limpiar meteoros
                     resetGame(&playPosition);
-                    level = 1;
 
+                    level = 1;
 
                     // Reiniciar el juego al presiona Enter
                     if (IsKeyDown(KEY_ENTER))
                     {
-                        gameOver = false;
+                        // Reinicia vidas y puntaje
                         lives = 5;
                         score = 0;
+                        gameOver = false;
                     }
                     // Vuelve al menu al presionar Q
                     if (IsKeyPressed(KEY_Q))

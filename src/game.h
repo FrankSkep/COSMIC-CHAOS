@@ -123,12 +123,12 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
     {
         *level = 2;
         double startTime = GetTime(); // Obtener el tiempo de inicio
-        
+
         while (GetTime() - startTime < *milliseconds / 1000.0)
         {
             // Limpiar la pantalla y mostrar "Nivel 2" en el centro
             ClearBackground(BLACK);
-            DrawText("Nivel 2", SCR_WIDTH / 2 - MeasureText("Nivel 2", 200) / 2, SCR_HEIGHT / 2-200, 200, WHITE);
+            DrawText("Nivel 2", SCR_WIDTH / 2 - MeasureText("Nivel 2", 200) / 2, SCR_HEIGHT / 2 - 200, 200, WHITE);
             // Actualizar la pantalla
             EndDrawing();
         }
@@ -144,7 +144,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
     {
         *level = 3;
         double startTime = GetTime(); // Obtener el tiempo de inicio
-        
+
         while (GetTime() - startTime < *milliseconds / 1000.0)
         {
             // Limpiar la pantalla y mostrar "Nivel 2" en el centro
@@ -228,9 +228,23 @@ void drawGrayMeteor(float rotation)
     {
         if (grayMeteors[i].active)
         {
+            // Dibujar el cuerpo principal del meteoro (polígono relleno)
             DrawPoly(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, GRAY);
+
+            // Dibujar líneas para resaltar bordes del meteoro
             DrawPolyLines(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, BLACK);
-            DrawPolyLinesEx(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, 12, DARKGRAY);
+
+            // Dibujar líneas adicionales para dar textura
+            DrawPolyLinesEx(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, 8, DARKGRAY);
+
+            // Dibujar puntos aleatorios dentro del meteoro para textura
+            for (int j = 0; j < 15; j++)
+            {
+                Vector2 point = {
+                    grayMeteors[i].position.x + GetRandomValue(-GRAY_METEOR_RADIUS / 2, GRAY_METEOR_RADIUS / 2),
+                    grayMeteors[i].position.y + GetRandomValue(-GRAY_METEOR_RADIUS / 2, GRAY_METEOR_RADIUS / 2)};
+                DrawCircleV(point, 3, BLACK);
+            }
         }
     }
 }
