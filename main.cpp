@@ -30,11 +30,10 @@ int main(void)
     Texture2D shipTextures[] =
         {
             LoadTexture("images/ship/ship01.png"),
-            LoadTexture("images/ship/ship02.png"),
-            LoadTexture("images/ship/ship03.png"),
-            LoadTexture("images/ship/ship02.png"),
             LoadTexture("images/ship/ship01.png"),
             LoadTexture("images/ship/ship02.png"),
+            LoadTexture("images/ship/ship02.png"),
+            LoadTexture("images/ship/ship03.png"),
             LoadTexture("images/ship/ship03.png")};
 
     Texture2D coinsTx[] =
@@ -44,13 +43,12 @@ int main(void)
             LoadTexture("images/coins/coin_03.png"),
             LoadTexture("images/coins/coin_04.png"),
             LoadTexture("images/coins/coin_05.png"),
-            LoadTexture("images/coins/coin_06.png"),
-            LoadTexture("images/coins/coin_07.png")};
+            LoadTexture("images/coins/coin_06.png")};
 
     /***** Ajustes textura nave *****/
     int currentFrame = 0; // indice de la textura actual
     float frameTimeCounter = 0.0f;
-    float frameSpeed = 1.0f / 4.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
+    float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
 
     /************** Inicializacion audio **************/
     InitAudioDevice();
@@ -103,7 +101,7 @@ int main(void)
                 // pasado el tiempo, cambia la imagen de la nave
                 if (frameTimeCounter >= frameSpeed)
                 {
-                    currentFrame = (currentFrame + 1) % 7; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
+                    currentFrame = (currentFrame + 1) % 6; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
                     frameTimeCounter = 0.0f;               // Reiniciar el contador de tiempo
                 }
 
@@ -269,6 +267,8 @@ int main(void)
 
                 if (gameOver)
                 {
+                    ClearBackground(BLACK);
+
                     StopMusicStream(gameMusic); // Detener musica partida
                     UpdateMusicStream(gameover);
                     PlayMusicStream(gameover); // Reproducir musica gameover
@@ -283,6 +283,7 @@ int main(void)
                     // Reiniciar el juego al presiona Enter
                     if (IsKeyDown(KEY_ENTER))
                     {
+                        ClearBackground(BLACK);
                         // Reinicia vidas y puntaje
                         lives = 5;
                         score = 0;
@@ -303,7 +304,7 @@ int main(void)
     }
 
     // Descargar texturas
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 7; i++)
     {
         UnloadTexture(shipTextures[i]);
         UnloadTexture(coinsTx[i]);

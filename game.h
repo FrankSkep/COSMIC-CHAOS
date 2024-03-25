@@ -82,8 +82,8 @@ void drawMainMenu(Texture2D background) // PANTALLA DE MENU
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 12 - MeasureText("COSMIC-CHAOS", 180) / 2 + 6, 190, 180, BLUE);
 
     int sizeStartTxt = MeasureText("(Enter) Start", 60);
-    int sizeExitText = MeasureText("(ESC) Exit", 60);
     int sizeTuto = MeasureText("(A) Como jugar", 60);
+    int sizeExitText = MeasureText("(ESC) Exit", 60);
     DrawText("(Enter) Start", SCR_WIDTH / 2 + 2 - sizeStartTxt / 2 + 2, SCR_HEIGHT / 2 + 82, 60, GREEN);
     DrawText("(Enter) Start", SCR_WIDTH / 2 - sizeStartTxt / 2, SCR_HEIGHT / 2 + 80, 60, LIME);
 
@@ -130,6 +130,8 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
             ClearBackground(BLACK);
             DrawText("Nivel 2", SCR_WIDTH / 2 - MeasureText("Nivel 2", 200) / 2, SCR_HEIGHT / 2 - 200, 200, WHITE);
             // Actualizar la pantalla
+            ClearBackground(BLACK);
+
             EndDrawing();
         }
 
