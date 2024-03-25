@@ -303,7 +303,9 @@ void drawCoins(Texture2D coinsTx, Vector2 coinPosition)
     {
         if (coins[i].active)
         {
-            DrawTextureV(coinsTx, coinPosition, WHITE);
+            Vector2 coinCenter = {coins->position.x - coinsTx[currentFrame].width / 2, coins->position.y - coinsTx[currentFrame].height / 2};
+
+            DrawTextureV(coinsTx, coinCenter, WHITE);
         }
     }
 }

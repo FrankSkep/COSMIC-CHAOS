@@ -232,6 +232,7 @@ int main(void)
                             // Detectar colisión con jugador y aumentar el contador de puntos
                             if (CheckCollision(playPosition, playRadius, coins[i].position, COINS_RADIUS))
                             {
+                                currentFrame=0;
                                 coins[i].active = false;
                                 score += 10; // Aumentar el puntaje
                                 PlaySound(soundcoin);
