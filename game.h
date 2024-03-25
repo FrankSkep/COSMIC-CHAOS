@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include <math.h>
 #include <time.h>
+#include <stdio.h>
 
 /******** DIMENSIONES PANTALLA *********/
 #define SCR_WIDTH 1600 // ALTO  (X)
@@ -55,7 +56,7 @@ void drawBrownMeteor(float rotation);
 void drawCoins(Texture2D coinsTx, Vector2 coinPosition);
 void drawHearts();
 void vidas(int lives);
-void gameOverInterface(Texture2D background, int score);
+void gameOverInterface(Texture2D background, int score, int level);
 
 /******** DESARROLLO DE FUNCIONES *********/
 void Tutorial()
@@ -121,6 +122,8 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
 {
     if (*score >= 30 && *level == 1)
     {
+        // Limpiar todas las esferas en la pantalla
+        resetGame(playPosition);
         *level = 2;
         double startTime = GetTime(); // Obtener el tiempo de inicio
 
@@ -128,18 +131,37 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
         {
             // Limpiar la pantalla y mostrar "Nivel 2" en el centro
             ClearBackground(BLACK);
-            DrawText("Nivel 2", SCR_WIDTH / 2 - MeasureText("Nivel 2", 200) / 2, SCR_HEIGHT / 2 - 200, 200, WHITE);
+            DrawText("IMAGEN DE SINEMATICA", SCR_WIDTH / 2 - MeasureText("IMAGEN DE SINEMATICA", 60) / 2, SCR_HEIGHT / 2 - 200, 60, WHITE);
+            DrawText("DE NIVEL 2", SCR_WIDTH / 2 - MeasureText("DE NIVEL 2", 60) / 2, SCR_HEIGHT / 2, 60, WHITE);
             // Actualizar la pantalla
             ClearBackground(BLACK);
 
             EndDrawing();
         }
+        // Esperar hasta que se presione la tecla espaciadora
+        while (!IsKeyPressed(KEY_S))
+        {
+            // Limpiar la pantalla y mostrar "Presiona ESPACIO" en el centro
+            DrawText("(S) SKIP", SCR_WIDTH - (100) - MeasureText("(S) SKIP", 50)-(100), SCR_HEIGHT - 50, 50, WHITE);
+            // Actualizar la pantalla
+            EndDrawing();
+        }
 
+        double startTime2 = GetTime(); // Obtener el tiempo de inicio
+
+        while (GetTime() - startTime2 < *milliseconds / 1000.0)
+        {
+            // Limpiar la pantalla y mostrar "Nivel 2" en el centro
+            ClearBackground(BLACK);
+            DrawText("NIVEL 2", SCR_WIDTH / 2 - MeasureText("NIVEL 2", 200) / 2, SCR_HEIGHT / 2 - 200, 200, WHITE);
+            // Actualizar la pantalla
+
+            EndDrawing();
+        }
+        ClearBackground(BLACK);
         *elapsedTime = 0.0f;
         *score = 0;
         *lives = 5;
-        // Limpiar todas las esferas en la pantalla
-        resetGame(playPosition);
     }
 
     // Verificar si el jugador ha alcanzado el nivel 3
@@ -306,7 +328,7 @@ void vidas(int lives)
         DrawText(" - ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón vacío
     }                                                                          //  Horizontal, Espaciado,         Altura, Tamaño
 }
-void gameOverInterface(Texture2D background, int score)
+void gameOverInterface(Texture2D background, int score, int level)
 {
     // Fondo gameover
     DrawTexture(background, 0, 0, WHITE);
@@ -316,7 +338,8 @@ void gameOverInterface(Texture2D background, int score)
     // Dibujar ventana de "Game Over"
     DrawText("GAME OVER", width / 2 + 2 - MeasureText("GAME OVER", 130) / 2 + 2, height / 2 - 218, 130, WHITE);
     DrawText("GAME OVER", width / 2 - MeasureText("GAME OVER", 130) / 2, height / 2 - 220, 130, RED);
-    DrawText(TextFormat("Score: %04i", score), width / 2 - MeasureText(TextFormat("Score: %04i", score), 70) / 2, height / 2 - 50, 70, RAYWHITE);
+    DrawText(TextFormat("Score: %04i", score), width / 2 - MeasureText(TextFormat("Score: %04i", score), 70) / 2, height / 2 +10, 70, RAYWHITE);
+    DrawText(TextFormat("LEVEL: %1i", level), width / 2 - MeasureText(TextFormat("LEVEL: %1i", level), 70) / 2, height / 2 - 50, 70, RAYWHITE);
     DrawText("(ENTER) Play Again", width / 2 + 2 - MeasureText("(ENTER) Play Again", 70) / 2 + 2, height / 2 + 130 + 2, 70, LIME);
     DrawText("(ENTER) Play Again", width / 2 - MeasureText("(ENTER) Play Again", 70) / 2, height / 2 + 130, 70, GREEN);
     DrawText("(Q) Back to menu", width / 2 + 2 - MeasureText("(Q) Back to menu", 70) / 2 + 2, height / 2 + 200 + 2, 70, WHITE);

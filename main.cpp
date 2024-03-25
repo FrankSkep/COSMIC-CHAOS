@@ -273,12 +273,11 @@ int main(void)
                     UpdateMusicStream(gameover);
                     PlayMusicStream(gameover); // Reproducir musica gameover
 
-                    gameOverInterface(gameoverT, score); // Dibujar interfaz juego terminado
+                    gameOverInterface(gameoverT, score, level); // Dibujar interfaz juego terminado
 
                     // Reiniciar posicion de la nave, limpiar meteoros
                     resetGame(&playPosition);
 
-                    level = 1;
 
                     // Reiniciar el juego al presiona Enter
                     if (IsKeyDown(KEY_ENTER))
@@ -287,6 +286,7 @@ int main(void)
                         // Reinicia vidas y puntaje
                         lives = 5;
                         score = 0;
+                        level = 1;
                         gameOver = false;
                     }
                     // Vuelve al menu al presionar Q
