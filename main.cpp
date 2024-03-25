@@ -295,7 +295,7 @@ int main(void)
                         isPlaying = false;
                     }
                 }
-                Levels(&score, &level, &elapsedTime, &playPosition, &milliseconds);
+                Levels(&score, &level, &elapsedTime, &playPosition, &milliseconds, &lives);
 
                 DrawFPS(20, 20);
                 EndDrawing();

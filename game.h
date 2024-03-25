@@ -117,7 +117,7 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     drawHearts();
 }
 
-void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *milliseconds)
+void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *milliseconds, int *lives)
 {
     if (*score >= 30 && *level == 1)
     {
@@ -137,6 +137,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
 
         *elapsedTime = 0.0f;
         *score = 0;
+        *lives = 5;
         // Limpiar todas las esferas en la pantalla
         resetGame(playPosition);
     }
@@ -151,13 +152,14 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
         {
             // Limpiar la pantalla y mostrar "Nivel 2" en el centro
             ClearBackground(BLACK);
-            DrawText("Nivel 3", SCR_WIDTH / 2 - MeasureText("Nivel 2", 200) / 2, SCR_HEIGHT / 2, 200, WHITE);
+            DrawText("Nivel 3", SCR_WIDTH / 2 - MeasureText("Nivel 3", 200) / 2, SCR_HEIGHT / 2, 200, WHITE);
             // Actualizar la pantalla
             EndDrawing();
         }
 
         *elapsedTime = 0.0f;
         *score = 0;
+        *lives = 5;
         // Limpiar todas las esferas en la pantalla
         resetGame(playPosition);
     }
