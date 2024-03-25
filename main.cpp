@@ -67,6 +67,9 @@ int main(void)
         // Calcula y actualiza la posición del centro de la nave
         Vector2 shipCenter = {playPosition.x - shipTextures[currentFrame].width / 2, playPosition.y - shipTextures[currentFrame].height / 2};
 
+        // Calcula y actualiza la posición del centro de la moneda
+        Vector2 coinCenter = {coins->position.x - coinsTx[currentFrame].width / 2, coins->position.y - coinsTx[currentFrame].height / 2};
+
         if (istutorial)
         {
             Tutorial();
@@ -262,7 +265,7 @@ int main(void)
                 BeginDrawing();
 
                 // Dibuja interfaz y elementos de la partida
-                gameInterface(game, shipTextures[currentFrame], shipCenter, lives, score, rotation);
+                gameInterface(game, shipTextures[currentFrame], shipCenter, lives, score, rotation, coinsTx[currentFrame], coinCenter);
 
                 if (gameOver)
                 {

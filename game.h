@@ -42,7 +42,7 @@ Ball hearts[MAX_HEARTS];
 /******** PROTOTIPOS DE FUNCIONES *********/
 void Tutorial();
 void drawMainMenu(Texture2D background);
-void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation);
+void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation, Texture2D coins, Vector2 coinPosition);
 void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *milliseconds);
 void resetGame(Vector2 *playPosition);
 void InitGrayMeteor(Ball *ball);
@@ -52,7 +52,7 @@ void InitHearts(Ball *ball);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius);
 void drawGrayMeteor(float rotation);
 void drawBrownMeteor(float rotation);
-void drawCoins();
+void drawCoins(Texture2D coinsTx, Vector2 coinPosition);
 void drawHearts();
 void vidas(int lives);
 void gameOverInterface(Texture2D background, int score);
@@ -96,7 +96,7 @@ void drawMainMenu(Texture2D background) // PANTALLA DE MENU
     EndDrawing();
 }
 
-void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation)
+void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation, Texture2D coins, Vector2 coinPosition)
 {
     // Dibujar fondo
     DrawTexture(gamebg, 0, 0, WHITE);
@@ -113,7 +113,7 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     // Dibujar los objetos
     drawGrayMeteor(rotation);
     drawBrownMeteor(rotation);
-    drawCoins();
+    drawCoins(coins, coinPosition);
     drawHearts();
 }
 
@@ -264,14 +264,17 @@ void drawBrownMeteor(float rotation)
         }
     }
 }
-void drawCoins()
+
+
+
+void drawCoins(Texture2D coinsTx, Vector2 coinPosition)
 {
     // Dibujar esferas amarillas
     for (int i = 0; i < MAX_COINS; i++)
     {
         if (coins[i].active)
         {
-            DrawCircleV(coins[i].position, COINS_RADIUS, YELLOW);
+            DrawTextureV(coinsTx, coinPosition, WHITE);
         }
     }
 }
