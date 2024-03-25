@@ -44,9 +44,14 @@ int main(void)
             LoadTexture("images/coins/coin_04.png"),
             LoadTexture("images/coins/coin_05.png"),
             LoadTexture("images/coins/coin_06.png")};
+
     Texture2D heartsTx[] = 
     {
         LoadTexture("images/hearts/hearth_01.png"),
+        LoadTexture("images/hearts/hearth_01.png"),
+        LoadTexture("images/hearts/hearth_01.png"),
+        LoadTexture("images/hearts/hearth_02.png"),
+        LoadTexture("images/hearts/hearth_02.png"),
         LoadTexture("images/hearts/hearth_02.png")
     };
 
@@ -309,6 +314,7 @@ int main(void)
     {
         UnloadTexture(shipTextures[i]);
         UnloadTexture(coinsTx[i]);
+        UnloadTexture(heartsTx[i]);
     }
     UnloadTexture(game);
     UnloadTexture(gameoverT);
