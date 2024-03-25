@@ -4,7 +4,6 @@
 #include "raylib.h"
 #include <math.h>
 #include <time.h>
-#include <stdio.h>
 
 /******** DIMENSIONES PANTALLA *********/
 #define SCR_WIDTH 1600 // ALTO  (X)
@@ -43,7 +42,7 @@ Ball hearts[MAX_HEARTS];
 /******** PROTOTIPOS DE FUNCIONES *********/
 void Tutorial();
 void drawMainMenu(Texture2D background);
-void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation, Texture2D coins, Vector2 coinPosition);
+void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation, Texture2D coins);
 void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *milliseconds);
 void resetGame(Vector2 *playPosition);
 void InitGrayMeteor(Ball *ball);
@@ -53,7 +52,7 @@ void InitHearts(Ball *ball);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius);
 void drawGrayMeteor(float rotation);
 void drawBrownMeteor(float rotation);
-void drawCoins(Texture2D coinsTx, Vector2 coinPosition);
+void drawCoins(Texture2D coinsTx);
 void drawHearts();
 void vidas(int lives);
 void gameOverInterface(Texture2D background, int score, int level);
@@ -102,7 +101,7 @@ void drawMainMenu(Texture2D background) // PANTALLA DE MENU
     EndDrawing();
 }
 
-void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation, Texture2D coins, Vector2 coinPosition)
+void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation, Texture2D coins)
 {
     // Dibujar fondo
     DrawTexture(gamebg, 0, 0, WHITE);
@@ -119,7 +118,7 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     // Dibujar los objetos
     drawGrayMeteor(rotation);
     drawBrownMeteor(rotation);
-    drawCoins(coins, coinPosition);
+    drawCoins(coins);
     drawHearts();
 }
 
@@ -296,14 +295,16 @@ void drawBrownMeteor(float rotation)
     }
 }
 
-void drawCoins(Texture2D coinsTx, Vector2 coinPosition)
+void drawCoins(Texture2D coinsTx)
 {
     // Dibujar esferas amarillas
     for (int i = 0; i < MAX_COINS; i++)
     {
         if (coins[i].active)
         {
-            DrawTextureV(coinsTx, coinPosition, WHITE);
+            // Calcular la posición del centro de la moneda
+            Vector2 coinCenter = {coins[i].position.x - coinsTx.width / 2, coins[i].position.y - coinsTx.height / 2};
+            DrawTextureV(coinsTx, coinCenter, WHITE);
         }
     }
 }
