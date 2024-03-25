@@ -27,14 +27,18 @@ int main(void)
     // Fondo gameover
     Texture2D gameoverT = LoadTexture("images/backgrounds/gameover.png");
     // Nave
+    Texture2D ship1 = LoadTexture("images/ship/ship01.png");
+    Texture2D ship2 = LoadTexture("images/ship/ship02.png");
+    Texture2D ship3 = LoadTexture("images/ship/ship03.png");
     Texture2D shipTextures[] =
         {
-            LoadTexture("images/ship/ship01.png"),
-            LoadTexture("images/ship/ship01.png"),
-            LoadTexture("images/ship/ship02.png"),
-            LoadTexture("images/ship/ship02.png"),
-            LoadTexture("images/ship/ship03.png"),
-            LoadTexture("images/ship/ship03.png")};
+            ship1,
+            ship1,
+            ship2,
+            ship2,
+            ship3,
+            ship3};
+
     // Monedas
     Texture2D coinsTx[] =
         {
@@ -45,15 +49,17 @@ int main(void)
             LoadTexture("images/coins/coin_05.png"),
             LoadTexture("images/coins/coin_06.png")};
 
-    Texture2D heartsTx[] = 
-    {
-        LoadTexture("images/hearts/hearth_01.png"),
-        LoadTexture("images/hearts/hearth_01.png"),
-        LoadTexture("images/hearts/hearth_01.png"),
-        LoadTexture("images/hearts/hearth_02.png"),
-        LoadTexture("images/hearts/hearth_02.png"),
-        LoadTexture("images/hearts/hearth_02.png")
-    };
+    // Corazones
+    Texture2D heart1 = LoadTexture("images/hearts/hearth_01.png");
+    Texture2D heart2 = LoadTexture("images/hearts/hearth_02.png");
+    Texture2D heartsTx[] =
+        {
+            heart1,
+            heart1,
+            heart1,
+            heart2,
+            heart2,
+            heart2};
 
     /***** Ajustes texturas cambiantes *****/
     int currentFrame = 0; // indice de la textura actual
@@ -313,14 +319,21 @@ int main(void)
     for (int i = 0; i < 7; i++)
     {
         UnloadTexture(shipTextures[i]);
-        UnloadTexture(coinsTx[i]);
-        UnloadTexture(heartsTx[i]);
     }
+    UnloadTexture(ship1);
+    UnloadTexture(ship2);
+    UnloadTexture(ship3);
+    UnloadTexture(heart1);
+    UnloadTexture(heart2);
+
     UnloadTexture(game);
     UnloadTexture(gameoverT);
     UnloadTexture(menu);
+
+    // Descarga sonidos
     UnloadMusicStream(gameMusic);
     UnloadMusicStream(gameover);
+    UnloadSound(soundcoin);
 
     CloseAudioDevice();
     CloseWindow();
