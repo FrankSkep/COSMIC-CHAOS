@@ -21,17 +21,28 @@ int main(void)
 
     /************** Texturas **************/
     // Fondo menu principal;
-    Texture2D menu = LoadTexture("resources/images/menu.png");
+    Texture2D menu = LoadTexture("resources/images/backgrounds/menu.png");
     // Fondo partida
-    Texture2D game = LoadTexture("resources/images/game.png");
-    // Fondo gameover
-    Texture2D gameoverT = LoadTexture("resources/images/gameover.png");
+    Texture2D game = LoadTexture("resources/images/backgrounds/game.png");
+    // Fondo gameovership/
+    Texture2D gameoverT = LoadTexture("resources/images/backgrounds/gameover.png");
     // Nave
     Texture2D shipTextures[] =
         {
-            LoadTexture("resources/images/nave_01.png"),
-            LoadTexture("resources/images/nave_02.png"),
-            LoadTexture("resources/images/nave_03.png")};
+            LoadTexture("resources/images/ship/ship01.png"),
+            LoadTexture("resources/images/ship/ship02.png"),
+            LoadTexture("resources/images/ship/ship03.png")};
+
+    Texture2D coinsTx[] = 
+    {
+        LoadTexture("resources/images/coins/coin1.png"),
+        LoadTexture("resources/images/coins/coin2.png"),
+        LoadTexture("resources/images/coins/coin3.png"),
+        LoadTexture("resources/images/coins/coin4.png"),
+        LoadTexture("resources/images/coins/coin5.png"),
+        LoadTexture("resources/images/coins/coin6.png"),
+        LoadTexture("resources/images/coins/coin7.png")
+    };
 
     /***** Ajustes textura nave *****/
     int currentFrame = 0; // indice de la textura actual
