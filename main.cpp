@@ -31,17 +31,21 @@ int main(void)
         {
             LoadTexture("images/ship/ship01.png"),
             LoadTexture("images/ship/ship02.png"),
+            LoadTexture("images/ship/ship03.png"),
+            LoadTexture("images/ship/ship02.png"),
+            LoadTexture("images/ship/ship01.png"),
+            LoadTexture("images/ship/ship02.png"),
             LoadTexture("images/ship/ship03.png")};
 
     Texture2D coinsTx[] =
         {
-            LoadTexture("images/coins/coin1.png"),
-            LoadTexture("images/coins/coin2.png"),
-            LoadTexture("images/coins/coin3.png"),
-            LoadTexture("images/coins/coin4.png"),
-            LoadTexture("images/coins/coin5.png"),
-            LoadTexture("images/coins/coin6.png"),
-            LoadTexture("images/coins/coin7.png")};
+            LoadTexture("images/coins/coin_01.png"),
+            LoadTexture("images/coins/coin_02.png"),
+            LoadTexture("images/coins/coin_03.png"),
+            LoadTexture("images/coins/coin_04.png"),
+            LoadTexture("images/coins/coin_05.png"),
+            LoadTexture("images/coins/coin_06.png"),
+            LoadTexture("images/coins/coin_07.png")};
 
     /***** Ajustes textura nave *****/
     int currentFrame = 0; // indice de la textura actual
@@ -96,7 +100,7 @@ int main(void)
                 // pasado el tiempo, cambia la imagen de la nave
                 if (frameTimeCounter >= frameSpeed)
                 {
-                    currentFrame = (currentFrame + 1) % 3; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
+                    currentFrame = (currentFrame + 1) % 7; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
                     frameTimeCounter = 0.0f;               // Reiniciar el contador de tiempo
                 }
 
@@ -299,6 +303,7 @@ int main(void)
     for (int i = 0; i < 3; i++)
     {
         UnloadTexture(shipTextures[i]);
+        UnloadTexture(coinsTx[i]);
     }
     UnloadTexture(game);
     UnloadTexture(gameoverT);
