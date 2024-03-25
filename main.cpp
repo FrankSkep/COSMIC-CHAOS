@@ -20,11 +20,11 @@ int main(void)
     SetTargetFPS(75);
 
     /************** Texturas **************/
-    // Fondo menu principal;
+    // Fondo menu principal
     Texture2D menu = LoadTexture("images/backgrounds/menu.png");
     // Fondo partida
     Texture2D game = LoadTexture("images/backgrounds/game.png");
-    // Fondo gameovership/
+    // Fondo gameover
     Texture2D gameoverT = LoadTexture("images/backgrounds/gameover.png");
     // Nave
     Texture2D shipTextures[] =
@@ -35,7 +35,7 @@ int main(void)
             LoadTexture("images/ship/ship02.png"),
             LoadTexture("images/ship/ship03.png"),
             LoadTexture("images/ship/ship03.png")};
-
+    // Monedas
     Texture2D coinsTx[] =
         {
             LoadTexture("images/coins/coin_01.png"),
@@ -45,7 +45,7 @@ int main(void)
             LoadTexture("images/coins/coin_05.png"),
             LoadTexture("images/coins/coin_06.png")};
 
-    /***** Ajustes textura nave *****/
+    /***** Ajustes texturas cambiantes *****/
     int currentFrame = 0; // indice de la textura actual
     float frameTimeCounter = 0.0f;
     float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
@@ -75,7 +75,7 @@ int main(void)
         }
         else
         {
-            if (!isPlaying) // Si isPlaying es falso, manda a menu principal
+            if (!isPlaying) // Menu principal
             {
                 drawMainMenu(menu);        // Dibuja menu principal
                 StopMusicStream(gameover); // Detiene musica gameover
