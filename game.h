@@ -55,14 +55,14 @@ void InitBrownMeteor(Ball *ball);
 void InitCoin(Ball *ball);
 void InitHearts(Ball *ball);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius);
-void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *milliseconds);
+void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *milliseconds, int *lives);
 void resetGame(Vector2 *playPosition);
 
 /* DIBUJO DE OBJETOS */
 void drawGrayMeteor(float rotation);
 void drawBrownMeteor(float rotation);
 void drawCoins(Texture2D coinsTx);
-void drawHearts();
+void drawHearts(Texture2D heartsTx);
 
 /************** DESARROLLO DE FUNCIONES **************/
 
@@ -142,7 +142,7 @@ void gameOverInterface(Texture2D background, int score, int level)
 }
 
 // Dibuja la interfaz de la partida
-void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation, Texture2D coins)
+void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation, Texture2D coins, Texture2D hearts)
 {
     // Dibujar fondo
     DrawTexture(gamebg, 0, 0, WHITE);
@@ -160,7 +160,7 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     drawGrayMeteor(rotation);
     drawBrownMeteor(rotation);
     drawCoins(coins);
-    drawHearts();
+    drawHearts(hearts);
 }
 
 // Dibuja las vidas restantes
@@ -347,7 +347,7 @@ void drawBrownMeteor(float rotation)
 {
     // Velocidad de rotacion
     rotation += 2.5f;
-    
+
     for (int i = 0; i < MAX_BROWN_METEORS / 2; i++)
     {
         if (brownMeteors[i].active)
@@ -374,13 +374,14 @@ void drawCoins(Texture2D coinsTx)
 }
 
 // Dibujar esferas Rojas
-void drawHearts()
+void drawHearts(Texture2D heartsTx)
 {
     for (int i = 0; i < MAX_HEARTS; i++)
     {
         if (hearts[i].active)
         {
-            DrawCircleV(hearts[i].position, HEARTS_RADIUS, RED);
+            Vector2 heartCenter = {(float)((int)hearts[i].position.x - heartsTx.width / 2), (float)((int)hearts[i].position.y - heartsTx.height / 2)};
+            DrawTextureV(heartsTx, heartCenter, RED);
         }
     }
 }

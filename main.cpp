@@ -44,6 +44,11 @@ int main(void)
             LoadTexture("images/coins/coin_04.png"),
             LoadTexture("images/coins/coin_05.png"),
             LoadTexture("images/coins/coin_06.png")};
+    Texture2D heartsTx[] = 
+    {
+        LoadTexture("images/hearts/hearth_01.png"),
+        LoadTexture("images/hearts/hearth_02.png")
+    };
 
     /***** Ajustes texturas cambiantes *****/
     int currentFrame = 0; // indice de la textura actual
@@ -260,7 +265,7 @@ int main(void)
                 BeginDrawing();
 
                 // Dibuja interfaz y elementos de la partida
-                gameInterface(game, shipTextures[currentFrame], shipCenter, lives, score, rotation, coinsTx[currentFrame]);
+                gameInterface(game, shipTextures[currentFrame], shipCenter, lives, score, rotation, coinsTx[currentFrame], heartsTx[currentFrame]);
 
                 if (gameOver)
                 {
