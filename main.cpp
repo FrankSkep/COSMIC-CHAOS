@@ -75,7 +75,7 @@ int main(void)
         }
         else
         {
-            if (!isPlaying) // Si isPlaying es falso, manda a menu principal
+            if (!isPlaying) // Menu principal
             {
                 drawMainMenu(menu);        // Dibuja menu principal
                 StopMusicStream(gameover); // Detiene musica gameover
