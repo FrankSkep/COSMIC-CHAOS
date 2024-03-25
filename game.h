@@ -78,21 +78,26 @@ void drawMainMenu(Texture2D background) // PANTALLA DE MENU
 
     DrawTexture(background, 0, 0, WHITE);
 
-    DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 - MeasureText("COSMIC-CHAOS", 180) / 2, 200, 186, DARKBLUE);
-    DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 6 - MeasureText("COSMIC-CHAOS", 180) / 2 + 3, 195, 183, DARKBLUE);
-    DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 12 - MeasureText("COSMIC-CHAOS", 180) / 2 + 6, 190, 180, BLUE);
+    DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 - MeasureText("COSMIC-CHAOS", 180) / 2, 150, 186, DARKBLUE);
+    DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 6 - MeasureText("COSMIC-CHAOS", 180) / 2 + 3, 145, 183, DARKBLUE);
+    DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 12 - MeasureText("COSMIC-CHAOS", 180) / 2 + 6, 140, 180, BLUE);
 
     int sizeStartTxt = MeasureText("(Enter) Start", 60);
-    int sizeTuto = MeasureText("(A) Como jugar", 60);
+    int sizeTuto = MeasureText("(A) How to play", 60);
     int sizeExitText = MeasureText("(ESC) Exit", 60);
-    DrawText("(Enter) Start", SCR_WIDTH / 2 + 2 - sizeStartTxt / 2 + 2, SCR_HEIGHT / 2 + 82, 60, GREEN);
-    DrawText("(Enter) Start", SCR_WIDTH / 2 - sizeStartTxt / 2, SCR_HEIGHT / 2 + 80, 60, LIME);
+    int aboutTxt = MeasureText("(E) About the game", 60);
 
-    DrawText("(A) Como jugar", SCR_WIDTH / 2 + 2 - sizeTuto / 2 + 2, SCR_HEIGHT / 2 + 152, 60, DARKPURPLE);
-    DrawText("(A) Como jugar", SCR_WIDTH / 2 - sizeTuto / 2, SCR_HEIGHT / 2 + 150, 60, PURPLE);
+    DrawText("(ENTER) Start", SCR_WIDTH / 2 + 2 - sizeStartTxt / 2 + 2, SCR_HEIGHT / 2 + 52, 60, GREEN);
+    DrawText("(ENTER) Start", SCR_WIDTH / 2 - sizeStartTxt / 2, SCR_HEIGHT / 2 + 50, 60, LIME);
 
-    DrawText("(ESC) Exit", SCR_WIDTH / 2 + 2 - sizeExitText / 2 + 2, SCR_HEIGHT / 2 + 224, 60, WHITE);
-    DrawText("(ESC) Exit", SCR_WIDTH / 2 - sizeExitText / 2, SCR_HEIGHT / 2 + 222, 60, YELLOW);
+    DrawText("(A) How to play", SCR_WIDTH / 2 + 2 - sizeTuto / 2 + 2, SCR_HEIGHT / 2 + 132, 60, DARKPURPLE);
+    DrawText("(A) How to play", SCR_WIDTH / 2 - sizeTuto / 2, SCR_HEIGHT / 2 + 130, 60, PURPLE);
+
+    DrawText("(E) About the game", SCR_WIDTH / 2 + 2 - aboutTxt / 2 + 2, SCR_HEIGHT / 2 + 212, 60, DARKGRAY);
+    DrawText("(E) About the game", SCR_WIDTH / 2 - aboutTxt / 2, SCR_HEIGHT / 2 + 210, 60, YELLOW);
+
+    DrawText("(ESC) Exit", SCR_WIDTH / 2 + 2 - sizeExitText / 2 + 2, SCR_HEIGHT / 2 + 292, 60, MAROON);
+    DrawText("(ESC) Exit", SCR_WIDTH / 2 - sizeExitText / 2, SCR_HEIGHT / 2 + 290, 60, RED);
 
     EndDrawing();
 }
@@ -142,7 +147,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
         while (!IsKeyPressed(KEY_S))
         {
             // Limpiar la pantalla y mostrar "Presiona ESPACIO" en el centro
-            DrawText("(S) SKIP", SCR_WIDTH - (100) - MeasureText("(S) SKIP", 50)-(100), SCR_HEIGHT - 50, 50, WHITE);
+            DrawText("(S) SKIP", SCR_WIDTH - (100) - MeasureText("(S) SKIP", 50) - (100), SCR_HEIGHT - 50, 50, WHITE);
             // Actualizar la pantalla
             EndDrawing();
         }
@@ -291,8 +296,6 @@ void drawBrownMeteor(float rotation)
     }
 }
 
-
-
 void drawCoins(Texture2D coinsTx, Vector2 coinPosition)
 {
     // Dibujar esferas amarillas
@@ -338,14 +341,17 @@ void gameOverInterface(Texture2D background, int score, int level)
     // Dibujar ventana de "Game Over"
     DrawText("GAME OVER", width / 2 + 2 - MeasureText("GAME OVER", 130) / 2 + 2, height / 2 - 218, 130, WHITE);
     DrawText("GAME OVER", width / 2 - MeasureText("GAME OVER", 130) / 2, height / 2 - 220, 130, RED);
-    DrawText(TextFormat("Score: %04i", score), width / 2 - MeasureText(TextFormat("Score: %04i", score), 70) / 2, height / 2 +10, 70, RAYWHITE);
+    DrawText(TextFormat("Score: %04i", score), width / 2 - MeasureText(TextFormat("Score: %04i", score), 70) / 2, height / 2 + 10, 70, RAYWHITE);
     DrawText(TextFormat("LEVEL: %1i", level), width / 2 - MeasureText(TextFormat("LEVEL: %1i", level), 70) / 2, height / 2 - 50, 70, RAYWHITE);
-    DrawText("(ENTER) Play Again", width / 2 + 2 - MeasureText("(ENTER) Play Again", 70) / 2 + 2, height / 2 + 130 + 2, 70, LIME);
+
+    DrawText("(ENTER) Play Again", width / 2 + 2 - MeasureText("(ENTER) Play Again", 70) / 2 + 2, height / 2 + 132, 70, LIME);
     DrawText("(ENTER) Play Again", width / 2 - MeasureText("(ENTER) Play Again", 70) / 2, height / 2 + 130, 70, GREEN);
-    DrawText("(Q) Back to menu", width / 2 + 2 - MeasureText("(Q) Back to menu", 70) / 2 + 2, height / 2 + 200 + 2, 70, WHITE);
-    DrawText("(Q) Back to menu", width / 2 - MeasureText("(Q) Back to menu", 70) / 2, height / 2 + 200, 70, MAGENTA);
-    DrawText("(Esc) Exit.", width / 2 + 2 - MeasureText("(Q) Exit", 90) / 2 + 2, height / 2 + 270 + 2, 70, WHITE);
-    DrawText("(Esc) Exit.", width / 2 - MeasureText("(Q) Exit", 90) / 2, height / 2 + 270, 70, RED);
+
+    DrawText("(Q) Back to menu", width / 2 + 2 - MeasureText("(Q) Back to menu", 70) / 2 + 2, height / 2 + 212, 70, DARKPURPLE);
+    DrawText("(Q) Back to menu", width / 2 - MeasureText("(Q) Back to menu", 70) / 2, height / 2 + 210, 70, MAGENTA);
+
+    DrawText("(Esc) Exit.", width / 2 + 2 - MeasureText("(Q) Exit", 90) / 2 + 2, height / 2 + 292, 70, RED);
+    DrawText("(Esc) Exit.", width / 2 - MeasureText("(Q) Exit", 90) / 2, height / 2 + 290, 70, MAROON);
 }
 
 #endif

@@ -278,7 +278,6 @@ int main(void)
                     // Reiniciar posicion de la nave, limpiar meteoros
                     resetGame(&playPosition);
 
-
                     // Reiniciar el juego al presiona Enter
                     if (IsKeyDown(KEY_ENTER))
                     {
