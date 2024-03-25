@@ -1,4 +1,4 @@
-#include "src/game.h"
+#include "game.h"
 
 int main(void)
 {
@@ -21,28 +21,27 @@ int main(void)
 
     /************** Texturas **************/
     // Fondo menu principal;
-    Texture2D menu = LoadTexture("resources/images/backgrounds/menu.png");
+    Texture2D menu = LoadTexture("images/backgrounds/menu.png");
     // Fondo partida
-    Texture2D game = LoadTexture("resources/images/backgrounds/game.png");
+    Texture2D game = LoadTexture("images/backgrounds/game.png");
     // Fondo gameovership/
-    Texture2D gameoverT = LoadTexture("resources/images/backgrounds/gameover.png");
+    Texture2D gameoverT = LoadTexture("images/backgrounds/gameover.png");
     // Nave
     Texture2D shipTextures[] =
         {
-            LoadTexture("resources/images/ship/ship01.png"),
-            LoadTexture("resources/images/ship/ship02.png"),
-            LoadTexture("resources/images/ship/ship03.png")};
+            LoadTexture("images/ship/ship01.png"),
+            LoadTexture("images/ship/ship02.png"),
+            LoadTexture("images/ship/ship03.png")};
 
-    Texture2D coinsTx[] = 
-    {
-        LoadTexture("resources/images/coins/coin1.png"),
-        LoadTexture("resources/images/coins/coin2.png"),
-        LoadTexture("resources/images/coins/coin3.png"),
-        LoadTexture("resources/images/coins/coin4.png"),
-        LoadTexture("resources/images/coins/coin5.png"),
-        LoadTexture("resources/images/coins/coin6.png"),
-        LoadTexture("resources/images/coins/coin7.png")
-    };
+    Texture2D coinsTx[] =
+        {
+            LoadTexture("images/coins/coin1.png"),
+            LoadTexture("images/coins/coin2.png"),
+            LoadTexture("images/coins/coin3.png"),
+            LoadTexture("images/coins/coin4.png"),
+            LoadTexture("images/coins/coin5.png"),
+            LoadTexture("images/coins/coin6.png"),
+            LoadTexture("images/coins/coin7.png")};
 
     /***** Ajustes textura nave *****/
     int currentFrame = 0; // indice de la textura actual
@@ -51,9 +50,9 @@ int main(void)
 
     /************** Inicializacion audio **************/
     InitAudioDevice();
-    Music gameMusic = LoadMusicStream("resources/sounds/music.mp3");
-    Music gameover = LoadMusicStream("resources/sounds/gameover.mp3");
-    Sound soundcoin = LoadSound("resources/sounds/coin.wav");
+    Music gameMusic = LoadMusicStream("sounds/music.mp3");
+    Music gameover = LoadMusicStream("sounds/gameover.mp3");
+    Sound soundcoin = LoadSound("sounds/coin.wav");
 
     // Posicion jugador
     Vector2 playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
