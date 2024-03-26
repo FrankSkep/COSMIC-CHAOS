@@ -319,10 +319,10 @@ int main(void)
         }
     }
 
-    // Descargar texturas
+    // Descarga texturas
     for (int i = 0; i < 7; i++)
     {
-        UnloadTexture(shipTextures[i]);
+        UnloadTexture(coinsTx[i]);
     }
     UnloadTexture(ship1);
     UnloadTexture(ship2);
