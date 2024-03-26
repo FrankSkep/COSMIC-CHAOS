@@ -55,7 +55,8 @@ void InitBrownMeteor(Ball *ball);
 void InitCoin(Ball *ball);
 void InitHearts(Ball *ball);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius);
-void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *milliseconds, int *lives);
+void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
+void clock(int *totalseconds, int *minutesT, int *econdsT);
 void resetGame(Vector2 *playPosition);
 
 /* DIBUJO DE OBJETOS */
@@ -217,7 +218,7 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
 }
 
 // Manejo de niveles
-void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *milliseconds, int *lives)
+void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives)
 {
     if (*score >= 30 && *level == 1)
     {
@@ -226,7 +227,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
         *level = 2;
         double startTime = GetTime(); // Obtener el tiempo de inicio
 
-        while (GetTime() - startTime < *milliseconds / 1000.0)
+        while (GetTime() - startTime < *seconds)
         {
             // Limpiar la pantalla y mostrar "Nivel 2" en el centro
             ClearBackground(BLACK);
@@ -237,7 +238,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
 
             EndDrawing();
         }
-        // Esperar hasta que se presione la tecla espaciadora
+        // Esperar hasta que se presione la tecla Skip
         while (!IsKeyPressed(KEY_S))
         {
             // Limpiar la pantalla y mostrar "Presiona ESPACIO" en el centro
@@ -248,7 +249,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
 
         double startTime2 = GetTime(); // Obtener el tiempo de inicio
 
-        while (GetTime() - startTime2 < *milliseconds / 1000.0)
+        while (GetTime() - startTime2 < *seconds)
         {
             // Limpiar la pantalla y mostrar "Nivel 2" en el centro
             ClearBackground(BLACK);
@@ -269,7 +270,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
         *level = 3;
         double startTime = GetTime(); // Obtener el tiempo de inicio
 
-        while (GetTime() - startTime < *milliseconds / 1000.0)
+        while (GetTime() - startTime < *seconds)
         {
             // Limpiar la pantalla y mostrar "Nivel 2" en el centro
             ClearBackground(BLACK);
@@ -284,6 +285,19 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
         // Limpiar todas las esferas en la pantalla
         resetGame(playPosition);
     }
+}
+
+// TIEMPO TRASCURRIDO
+void clock(int *totalseconds, int *minutesT, int *secondsT)
+{
+    // Actualizar lógica del juego
+    double timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
+    *totalseconds = (int)timeseconds;
+    *minutesT = *totalseconds / 60;
+    *secondsT = *totalseconds % 60;
+
+    // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
+    DrawText(TextFormat("%02d:%02d", *minutesT, *secondsT), 50, 50, 100, WHITE);
 }
 
 // Limpiar elementos y posicion jugador

@@ -14,7 +14,10 @@ int main(void)
     int score = 0;                    // Inicio del puntaje
     int lives = 5;                    // Vidas Iniciales
     int level = 1;                    // Nivel inicial
-    int milliseconds = 2000;
+    int seconds = 1.00;               // espera entre niveles 
+    int totalseconds = 0;  // -------
+    int minutesT = 0;      // CLOCK  
+    int secondsT = 0;      // -------
 
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.12");
     SetTargetFPS(75);
@@ -274,6 +277,7 @@ int main(void)
 
                 /********************* DIBUJO *********************/
                 BeginDrawing();
+                clock(&totalseconds, &minutesT, &secondsT);
 
                 // Dibuja interfaz y elementos de la partida
                 gameInterface(game, shipTextures[currentFrame], shipCenter, lives, score, rotation, coinsTx[currentFrame], heartsTx[currentFrame]);
@@ -307,7 +311,7 @@ int main(void)
                         isPlaying = false;
                     }
                 }
-                Levels(&score, &level, &elapsedTime, &playPosition, &milliseconds, &lives);
+                Levels(&score, &level, &elapsedTime, &playPosition, &seconds, &lives);
 
                 DrawFPS(20, 20);
                 EndDrawing();
