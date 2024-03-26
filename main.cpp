@@ -18,6 +18,7 @@ int main(void)
     int totalseconds = 0;  // -------
     int minutesT = 0;      // CLOCK  
     int secondsT = 0;      // -------
+    double timeseconds=0;
 
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.12");
     SetTargetFPS(75);
@@ -101,6 +102,7 @@ int main(void)
 
                 if (IsKeyPressed(KEY_ENTER))
                 {
+                    secondsT=0;
                     isPlaying = true;
                 }
                 if (IsKeyPressed(KEY_A))
@@ -125,7 +127,8 @@ int main(void)
                 rotation += 1.5f;
 
                 if (!gameOver)
-                {
+                {   
+
                     StopMusicStream(gameover);  // Detiene musica de gameover
                     PlayMusicStream(gameMusic); // Reproduce musica de la partida
 
@@ -274,10 +277,10 @@ int main(void)
                         }
                     }
                 }
+                // clock(&totalseconds, &minutesT, &secondsT);
 
                 /********************* DIBUJO *********************/
                 BeginDrawing();
-                clock(&totalseconds, &minutesT, &secondsT);
 
                 // Dibuja interfaz y elementos de la partida
                 gameInterface(game, shipTextures[currentFrame], shipCenter, lives, score, rotation, coinsTx[currentFrame], heartsTx[currentFrame]);
@@ -304,6 +307,7 @@ int main(void)
                         score = 0;
                         level = 1;
                         gameOver = false;
+                        timeseconds=0;
                     }
                     // Vuelve al menu al presionar Q
                     if (IsKeyPressed(KEY_Q))
@@ -311,6 +315,16 @@ int main(void)
                         isPlaying = false;
                     }
                 }
+
+                timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
+
+                totalseconds = (int)timeseconds;
+                minutesT = totalseconds / 60;
+                secondsT = totalseconds % 60;
+
+                // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
+                DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
+        
                 Levels(&score, &level, &elapsedTime, &playPosition, &seconds, &lives);
 
                 DrawFPS(20, 20);

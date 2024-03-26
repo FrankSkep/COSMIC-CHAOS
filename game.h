@@ -288,17 +288,16 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
 }
 
 // TIEMPO TRASCURRIDO
-void clock(int *totalseconds, int *minutesT, int *secondsT)
-{
-    // Actualizar lógica del juego
-    double timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
-    *totalseconds = (int)timeseconds;
-    *minutesT = *totalseconds / 60;
-    *secondsT = *totalseconds % 60;
+// void clock(int *totalseconds, int *minutesT, int *secondsT)
+// {
+//     double timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
+//     *totalseconds = (int)timeseconds;
+//     *minutesT = *totalseconds / 60;
+//     *secondsT = *totalseconds % 60;
 
-    // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
-    DrawText(TextFormat("%02d:%02d", *minutesT, *secondsT), 50, 50, 100, WHITE);
-}
+//     // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
+//     DrawText(TextFormat("%02d:%02d", *minutesT, *secondsT), 100, 100, 100, WHITE);
+// }
 
 // Limpiar elementos y posicion jugador
 void resetGame(Vector2 *playPosition)
