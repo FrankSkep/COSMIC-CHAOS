@@ -2,31 +2,34 @@
 
 int main(void)
 {
+    /*********** CONSTANTES ************/
+    const int playRadius = 45;        // Tamaño del jugador
+    const float playerSpeed = 15.0f;  // Velocidad del jugador
+    const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de meteoros
+
     /************ VARIABLES *************/
-    const int playRadius = 45;     // Tamaño del jugador
-    const float ballSpeed = 15.0f; // Velocidad del jugador
-    // -- ESTADOS DEL JUEGO--
+
+    // ---- ESTADOS DEL JUEGO----
     bool gameOver = false;  // Controla gameover
     bool howToPlay = false; // Controla cuando entra al tutorial
     bool isPlaying = false; // Determina si esta en juego
-    bool aboutGame = false;
-    // ----------------------
+    bool aboutGame = false; // Determina si esta en la pagina acerca de
+    // --------------------------------------------------------
     float elapsedTime = 0.0f;
-    const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de esferas verdes
-    float rotation = 0.0f;            // Rotacion de meteoros
-    int score = 0;                    // Inicio del puntaje
-    int lives = 5;                    // Vidas Iniciales
-    int level = 1;                    // Nivel inicial
-    int seconds = 1.00;               // espera entre niveles
-    int totalseconds = 0;             // -------
-    int minutesT = 0;                 // CLOCK
-    int secondsT = 0;                 // -------
+    float rotation = 0.0f; // Rotacion de meteoros
+    int score = 0;         // Inicio del puntaje
+    int lives = 5;         // Vidas Iniciales
+    int level = 1;         // Nivel inicial
+    int seconds = 1.00;    // espera entre niveles
+    int totalseconds = 0;  // -------
+    int minutesT = 0;      // CLOCK
+    int secondsT = 0;      // -------
     double timeseconds = 0;
 
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.12");
     SetTargetFPS(75);
 
-    /************** Texturas **************/
+    /************** Carga de texturas **************/
     // Fondo menu principal
     Texture2D menu = LoadTexture("images/backgrounds/menu.png");
     // Fondo partida
@@ -73,7 +76,7 @@ int main(void)
     float frameTimeCounter = 0.0f;
     float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
 
-    /************** Inicializacion audio **************/
+    /************** Carga de sonidos **************/
     InitAudioDevice();
     Music gameMusic = LoadMusicStream("sounds/music.mp3");
     Music gameover = LoadMusicStream("sounds/gameover.mp3");
@@ -91,7 +94,7 @@ int main(void)
         if (aboutGame) // Acerca de
         {
             aboutTheGame();
-            if (IsKeyPressed(KEY_Q))
+            if (IsKeyPressed(KEY_Q)) // Volver a menu principal
             {
                 aboutGame = false;
             }
@@ -101,7 +104,7 @@ int main(void)
             if (howToPlay) // Como jugar
             {
                 drawHowToPlay();
-                if (IsKeyPressed(KEY_Q))
+                if (IsKeyPressed(KEY_Q)) // Volver a menu principal
                 {
                     howToPlay = false;
                 }
@@ -113,16 +116,16 @@ int main(void)
                     drawMainMenu(menu);        // Dibuja menu principal
                     StopMusicStream(gameover); // Detiene musica gameover
 
-                    if (IsKeyPressed(KEY_ENTER))
+                    if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
                     {
                         secondsT = 0;
                         isPlaying = true;
                     }
-                    if (IsKeyPressed(KEY_A))
+                    if (IsKeyPressed(KEY_A)) // Ir a tutorial como jugar
                     {
                         howToPlay = true;
                     }
-                    if (IsKeyPressed(KEY_E))
+                    if (IsKeyPressed(KEY_E)) // Ir a acerca del juego
                     {
                         aboutGame = true;
                     }
@@ -154,19 +157,19 @@ int main(void)
                         // Control del jugador
                         if (IsKeyDown(KEY_RIGHT) && playPosition.x + playRadius < SCR_WIDTH)
                         {
-                            playPosition.x += ballSpeed;
+                            playPosition.x += playerSpeed;
                         }
                         if (IsKeyDown(KEY_LEFT) && playPosition.x - playRadius > 0)
                         {
-                            playPosition.x -= ballSpeed;
+                            playPosition.x -= playerSpeed;
                         }
                         if (IsKeyDown(KEY_UP) && playPosition.y - playRadius > 0) // Ajuste para la parte superior
                         {
-                            playPosition.y -= ballSpeed;
+                            playPosition.y -= playerSpeed;
                         }
                         if (IsKeyDown(KEY_DOWN) && playPosition.y + playRadius < SCR_HEIGHT) // Ajuste para la parte inferior
                         {
-                            playPosition.y += ballSpeed;
+                            playPosition.y += playerSpeed;
                         }
 
                         // Generar meteoros y objetos
