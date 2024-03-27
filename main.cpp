@@ -1,7 +1,7 @@
 #include "src/game.h"
 #include "src/resources.h"
 
-int main(void)
+int main()
 {
     /*********** CONSTANTES ************/
     const int playRadius = 45;        // Tamaño del jugador
@@ -74,7 +74,7 @@ int main(void)
             }
 
             // Velocidad de rotacion meteoros
-            rotation += 1.5f;
+            rotation += 2.5f;
 
             if (!gameOver)
             {
@@ -229,10 +229,10 @@ int main(void)
             }
             // clock(&totalseconds, &minutesT, &secondsT);
 
-            /********************* DIBUJO *********************/
+            /*------------------- DIBUJO -------------------*/
             BeginDrawing();
             // Dibuja interfaz y elementos de la partida
-            gameInterface(game, shipTextures[currentFrame], shipCenter, lives, score, rotation, coinsTx[currentFrame], heartsTx[currentFrame]);
+            gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &rotation);
 
             if (gameOver)
             {

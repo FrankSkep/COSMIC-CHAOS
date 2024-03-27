@@ -33,13 +33,13 @@ typedef struct
     bool active;
 } Ball;
 
-/******** INSTANCIAS NECESARIAS DE STRUCT 'Ball' *********/
+/*----------- INSTANCIAS NECESARIAS DE STRUCT 'Ball' -----------*/
 Ball grayMeteors[MAX_GRAY_METEORS];
 Ball brownMeteors[MAX_BROWN_METEORS];
 Ball coins[MAX_COINS];
 Ball hearts[MAX_HEARTS];
 
-/********************* PROTOTIPOS FUNCIONES **********************/
+/*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
 
 /* MENUS DEL JUEGO */
 void drawMainMenu(Texture2D background);
@@ -48,9 +48,9 @@ void aboutTheGame();
 void gameOverInterface(Texture2D *background, int *score, int *level);
 
 /* LOGICA DEL JUEGO */
-void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation, Texture2D coins);
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, int *lives, int *score, float *rotation);
 void logicaMenu(int *seconds, bool *isPlaying);
-void vidas(int lives);
+void vidas(int *lives);
 void InitGrayMeteor(Ball *grayMeteor);
 void InitBrownMeteor(Ball *brownMeteor);
 void InitCoin(Ball *coin);
@@ -61,13 +61,12 @@ void clock(int *totalseconds, int *minutesT, int *econdsT);
 void resetItems(Vector2 *playPosition);
 void resetStats(int *lives, int *score, int *level, double *timeSeconds);
 
-/* DIBUJO DE OBJETOS */
+/* DIBUJO */
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
-
-void drawGrayMeteor(float rotation);
-void drawBrownMeteor(float rotation);
-void drawCoins(Texture2D coinsTx);
-void drawHearts(Texture2D heartsTx);
+void drawGrayMeteor(float *rotation);
+void drawBrownMeteor(float *rotation);
+void drawCoins(Texture2D *coinsTx);
+void drawHearts(Texture2D *heartsTx);
 
 /************** DESARROLLO DE FUNCIONES **************/
 
@@ -131,13 +130,14 @@ void aboutTheGame()
         BeginDrawing();
 
         ClearBackground(BLACK);
-        DrawText("About the game", SCR_WIDTH / 2 - MeasureText("About the game", 100) / 2, 100, 100, RED);
-        DrawText("Developers:", SCR_WIDTH / 2 - MeasureText("Developers:", 50) / 2, SCR_HEIGHT / 2 - 180, 50, YELLOW);
-        DrawText("- Francisco Cornejo", SCR_WIDTH / 2 - MeasureText("- Francisco Cornejo", 50) / 2, SCR_HEIGHT / 2 - 110, 50, GREEN);
-        DrawText("- Diego Ibarra", SCR_WIDTH / 2 - MeasureText("- Diego Ibarra", 50) / 2, SCR_HEIGHT / 2 - 50, 50, GREEN);
-        DrawText("Sounds:", SCR_WIDTH / 2 - MeasureText("Sound:", 50) / 2, SCR_HEIGHT / 2 + 130, 50, GOLD);
-        DrawText("Unnamed", SCR_WIDTH / 2 - MeasureText("Unnamed", 50) / 2, SCR_HEIGHT / 2 + 190, 50, LIME);
-        DrawText("(Q) Back to menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GOLD);
+
+        drawTextCenter("About the game", 0, 100, 100, RED);
+        drawTextCenter("Developers:", 0, 270, 50, YELLOW);
+        drawTextCenter("- Francisco Cornejo", 0, 340, 50, GREEN);
+        drawTextCenter("- Diego Ibarra", 0, 400, 50, GREEN);
+        drawTextCenter("Sounds:", 0, 580, 50, GOLD);
+        drawTextCenter("Unnamed", 0, 640, 50, LIME);
+        drawTextCenter("(Q) Back to menu", 0, 800, 50, GOLD);
 
         EndDrawing();
     }
@@ -153,13 +153,11 @@ void gameOverInterface(Texture2D *background, int *score, int *level)
     drawTextCenter("GAME OVER", 2, 232, 130, WHITE);
     drawTextCenter("GAME OVER", 0, 230, 130, RED);
 
-    // DrawText("GAME OVER", SCR_WIDTH / 2 + 2 - MeasureText("GAME OVER", 130) / 2 + 2, SCR_HEIGHT / 2 - 218, 130, WHITE);
-    // DrawText("GAME OVER", SCR_WIDTH / 2 - MeasureText("GAME OVER", 130) / 2, SCR_HEIGHT / 2 - 220, 130, RED);
     DrawText(TextFormat("Score: %04i", *score), SCR_WIDTH / 2 - MeasureText(TextFormat("Score: %04i", *score), 70) / 2, SCR_HEIGHT / 2 + 10, 70, RAYWHITE);
     DrawText(TextFormat("LEVEL: %1i", *level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", *level), 70) / 2, SCR_HEIGHT / 2 - 50, 70, RAYWHITE);
 
-    DrawText("(ENTER) Play Again", SCR_WIDTH / 2 + 2 - MeasureText("(ENTER) Play Again", 70) / 2 + 2, SCR_HEIGHT / 2 + 132, 70, LIME);
-    DrawText("(ENTER) Play Again", SCR_WIDTH / 2 - MeasureText("(ENTER) Play Again", 70) / 2, SCR_HEIGHT / 2 + 130, 70, GREEN);
+    drawTextCenter("(ENTER) Play Again", 2, 582, 70, LIME);
+    drawTextCenter("(ENTER) Play Again", 0, 580, 70, GREEN);
 
     DrawText("(Q) Back to menu", SCR_WIDTH / 2 + 2 - MeasureText("(Q) Back to menu", 70) / 2 + 2, SCR_HEIGHT / 2 + 212, 70, DARKPURPLE);
     DrawText("(Q) Back to menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 70) / 2, SCR_HEIGHT / 2 + 210, 70, MAGENTA);
@@ -169,10 +167,10 @@ void gameOverInterface(Texture2D *background, int *score, int *level)
 }
 
 // Dibuja la interfaz de la partida
-void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation, Texture2D coins, Texture2D hearts)
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, int *lives, int *score, float *rotation)
 {
     // Dibujar fondo
-    DrawTexture(gamebg, 0, 0, WHITE);
+    DrawTexture(*gamebg, 0, 0, WHITE);
 
     // Dibujar vidas
     vidas(lives);
@@ -181,7 +179,7 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     DrawText(TextFormat("SCORE: %04i", score), SCR_WIDTH - 400, 20, 50, WHITE);
 
     // Dibujar jugador (nave)
-    DrawTextureV(ship, shipPosicion, WHITE);
+    DrawTextureV(*ship, *shipPosicion, WHITE);
 
     // Dibujar los objetos
     drawGrayMeteor(rotation);
@@ -208,14 +206,14 @@ void logicaMenu(int *seconds, bool *isPlaying)
 }
 
 // Dibuja las vidas restantes
-void vidas(int lives)
+void vidas(int *lives)
 {
-    DrawText(TextFormat("Vidas: %d", lives), SCR_WIDTH - 250, SCR_HEIGHT - 140, 50, WHITE);
-    for (int i = 0; i < lives; i++)
+    DrawText(TextFormat("Vidas: %d", *lives), SCR_WIDTH - 250, SCR_HEIGHT - 140, 50, WHITE);
+    for (int i = 0; i < *lives; i++)
     {
         DrawText("<3 ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón lleno
     }
-    for (int i = lives; i < 5; i++)
+    for (int i = *lives; i < 5; i++)
     {
         DrawText(" - ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón vacío
     }                                                                          //  Horizontal, Espaciado,         Altura, Tamaño
@@ -418,23 +416,20 @@ void resetStats(int *lives, int *score, int *level, double *timeSeconds)
 }
 
 // Dibujar meteoros grises
-void drawGrayMeteor(float rotation)
+void drawGrayMeteor(float *rotation)
 {
-    // Velocidad de rotacion
-    rotation += 2.5f;
-
     for (int i = 0; i < MAX_GRAY_METEORS; i++)
     {
         if (grayMeteors[i].active)
         {
             // Dibujar el cuerpo principal del meteoro (polígono relleno)
-            DrawPoly(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, GRAY);
+            DrawPoly(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, *rotation, GRAY);
 
             // Dibujar líneas para resaltar bordes del meteoro
-            DrawPolyLines(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, BLACK);
+            DrawPolyLines(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, *rotation, BLACK);
 
             // Dibujar líneas adicionales para dar textura
-            DrawPolyLinesEx(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, rotation, 8, DARKGRAY);
+            DrawPolyLinesEx(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, *rotation, 8, DARKGRAY);
 
             // Dibujar puntos aleatorios dentro del meteoro para textura
             for (int j = 0; j < 15; j++)
@@ -449,45 +444,42 @@ void drawGrayMeteor(float rotation)
 }
 
 // Dibujar meteoros cafe
-void drawBrownMeteor(float rotation)
+void drawBrownMeteor(float *rotation)
 {
-    // Velocidad de rotacion
-    rotation += 2.5f;
-
     for (int i = 0; i < MAX_BROWN_METEORS / 2; i++)
     {
         if (brownMeteors[i].active)
         {
-            DrawPoly(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, rotation, BROWN);
-            DrawPolyLines(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, rotation, DARKBROWN);
-            DrawPolyLinesEx(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, rotation, 8, DARKGRAY);
+            DrawPoly(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, *rotation, BROWN);
+            DrawPolyLines(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, *rotation, DARKBROWN);
+            DrawPolyLinesEx(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, *rotation, 8, DARKGRAY);
         }
     }
 }
 
 // Dibujar esferas amarillas
-void drawCoins(Texture2D coinsTx)
+void drawCoins(Texture2D *coinsTx)
 {
     for (int i = 0; i < MAX_COINS; i++)
     {
         if (coins[i].active)
         {
             // Calcular la posición del centro de la moneda
-            Vector2 coinCenter = {coins[i].position.x - coinsTx.width / 2, coins[i].position.y - coinsTx.height / 2};
-            DrawTextureV(coinsTx, coinCenter, WHITE);
+            Vector2 coinCenter = {coins[i].position.x - coinsTx->width / 2, coins[i].position.y - coinsTx->height / 2};
+            DrawTextureV(*coinsTx, coinCenter, WHITE);
         }
     }
 }
 
 // Dibujar esferas Rojas
-void drawHearts(Texture2D heartsTx)
+void drawHearts(Texture2D *heartsTx)
 {
     for (int i = 0; i < MAX_HEARTS; i++)
     {
         if (hearts[i].active)
         {
-            Vector2 heartCenter = {(float)((int)hearts[i].position.x - heartsTx.width / 2), (float)((int)hearts[i].position.y - heartsTx.height / 2)};
-            DrawTextureV(heartsTx, heartCenter, RED);
+            Vector2 heartCenter = {(float)((int)hearts[i].position.x - heartsTx->width / 2), (float)((int)hearts[i].position.y - heartsTx->height / 2)};
+            DrawTextureV(*heartsTx, heartCenter, RED);
         }
     }
 }

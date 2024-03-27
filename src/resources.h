@@ -2,15 +2,15 @@
 #define RESOURCES_H
 #include "raylib.h"
 
-/*-------- PROTOTIPOS --------*/
+/*---------------- PROTOTIPOS ----------------*/
 void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx);
 void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx);
 void loadSounds(Music *game, Music *gameover, Sound *coin);
 void unloadSounds(Music *game, Music *gameover, Sound *coin);
 
-/*-------- DESARROLLO --------*/
+/*---------------- DESARROLLO ----------------*/
 
-// ---- Cargar texturas ----
+// ---- Carga texturas ----
 void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx)
 {
     // Fondo menu principal
@@ -47,30 +47,29 @@ void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Textu
     heartsTx[5] = LoadTexture("images/hearts/hearth_02.png");
 }
 
-// ---- Descargar texturas ----
+// ---- Descarga texturas ----
 void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx)
 {
-    /***** DESCARGA DE RECURSOS *****/
+    UnloadTexture(*menu);
+    UnloadTexture(*gamebg);
+    UnloadTexture(*gameover);
     for (int i = 0; i < 6; i++)
     {
         UnloadTexture(shipTx[i]);
         UnloadTexture(coinsTx[i]);
         UnloadTexture(heartsTx[i]);
     }
-    UnloadTexture(*menu);
-    UnloadTexture(*gamebg);
-    UnloadTexture(*gameover);
 }
 
-// ---- Cargar sonidos ----
+// ---- Carga sonidos ----
 void loadSounds(Music *game, Music *gameover, Sound *coin)
 {
-    *game = LoadMusicStream("sounds/music.mp3");
-    *gameover = LoadMusicStream("sounds/gameover.mp3");
-    *coin = LoadSound("sounds/coin.wav");
+    *game = LoadMusicStream("sounds/music.mp3");        // Musica partida
+    *gameover = LoadMusicStream("sounds/gameover.mp3"); // Musica gameover
+    *coin = LoadSound("sounds/coin.wav");               // Sonido moneda
 }
 
-// ---- Descargar sonidos ----
+// ---- Descarga sonidos ----
 void unloadSounds(Music *game, Music *gameover, Sound *coin)
 {
     UnloadMusicStream(*game);
