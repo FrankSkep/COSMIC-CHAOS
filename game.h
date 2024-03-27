@@ -3,10 +3,6 @@
 
 #include "raylib.h"
 #include <math.h>
-<<<<<<< HEAD
-#include <string.h>
-=======
->>>>>>> 1906b15d1c20435ed64bb2d62f466987b4513e51
 
 /******** DIMENSIONES PANTALLA *********/
 #define SCR_WIDTH 1600 // ALTO  (X)
@@ -338,60 +334,17 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
         *level = 2;
         double startTime = GetTime(); // Obtener el tiempo de inicio
 
-        char str[] = "no te puedo regalar unas florees amarillas pero si te puedo dedicar un codigo ---- ya esto es aparte  mas texto aqui para ver sus limites mas y mas texto mas y mas ya fin  NOTA: CAMBIAR ESTO MEJOR A LA IZQUIERDA ";
-        int tamano = 40;
-        int longitud = strlen(str);
-        int i;
-
-        for (i = 0; i < longitud; i++)
+        while (GetTime() - startTime < *seconds)
         {
-            double cinematica1 = GetTime(); // Obtener el tiempo de inicio
+            // Limpiar la pantalla y mostrar "Nivel 2" en el centro
+            ClearBackground(BLACK);
+            DrawText("IMAGEN DE SINEMATICA", SCR_WIDTH / 2 - MeasureText("IMAGEN DE SINEMATICA", 60) / 2, SCR_HEIGHT / 2 - 200, 60, WHITE);
+            DrawText("DE NIVEL 2", SCR_WIDTH / 2 - MeasureText("DE NIVEL 2", 60) / 2, SCR_HEIGHT / 2, 60, WHITE);
+            // Actualizar la pantalla
+            ClearBackground(BLACK);
 
-            while (GetTime() - cinematica1 < 0.05)
-            {
-                BeginDrawing();
-                ClearBackground(BLACK);
-
-                // Calcular el ancho total de todas las letras mostradas hasta ahora
-                float totalWidth = 0.0f;
-                int j;
-                for (j = 0; j <= i; j++)
-                {
-                    totalWidth += MeasureText(TextFormat("%c", str[j]), 30);
-                }
-
-                // Calcular la posición horizontal del texto para centrarlo
-                float x = (SCR_WIDTH - totalWidth) / 2;
-                float y = SCR_HEIGHT / 2 + 10; // Iniciar en la mitad vertical de la pantalla
-
-                // Verificar si el texto se sale de la pantalla por la izquierda
-                if (x < 0)
-                {
-                    // Si se sale, ajustar la posición horizontal para que sea 0
-                    x = 0;
-                }
-
-                // Mostrar todas las letras hasta el índice actual
-                for (j = 0; j <= i; j++)
-                {
-                    // Verificar si la posición horizontal excede el límite máximo de línea
-                    if (x + MeasureText(TextFormat("%c", str[j]), 30) > SCR_WIDTH)
-                    {
-                        // Si excede, mover a la siguiente línea
-                        x = 0;   // Iniciar desde el borde izquierdo
-                        y += 40; // Asumiendo una altura de línea de 40 píxeles
-                    }
-
-                    // Dibujar cada letra en la posición calculada
-                    DrawText(TextFormat("%c", str[j]), x, y, 30, RAYWHITE);
-                    // Incrementar la posición horizontal para la próxima letra
-                    x += MeasureText(TextFormat("%c", str[j]), 30) + 10; // Agregar un margen de 10 píxeles entre letras
-                }
-
-                EndDrawing();
-            }
+            EndDrawing();
         }
-
         // Esperar hasta que se presione la tecla Skip
         while (!IsKeyPressed(KEY_S))
         {
