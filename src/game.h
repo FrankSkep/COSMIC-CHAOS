@@ -111,8 +111,7 @@ void drawHowToPlay()
         ClearBackground(BLACK);
 
         drawTextCenter("HOW TO PLAY: ", 0, 100, 100, BLUE);
-        DrawText("COMO SE JUEGA:", SCR_WIDTH / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 100, 100, BLUE);
-        DrawText("- MUEVETE CON LAS FLECHAS   <-  ->", 40, SCR_HEIGHT / 2 + 40, 50, WHITE);
+        DrawText("- MOVE WITH THE ARROUS <-  ->", 40, SCR_HEIGHT / 2 + 40, 50, WHITE);
         DrawText("- AVOID COLLIDING WITH ASTEROIDS", 40, SCR_HEIGHT / 2 + 110, 50, GRAY);
         DrawText("- COLLECT POINTS", 40, SCR_HEIGHT / 2 + 180, 50, YELLOW);
         DrawText("- SURVIVE BY COLLECTING LIVES", 40, SCR_HEIGHT / 2 + 250, 50, RED);
@@ -154,16 +153,16 @@ void gameOverInterface(Texture2D *background, int *score, int *level)
     drawTextCenter("GAME OVER", 0, 230, 130, RED);
 
     DrawText(TextFormat("Score: %04i", *score), SCR_WIDTH / 2 - MeasureText(TextFormat("Score: %04i", *score), 70) / 2, SCR_HEIGHT / 2 + 10, 70, RAYWHITE);
-    DrawText(TextFormat("LEVEL: %1i", *level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", *level), 70) / 2, SCR_HEIGHT / 2 - 50, 70, RAYWHITE);
+    DrawText(TextFormat("Level: %1i", *level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", *level), 70) / 2, SCR_HEIGHT / 2 - 50, 70, RAYWHITE);
 
     drawTextCenter("(ENTER) Play Again", 2, 582, 70, LIME);
     drawTextCenter("(ENTER) Play Again", 0, 580, 70, GREEN);
 
-    DrawText("(Q) Back to menu", SCR_WIDTH / 2 + 2 - MeasureText("(Q) Back to menu", 70) / 2 + 2, SCR_HEIGHT / 2 + 212, 70, DARKPURPLE);
-    DrawText("(Q) Back to menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 70) / 2, SCR_HEIGHT / 2 + 210, 70, MAGENTA);
+    drawTextCenter("(Q) Back to menu", 2, 662, 70, DARKPURPLE);
+    drawTextCenter("(Q) Back to menu", 0, 660, 70, MAGENTA);
 
-    DrawText("(Esc) Exit.", SCR_WIDTH / 2 + 2 - MeasureText("(Q) Exit", 90) / 2 + 2, SCR_HEIGHT / 2 + 292, 70, RED);
-    DrawText("(Esc) Exit.", SCR_WIDTH / 2 - MeasureText("(Q) Exit", 90) / 2, SCR_HEIGHT / 2 + 290, 70, MAROON);
+    drawTextCenter("(ESC) Exit", 2, 742, 70, RED);
+    drawTextCenter("(ESC) Exit", 0, 740, 70, MAROON);
 }
 
 // Dibuja la interfaz de la partida
