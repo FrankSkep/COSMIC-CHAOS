@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include <math.h>
 #include <time.h>
+#include <string.h>
 
 /******** DIMENSIONES PANTALLA *********/
 #define SCR_WIDTH 1600 // ALTO  (X)
@@ -230,11 +231,39 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
         while (GetTime() - startTime < *seconds)
         {
             // Limpiar la pantalla y mostrar "Nivel 2" en el centro
+            ClearBackground(BLACK); //////// /////// /////// //////// ///////
             ClearBackground(BLACK);
-            DrawText("IMAGEN DE SINEMATICA", SCR_WIDTH / 2 - MeasureText("IMAGEN DE SINEMATICA", 60) / 2, SCR_HEIGHT / 2 - 200, 60, WHITE);
-            DrawText("DE NIVEL 2", SCR_WIDTH / 2 - MeasureText("DE NIVEL 2", 60) / 2, SCR_HEIGHT / 2, 60, WHITE);
-            // Actualizar la pantalla
+            // Limpiar todas las esferas en la pantalla
+            resetGame(playPosition);
+            *level = 2;
+            #define MAX_TEXT_LENGTH 1000
+            #define LETTER_DISPLAY_INTERVAL 0.25f   
+            const char *text = "Texto a desplegar letra por letra.";
+            int textLength = strlen(text);
+            char displayedText[MAX_TEXT_LENGTH] = {0}; // Arreglo para almacenar el texto desplegado
+            float elapsedTime2 = 0.0f;
+            int lettersToShow = 0;
+                // Limpiar la pantalla y mostrar "Nivel 2" en el centro
             ClearBackground(BLACK);
+
+            // Calcular el tiempo transcurrido
+            elapsedTime2 += GetFrameTime();
+
+            // Si ha pasado el intervalo entre letras y no hemos mostrado todas las letras
+            if (elapsedTime2 >= LETTER_DISPLAY_INTERVAL && lettersToShow < textLength)
+            {
+                // Añadir la próxima letra al texto desplegado
+                displayedText[lettersToShow] = text[lettersToShow];
+                displayedText[lettersToShow + 1] = '\0'; // Asegurarse de que el texto desplegado tenga un terminador nulo
+
+                // Reiniciar el temporizador y avanzar al siguiente carácter
+                elapsedTime2 = 0.0f;
+                lettersToShow++;
+            }
+
+            // Mostrar el texto desplegado en la pantalla
+            DrawText(displayedText, SCR_HEIGHT/2, SCR_WIDTH/2, 50, WHITE);           // Actualizar la pantalla
+            ClearBackground(BLACK);/////// /////// ////////// //////// /////
 
             EndDrawing();
         }
