@@ -3,7 +3,10 @@
 
 #include "raylib.h"
 #include <math.h>
+<<<<<<< HEAD
 #include <string.h>
+=======
+>>>>>>> 1906b15d1c20435ed64bb2d62f466987b4513e51
 
 /******** DIMENSIONES PANTALLA *********/
 #define SCR_WIDTH 1600 // ALTO  (X)
