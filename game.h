@@ -3,7 +3,6 @@
 
 #include "raylib.h"
 #include <math.h>
-#include <time.h>
 #include <string.h>
 
 /******** DIMENSIONES PANTALLA *********/
@@ -50,17 +49,23 @@ void gameOverInterface(Texture2D background, int score, int level);
 
 /* LOGICA DEL JUEGO */
 void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation, Texture2D coins);
+void flujoMenu(int *seconds, bool *isPlaying);
 void vidas(int lives);
 void InitGrayMeteor(Ball *ball);
 void InitBrownMeteor(Ball *ball);
 void InitCoin(Ball *ball);
 void InitHearts(Ball *ball);
+void playerMovement(Vector2 *playPosition, const int playRadius, const float playerSpeed);
+void generateObjects(float *elapsedTime, const float spawnInterval);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius);
 void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
 void clock(int *totalseconds, int *minutesT, int *econdsT);
-void resetGame(Vector2 *playPosition);
+void resetItems(Vector2 *playPosition);
+void resetStats(int *lives, int *score, int *level, double *timeSeconds);
 
 /* DIBUJO DE OBJETOS */
+void drawTextCenter(const char text[], int posX, int posY, int fontSize, Color color);
+
 void drawGrayMeteor(float rotation);
 void drawBrownMeteor(float rotation);
 void drawCoins(Texture2D coinsTx);
@@ -68,16 +73,25 @@ void drawHearts(Texture2D heartsTx);
 
 /************** DESARROLLO DE FUNCIONES **************/
 
+void drawTextCenter(const char text[], int posX, int posY, int fontSize, Color color)
+{
+    int posX2 = posX / 2;
+    DrawText(text, SCR_WIDTH / 2 + posX - MeasureText(text, fontSize) / 2 + posX2, posY, fontSize, color);
+}
+
 // Dibuja menu principal inicial
 void drawMainMenu(Texture2D background) // PANTALLA DE MENU
 {
     BeginDrawing();
-
     DrawTexture(background, 0, 0, WHITE);
 
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 - MeasureText("COSMIC-CHAOS", 180) / 2, 150, 186, DARKBLUE);
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 6 - MeasureText("COSMIC-CHAOS", 180) / 2 + 3, 145, 183, DARKBLUE);
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 12 - MeasureText("COSMIC-CHAOS", 180) / 2 + 6, 140, 180, BLUE);
+
+    // drawTextCenter("COSMIC-CHAOS", 0, 150, 186, DARKBLUE);
+    // drawTextCenter("COSMIC-CHAOS", 6, 145, 183, DARKBLUE);
+    // drawTextCenter("COSMIC-CHAOS", 12, 140, 180, BLUE);
 
     int sizeStartTxt = MeasureText("(Enter) Start", 60);
     int sizeTuto = MeasureText("(A) How to play", 60);
@@ -102,30 +116,39 @@ void drawMainMenu(Texture2D background) // PANTALLA DE MENU
 // Dibuja interfaz de como jugar
 void drawHowToPlay()
 {
-    BeginDrawing();
-    DrawRectangleGradientV(0, 0, SCR_WIDTH, SCR_HEIGHT, PURPLE, DARKPURPLE);
-    DrawText("COMO SE JUEGA:", SCR_WIDTH / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 100, 100, BLUE);
-    DrawText("- MUEVETE CON LAS FLECHAS   <-  ->", 40, SCR_HEIGHT / 2 + 40, 50, WHITE);
-    DrawText("- EVITA COLISIONAR CON LOS ASTEROIDES", 40, SCR_HEIGHT / 2 + 110, 50, GRAY);
-    DrawText("- RECOLECTA PUNTOS ", 40, SCR_HEIGHT / 2 + 180, 50, YELLOW);
-    DrawText("- SOBREVIVE RECOLECTANTO VIDAS ⏎", 40, SCR_HEIGHT / 2 + 250, 50, RED);
-    DrawText("(Q) Back to menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GREEN);
-    EndDrawing();
+    while (!WindowShouldClose() && !IsKeyPressed(KEY_Q))
+    {
+        BeginDrawing();
+        DrawRectangleGradientV(0, 0, SCR_WIDTH, SCR_HEIGHT, PURPLE, DARKPURPLE);
+        DrawText("COMO SE JUEGA:", SCR_WIDTH / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 100, 100, BLUE);
+        DrawText("- MUEVETE CON LAS FLECHAS   <-  ->", 40, SCR_HEIGHT / 2 + 40, 50, WHITE);
+        DrawText("- EVITA COLISIONAR CON LOS ASTEROIDES", 40, SCR_HEIGHT / 2 + 110, 50, GRAY);
+        DrawText("- RECOLECTA PUNTOS ", 40, SCR_HEIGHT / 2 + 180, 50, YELLOW);
+        DrawText("- SOBREVIVE RECOLECTANTO VIDAS ⏎", 40, SCR_HEIGHT / 2 + 250, 50, RED);
+        DrawText("(Q) Back to menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GREEN);
+
+        EndDrawing();
+    }
 }
 
 // Dibuja interfaz con informacion acerca del juego
 void aboutTheGame()
 {
-    BeginDrawing();
-    DrawRectangleGradientV(0, 0, SCR_WIDTH, SCR_HEIGHT, DARKGRAY, BLACK);
-    DrawText("About the game", SCR_WIDTH / 2 - MeasureText("About the game", 100) / 2, 100, 100, RED);
-    DrawText("Developers:", SCR_WIDTH / 2 - MeasureText("Developers:", 50) / 2, SCR_HEIGHT / 2 - 180, 50, YELLOW);
-    DrawText("- Francisco Cornejo", SCR_WIDTH / 2 - MeasureText("- Francisco Cornejo", 50) / 2, SCR_HEIGHT / 2 - 110, 50, GREEN);
-    DrawText("- Diego Ibarra", SCR_WIDTH / 2 - MeasureText("- Diego Ibarra", 50) / 2, SCR_HEIGHT / 2 - 50, 50, GREEN);
-    DrawText("Sounds:", SCR_WIDTH / 2 - MeasureText("Sound:", 50) / 2, SCR_HEIGHT / 2 + 130, 50, GOLD);
-    DrawText("Unnamed", SCR_WIDTH / 2 - MeasureText("Unnamed", 50) / 2, SCR_HEIGHT / 2 + 190, 50, LIME);
-    DrawText("(Q) Back to menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GOLD);
-    EndDrawing();
+    while (!WindowShouldClose() && !IsKeyPressed(KEY_Q)) // Bucle para mostrar la interfaz "about"
+    {
+        BeginDrawing();
+
+        ClearBackground(BLACK);
+        DrawText("About the game", SCR_WIDTH / 2 - MeasureText("About the game", 100) / 2, 100, 100, RED);
+        DrawText("Developers:", SCR_WIDTH / 2 - MeasureText("Developers:", 50) / 2, SCR_HEIGHT / 2 - 180, 50, YELLOW);
+        DrawText("- Francisco Cornejo", SCR_WIDTH / 2 - MeasureText("- Francisco Cornejo", 50) / 2, SCR_HEIGHT / 2 - 110, 50, GREEN);
+        DrawText("- Diego Ibarra", SCR_WIDTH / 2 - MeasureText("- Diego Ibarra", 50) / 2, SCR_HEIGHT / 2 - 50, 50, GREEN);
+        DrawText("Sounds:", SCR_WIDTH / 2 - MeasureText("Sound:", 50) / 2, SCR_HEIGHT / 2 + 130, 50, GOLD);
+        DrawText("Unnamed", SCR_WIDTH / 2 - MeasureText("Unnamed", 50) / 2, SCR_HEIGHT / 2 + 190, 50, LIME);
+        DrawText("(Q) Back to menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GOLD);
+
+        EndDrawing();
+    }
 }
 
 // Dibuja la interfaz de juego terminado
@@ -134,22 +157,20 @@ void gameOverInterface(Texture2D background, int score, int level)
     // Fondo
     DrawTexture(background, 0, 0, WHITE);
 
-    int width = SCR_WIDTH;
-    int height = SCR_HEIGHT;
     // Dibujar ventana de "Game Over"
-    DrawText("GAME OVER", width / 2 + 2 - MeasureText("GAME OVER", 130) / 2 + 2, height / 2 - 218, 130, WHITE);
-    DrawText("GAME OVER", width / 2 - MeasureText("GAME OVER", 130) / 2, height / 2 - 220, 130, RED);
-    DrawText(TextFormat("Score: %04i", score), width / 2 - MeasureText(TextFormat("Score: %04i", score), 70) / 2, height / 2 + 10, 70, RAYWHITE);
-    DrawText(TextFormat("LEVEL: %1i", level), width / 2 - MeasureText(TextFormat("LEVEL: %1i", level), 70) / 2, height / 2 - 50, 70, RAYWHITE);
+    DrawText("GAME OVER", SCR_WIDTH / 2 + 2 - MeasureText("GAME OVER", 130) / 2 + 2, SCR_HEIGHT / 2 - 218, 130, WHITE);
+    DrawText("GAME OVER", SCR_WIDTH / 2 - MeasureText("GAME OVER", 130) / 2, SCR_HEIGHT / 2 - 220, 130, RED);
+    DrawText(TextFormat("Score: %04i", score), SCR_WIDTH / 2 - MeasureText(TextFormat("Score: %04i", score), 70) / 2, SCR_HEIGHT / 2 + 10, 70, RAYWHITE);
+    DrawText(TextFormat("LEVEL: %1i", level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", level), 70) / 2, SCR_HEIGHT / 2 - 50, 70, RAYWHITE);
 
-    DrawText("(ENTER) Play Again", width / 2 + 2 - MeasureText("(ENTER) Play Again", 70) / 2 + 2, height / 2 + 132, 70, LIME);
-    DrawText("(ENTER) Play Again", width / 2 - MeasureText("(ENTER) Play Again", 70) / 2, height / 2 + 130, 70, GREEN);
+    DrawText("(ENTER) Play Again", SCR_WIDTH / 2 + 2 - MeasureText("(ENTER) Play Again", 70) / 2 + 2, SCR_HEIGHT / 2 + 132, 70, LIME);
+    DrawText("(ENTER) Play Again", SCR_WIDTH / 2 - MeasureText("(ENTER) Play Again", 70) / 2, SCR_HEIGHT / 2 + 130, 70, GREEN);
 
-    DrawText("(Q) Back to menu", width / 2 + 2 - MeasureText("(Q) Back to menu", 70) / 2 + 2, height / 2 + 212, 70, DARKPURPLE);
-    DrawText("(Q) Back to menu", width / 2 - MeasureText("(Q) Back to menu", 70) / 2, height / 2 + 210, 70, MAGENTA);
+    DrawText("(Q) Back to menu", SCR_WIDTH / 2 + 2 - MeasureText("(Q) Back to menu", 70) / 2 + 2, SCR_HEIGHT / 2 + 212, 70, DARKPURPLE);
+    DrawText("(Q) Back to menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 70) / 2, SCR_HEIGHT / 2 + 210, 70, MAGENTA);
 
-    DrawText("(Esc) Exit.", width / 2 + 2 - MeasureText("(Q) Exit", 90) / 2 + 2, height / 2 + 292, 70, RED);
-    DrawText("(Esc) Exit.", width / 2 - MeasureText("(Q) Exit", 90) / 2, height / 2 + 290, 70, MAROON);
+    DrawText("(Esc) Exit.", SCR_WIDTH / 2 + 2 - MeasureText("(Q) Exit", 90) / 2 + 2, SCR_HEIGHT / 2 + 292, 70, RED);
+    DrawText("(Esc) Exit.", SCR_WIDTH / 2 - MeasureText("(Q) Exit", 90) / 2, SCR_HEIGHT / 2 + 290, 70, MAROON);
 }
 
 // Dibuja la interfaz de la partida
@@ -172,6 +193,23 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     drawBrownMeteor(rotation);
     drawCoins(coins);
     drawHearts(hearts);
+}
+
+void flujoMenu(int *seconds, bool *isPlaying)
+{
+    if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
+    {
+        *seconds = 0;
+        *isPlaying = true;
+    }
+    if (IsKeyPressed(KEY_A)) // Ir a tutorial como jugar
+    {
+        drawHowToPlay();
+    }
+    if (IsKeyPressed(KEY_E)) // Ir a acerca del juego
+    {
+        aboutTheGame();
+    }
 }
 
 // Dibuja las vidas restantes
@@ -220,6 +258,66 @@ void InitHearts(Ball *ball)
     ball->active = true;
 }
 
+void playerMovement(Vector2 *playPosition, const int playRadius, const float playerSpeed)
+{
+    if (IsKeyDown(KEY_RIGHT) && playPosition->x + playRadius < SCR_WIDTH)
+    {
+        playPosition->x += playerSpeed;
+    }
+    if (IsKeyDown(KEY_LEFT) && playPosition->x - playRadius > 0)
+    {
+        playPosition->x -= playerSpeed;
+    }
+    if (IsKeyDown(KEY_UP) && playPosition->y - playRadius > 0) // Ajuste para la parte superior
+    {
+        playPosition->y -= playerSpeed;
+    }
+    if (IsKeyDown(KEY_DOWN) && playPosition->y + playRadius < SCR_HEIGHT) // Ajuste para la parte inferior
+    {
+        playPosition->y += playerSpeed;
+    }
+}
+
+void generateObjects(float *elapsedTime, const float spawnInterval)
+{
+    if (*elapsedTime >= spawnInterval)
+    {
+        for (int i = 0; i < MAX_GRAY_METEORS; i++)
+        {
+            if (!grayMeteors[i].active)
+            {
+                InitGrayMeteor(&grayMeteors[i]);
+                break;
+            }
+        }
+        for (int i = 0; i < MAX_BROWN_METEORS; i++)
+        {
+            if (!brownMeteors[i].active)
+            {
+                InitBrownMeteor(&brownMeteors[i]);
+                break;
+            }
+        }
+        for (int i = 0; i < MAX_COINS; i++)
+        {
+            if (!coins[i].active)
+            {
+                InitCoin(&coins[i]);
+                break;
+            }
+        }
+        for (int i = 0; i < MAX_HEARTS; i++)
+        {
+            if (!hearts[i].active)
+            {
+                InitHearts(&hearts[i]);
+                break;
+            }
+        }
+        *elapsedTime = 0.0f; // Reiniciar el temporizador
+    }
+}
+
 // Colisiones
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius)
 {
@@ -233,49 +331,64 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
     if (*score >= 30 && *level == 1)
     {
         // Limpiar todas las esferas en la pantalla
-        resetGame(playPosition);
+        resetItems(playPosition);
         *level = 2;
         double startTime = GetTime(); // Obtener el tiempo de inicio
 
-        while (GetTime() - startTime < *seconds)
+        char str[] = "no te puedo regalar unas florees amarillas pero si te puedo dedicar un codigo ---- ya esto es aparte  mas texto aqui para ver sus limites mas y mas texto mas y mas ya fin  NOTA: CAMBIAR ESTO MEJOR A LA IZQUIERDA ";
+        int tamano = 40;
+        int longitud = strlen(str);
+        int i;
+
+        for (i = 0; i < longitud; i++)
         {
-            // Limpiar la pantalla y mostrar "Nivel 2" en el centro
-            ClearBackground(BLACK); //////// /////// /////// //////// ///////
-            ClearBackground(BLACK);
-            // Limpiar todas las esferas en la pantalla
-            resetGame(playPosition);
-            *level = 2;
-            #define MAX_TEXT_LENGTH 1000
-            #define LETTER_DISPLAY_INTERVAL 0.25f   
-            const char *text = "Texto a desplegar letra por letra.";
-            int textLength = strlen(text);
-            char displayedText[MAX_TEXT_LENGTH] = {0}; // Arreglo para almacenar el texto desplegado
-            float elapsedTime2 = 0.0f;
-            int lettersToShow = 0;
-                // Limpiar la pantalla y mostrar "Nivel 2" en el centro
-            ClearBackground(BLACK);
+            double cinematica1 = GetTime(); // Obtener el tiempo de inicio
 
-            // Calcular el tiempo transcurrido
-            elapsedTime2 += GetFrameTime();
-
-            // Si ha pasado el intervalo entre letras y no hemos mostrado todas las letras
-            if (elapsedTime2 >= LETTER_DISPLAY_INTERVAL && lettersToShow < textLength)
+            while (GetTime() - cinematica1 < 0.05)
             {
-                // Añadir la próxima letra al texto desplegado
-                displayedText[lettersToShow] = text[lettersToShow];
-                displayedText[lettersToShow + 1] = '\0'; // Asegurarse de que el texto desplegado tenga un terminador nulo
+                BeginDrawing();
+                ClearBackground(BLACK);
 
-                // Reiniciar el temporizador y avanzar al siguiente carácter
-                elapsedTime2 = 0.0f;
-                lettersToShow++;
+                // Calcular el ancho total de todas las letras mostradas hasta ahora
+                float totalWidth = 0.0f;
+                int j;
+                for (j = 0; j <= i; j++)
+                {
+                    totalWidth += MeasureText(TextFormat("%c", str[j]), 30);
+                }
+
+                // Calcular la posición horizontal del texto para centrarlo
+                float x = (SCR_WIDTH - totalWidth) / 2;
+                float y = SCR_HEIGHT / 2 + 10; // Iniciar en la mitad vertical de la pantalla
+
+                // Verificar si el texto se sale de la pantalla por la izquierda
+                if (x < 0)
+                {
+                    // Si se sale, ajustar la posición horizontal para que sea 0
+                    x = 0;
+                }
+
+                // Mostrar todas las letras hasta el índice actual
+                for (j = 0; j <= i; j++)
+                {
+                    // Verificar si la posición horizontal excede el límite máximo de línea
+                    if (x + MeasureText(TextFormat("%c", str[j]), 30) > SCR_WIDTH)
+                    {
+                        // Si excede, mover a la siguiente línea
+                        x = 0;   // Iniciar desde el borde izquierdo
+                        y += 40; // Asumiendo una altura de línea de 40 píxeles
+                    }
+
+                    // Dibujar cada letra en la posición calculada
+                    DrawText(TextFormat("%c", str[j]), x, y, 30, RAYWHITE);
+                    // Incrementar la posición horizontal para la próxima letra
+                    x += MeasureText(TextFormat("%c", str[j]), 30) + 10; // Agregar un margen de 10 píxeles entre letras
+                }
+
+                EndDrawing();
             }
-
-            // Mostrar el texto desplegado en la pantalla
-            DrawText(displayedText, SCR_HEIGHT/2, SCR_WIDTH/2, 50, WHITE);           // Actualizar la pantalla
-            ClearBackground(BLACK);/////// /////// ////////// //////// /////
-
-            EndDrawing();
         }
+
         // Esperar hasta que se presione la tecla Skip
         while (!IsKeyPressed(KEY_S))
         {
@@ -321,7 +434,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
         *score = 0;
         *lives = 5;
         // Limpiar todas las esferas en la pantalla
-        resetGame(playPosition);
+        resetItems(playPosition);
     }
 }
 
@@ -338,7 +451,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
 // }
 
 // Limpiar elementos y posicion jugador
-void resetGame(Vector2 *playPosition)
+void resetItems(Vector2 *playPosition)
 {
     // Reiniciar posicion nave
     *playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
@@ -360,6 +473,15 @@ void resetGame(Vector2 *playPosition)
     {
         hearts[i].active = false;
     }
+}
+
+void resetStats(int *lives, int *score, int *level, double *timeSeconds)
+{
+    // Reinicia vidas y puntaje
+    *lives = 5;
+    *score = 0;
+    *level = 1;
+    *timeSeconds = 0;
 }
 
 // Dibujar meteoros grises
