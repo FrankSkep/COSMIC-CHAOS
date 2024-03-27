@@ -43,7 +43,7 @@ Ball hearts[MAX_HEARTS];
 
 /* MENUS DEL JUEGO */
 void drawMainMenu(Texture2D background);
-void Tutorial();
+void drawHowToPlay();
 void aboutTheGame();
 void gameOverInterface(Texture2D background, int score, int level);
 
@@ -99,7 +99,7 @@ void drawMainMenu(Texture2D background) // PANTALLA DE MENU
 }
 
 // Dibuja interfaz de como jugar
-void Tutorial()
+void drawHowToPlay()
 {
     BeginDrawing();
     DrawRectangleGradientV(0, 0, SCR_WIDTH, SCR_HEIGHT, PURPLE, DARKPURPLE);
@@ -108,14 +108,23 @@ void Tutorial()
     DrawText("- EVITA COLISIONAR CON LOS ASTEROIDES", 40, SCR_HEIGHT / 2 + 110, 50, GRAY);
     DrawText("- RECOLECTA PUNTOS ", 40, SCR_HEIGHT / 2 + 180, 50, YELLOW);
     DrawText("- SOBREVIVE RECOLECTANTO VIDAS ⏎", 40, SCR_HEIGHT / 2 + 250, 50, RED);
-    DrawText("(Q) Exit tutorial", SCR_WIDTH / 2 - MeasureText("(Q) Exit tutorial", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GREEN);
+    DrawText("(Q) Back to menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GREEN);
     EndDrawing();
 }
 
 // Dibuja interfaz con informacion acerca del juego
 void aboutTheGame()
 {
-    return;
+    BeginDrawing();
+    DrawRectangleGradientV(0, 0, SCR_WIDTH, SCR_HEIGHT, DARKGRAY, BLACK);
+    DrawText("About the game", SCR_WIDTH / 2 - MeasureText("About the game", 100) / 2, 100, 100, RED);
+    DrawText("Developers:", SCR_WIDTH / 2 - MeasureText("Developers:", 50) / 2, SCR_HEIGHT / 2 - 180, 50, YELLOW);
+    DrawText("- Francisco Cornejo", SCR_WIDTH / 2 - MeasureText("- Francisco Cornejo", 50) / 2, SCR_HEIGHT / 2 - 110, 50, GREEN);
+    DrawText("- Diego Ibarra", SCR_WIDTH / 2 - MeasureText("- Diego Ibarra", 50) / 2, SCR_HEIGHT / 2 - 50, 50, GREEN);
+    DrawText("Sounds:", SCR_WIDTH / 2 - MeasureText("Sound:", 50) / 2, SCR_HEIGHT / 2 + 130, 50, GOLD);
+    DrawText("Unnamed", SCR_WIDTH / 2 - MeasureText("Unnamed", 50) / 2, SCR_HEIGHT / 2 + 190, 50, LIME);
+    DrawText("(Q) Back to menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GOLD);
+    EndDrawing();
 }
 
 // Dibuja la interfaz de juego terminado
