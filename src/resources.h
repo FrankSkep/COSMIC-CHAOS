@@ -1,0 +1,81 @@
+#ifndef RESOURCES_H
+#define RESOURCES_H
+#include "raylib.h"
+
+/*-------- PROTOTIPOS --------*/
+void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx);
+void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx);
+void loadSounds(Music *game, Music *gameover, Sound *coin);
+void unloadSounds(Music *game, Music *gameover, Sound *coin);
+
+/*-------- DESARROLLO --------*/
+
+// ---- Cargar texturas ----
+void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx)
+{
+    // Fondo menu principal
+    *menu = LoadTexture("images/backgrounds/menu.png");
+
+    // Fondo partida
+    *gamebg = LoadTexture("images/backgrounds/game.png");
+
+    // Fondo gameover
+    *gameover = LoadTexture("images/backgrounds/gameover.png");
+
+    // Nave
+    shipTx[0] = LoadTexture("images/ship/ship01.png");
+    shipTx[1] = LoadTexture("images/ship/ship01.png");
+    shipTx[2] = LoadTexture("images/ship/ship02.png");
+    shipTx[3] = LoadTexture("images/ship/ship02.png");
+    shipTx[4] = LoadTexture("images/ship/ship03.png");
+    shipTx[5] = LoadTexture("images/ship/ship03.png");
+
+    // Monedas
+    coinsTx[0] = LoadTexture("images/coins/coin_01.png");
+    coinsTx[1] = LoadTexture("images/coins/coin_02.png");
+    coinsTx[2] = LoadTexture("images/coins/coin_03.png");
+    coinsTx[3] = LoadTexture("images/coins/coin_04.png");
+    coinsTx[4] = LoadTexture("images/coins/coin_05.png");
+    coinsTx[5] = LoadTexture("images/coins/coin_06.png");
+
+    // Corazones
+    heartsTx[0] = LoadTexture("images/hearts/hearth_01.png");
+    heartsTx[1] = LoadTexture("images/hearts/hearth_01.png");
+    heartsTx[2] = LoadTexture("images/hearts/hearth_01.png");
+    heartsTx[3] = LoadTexture("images/hearts/hearth_02.png");
+    heartsTx[4] = LoadTexture("images/hearts/hearth_02.png");
+    heartsTx[5] = LoadTexture("images/hearts/hearth_02.png");
+}
+
+// ---- Descargar texturas ----
+void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx)
+{
+    /***** DESCARGA DE RECURSOS *****/
+    for (int i = 0; i < 6; i++)
+    {
+        UnloadTexture(shipTx[i]);
+        UnloadTexture(coinsTx[i]);
+        UnloadTexture(heartsTx[i]);
+    }
+    UnloadTexture(*menu);
+    UnloadTexture(*gamebg);
+    UnloadTexture(*gameover);
+}
+
+// ---- Cargar sonidos ----
+void loadSounds(Music *game, Music *gameover, Sound *coin)
+{
+    *game = LoadMusicStream("sounds/music.mp3");
+    *gameover = LoadMusicStream("sounds/gameover.mp3");
+    *coin = LoadSound("sounds/coin.wav");
+}
+
+// ---- Descargar sonidos ----
+void unloadSounds(Music *game, Music *gameover, Sound *coin)
+{
+    UnloadMusicStream(*game);
+    UnloadMusicStream(*gameover);
+    UnloadSound(*coin);
+}
+
+#endif

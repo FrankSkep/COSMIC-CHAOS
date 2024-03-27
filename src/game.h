@@ -45,18 +45,16 @@ Ball hearts[MAX_HEARTS];
 void drawMainMenu(Texture2D background);
 void drawHowToPlay();
 void aboutTheGame();
-void gameOverInterface(Texture2D background, int score, int level);
+void gameOverInterface(Texture2D *background, int *score, int *level);
 
 /* LOGICA DEL JUEGO */
 void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int lives, int score, float rotation, Texture2D coins);
-void flujoMenu(int *seconds, bool *isPlaying);
+void logicaMenu(int *seconds, bool *isPlaying);
 void vidas(int lives);
-void InitGrayMeteor(Ball *ball);
-void InitBrownMeteor(Ball *ball);
-void InitCoin(Ball *ball);
-void InitHearts(Ball *ball);
-void playerMovement(Vector2 *playPosition, const int playRadius, const float playerSpeed);
-void generateObjects(float *elapsedTime, const float spawnInterval);
+void InitGrayMeteor(Ball *grayMeteor);
+void InitBrownMeteor(Ball *brownMeteor);
+void InitCoin(Ball *coin);
+void InitHearts(Ball *heart);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius);
 void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
 void clock(int *totalseconds, int *minutesT, int *econdsT);
@@ -64,7 +62,7 @@ void resetItems(Vector2 *playPosition);
 void resetStats(int *lives, int *score, int *level, double *timeSeconds);
 
 /* DIBUJO DE OBJETOS */
-void drawTextCenter(const char text[], int posX, int posY, int fontSize, Color color);
+void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
 void drawGrayMeteor(float rotation);
 void drawBrownMeteor(float rotation);
@@ -73,42 +71,34 @@ void drawHearts(Texture2D heartsTx);
 
 /************** DESARROLLO DE FUNCIONES **************/
 
-void drawTextCenter(const char text[], int posX, int posY, int fontSize, Color color)
+void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color)
 {
-    int posX2 = posX / 2;
-    DrawText(text, SCR_WIDTH / 2 + posX - MeasureText(text, fontSize) / 2 + posX2, posY, fontSize, color);
+    DrawText(text, SCR_WIDTH / 2 + posX - MeasureText(text, fontSize) / 2 + posX, posY, fontSize, color);
 }
 
 // Dibuja menu principal inicial
 void drawMainMenu(Texture2D background) // PANTALLA DE MENU
 {
     BeginDrawing();
-    DrawTexture(background, 0, 0, WHITE);
+    DrawTexture(background, 0, 0, WHITE); // Fondo
 
+    // Titulo
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 - MeasureText("COSMIC-CHAOS", 180) / 2, 150, 186, DARKBLUE);
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 6 - MeasureText("COSMIC-CHAOS", 180) / 2 + 3, 145, 183, DARKBLUE);
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 12 - MeasureText("COSMIC-CHAOS", 180) / 2 + 6, 140, 180, BLUE);
 
-    // drawTextCenter("COSMIC-CHAOS", 0, 150, 186, DARKBLUE);
-    // drawTextCenter("COSMIC-CHAOS", 6, 145, 183, DARKBLUE);
-    // drawTextCenter("COSMIC-CHAOS", 12, 140, 180, BLUE);
+    // Subtitulos
+    drawTextCenter("(ENTER) Start", 2, 502, 60, LIME);
+    drawTextCenter("(ENTER) Start", 0, 500, 60, GREEN);
 
-    int sizeStartTxt = MeasureText("(Enter) Start", 60);
-    int sizeTuto = MeasureText("(A) How to play", 60);
-    int sizeExitText = MeasureText("(ESC) Exit", 60);
-    int aboutTxt = MeasureText("(E) About the game", 60);
+    drawTextCenter("(A) How to play", 2, 582, 60, DARKPURPLE);
+    drawTextCenter("(A) How to play", 0, 580, 60, PURPLE);
 
-    DrawText("(ENTER) Start", SCR_WIDTH / 2 + 2 - sizeStartTxt / 2 + 2, SCR_HEIGHT / 2 + 52, 60, GREEN);
-    DrawText("(ENTER) Start", SCR_WIDTH / 2 - sizeStartTxt / 2, SCR_HEIGHT / 2 + 50, 60, LIME);
+    drawTextCenter("(E) About the game", 2, 662, 60, GRAY);
+    drawTextCenter("(E) About the game", 0, 660, 60, YELLOW);
 
-    DrawText("(A) How to play", SCR_WIDTH / 2 + 2 - sizeTuto / 2 + 2, SCR_HEIGHT / 2 + 132, 60, DARKPURPLE);
-    DrawText("(A) How to play", SCR_WIDTH / 2 - sizeTuto / 2, SCR_HEIGHT / 2 + 130, 60, PURPLE);
-
-    DrawText("(E) About the game", SCR_WIDTH / 2 + 2 - aboutTxt / 2 + 2, SCR_HEIGHT / 2 + 212, 60, DARKGRAY);
-    DrawText("(E) About the game", SCR_WIDTH / 2 - aboutTxt / 2, SCR_HEIGHT / 2 + 210, 60, YELLOW);
-
-    DrawText("(ESC) Exit", SCR_WIDTH / 2 + 2 - sizeExitText / 2 + 2, SCR_HEIGHT / 2 + 292, 60, MAROON);
-    DrawText("(ESC) Exit", SCR_WIDTH / 2 - sizeExitText / 2, SCR_HEIGHT / 2 + 290, 60, RED);
+    drawTextCenter("(ESC) Exit", 2, 742, 60, DARKGRAY);
+    drawTextCenter("(ESC) Exit", 0, 740, 60, RED);
 
     EndDrawing();
 }
@@ -119,12 +109,14 @@ void drawHowToPlay()
     while (!WindowShouldClose() && !IsKeyPressed(KEY_Q))
     {
         BeginDrawing();
-        DrawRectangleGradientV(0, 0, SCR_WIDTH, SCR_HEIGHT, PURPLE, DARKPURPLE);
+        ClearBackground(BLACK);
+
+        drawTextCenter("HOW TO PLAY: ", 0, 100, 100, BLUE);
         DrawText("COMO SE JUEGA:", SCR_WIDTH / 2 - MeasureText("COMO SE JUEGA", 100) / 2, 100, 100, BLUE);
         DrawText("- MUEVETE CON LAS FLECHAS   <-  ->", 40, SCR_HEIGHT / 2 + 40, 50, WHITE);
-        DrawText("- EVITA COLISIONAR CON LOS ASTEROIDES", 40, SCR_HEIGHT / 2 + 110, 50, GRAY);
-        DrawText("- RECOLECTA PUNTOS ", 40, SCR_HEIGHT / 2 + 180, 50, YELLOW);
-        DrawText("- SOBREVIVE RECOLECTANTO VIDAS ⏎", 40, SCR_HEIGHT / 2 + 250, 50, RED);
+        DrawText("- AVOID COLLIDING WITH ASTEROIDS", 40, SCR_HEIGHT / 2 + 110, 50, GRAY);
+        DrawText("- COLLECT POINTS", 40, SCR_HEIGHT / 2 + 180, 50, YELLOW);
+        DrawText("- SURVIVE BY COLLECTING LIVES", 40, SCR_HEIGHT / 2 + 250, 50, RED);
         DrawText("(Q) Back to menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GREEN);
 
         EndDrawing();
@@ -152,16 +144,19 @@ void aboutTheGame()
 }
 
 // Dibuja la interfaz de juego terminado
-void gameOverInterface(Texture2D background, int score, int level)
+void gameOverInterface(Texture2D *background, int *score, int *level)
 {
     // Fondo
-    DrawTexture(background, 0, 0, WHITE);
+    DrawTexture(*background, 0, 0, WHITE);
 
     // Dibujar ventana de "Game Over"
-    DrawText("GAME OVER", SCR_WIDTH / 2 + 2 - MeasureText("GAME OVER", 130) / 2 + 2, SCR_HEIGHT / 2 - 218, 130, WHITE);
-    DrawText("GAME OVER", SCR_WIDTH / 2 - MeasureText("GAME OVER", 130) / 2, SCR_HEIGHT / 2 - 220, 130, RED);
-    DrawText(TextFormat("Score: %04i", score), SCR_WIDTH / 2 - MeasureText(TextFormat("Score: %04i", score), 70) / 2, SCR_HEIGHT / 2 + 10, 70, RAYWHITE);
-    DrawText(TextFormat("LEVEL: %1i", level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", level), 70) / 2, SCR_HEIGHT / 2 - 50, 70, RAYWHITE);
+    drawTextCenter("GAME OVER", 2, 232, 130, WHITE);
+    drawTextCenter("GAME OVER", 0, 230, 130, RED);
+
+    // DrawText("GAME OVER", SCR_WIDTH / 2 + 2 - MeasureText("GAME OVER", 130) / 2 + 2, SCR_HEIGHT / 2 - 218, 130, WHITE);
+    // DrawText("GAME OVER", SCR_WIDTH / 2 - MeasureText("GAME OVER", 130) / 2, SCR_HEIGHT / 2 - 220, 130, RED);
+    DrawText(TextFormat("Score: %04i", *score), SCR_WIDTH / 2 - MeasureText(TextFormat("Score: %04i", *score), 70) / 2, SCR_HEIGHT / 2 + 10, 70, RAYWHITE);
+    DrawText(TextFormat("LEVEL: %1i", *level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", *level), 70) / 2, SCR_HEIGHT / 2 - 50, 70, RAYWHITE);
 
     DrawText("(ENTER) Play Again", SCR_WIDTH / 2 + 2 - MeasureText("(ENTER) Play Again", 70) / 2 + 2, SCR_HEIGHT / 2 + 132, 70, LIME);
     DrawText("(ENTER) Play Again", SCR_WIDTH / 2 - MeasureText("(ENTER) Play Again", 70) / 2, SCR_HEIGHT / 2 + 130, 70, GREEN);
@@ -195,7 +190,7 @@ void gameInterface(Texture2D gamebg, Texture2D ship, Vector2 shipPosicion, int l
     drawHearts(hearts);
 }
 
-void flujoMenu(int *seconds, bool *isPlaying)
+void logicaMenu(int *seconds, bool *isPlaying)
 {
     if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
     {
@@ -227,95 +222,35 @@ void vidas(int lives)
 }
 
 // Inicializa los meteoros gris
-void InitGrayMeteor(Ball *ball)
+void InitGrayMeteor(Ball *grayMeteor)
 {
-    ball->position.x = GetRandomValue(0, GetScreenWidth());
-    ball->position.y = -GRAY_METEOR_RADIUS * 2;
-    ball->active = true;
+    grayMeteor->position.x = GetRandomValue(0, GetScreenWidth());
+    grayMeteor->position.y = -GRAY_METEOR_RADIUS * 2;
+    grayMeteor->active = true;
 }
 
 // Inicializa los meteoros cafe
-void InitBrownMeteor(Ball *ball)
+void InitBrownMeteor(Ball *brownMeteor)
 {
-    ball->position.x = GetRandomValue(0, GetScreenWidth());
-    ball->position.y = -BROWN_METEOR_RADIUS * 2;
-    ball->active = true;
+    brownMeteor->position.x = GetRandomValue(0, GetScreenWidth());
+    brownMeteor->position.y = -BROWN_METEOR_RADIUS * 2;
+    brownMeteor->active = true;
 }
 
 // Inicializa las monedas de puntos
-void InitCoin(Ball *ball)
+void InitCoin(Ball *coin)
 {
-    ball->position.x = GetRandomValue(0, GetScreenWidth());
-    ball->position.y = -COINS_RADIUS * 2;
-    ball->active = true;
+    coin->position.x = GetRandomValue(0, GetScreenWidth());
+    coin->position.y = -COINS_RADIUS * 2;
+    coin->active = true;
 }
 
 // Inicializa los corazones de vida adicional
-void InitHearts(Ball *ball)
+void InitHearts(Ball *heart)
 {
-    ball->position.x = GetRandomValue(0, GetScreenWidth());
-    ball->position.y = -HEARTS_RADIUS * 2;
-    ball->active = true;
-}
-
-void playerMovement(Vector2 *playPosition, const int playRadius, const float playerSpeed)
-{
-    if (IsKeyDown(KEY_RIGHT) && playPosition->x + playRadius < SCR_WIDTH)
-    {
-        playPosition->x += playerSpeed;
-    }
-    if (IsKeyDown(KEY_LEFT) && playPosition->x - playRadius > 0)
-    {
-        playPosition->x -= playerSpeed;
-    }
-    if (IsKeyDown(KEY_UP) && playPosition->y - playRadius > 0) // Ajuste para la parte superior
-    {
-        playPosition->y -= playerSpeed;
-    }
-    if (IsKeyDown(KEY_DOWN) && playPosition->y + playRadius < SCR_HEIGHT) // Ajuste para la parte inferior
-    {
-        playPosition->y += playerSpeed;
-    }
-}
-
-void generateObjects(float *elapsedTime, const float spawnInterval)
-{
-    if (*elapsedTime >= spawnInterval)
-    {
-        for (int i = 0; i < MAX_GRAY_METEORS; i++)
-        {
-            if (!grayMeteors[i].active)
-            {
-                InitGrayMeteor(&grayMeteors[i]);
-                break;
-            }
-        }
-        for (int i = 0; i < MAX_BROWN_METEORS; i++)
-        {
-            if (!brownMeteors[i].active)
-            {
-                InitBrownMeteor(&brownMeteors[i]);
-                break;
-            }
-        }
-        for (int i = 0; i < MAX_COINS; i++)
-        {
-            if (!coins[i].active)
-            {
-                InitCoin(&coins[i]);
-                break;
-            }
-        }
-        for (int i = 0; i < MAX_HEARTS; i++)
-        {
-            if (!hearts[i].active)
-            {
-                InitHearts(&hearts[i]);
-                break;
-            }
-        }
-        *elapsedTime = 0.0f; // Reiniciar el temporizador
-    }
+    heart->position.x = GetRandomValue(0, GetScreenWidth());
+    heart->position.y = -HEARTS_RADIUS * 2;
+    heart->active = true;
 }
 
 // Colisiones
@@ -373,7 +308,7 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
                     if (x + MeasureText(TextFormat("%c", str[j]), tamano) > SCR_WIDTH)
                     {
                         // Si excede, mover a la siguiente línea
-                        x = 50;   // Iniciar desde el borde izquierdo
+                        x = 50;  // Iniciar desde el borde izquierdo
                         y += 70; // Asumiendo una altura de línea de 40 píxeles
                     }
 

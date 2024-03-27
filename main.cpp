@@ -1,4 +1,5 @@
-#include "game.h"
+#include "src/game.h"
+#include "src/resources.h"
 
 int main(void)
 {
@@ -28,57 +29,22 @@ int main(void)
     SetTargetFPS(75);
 
     /************** Carga de texturas **************/
-    // Fondo menu principal
-    Texture2D menu = LoadTexture("images/backgrounds/menu.png");
-    // Fondo partida
-    Texture2D game = LoadTexture("images/backgrounds/game.png");
-    // Fondo gameover
-    Texture2D gameoverT = LoadTexture("images/backgrounds/gameover.png");
-    // Nave
-    Texture2D ship1 = LoadTexture("images/ship/ship01.png");
-    Texture2D ship2 = LoadTexture("images/ship/ship02.png");
-    Texture2D ship3 = LoadTexture("images/ship/ship03.png");
-    Texture2D shipTextures[] =
-        {
-            ship1,
-            ship1,
-            ship2,
-            ship2,
-            ship3,
-            ship3};
+    Texture2D menu, game, gameoverT;
+    Texture2D shipTextures[6];
+    Texture2D coinsTx[6];
+    Texture2D heartsTx[6];
+    loadTextures(&menu, &game, &gameoverT, shipTextures, coinsTx, heartsTx);
 
-    // Monedas
-    Texture2D coinsTx[] =
-        {
-            LoadTexture("images/coins/coin_01.png"),
-            LoadTexture("images/coins/coin_02.png"),
-            LoadTexture("images/coins/coin_03.png"),
-            LoadTexture("images/coins/coin_04.png"),
-            LoadTexture("images/coins/coin_05.png"),
-            LoadTexture("images/coins/coin_06.png")};
-
-    // Corazones
-    Texture2D heart1 = LoadTexture("images/hearts/hearth_01.png");
-    Texture2D heart2 = LoadTexture("images/hearts/hearth_02.png");
-    Texture2D heartsTx[] =
-        {
-            heart1,
-            heart1,
-            heart1,
-            heart2,
-            heart2,
-            heart2};
+    /************** Carga de sonidos **************/
+    InitAudioDevice();
+    Music gameMusic, gameover;
+    Sound soundcoin;
+    loadSounds(&gameMusic, &gameover, &soundcoin);
 
     /***** Ajustes texturas cambiantes *****/
     int currentFrame = 0; // indice de la textura actual
     float frameTimeCounter = 0.0f;
     float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
-
-    /************** Carga de sonidos **************/
-    InitAudioDevice();
-    Music gameMusic = LoadMusicStream("sounds/music.mp3");
-    Music gameover = LoadMusicStream("sounds/gameover.mp3");
-    Sound soundcoin = LoadSound("sounds/coin.wav");
 
     // Posicion jugador
     Vector2 playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
@@ -91,15 +57,13 @@ int main(void)
 
         if (!isPlaying) // Menu principal
         {
-            ClearBackground(BLACK);
             StopMusicStream(gameover); // Detiene musica gameover
             drawMainMenu(menu);        // Dibuja menu principal
-            flujoMenu(&secondsT, &isPlaying);
+
+            logicaMenu(&secondsT, &isPlaying);
         }
         else // Partida
         {
-            UpdateMusicStream(gameMusic);
-
             /***** SPRITE NAVE *****/
             frameTimeCounter += GetFrameTime();
             // pasado el tiempo, cambia la imagen de la nave
@@ -114,16 +78,67 @@ int main(void)
 
             if (!gameOver)
             {
-                StopMusicStream(gameover);  // Detiene musica de gameover
+                StopMusicStream(gameover); // Detiene musica de gameover
+                UpdateMusicStream(gameMusic);
                 PlayMusicStream(gameMusic); // Reproduce musica de la partida
 
                 elapsedTime += GetFrameTime(); // Actualizar temporizador
 
                 // Controlar movimiento del jugador
-                playerMovement(&playPosition, playRadius, playerSpeed);
+                if (IsKeyDown(KEY_RIGHT) && playPosition.x + playRadius < SCR_WIDTH)
+                {
+                    playPosition.x += playerSpeed;
+                }
+                if (IsKeyDown(KEY_LEFT) && playPosition.x - playRadius > 0)
+                {
+                    playPosition.x -= playerSpeed;
+                }
+                if (IsKeyDown(KEY_UP) && playPosition.y - playRadius > 0) // Ajuste para la parte superior
+                {
+                    playPosition.y -= playerSpeed;
+                }
+                if (IsKeyDown(KEY_DOWN) && playPosition.y + playRadius < SCR_HEIGHT) // Ajuste para la parte inferior
+                {
+                    playPosition.y += playerSpeed;
+                }
 
-                // Generar meteoros y objetos
-                generateObjects(&elapsedTime, spawnInterval);
+                // ---------- Generar meteoros y objetos ----------
+                if (elapsedTime >= spawnInterval)
+                {
+                    for (int i = 0; i < MAX_GRAY_METEORS; i++)
+                    {
+                        if (!grayMeteors[i].active)
+                        {
+                            InitGrayMeteor(&grayMeteors[i]);
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < MAX_BROWN_METEORS; i++)
+                    {
+                        if (!brownMeteors[i].active)
+                        {
+                            InitBrownMeteor(&brownMeteors[i]);
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < MAX_COINS; i++)
+                    {
+                        if (!coins[i].active)
+                        {
+                            InitCoin(&coins[i]);
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < MAX_HEARTS; i++)
+                    {
+                        if (!hearts[i].active)
+                        {
+                            InitHearts(&hearts[i]);
+                            break;
+                        }
+                    }
+                    elapsedTime = 0.0f; // Reiniciar el temporizador
+                }
 
                 // Fisicas meteoro gris
                 for (int i = 0; i < MAX_GRAY_METEORS; i++)
@@ -221,8 +236,11 @@ int main(void)
 
             if (gameOver)
             {
-                gameOverInterface(gameoverT, score, level); // Dibujar interfaz de gameover
-                StopMusicStream(gameMusic);                 // Detener musica partida
+                rotation = 0;
+                currentFrame = 0; // Reiniciar currentFrame
+
+                gameOverInterface(&gameoverT, &score, &level); // Dibujar interfaz de gameover
+                StopMusicStream(gameMusic);                    // Detener musica partida
                 UpdateMusicStream(gameover);
                 PlayMusicStream(gameover); // Reproducir musica gameover
 
@@ -261,24 +279,10 @@ int main(void)
         }
     }
 
-    /***** DESCARGA DE RECURSOS *****/
-    // Texturas
-    for (int i = 0; i < 7; i++)
-    {
-        UnloadTexture(coinsTx[i]);
-    }
-    UnloadTexture(ship1);
-    UnloadTexture(ship2);
-    UnloadTexture(ship3);
-    UnloadTexture(heart1);
-    UnloadTexture(heart2);
-    UnloadTexture(game);
-    UnloadTexture(gameoverT);
-    UnloadTexture(menu);
-    // Sonidos
-    UnloadMusicStream(gameMusic);
-    UnloadMusicStream(gameover);
-    UnloadSound(soundcoin);
+    // Descarga de recursos
+    unloadTextures(&menu, &game, &gameoverT, shipTextures, coinsTx, heartsTx);
+    unloadSounds(&gameMusic, &gameover, &soundcoin);
+
     CloseAudioDevice();
     CloseWindow();
     return 0;
