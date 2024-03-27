@@ -175,7 +175,7 @@ void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Te
     vidas(lives);
 
     // Dibujar puntaje
-    DrawText(TextFormat("SCORE: %04i", score), SCR_WIDTH - 400, 20, 50, WHITE);
+    DrawText(TextFormat("SCORE: %04i", *score), SCR_WIDTH - 400, 20, 50, WHITE);
 
     // Dibujar jugador (nave)
     DrawTextureV(*ship, *shipPosicion, WHITE);
