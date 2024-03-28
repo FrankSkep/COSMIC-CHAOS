@@ -72,7 +72,7 @@ int main()
             }
 
             // Velocidad de rotacion meteoros
-            rotation += 3.5f;
+            rotation += 3.0f;
 
             if (!gameOver)
             {
