@@ -46,12 +46,14 @@ int main()
 
     // Posicion jugador
     Vector2 playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
+    // Posicion nave
+    Vector2 shipCenter;
 
     /*************** BUCLE DEL JUEGO ***************/
     while (!WindowShouldClose())
     {
         // Calcula y actualiza la posición del centro de la nave
-        Vector2 shipCenter = {playPosition.x - shipTextures[currentFrame].width / 2, playPosition.y - shipTextures[currentFrame].height / 2};
+        shipCenter = {playPosition.x - shipTextures[currentFrame].width / 2, playPosition.y - shipTextures[currentFrame].height / 2};
 
         if (!isPlaying) // Menu principal
         {
