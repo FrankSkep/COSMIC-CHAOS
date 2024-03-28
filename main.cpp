@@ -154,11 +154,11 @@ int main()
                     elapsedTime = 0.0f; // Reiniciar el temporizador
                 }
 
-                /*------------------ METEOROS ------------------*/
+                /*------------------ FISICAS Y COLISIONES ------------------*/
                 // Velocidad de rotacion meteoros
                 rotation += 2.5f;
 
-                // Fisicas meteoro gris
+                // Meteoro gris
                 for (int i = 0; i < MAX_GRAY_METEORS; i++)
                 {
                     if (grayMeteors[i].active)
@@ -181,7 +181,7 @@ int main()
                         }
                     }
                 }
-                // Fisicas meteoro cafe
+                // Meteoro cafe
                 for (int i = 0; i < MAX_BROWN_METEORS; i++)
                 {
                     if (brownMeteors[i].active)
@@ -206,7 +206,7 @@ int main()
                 }
 
                 /*------------------ OBJETOS ------------------*/
-                // Fisicas moneda (Incrementador de puntos)
+                // Moneda (Incrementador de puntos)
                 for (int i = 0; i < MAX_COINS; i++)
                 {
                     if (coins[i].active)
@@ -226,7 +226,7 @@ int main()
                         }
                     }
                 }
-                // Fisicas corazon (Vida adicional)
+                // Corazon (Vida adicional)
                 for (int i = 0; i < MAX_HEARTS; i++)
                 {
                     if (hearts[i].active)
@@ -259,6 +259,8 @@ int main()
                 // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
                 DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
 
+                EndDrawing();
+
                 Levels(&score, &level, &elapsedTime, &playPosition, &seconds, &lives);
                 /*------------------- ------ -------------------*/
 
@@ -280,6 +282,7 @@ int main()
             /*------------------- GAMEOVER -------------------*/
             if (gameOver)
             {
+                BeginDrawing();
                 // Reproducir musica gameover
                 UpdateMusicStream(gameover);
 
@@ -299,11 +302,11 @@ int main()
                     isPlaying = false;
                     gameOver = false;
                 }
+                EndDrawing();
             }
             /*---------------------------------------------------*/
 
             DrawFPS(20, SCR_HEIGHT - 40);
-            EndDrawing();
         }
     }
 
