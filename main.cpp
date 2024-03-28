@@ -52,9 +52,6 @@ int main()
     /*************** BUCLE DEL JUEGO ***************/
     while (!WindowShouldClose())
     {
-        // Calcula y actualiza la posición del centro de la nave
-        shipCenter = {playPosition.x - shipTextures[currentFrame].width / 2, playPosition.y - shipTextures[currentFrame].height / 2};
-
         if (!isPlaying) // Menu principal
         {
             StopMusicStream(gameover); // Detiene musica gameover
@@ -62,13 +59,17 @@ int main()
 
             logicaMenu(&secondsT, &isPlaying);
         }
-        else // Partida
+        else
         {
+            /*-------------------- PARTIDA --------------------*/
             if (!gameOver)
             {
                 StopMusicStream(gameover); // Detiene musica de gameover
                 UpdateMusicStream(gameMusic);
                 PlayMusicStream(gameMusic); // Reproduce musica de la partida
+
+                // Calcula y actualiza la posición del centro de la nave
+                shipCenter = {playPosition.x - shipTextures[currentFrame].width / 2, playPosition.y - shipTextures[currentFrame].height / 2};
 
                 /***** SPRITES *****/
                 frameTimeCounter += GetFrameTime();
@@ -175,8 +176,6 @@ int main()
                             lives--;                       // Pierde una vida
                             if (lives <= 0)
                             {
-                                // Reinicia elementos
-                                resetItems(&playPosition);
                                 gameOver = true;
                             }
                         }
@@ -200,8 +199,6 @@ int main()
                             lives--;                        // Pierde una vida
                             if (lives <= 0)
                             {
-                                // Reinicia elementos
-                                resetItems(&playPosition);
                                 gameOver = true;
                             }
                         }
@@ -248,26 +245,43 @@ int main()
                         }
                     }
                 }
+                /*------------- DIBUJA PARTIDA EN CURSO -------------*/
+                BeginDrawing();
+                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &rotation);
+
+                /*------------------- NIVELES -------------------*/
+                timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
+
+                totalseconds = (int)timeseconds;
+                minutesT = totalseconds / 60;
+                secondsT = totalseconds % 60;
+
+                // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
+                DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
+
+                Levels(&score, &level, &elapsedTime, &playPosition, &seconds, &lives);
+                /*------------------- ------ -------------------*/
+
+                if (gameOver)
+                {
+                    minutesT = 0, secondsT = 0, totalseconds = 0, timeseconds = 0;
+
+                    rotation = 0;              // Reiniciar rotacion
+                    currentFrame = 0;          // Reiniciar currentFrame
+                    resetItems(&playPosition); // Reinicia posicion y desactiva objetos
+
+                    StopMusicStream(gameMusic); // Detener musica partida
+
+                    PlayMusicStream(gameover); // Reproducir musica gameover
+                }
             }
+            /*-------------------- FIN DE PARTIDA --------------------*/
 
-            /*------------------- DIBUJO -------------------*/
-            BeginDrawing();
-            // Dibuja interfaz y elementos de la partida
-            gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &rotation);
-
+            /*------------------- GAMEOVER -------------------*/
             if (gameOver)
             {
-                rotation = 0;     // Reiniciar rotacion
-                currentFrame = 0; // Reiniciar currentFrame
-
-                StopMusicStream(gameMusic); // Detener musica partida
-
                 // Reproducir musica gameover
                 UpdateMusicStream(gameover);
-                PlayMusicStream(gameover);
-
-                // // Reinicia elementos
-                // resetItems(&playPosition);
 
                 // Dibuja interfaz
                 gameOverInterface(&gameoverT, &score, &level);
@@ -286,17 +300,7 @@ int main()
                     gameOver = false;
                 }
             }
-
-            timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
-
-            totalseconds = (int)timeseconds;
-            minutesT = totalseconds / 60;
-            secondsT = totalseconds % 60;
-
-            // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
-            DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
-
-            Levels(&score, &level, &elapsedTime, &playPosition, &seconds, &lives);
+            /*---------------------------------------------------*/
 
             DrawFPS(20, SCR_HEIGHT - 40);
             EndDrawing();
