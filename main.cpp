@@ -30,9 +30,7 @@ int main()
 
     /************** Carga de texturas **************/
     Texture2D menu, game, gameoverT;
-    Texture2D shipTextures[6];
-    Texture2D coinsTx[6];
-    Texture2D heartsTx[6];
+    Texture2D shipTextures[6], coinsTx[6], heartsTx[6];
     loadTextures(&menu, &game, &gameoverT, shipTextures, coinsTx, heartsTx);
 
     /************** Carga de sonidos **************/
