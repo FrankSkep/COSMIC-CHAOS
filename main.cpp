@@ -58,7 +58,7 @@ int main()
         if (!isPlaying) // Menu principal
         {
             StopMusicStream(gameover); // Detiene musica gameover
-            drawMainMenu(menu);        // Dibuja menu principal
+            drawMainMenu(&menu);       // Dibuja menu principal
 
             logicaMenu(&secondsT, &isPlaying);
         }
@@ -72,9 +72,6 @@ int main()
                 currentFrame = (currentFrame + 1) % 6; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
                 frameTimeCounter = 0.0f;               // Reiniciar el contador de tiempo
             }
-
-            // Velocidad de rotacion meteoros
-            rotation += 3.0f;
 
             if (!gameOver)
             {
@@ -118,7 +115,6 @@ int main()
                     playPosition.y += playerSpeed;
                 }
 
-
                 // ---------- Generar meteoros y objetos ----------
                 if (elapsedTime >= spawnInterval)
                 {
@@ -156,6 +152,10 @@ int main()
                     }
                     elapsedTime = 0.0f; // Reiniciar el temporizador
                 }
+
+                /*------------------ METEOROS ------------------*/
+                // Velocidad de rotacion meteoros
+                rotation += 2.5f;
 
                 // Fisicas meteoro gris
                 for (int i = 0; i < MAX_GRAY_METEORS; i++)
@@ -204,6 +204,7 @@ int main()
                     }
                 }
 
+                /*------------------ OBJETOS ------------------*/
                 // Fisicas moneda (Incrementador de puntos)
                 for (int i = 0; i < MAX_COINS; i++)
                 {
@@ -244,9 +245,9 @@ int main()
                     }
                 }
             }
+
             /*------------------- DIBUJO -------------------*/
             BeginDrawing();
-
             // Dibuja interfaz y elementos de la partida
             gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &rotation);
 
@@ -263,7 +264,7 @@ int main()
                 resetItems(&playPosition);
 
                 // Dibuja interfaz
-                gameOverInterface(&gameoverT, &score, &level); 
+                gameOverInterface(&gameoverT, &score, &level);
 
                 // Vuelve a jugar al presionar enter
                 if (IsKeyDown(KEY_ENTER))
