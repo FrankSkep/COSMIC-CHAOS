@@ -57,7 +57,7 @@ void InitCoin(Ball *coin);
 void InitHearts(Ball *heart);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius);
 void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
-void clock(int *totalseconds, int *minutesT, int *econdsT);
+//void clock(int *totalseconds, int *minutesT, int *econdsT);
 void resetItems(Vector2 *playPosition);
 void resetStats(int *lives, int *score, int *level, double *timeSeconds);
 
@@ -210,6 +210,7 @@ void vidas(int *lives)
     DrawText(TextFormat("Vidas: %d", *lives), SCR_WIDTH - 250, SCR_HEIGHT - 140, 50, WHITE);
     for (int i = 0; i < *lives; i++)
     {
+
         DrawText("<3 ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón lleno
     }
     for (int i = *lives; i < 5; i++)
@@ -429,15 +430,6 @@ void drawGrayMeteor(float *rotation)
 
             // Dibujar líneas adicionales para dar textura
             DrawPolyLinesEx(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, *rotation, 8, DARKGRAY);
-
-            // Dibujar puntos aleatorios dentro del meteoro para textura
-            for (int j = 0; j < 15; j++)
-            {
-                Vector2 point = {
-                    grayMeteors[i].position.x + GetRandomValue(-GRAY_METEOR_RADIUS / 2, GRAY_METEOR_RADIUS / 2),
-                    grayMeteors[i].position.y + GetRandomValue(-GRAY_METEOR_RADIUS / 2, GRAY_METEOR_RADIUS / 2)};
-                DrawCircleV(point, 3, BLACK);
-            }
         }
     }
 }

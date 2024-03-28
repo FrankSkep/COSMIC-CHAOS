@@ -72,7 +72,7 @@ int main()
             }
 
             // Velocidad de rotacion meteoros
-            rotation += 2.5f;
+            rotation += 3.5f;
 
             if (!gameOver)
             {
@@ -82,7 +82,7 @@ int main()
 
                 elapsedTime += GetFrameTime(); // Actualizar temporizador
 
-                // Controlar movimiento del jugador
+                //------- Controlar movimiento del jugador -------
                 if (IsKeyDown(KEY_RIGHT) && playPosition.x + playRadius < SCR_WIDTH)
                 {
                     playPosition.x += playerSpeed;
@@ -225,35 +225,35 @@ int main()
                     }
                 }
             }
-            // clock(&totalseconds, &minutesT, &secondsT);
-
             /*------------------- DIBUJO -------------------*/
             BeginDrawing();
+
             // Dibuja interfaz y elementos de la partida
             gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &rotation);
 
             if (gameOver)
             {
-                rotation = 0;
+                rotation = 0;     // Reiniciar rotacion
                 currentFrame = 0; // Reiniciar currentFrame
 
-                gameOverInterface(&gameoverT, &score, &level); // Dibujar interfaz de gameover
-                StopMusicStream(gameMusic);                    // Detener musica partida
+                StopMusicStream(gameMusic); // Detener musica partida
                 UpdateMusicStream(gameover);
                 PlayMusicStream(gameover); // Reproducir musica gameover
 
-                // Reiniciar elementos
+                // Reinicia elementos
                 resetItems(&playPosition);
+
+                // Dibuja interfaz
+                gameOverInterface(&gameoverT, &score, &level); 
 
                 // Vuelve a jugar al presionar enter
                 if (IsKeyDown(KEY_ENTER))
                 {
-                    // Reiniciar estadisticas
                     resetStats(&lives, &score, &level, &timeseconds);
                     gameOver = false;
                 }
                 // Vuelve al menu al presionar Q
-                if (IsKeyPressed(KEY_Q))
+                if (IsKeyDown(KEY_Q))
                 {
                     resetStats(&lives, &score, &level, &timeseconds);
                     isPlaying = false;
@@ -272,7 +272,7 @@ int main()
 
             Levels(&score, &level, &elapsedTime, &playPosition, &seconds, &lives);
 
-            DrawFPS(20, 20);
+            DrawFPS(20, SCR_HEIGHT - 40);
             EndDrawing();
         }
     }
