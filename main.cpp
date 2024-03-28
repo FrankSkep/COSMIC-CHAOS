@@ -87,7 +87,15 @@ int main()
                 {
                     playPosition.x += playerSpeed;
                 }
+                if (IsKeyDown(KEY_D) && playPosition.x + playRadius < SCR_WIDTH)
+                {
+                    playPosition.x += playerSpeed;
+                }
                 if (IsKeyDown(KEY_LEFT) && playPosition.x - playRadius > 0)
+                {
+                    playPosition.x -= playerSpeed;
+                }
+                if (IsKeyDown(KEY_A) && playPosition.x - playRadius > 0)
                 {
                     playPosition.x -= playerSpeed;
                 }
@@ -95,10 +103,19 @@ int main()
                 {
                     playPosition.y -= playerSpeed;
                 }
+                if (IsKeyDown(KEY_W) && playPosition.y - playRadius > 0) // Ajuste para la parte superior
+                {
+                    playPosition.y -= playerSpeed;
+                }
                 if (IsKeyDown(KEY_DOWN) && playPosition.y + playRadius < SCR_HEIGHT) // Ajuste para la parte inferior
                 {
                     playPosition.y += playerSpeed;
                 }
+                if (IsKeyDown(KEY_S) && playPosition.y + playRadius < SCR_HEIGHT) // Ajuste para la parte inferior
+                {
+                    playPosition.y += playerSpeed;
+                }
+
 
                 // ---------- Generar meteoros y objetos ----------
                 if (elapsedTime >= spawnInterval)

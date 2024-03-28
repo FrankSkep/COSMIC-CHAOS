@@ -273,34 +273,19 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
 
         for (i = 0; i < longitud; i++)
         {
-            double cinematica1 = GetTime(); // Obtener el tiempo de inicio
+            float cinematica1 = GetTime(); // Obtener el tiempo de inicio
 
-            while (GetTime() - cinematica1 < 0.05)
+            while (GetTime() - cinematica1 < 0.01)
             {
                 BeginDrawing();
                 ClearBackground(BLACK);
-
-                // Calcular el ancho total de todas las letras mostradas hasta ahora
-                float totalWidth = 0.0f;
                 int j;
-                for (j = 0; j <= i; j++)
-                {
-                    totalWidth += MeasureText(TextFormat("%c", str[j]), tamano);
-                }
-
                 // Calcular la posición horizontal del texto para centrarlo
-                float x = (SCR_WIDTH - totalWidth) / 2;
+                float x = 51;
                 float y = SCR_HEIGHT / 2 + 10; // Iniciar en la mitad vertical de la pantalla
 
-                // Verificar si el texto se sale de la pantalla por la izquierda
-                if (x < 50)
-                {
-                    // Si se sale, ajustar la posición horizontal para que sea 50
-                    x = 50;
-                }
-
                 // Mostrar todas las letras hasta el índice actual
-                for (j = 0; j <= i; j++)
+                for (j = 0; j <= i; j++) 
                 {
                     // Verificar si la posición horizontal excede el límite máximo de línea
                     if (x + MeasureText(TextFormat("%c", str[j]), tamano) > SCR_WIDTH)
@@ -309,7 +294,6 @@ void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, i
                         x = 50;  // Iniciar desde el borde izquierdo
                         y += 70; // Asumiendo una altura de línea de 40 píxeles
                     }
-
                     // Dibujar cada letra en la posición calculada
                     DrawText(TextFormat("%c", str[j]), x, y, tamano, RAYWHITE);
                     // Incrementar la posición horizontal para la próxima letra
