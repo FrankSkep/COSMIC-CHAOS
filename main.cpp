@@ -64,20 +64,20 @@ int main()
         }
         else // Partida
         {
-            /***** SPRITE NAVE *****/
-            frameTimeCounter += GetFrameTime();
-            // pasado el tiempo, cambia la imagen de la nave
-            if (frameTimeCounter >= frameSpeed)
-            {
-                currentFrame = (currentFrame + 1) % 6; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
-                frameTimeCounter = 0.0f;               // Reiniciar el contador de tiempo
-            }
-
             if (!gameOver)
             {
                 StopMusicStream(gameover); // Detiene musica de gameover
                 UpdateMusicStream(gameMusic);
                 PlayMusicStream(gameMusic); // Reproduce musica de la partida
+
+                /***** SPRITES *****/
+                frameTimeCounter += GetFrameTime();
+                // pasado el tiempo, cambia la imagen de la nave
+                if (frameTimeCounter >= frameSpeed)
+                {
+                    currentFrame = (currentFrame + 1) % 6; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
+                    frameTimeCounter = 0.0f;               // Reiniciar el contador de tiempo
+                }
 
                 elapsedTime += GetFrameTime(); // Actualizar temporizador
 
@@ -115,7 +115,7 @@ int main()
                     playPosition.y += playerSpeed;
                 }
 
-                // ---------- Generar meteoros y objetos ----------
+                // ---------- GENERACION OBJETOS ----------
                 if (elapsedTime >= spawnInterval)
                 {
                     for (int i = 0; i < MAX_GRAY_METEORS; i++)
@@ -175,6 +175,8 @@ int main()
                             lives--;                       // Pierde una vida
                             if (lives <= 0)
                             {
+                                // Reinicia elementos
+                                resetItems(&playPosition);
                                 gameOver = true;
                             }
                         }
@@ -198,6 +200,8 @@ int main()
                             lives--;                        // Pierde una vida
                             if (lives <= 0)
                             {
+                                // Reinicia elementos
+                                resetItems(&playPosition);
                                 gameOver = true;
                             }
                         }
@@ -257,11 +261,13 @@ int main()
                 currentFrame = 0; // Reiniciar currentFrame
 
                 StopMusicStream(gameMusic); // Detener musica partida
-                UpdateMusicStream(gameover);
-                PlayMusicStream(gameover); // Reproducir musica gameover
 
-                // Reinicia elementos
-                resetItems(&playPosition);
+                // Reproducir musica gameover
+                UpdateMusicStream(gameover);
+                PlayMusicStream(gameover);
+
+                // // Reinicia elementos
+                // resetItems(&playPosition);
 
                 // Dibuja interfaz
                 gameOverInterface(&gameoverT, &score, &level);
