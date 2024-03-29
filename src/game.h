@@ -247,8 +247,7 @@ void InitHearts(Ball *heart)
 // Colisiones
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius)
 {
-    float distance = sqrt(pow(ballPos.x - playerPos.x, 2) + pow(ballPos.y - playerPos.y, 2));
-    return (distance < (playerRadius + playRadius));
+    return (sqrt(pow(ballPos.x - playerPos.x, 2) + pow(ballPos.y - playerPos.y, 2)) < (playerRadius + playRadius));
 }
 
 // Manejo de niveles
@@ -275,7 +274,7 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         {
             float cinematica1 = GetTime(); // Obtener el tiempo de inicio
             ClearBackground(BLACK);
-            DrawTexture(cinema[1], 288, 0, WHITE);
+            DrawTexture(cinema[0], 288, 0, WHITE);
             // Cambiar la imagen de fondo cada 10 letras
 
             while (GetTime() - cinematica1 < 0.01)
@@ -293,9 +292,9 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
 
                 // Dibujar la imagen de fondo correspondiente
                 if (cambio)
-                    DrawTexture(cinema[1], 288, 0, WHITE);
+                    DrawTexture(cinema[0], 288, 0, WHITE);
                 else
-                    DrawTexture(cinema[2], 288, 0, WHITE);
+                    DrawTexture(cinema[1], 288, 0, WHITE);
 
                 int j;
                 float x = limiteH;                // inicio

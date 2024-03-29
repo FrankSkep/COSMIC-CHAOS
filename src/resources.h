@@ -23,8 +23,8 @@ void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Textu
     *gameover = LoadTexture("images/backgrounds/gameover.png");
 
     // presentador
-    cinema[1] = LoadTexture("images/backgrounds/cinema1.png");
-    cinema[2] = LoadTexture("images/backgrounds/cinema2.png");
+    cinema[0] = LoadTexture("images/backgrounds/cinema1.png");
+    cinema[1] = LoadTexture("images/backgrounds/cinema2.png");
 
     // Nave
     shipTx[0] = LoadTexture("images/ship/ship01.png");
