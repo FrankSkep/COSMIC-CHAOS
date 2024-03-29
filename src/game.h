@@ -6,38 +6,38 @@
 #include <string.h>
 
 /******** DIMENSIONES PANTALLA *********/
-#define SCR_WIDTH 1600 // ALTO  (X)
-#define SCR_HEIGHT 900 // ANCHO (Y)
+#define SCR_WIDTH 1600 // ANCHO  (X)
+#define SCR_HEIGHT 900 // ALTO (Y)
 
 /******** CONSTANTES *********/
 // Meteoros
-#define MAX_GRAY_METEORS 30     // Maximo de bolas verde
-#define GRAY_METEOR_RADIUS 70   // Tamaño
-#define GRAY_METEOR_SPEED 7.0f  // Velocidad de caida
-#define MAX_BROWN_METEORS 10    // Maximo de bolas cafe
-#define BROWN_METEOR_RADIUS 40  // Tamaño
-#define BROWN_METEOR_SPEED 9.0f // Velocidad de caida
+#define MAX_GRAY_METEORS 30    // Maximos meteoros en pantalla
+#define GRAY_METEOR_RADIUS 70  // Tamaño
+#define GRAY_METEOR_SPEED 7.0f // Velocidad de caida
+#define MAX_BROWN_METEORS 10
+#define BROWN_METEOR_RADIUS 40
+#define BROWN_METEOR_SPEED 9.0f
 // Monedas
-#define MAX_COINS 2      // Maximo de bolas amarilla
+#define MAX_COINS 2      // Maximas monedas en pantalla
 #define COINS_RADIUS 20  // Tamaño
 #define COINS_SPEED 8.0f // Velocidad de caida
 // Corazones
-#define MAX_HEARTS 1      // Maximo bolas rojas
+#define MAX_HEARTS 1      // Maximos corazones en pantalla
 #define HEARTS_RADIUS 20  // Tamaño
 #define HEARTS_SPEED 9.0f // Velocidad de caida
 
-/***** STRUCT PARA METEOROS Y OBJETOS DEL JUEGO ******/
+/*------- STRUCT OBJETOS DEL JUEGO -------*/
 typedef struct
 {
     Vector2 position;
     bool active;
-} Ball;
+} GameObject;
 
 /*----------- INSTANCIAS NECESARIAS DE STRUCT 'Ball' -----------*/
-Ball grayMeteors[MAX_GRAY_METEORS];
-Ball brownMeteors[MAX_BROWN_METEORS];
-Ball coins[MAX_COINS];
-Ball hearts[MAX_HEARTS];
+GameObject grayMeteors[MAX_GRAY_METEORS];
+GameObject brownMeteors[MAX_BROWN_METEORS];
+GameObject coins[MAX_COINS];
+GameObject hearts[MAX_HEARTS];
 
 /*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
 
@@ -50,10 +50,10 @@ void gameOverInterface(Texture2D *background, int *score, int *level);
 /* LOGICA DEL JUEGO */
 void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, int *lives, int *score, float *rotation);
 void logicaMenu(int *seconds, bool *isPlaying);
-void InitGrayMeteor(Ball *grayMeteor);
-void InitBrownMeteor(Ball *brownMeteor);
-void InitCoin(Ball *coin);
-void InitHearts(Ball *heart);
+void InitGrayMeteor(GameObject *grayMeteor);
+void InitBrownMeteor(GameObject *brownMeteor);
+void InitCoin(GameObject *coin);
+void InitHearts(GameObject *heart);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius);
 void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
 void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int numFondos);
@@ -214,7 +214,7 @@ void logicaMenu(int *seconds, bool *isPlaying)
 }
 
 // Inicializa los meteoros gris
-void InitGrayMeteor(Ball *grayMeteor)
+void InitGrayMeteor(GameObject *grayMeteor)
 {
     grayMeteor->position.x = GetRandomValue(0, GetScreenWidth());
     grayMeteor->position.y = -GRAY_METEOR_RADIUS * 2;
@@ -222,7 +222,7 @@ void InitGrayMeteor(Ball *grayMeteor)
 }
 
 // Inicializa los meteoros cafe
-void InitBrownMeteor(Ball *brownMeteor)
+void InitBrownMeteor(GameObject *brownMeteor)
 {
     brownMeteor->position.x = GetRandomValue(0, GetScreenWidth());
     brownMeteor->position.y = -BROWN_METEOR_RADIUS * 2;
@@ -230,7 +230,7 @@ void InitBrownMeteor(Ball *brownMeteor)
 }
 
 // Inicializa las monedas de puntos
-void InitCoin(Ball *coin)
+void InitCoin(GameObject *coin)
 {
     coin->position.x = GetRandomValue(0, GetScreenWidth());
     coin->position.y = -COINS_RADIUS * 2;
@@ -238,7 +238,7 @@ void InitCoin(Ball *coin)
 }
 
 // Inicializa los corazones de vida adicional
-void InitHearts(Ball *heart)
+void InitHearts(GameObject *heart)
 {
     heart->position.x = GetRandomValue(0, GetScreenWidth());
     heart->position.y = -HEARTS_RADIUS * 2;
@@ -266,7 +266,12 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         // int tamano = 45;
         // int limiteH = 50;
 
-        // int longitud = strlen(str);
+        int longitud = strlen(str);
+        int i;
+        int count;
+        bool cambio = true;
+        int backgroundChangeFrequency = 7;  // Cambiar la imagen de fondo cada 10 letras
+        int lettersPerBackgroundChange = 0; // Contador de letras desde el último cambio de imagen de fondo
 
         // int i;
         // int count;
