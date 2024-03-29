@@ -52,6 +52,10 @@ int main()
     /*************** BUCLE DEL JUEGO ***************/
     while (!WindowShouldClose())
     {
+        if(IsKeyPressed(KEY_F11))
+        {
+            ToggleFullscreen();
+        }
         if (!isPlaying) // Menu principal
         {
             StopMusicStream(gameover); // Detiene musica gameover
