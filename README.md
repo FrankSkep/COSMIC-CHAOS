@@ -15,6 +15,8 @@
 - Lista de características principales del juego.
 - Aspectos como género, estilo de juego, modo de juego, etc.
 
+## **Instrucciones de uso**
+
 ### **Instalación**
 1. Descargar el archivo <a href="aquiPonerURLdeRelease">`COSMIC-CHAOS`</a> desde la página de lanzamientos en este repositorio.
 
@@ -24,17 +26,15 @@
 
 **_Si recibe un aviso de virus deberá ejecutar el archivo ejecutable como administrador._**
 
-## **Instrucciones de uso**
+### Los controles básicos para jugar son las siguientes:
 
-#### Los controles básicos para jugar son las siguientes:
-
-##### Controles de movimiento
+#### Controles de movimiento
 -   **W o ^**: Mover hacia arriba
 -   **A o <**: Mover hacia la izquierda
 -   **S o v**: Mover hacia abajo
 -   **D o >**: Mover hacia la derecha
 
-##### Otras acciones
+#### Otras acciones
 -   **ENTER**: Jugar
 -   **A**: Como jugar
 -   **E**: Informacion del juego
