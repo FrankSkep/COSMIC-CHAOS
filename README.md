@@ -1,6 +1,5 @@
 # COSMIC CHAOS 
 
----
 ![Captura de pantalla del juego](https://i.ibb.co/9W1YGtq/interfaz.png)
 
 ## Descripcion
