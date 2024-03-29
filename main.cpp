@@ -23,7 +23,7 @@ int main()
     double timeseconds = 0;
 
     /*----------- CONFIGURACION VENTANA -----------*/
-    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.12");
+    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.15");
     SetTargetFPS(75);
 
     /*----------- Carga de texturas -----------*/
