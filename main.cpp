@@ -253,8 +253,8 @@ int main()
 
                 // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
                 DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
-
-                Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &seconds, &lives);
+                
+                Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &lives);
                 /*--------------------------------------------------------*/
 
                 if (gameOver)

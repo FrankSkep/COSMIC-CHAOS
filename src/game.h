@@ -53,7 +53,7 @@ void logicaMenu(int *seconds, bool *isPlaying);
 
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
 void InitObject(GameObject *object, float *objRadius);
-void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
+void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *lives);
 void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int frame1, int frame2);
 void skip(void);
 void screenlevel(const char *text, int seconds);
