@@ -11,12 +11,12 @@
 
 /******** CONSTANTES *********/
 // Meteoros
-#define MAX_GRAY_METEORS 30     // Maximos meteoros en pantalla
-#define GRAY_METEOR_RADIUS 70   // Tamaño
-#define GRAY_METEOR_SPEED 7.0f  // Velocidad de caida
-#define MAX_BROWN_METEORS 10    
-#define BROWN_METEOR_RADIUS 40  
-#define BROWN_METEOR_SPEED 9.0f 
+#define MAX_GRAY_METEORS 30    // Maximos meteoros en pantalla
+#define GRAY_METEOR_RADIUS 70  // Tamaño
+#define GRAY_METEOR_SPEED 7.0f // Velocidad de caida
+#define MAX_BROWN_METEORS 10
+#define BROWN_METEOR_RADIUS 40
+#define BROWN_METEOR_SPEED 9.0f
 // Monedas
 #define MAX_COINS 2      // Maximas monedas en pantalla
 #define COINS_RADIUS 20  // Tamaño
@@ -267,8 +267,8 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         int i;
         int count;
         bool cambio = true;
-        int backgroundChangeFrequency = 7; // Cambiar la imagen de fondo cada 10 letras
-        int lettersPerBackgroundChange = 0;  // Contador de letras desde el último cambio de imagen de fondo
+        int backgroundChangeFrequency = 7;  // Cambiar la imagen de fondo cada 10 letras
+        int lettersPerBackgroundChange = 0; // Contador de letras desde el último cambio de imagen de fondo
 
         for (i = 0; i < longitud; i++)
         {
