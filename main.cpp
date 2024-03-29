@@ -272,8 +272,8 @@ int main()
                 }
             } /*-------------------- FIN DE PARTIDA --------------------*/
             else
-            {
-                /*------------------- GAMEOVER -------------------*/
+            { /*------------------ GAMEOVER TRUE ------------------*/
+                
                 // Reproducir musica gameover
                 UpdateMusicStream(gameover);
 
