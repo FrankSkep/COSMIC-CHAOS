@@ -1,53 +1,53 @@
-# COSMIC CHAOS 
+<h1 style="text-align:center;">COSMIC CHAOS</h1>
 
 ![Captura de pantalla del juego](https://i.ibb.co/9W1YGtq/interfaz.png)
 
-## Descripcion
-(Breve descripcion del juego y objetivo principal)
-- El jugador controla una nave, y debe esquivar los meteoros que van cayendo para sobrevivir, asi como ir recolectando objetos.
-- Inicialmente, cuentas con 5 vidas
-- Si chocas con un meteoro, pierdes una vida.
-- Si tomas una moneda, ganas 10 puntos.
-- Si tomas un corazon, ganas una vida adicional.
+## Descripción
+COSMIC CHAOS es un videojuego espacial en 2D donde el jugador controla una nave espacial y debe esquivar meteoros para sobrevivir, mientras recolecta objetos para ganar puntos y vidas adicionales.
 
-## Caracteristicas
-- Lista de características principales del juego.
-- Aspectos como género, estilo de juego, modo de juego, etc.
+## Características
+- **Jugabilidad Adictiva:** Sumérgete en una experiencia de juego emocionante y desafiante que pondrá a prueba tus reflejos y habilidades de esquiva.
+- **Sistema de Puntuación y Vidas:** Compite por obtener la puntuación más alta mientras gestionas tus vidas y te esfuerzas por alcanzar nuevos récords.
+- **Objetos coleccionables:** Encuentra monedas para aumentar tu puntuación y corazones para añadir una vida adicional.
+- **Ambiente Sonoro Envolvente:** Sumérgete completamente en el juego con efectos de sonido que complementan la acción y la atmósfera del espacio.
 
-## **Instrucciones de uso**
+## Características Técnicas y Requisitos del Sistema
+**Características Técnicas:**
+- Lenguaje de Programación: C
+- Biblioteca Gráfica: Raylib
+- Plataforma: Windows, Linux, macOS
 
-### **Instalación**
-1. Descargar el archivo <a href="aquiPonerURLdeRelease">`COSMIC-CHAOS`</a> desde la página de lanzamientos en este repositorio.
+**Requisitos del Sistema:**
+- Memoria RAM: 1.5 GB
+- Procesador: Dual-core (mínimo 2 núcleos)
 
-2. Descomprimir el archivo con la extensión `.zip` en cualquier folder.
 
-3. Ejecutar el archivo `Cosmic-Chaos.exe` contenido en el folder.
+## Instrucciones de uso
+### Instalación
+1. Descarga el archivo [COSMIC-CHAOS](aquiPonerURLdeRelease) desde la página de lanzamientos en este repositorio.
+2. Descomprime el archivo con la extensión `.zip` en cualquier carpeta.
+3. Ejecuta el archivo `Cosmic-Chaos.exe` contenido en la carpeta.
 
-**_Si recibe un aviso de virus deberá ejecutar el archivo ejecutable como administrador._**
+**_Si recibes un aviso de virus, ejecuta el archivo ejecutable como administrador._**
 
-### Los controles básicos para jugar son las siguientes:
+### Controles básicos
 
-#### Controles de movimiento
--   **W o ^**: Mover hacia arriba
--   **A o <**: Mover hacia la izquierda
--   **S o v**: Mover hacia abajo
--   **D o >**: Mover hacia la derecha
-
-#### Otras acciones
--   **ENTER**: Jugar
--   **A**: Como jugar
--   **E**: Informacion del juego
--   **Q**: Volver al menu principal
--   **ESC**: Salir
-
+| Acción               | Tecla           |
+|----------------------|-----------------|
+| Mover hacia arriba   | W o ↑           |
+| Mover hacia abajo    | S o ↓           |
+| Mover hacia la izq.  | A o ←           |
+| Mover hacia la der.  | D o →           |
+| Jugar                | ENTER           |
+| Instrucciones        | A               |
+| Información del juego| E               |
+| Volver al menú       | Q               |
+| Salir                | ESC             |
 
 ## Créditos
-### **Desarrolladores**
-
----
-
+### Desarrolladores
 - [Francisco Cornejo Pacheco](https://github.com/FrankSkep)
 - [Diego Alonso Ibarra Galindo](https://github.com/Dekstro999)
 
-### **Sonido**
+### Sonido
 - X
