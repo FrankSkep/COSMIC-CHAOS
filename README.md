@@ -24,7 +24,7 @@
 
 **_Si recibe un aviso de virus deberá ejecutar el archivo ejecutable como administrador._**
 
-### **Instrucciones de uso**
+## **Instrucciones de uso**
 
 #### Los controles básicos para jugar son las siguientes:
 
@@ -43,7 +43,6 @@
 
 
 ## Créditos
----
 ### **Desarrolladores**
 
 ---
@@ -51,6 +50,5 @@
 - [Francisco Cornejo Pacheco](https://github.com/FrankSkep)
 - [Diego Alonso Ibarra Galindo](https://github.com/Dekstro999)
 
----
 ### **Sonido**
 - X
