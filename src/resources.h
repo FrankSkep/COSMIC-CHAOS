@@ -3,15 +3,15 @@
 #include "raylib.h"
 
 /*---------------- PROTOTIPOS ----------------*/
-void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx);
-void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx);
+void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx);
+void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx);
 void loadSounds(Music *game, Music *gameover, Sound *coin);
 void unloadSounds(Music *game, Music *gameover, Sound *coin);
 
 /*---------------- DESARROLLO ----------------*/
 
 // ---- Carga texturas ----
-void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx)
+void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx)
 {
     // Fondo menu principal
     *menu = LoadTexture("images/backgrounds/menu.png");
@@ -21,6 +21,10 @@ void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Textu
 
     // Fondo gameover
     *gameover = LoadTexture("images/backgrounds/gameover.png");
+
+    // presentador
+    cinema[1] = LoadTexture("images/backgrounds/cinema1.png");
+    cinema[2] = LoadTexture("images/backgrounds/cinema2.png");
 
     // Nave
     shipTx[0] = LoadTexture("images/ship/ship01.png");
@@ -48,11 +52,14 @@ void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Textu
 }
 
 // ---- Descarga texturas ----
-void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx)
+void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx)
 {
     UnloadTexture(*menu);
     UnloadTexture(*gamebg);
     UnloadTexture(*gameover);
+    UnloadTexture(cinema[1]);
+    UnloadTexture(cinema[2]);
+
     for (int i = 0; i < 6; i++)
     {
         UnloadTexture(shipTx[i]);

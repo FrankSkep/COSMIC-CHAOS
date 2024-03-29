@@ -29,9 +29,9 @@ int main()
     SetTargetFPS(75);
 
     /************** Carga de texturas **************/
-    Texture2D menu, game, gameoverT;
+    Texture2D menu, game, gameoverT, cinema[2];
     Texture2D shipTextures[6], coinsTx[6], heartsTx[6];
-    loadTextures(&menu, &game, &gameoverT, shipTextures, coinsTx, heartsTx);
+    loadTextures(&menu, &game, &gameoverT,cinema, shipTextures, coinsTx, heartsTx);
 
     /************** Carga de sonidos **************/
     InitAudioDevice();
@@ -261,7 +261,7 @@ int main()
 
                 EndDrawing();
 
-                Levels(&score, &level, &elapsedTime, &playPosition, &seconds, &lives);
+                Levels(cinema, &score, &level, &elapsedTime, &playPosition, &seconds, &lives);
                 /*------------------- ------ -------------------*/
 
                 if (gameOver)
@@ -311,7 +311,7 @@ int main()
     }
 
     // Descarga de recursos
-    unloadTextures(&menu, &game, &gameoverT, shipTextures, coinsTx, heartsTx);
+    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, coinsTx, heartsTx);
     unloadSounds(&gameMusic, &gameover, &soundcoin);
 
     CloseAudioDevice();

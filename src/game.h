@@ -55,7 +55,7 @@ void InitBrownMeteor(Ball *brownMeteor);
 void InitCoin(Ball *coin);
 void InitHearts(Ball *heart);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius);
-void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
+void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
 // void clock(int *totalseconds, int *minutesT, int *econdsT);
 void resetItems(Vector2 *playPosition);
 void resetStats(int *lives, int *score, int *level, double *timeSeconds);
@@ -252,46 +252,73 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
 }
 
 // Manejo de niveles
-void Levels(int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives)
+void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives)
 {
     if (*score >= 30 && *level == 1)
     {
         // Limpiar todas las esferas en la pantalla
+        // Limpiar todas las esferas en la pantalla
         resetItems(playPosition);
-        *level = 2;
-        char str[] = "no te puedo regalar unas florees amarillas pero si te puedo dedicar un codigo ---- ya esto es aparte  mas texto aqui para ver sus limites mas y mas texto mas y mas ya fin  NOTA: CAMBIAR ESTO MEJOR A LA IZQUIERDA ";
-        int tamano = 60;
+        *level = 2; //                         -v-  aqui
+        char str[] = "\"EN ULTIMAS NOTICIAS\"                                      LA PGR DETUVO A DOS DEVELOPER POR PLAGIAR EL CODIGO DE UN JOVEN DE CHILPANCINGO DE LA CARRERA DE SISTEMAS ";
+        int tamano = 40;
+        int limiteH = 50;
+
         int longitud = strlen(str);
         int i;
+        int count;
+        bool cambio = true;
+        int backgroundChangeFrequency = 7; // Cambiar la imagen de fondo cada 10 letras
+        int lettersPerBackgroundChange = 0;  // Contador de letras desde el último cambio de imagen de fondo
 
         for (i = 0; i < longitud; i++)
         {
             float cinematica1 = GetTime(); // Obtener el tiempo de inicio
+            ClearBackground(BLACK);
+            DrawTexture(cinema[1], 288, 0, WHITE);
+            // Cambiar la imagen de fondo cada 10 letras
 
             while (GetTime() - cinematica1 < 0.01)
             {
-                BeginDrawing();
                 ClearBackground(BLACK);
+
+                BeginDrawing();
+
+                // Cambiar la imagen de fondo cuando corresponda
+                if (lettersPerBackgroundChange >= backgroundChangeFrequency)
+                {
+                    cambio = !cambio;               // Alternar entre las imágenes de fondo
+                    lettersPerBackgroundChange = 0; // Reiniciar el contador de letras desde el último cambio
+                }
+
+                // Dibujar la imagen de fondo correspondiente
+                if (cambio)
+                    DrawTexture(cinema[1], 288, 0, WHITE);
+                else
+                    DrawTexture(cinema[2], 288, 0, WHITE);
+
                 int j;
-                // Calcular la posición horizontal del texto para centrarlo
-                float x = 51;
-                float y = SCR_HEIGHT / 2 + 10; // Iniciar en la mitad vertical de la pantalla
+                float x = limiteH;                // inicio
+                float y = (SCR_HEIGHT / 2) * 1.5; //   ↵
 
                 // Mostrar todas las letras hasta el índice actual
                 for (j = 0; j <= i; j++)
                 {
                     // Verificar si la posición horizontal excede el límite máximo de línea
-                    if (x + MeasureText(TextFormat("%c", str[j]), tamano) > SCR_WIDTH)
+                    if (x + MeasureText(TextFormat("%c", str[j]), tamano) > SCR_WIDTH - limiteH)
                     {
                         // Si excede, mover a la siguiente línea
-                        x = 50;  // Iniciar desde el borde izquierdo
-                        y += 70; // Asumiendo una altura de línea de 40 píxeles
+                        x = limiteH;     // Iniciar desde el borde izquierdo
+                        y += tamano + 5; // Espacio entre fila
                     }
                     // Dibujar cada letra en la posición calculada
-                    DrawText(TextFormat("%c", str[j]), x, y, tamano, RAYWHITE);
+                    DrawText(TextFormat("%c", str[j]), x + 4, y + 4, tamano, BLACK);
+                    DrawText(TextFormat("%c", str[j]), x, y, tamano, WHITE);
                     // Incrementar la posición horizontal para la próxima letra
                     x += MeasureText(TextFormat("%c", str[j]), tamano) + 10; // Agregar un margen de 10 píxeles entre letras
+                    count++;
                 }
+                lettersPerBackgroundChange++;
 
                 EndDrawing();
             }
