@@ -3,56 +3,53 @@
 
 int main()
 {
-    /*********** CONSTANTES ************/
+    /*------------- CONSTANTES -------------*/  
     const int playRadius = 45;        // Tamaño del jugador
     const float playerSpeed = 15.0f;  // Velocidad del jugador
-    const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de meteoros
+    const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de objetos
 
-    /************ VARIABLES *************/
+    /*--------------- VARIABLES ---------------*/
+    /* ESTADOS DEL JUEGO */
+    bool isPlaying = false;
+    bool gameOver = false;
 
-    // ---- ESTADOS DEL JUEGO----
-    bool isPlaying = false; // Determina si esta en juego
-    bool gameOver = false;  // Controla gameover
-    // --------------------------------------------------------
-    float elapsedTime = 0.0f;
-    float rotation = 0.0f; // Rotacion de meteoros
-    int score = 0;         // Inicio del puntaje
-    int lives = 5;         // Vidas Iniciales
-    int level = 1;         // Nivel inicial
-    int seconds = 1.00;    // espera entre niveles
-    int totalseconds = 0;  // -------
-    int minutesT = 0;      // CLOCK
-    int secondsT = 0;      // -------
+    /* JUEGO */
+    float elapsedTime = 0.0f, rotationMeteor = 0.0f;
+    int score = 0, lives = 5, level = 1;
+
+    /* CRONOMETRO */
+    int seconds = 1.00, totalseconds = 0, minutesT = 0, secondsT = 0;
     double timeseconds = 0;
 
+    /*----------- CONFIGURACION VENTANA -----------*/
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.12");
     SetTargetFPS(75);
 
-    /************** Carga de texturas **************/
+    /*----------- Carga de texturas -----------*/
     Texture2D menu, game, gameoverT, cinema[2];
     Texture2D shipTextures[6], coinsTx[6], heartsTx[6];
-    loadTextures(&menu, &game, &gameoverT,cinema, shipTextures, coinsTx, heartsTx);
+    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, coinsTx, heartsTx);
 
-    /************** Carga de sonidos **************/
+    /*----------- Carga de sonidos -----------*/
     InitAudioDevice();
     Music gameMusic, gameover;
     Sound soundcoin;
     loadSounds(&gameMusic, &gameover, &soundcoin);
 
-    /***** Ajustes texturas cambiantes *****/
+    /*-------- Ajustes texturas cambiantes --------*/
     int currentFrame = 0; // indice de la textura actual
     float frameTimeCounter = 0.0f;
     float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
 
     // Posicion jugador
     Vector2 playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
-    // Posicion nave
+    // Centro nave
     Vector2 shipCenter;
 
-    /*************** BUCLE DEL JUEGO ***************/
+    /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
     {
-        if(IsKeyPressed(KEY_F11))
+        if (IsKeyPressed(KEY_F11))
         {
             ToggleFullscreen();
         }
@@ -61,7 +58,7 @@ int main()
             StopMusicStream(gameover); // Detiene musica gameover
             drawMainMenu(&menu);       // Dibuja menu principal
 
-            logicaMenu(&secondsT, &isPlaying);
+            logicaMenu(&secondsT, &isPlaying); // Acciones menu
         }
         else
         {
@@ -84,9 +81,7 @@ int main()
                     frameTimeCounter = 0.0f;               // Reiniciar el contador de tiempo
                 }
 
-                elapsedTime += GetFrameTime(); // Actualizar temporizador
-
-                //------- Controlar movimiento del jugador -------
+                /*--------------- CONTROL MOVIMIENTO NAVE ---------------*/
                 if (IsKeyDown(KEY_RIGHT) && playPosition.x + playRadius < SCR_WIDTH)
                 {
                     playPosition.x += playerSpeed;
@@ -120,7 +115,8 @@ int main()
                     playPosition.y += playerSpeed;
                 }
 
-                // ---------- GENERACION OBJETOS ----------
+                /*------------------- GENERACION OBJETOS -------------------*/
+                elapsedTime += GetFrameTime(); // Actualizar temporizador
                 if (elapsedTime >= spawnInterval)
                 {
                     for (int i = 0; i < MAX_GRAY_METEORS; i++)
@@ -160,7 +156,7 @@ int main()
 
                 /*------------------ FISICAS Y COLISIONES ------------------*/
                 // Velocidad de rotacion meteoros
-                rotation += 2.5f;
+                rotationMeteor += 2.5f;
 
                 // Meteoro gris
                 for (int i = 0; i < MAX_GRAY_METEORS; i++)
@@ -209,7 +205,6 @@ int main()
                     }
                 }
 
-                /*------------------ OBJETOS ------------------*/
                 // Moneda (Incrementador de puntos)
                 for (int i = 0; i < MAX_COINS; i++)
                 {
@@ -249,13 +244,12 @@ int main()
                         }
                     }
                 }
-                /*------------- DIBUJA PARTIDA EN CURSO -------------*/
+                /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
                 BeginDrawing();
-                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &rotation);
+                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &rotationMeteor);
 
                 /*------------------- NIVELES -------------------*/
                 timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
-
                 totalseconds = (int)timeseconds;
                 minutesT = totalseconds / 60;
                 secondsT = totalseconds % 60;
@@ -266,13 +260,13 @@ int main()
                 EndDrawing();
 
                 Levels(cinema, &score, &level, &elapsedTime, &playPosition, &seconds, &lives);
-                /*------------------- ------ -------------------*/
+                /*--------------------- FIN DIBUJO ---------------------*/
 
                 if (gameOver)
                 {
                     minutesT = 0, secondsT = 0, totalseconds = 0, timeseconds = 0;
 
-                    rotation = 0;              // Reiniciar rotacion
+                    rotationMeteor = 0;        // Reiniciar rotacion
                     currentFrame = 0;          // Reiniciar currentFrame
                     resetItems(&playPosition); // Reinicia posicion y desactiva objetos
 
@@ -280,8 +274,7 @@ int main()
 
                     PlayMusicStream(gameover); // Reproducir musica gameover
                 }
-            }
-            /*-------------------- FIN DE PARTIDA --------------------*/
+            } /*-------------------- FIN DE PARTIDA --------------------*/
 
             /*------------------- GAMEOVER -------------------*/
             if (gameOver)
