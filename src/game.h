@@ -11,20 +11,20 @@
 
 /******** CONSTANTES *********/
 // Meteoros
-#define MAX_GRAY_METEORS 30    // Maximos meteoros en pantalla
-#define GRAY_METEOR_RADIUS 70  // Tamaño
-#define GRAY_METEOR_SPEED 7.0f // Velocidad de caida
+#define MAX_GRAY_METEORS 30          // Maximos meteoros en pantalla
+const float GRAY_METEOR_RADIUS = 70; // Tamaño
+#define GRAY_METEOR_SPEED 7.0f       // Velocidad de caida
 #define MAX_BROWN_METEORS 10
-#define BROWN_METEOR_RADIUS 40
+const float BROWN_METEOR_RADIUS = 40;
 #define BROWN_METEOR_SPEED 9.0f
 // Monedas
-#define MAX_COINS 2      // Maximas monedas en pantalla
-#define COINS_RADIUS 20  // Tamaño
-#define COINS_SPEED 8.0f // Velocidad de caida
+#define MAX_COINS 2            // Maximas monedas en pantalla
+const float COINS_RADIUS = 20; // Tamaño
+#define COINS_SPEED 8.0f       // Velocidad de caida
 // Corazones
-#define MAX_HEARTS 1      // Maximos corazones en pantalla
-#define HEARTS_RADIUS 20  // Tamaño
-#define HEARTS_SPEED 9.0f // Velocidad de caida
+#define MAX_HEARTS 1            // Maximos corazones en pantalla
+const float HEARTS_RADIUS = 20; // Tamaño
+#define HEARTS_SPEED 9.0f       // Velocidad de caida
 
 /*------- STRUCT OBJETOS DEL JUEGO -------*/
 typedef struct
@@ -50,11 +50,9 @@ void gameOverInterface(Texture2D *background, int *score, int *level);
 /* LOGICA DEL JUEGO */
 void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, int *lives, int *score, float *rotation);
 void logicaMenu(int *seconds, bool *isPlaying);
-void InitGrayMeteor(GameObject *grayMeteor);
-void InitBrownMeteor(GameObject *brownMeteor);
-void InitCoin(GameObject *coin);
-void InitHearts(GameObject *heart);
+
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
+void InitObject(GameObject *object, float *objRadius);
 void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
 void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int numFondos);
 // void clock(int *totalseconds, int *minutesT, int *econdsT);
@@ -213,36 +211,11 @@ void logicaMenu(int *seconds, bool *isPlaying)
     }
 }
 
-// Inicializa los meteoros gris
-void InitGrayMeteor(GameObject *grayMeteor)
+void InitObject(GameObject *object, const float *objRadius)
 {
-    grayMeteor->position.x = GetRandomValue(0, GetScreenWidth());
-    grayMeteor->position.y = -GRAY_METEOR_RADIUS * 2;
-    grayMeteor->active = true;
-}
-
-// Inicializa los meteoros cafe
-void InitBrownMeteor(GameObject *brownMeteor)
-{
-    brownMeteor->position.x = GetRandomValue(0, GetScreenWidth());
-    brownMeteor->position.y = -BROWN_METEOR_RADIUS * 2;
-    brownMeteor->active = true;
-}
-
-// Inicializa las monedas de puntos
-void InitCoin(GameObject *coin)
-{
-    coin->position.x = GetRandomValue(0, GetScreenWidth());
-    coin->position.y = -COINS_RADIUS * 2;
-    coin->active = true;
-}
-
-// Inicializa los corazones de vida adicional
-void InitHearts(GameObject *heart)
-{
-    heart->position.x = GetRandomValue(0, GetScreenWidth());
-    heart->position.y = -HEARTS_RADIUS * 2;
-    heart->active = true;
+    object->position.x = GetRandomValue(0, SCR_WIDTH);
+    object->position.y = -*objRadius * 2;
+    object->active = true;
 }
 
 // Colisiones
@@ -267,70 +240,6 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         subtiruloscinematicas("hola como estan todos en este dias --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 2);
 
         subtiruloscinematicas("segundo subtitulo --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 2);
-
-        // char str[] = "\"EN ULTIMAS NOTICIAS\"                                      LA PGR DETUVO A DOS DEVELOPER POR PLAGIAR EL CODIGO DE UN JOVEN DE CHILPANCINGO DE LA CARRERA DE SISTEMAS ";
-        // int tamano = 40;
-        // int limiteH = 50;
-
-        // int longitud = strlen(str);
-        // int i;
-        // int count;
-        // bool cambio = true;
-        // int backgroundChangeFrequency = 7;  // Cambiar la imagen de fondo cada 10 letras
-        // int lettersPerBackgroundChange = 0; // Contador de letras desde el último cambio de imagen de fondo
-
-        // for (i = 0; i < longitud; i++)
-        // {
-        //     float cinematica1 = GetTime(); // Obtener el tiempo de inicio
-        //     ClearBackground(BLACK);
-        //     DrawTexture(cinema[0], 288, 0, WHITE);
-        //     // Cambiar la imagen de fondo cada 10 letras
-
-        //     while (GetTime() - cinematica1 < 0.01)
-        //     {
-        //         ClearBackground(BLACK);
-
-        //         BeginDrawing();
-
-        //         // Cambiar la imagen de fondo cuando corresponda
-        //         if (lettersPerBackgroundChange >= backgroundChangeFrequency)
-        //         {
-        //             cambio = !cambio;               // Alternar entre las imágenes de fondo
-        //             lettersPerBackgroundChange = 0; // Reiniciar el contador de letras desde el último cambio
-        //         }
-
-        //         // Dibujar la imagen de fondo correspondiente
-        //         if (cambio)
-        //             DrawTexture(cinema[0], 288, 0, WHITE);
-        //         else
-        //             DrawTexture(cinema[1], 288, 0, WHITE);
-
-        //         int j;
-        //         float x = limiteH;                // inicio
-        //         float y = (SCR_HEIGHT / 2) * 1.5; //   ↵
-
-        //         // Mostrar todas las letras hasta el índice actual
-        //         for (j = 0; j <= i; j++)
-        //         {
-        //             // Verificar si la posición horizontal excede el límite máximo de línea
-        //             if (x + MeasureText(TextFormat("%c", str[j]), tamano) > SCR_WIDTH - limiteH)
-        //             {
-        //                 // Si excede, mover a la siguiente línea
-        //                 x = limiteH;     // Iniciar desde el borde izquierdo
-        //                 y += tamano + 5; // Espacio entre fila
-        //             }
-        //             // Dibujar cada letra en la posición calculada
-        //             DrawText(TextFormat("%c", str[j]), x + 4, y + 4, tamano, BLACK);
-        //             DrawText(TextFormat("%c", str[j]), x, y, tamano, WHITE);
-        //             // Incrementar la posición horizontal para la próxima letra
-        //             x += MeasureText(TextFormat("%c", str[j]), tamano) + 10; // Agregar un margen de 10 píxeles entre letras
-        //             count++;
-        //         }
-        //         lettersPerBackgroundChange++;
-
-        //         EndDrawing();
-        //     }
-        // }
 
         // Esperar hasta que se presione la tecla Skip
         while (!IsKeyPressed(KEY_S))

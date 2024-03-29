@@ -50,8 +50,9 @@ int main()
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
     {
-        if(IsKeyPressed(KEY_F11)) ToggleFullscreen();
-        
+        if (IsKeyPressed(KEY_F11))
+            ToggleFullscreen();
+
         if (!isPlaying) // Menu principal
         {
             StopMusicStream(gameover); // Detiene musica gameover
@@ -119,7 +120,7 @@ int main()
                     {
                         if (!grayMeteors[i].active)
                         {
-                            InitGrayMeteor(&grayMeteors[i]);
+                            InitObject(&grayMeteors[i], &GRAY_METEOR_RADIUS);
                             break;
                         }
                     }
@@ -127,7 +128,7 @@ int main()
                     {
                         if (!brownMeteors[i].active)
                         {
-                            InitBrownMeteor(&brownMeteors[i]);
+                            InitObject(&brownMeteors[i], &BROWN_METEOR_RADIUS);
                             break;
                         }
                     }
@@ -135,7 +136,7 @@ int main()
                     {
                         if (!coins[i].active)
                         {
-                            InitCoin(&coins[i]);
+                            InitObject(&coins[i], &COINS_RADIUS);
                             break;
                         }
                     }
@@ -143,7 +144,7 @@ int main()
                     {
                         if (!hearts[i].active)
                         {
-                            InitHearts(&hearts[i]);
+                            InitObject(&hearts[i], &HEARTS_RADIUS);
                             break;
                         }
                     }
@@ -168,7 +169,7 @@ int main()
                         // Detectar colisión con jugador
                         if (CheckCollision(playerPosition, playRadius, grayMeteors[i].position, GRAY_METEOR_RADIUS))
                         {
-                            grayMeteors[i].active = false; // Elimina meteoro tocado
+                            grayMeteors[i].active = false; // Eliminar objeto tocado
                             lives--;                       // Pierde una vida
                             if (lives <= 0)
                             {
@@ -191,7 +192,7 @@ int main()
                         // Detectar colisión con jugador
                         if (CheckCollision(playerPosition, playRadius, brownMeteors[i].position, BROWN_METEOR_RADIUS))
                         {
-                            brownMeteors[i].active = false; // Elimina meteoro tocado
+                            brownMeteors[i].active = false; // Eliminar objeto tocado
                             lives--;                        // Pierde una vida
                             if (lives <= 0)
                             {
@@ -215,8 +216,8 @@ int main()
                         // Detectar colisión con jugador y aumentar el contador de puntos
                         if (CheckCollision(playerPosition, playRadius, coins[i].position, COINS_RADIUS))
                         {
-                            coins[i].active = false;
-                            score += 10; // Aumentar el puntaje
+                            coins[i].active = false; // Eliminar objeto tocado
+                            score += 10;             // Aumentar el puntaje
                             PlaySound(soundcoin);
                         }
                     }
@@ -235,7 +236,7 @@ int main()
                         // Detectar colisión con jugador y aumentar vidas
                         if (CheckCollision(playerPosition, playRadius, hearts[i].position, HEARTS_RADIUS))
                         {
-                            hearts[i].active = false; // Eliminar la esfera tocada
+                            hearts[i].active = false; // Eliminar objeto tocado
                             lives++;                  // Gana una vida
                         }
                     }
@@ -244,7 +245,7 @@ int main()
                 BeginDrawing();
                 gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &rotationMeteor);
 
-                /*------------------- NIVELES -------------------*/
+                /*--------------- NIVELES ---------------*/
                 timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
                 totalseconds = (int)timeseconds;
                 minutesT = totalseconds / 60;
@@ -254,16 +255,16 @@ int main()
                 DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
 
                 Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &seconds, &lives);
-                /*--------------------- FIN DIBUJO ---------------------*/
+                /*--------------------------------------------------------*/
 
                 if (gameOver)
                 {
                     minutesT = 0, secondsT = 0, totalseconds = 0, timeseconds = 0;
-                    rotationMeteor = 0;        // Reiniciar rotacion
+                    rotationMeteor = 0;          // Reiniciar rotacion
                     resetItems(&playerPosition); // Reinicia posicion y desactiva objetos
 
                     StopMusicStream(gameMusic); // Detener musica partida
-                    PlayMusicStream(gameover); // Reproducir musica gameover
+                    PlayMusicStream(gameover);  // Reproducir musica gameover
                 }
             } /*-------------------- FIN DE PARTIDA --------------------*/
             else
