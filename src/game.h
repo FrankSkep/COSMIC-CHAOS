@@ -54,7 +54,9 @@ void logicaMenu(int *seconds, bool *isPlaying);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
 void InitObject(GameObject *object, float *objRadius);
 void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
-void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int numFondos);
+void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int frame1, int frame2);
+void skip(void);
+void screenlevel(const char *text, int seconds);
 // void clock(int *totalseconds, int *minutesT, int *econdsT);
 void resetItems(Vector2 *playPosition);
 void resetStats(int *lives, int *score, int *level, double *timeSeconds);
@@ -229,58 +231,27 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
 }
 
 // Manejo de niveles
-void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives)
+void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *lives)
 {
     if (*score >= 30 && *level == 1)
     {
         // Limpiar todas las esferas en la pantalla
-        // Limpiar todas las esferas en la pantalla
         resetItems(playPosition);
         *level = 2; //                         -v-  aqui
-        subtiruloscinematicas("hola como estan todos en este dias --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 2);
+        subtiruloscinematicas("hola como estan todos en este dias --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 0, 1);
+        subtiruloscinematicas("segundo subtitulo --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 0, 1);
+        skip();
+        screenlevel("NIVEL 2", 2);
 
-        subtiruloscinematicas("segundo subtitulo --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 2);
-
-        // Esperar hasta que se presione la tecla Skip
-        while (!IsKeyPressed(KEY_S))
-        {
-            // Limpiar la pantalla y mostrar "Presiona ESPACIO" en el centro
-            DrawText("(S) SKIP", SCR_WIDTH - (250), SCR_HEIGHT - 70, 50, WHITE);
-            // Actualizar la pantalla
-            EndDrawing();
-        }
-
-        double startTime2 = GetTime(); // Obtener el tiempo de inicio
-
-        while (GetTime() - startTime2 < *seconds)
-        {
-            // Limpiar la pantalla y mostrar "Nivel 2" en el centro
-            ClearBackground(BLACK);
-            DrawText("NIVEL 2", SCR_WIDTH / 2 - MeasureText("NIVEL 2", 200) / 2, SCR_HEIGHT / 2 - 200, 200, WHITE);
-            // Actualizar la pantalla
-
-            EndDrawing();
-        }
-        ClearBackground(BLACK);
         *elapsedTime = 0.0f;
         *score = 0;
         *lives = 5;
     }
-
     // Verificar si el jugador ha alcanzado el nivel 3
     if (*score >= 20 && *level == 2)
     {
         *level = 3;
-        double startTime = GetTime(); // Obtener el tiempo de inicio
-
-        while (GetTime() - startTime < *seconds)
-        {
-            // Limpiar la pantalla y mostrar "Nivel 2" en el centro
-            ClearBackground(BLACK);
-            DrawText("Nivel 3", SCR_WIDTH / 2 - MeasureText("Nivel 3", 200) / 2, SCR_HEIGHT / 2, 200, WHITE);
-            // Actualizar la pantalla
-            EndDrawing();
-        }
+        screenlevel("NIVEL 3", 2);
 
         *elapsedTime = 0.0f;
         *score = 0;
@@ -289,8 +260,8 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         resetItems(playPosition);
     }
 }
-
-void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int numFondos)
+// Maximo 160 caracteres - tamaño - frecuencia - textura - frame1 y frame2
+void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int frame1, int frame2)
 {
     int longitud = strlen(text);
     int i;
@@ -310,12 +281,12 @@ void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture
         BeginDrawing();
         ClearBackground(BLACK);
         if (cambio)
-            DrawTexture(texturas[0], 288, 0, WHITE);
+            DrawTexture(texturas[frame1], 288, 0, WHITE);
         else
-            DrawTexture(texturas[1], 288, 0, WHITE);
+            DrawTexture(texturas[frame2], 288, 0, WHITE);
 
         float x = limiteH;
-        float y = (SCR_HEIGHT / 2) * 1.5;
+        float y = (SCR_HEIGHT / 2) * 1.6;
 
         for (int j = 0; j <= i; j++)
         {
@@ -339,6 +310,36 @@ void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture
     {
     }
 }
+// Esperar hasta que se presione la tecla Skip
+void skip(void)
+{
+    while (!IsKeyPressed(KEY_S))
+    {
+        // Limpiar la pantalla y mostrar "Presiona ESPACIO" en el centro
+        DrawText("(S) SKIP", SCR_WIDTH - (250), SCR_HEIGHT - 70, 50, WHITE);
+        // Actualizar la pantalla
+        EndDrawing();
+    }
+}
+
+void screenlevel(const char *text, int seconds)
+{
+    int tamano = 200;
+    double startTime2 = GetTime(); // Obtener el tiempo de inicio
+
+    while (GetTime() - startTime2 < seconds)
+    {
+        // Limpiar la pantalla y mostrar "Nivel #" en el centro
+        ClearBackground(BLACK);
+        DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2)-100, tamano, WHITE);
+
+        // Actualizar la pantalla
+
+        EndDrawing();
+    }
+    ClearBackground(BLACK);
+}
+
 // Limpiar elementos y posicion jugador
 void resetItems(Vector2 *playPosition)
 {
