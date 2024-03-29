@@ -3,56 +3,54 @@
 
 int main()
 {
-    /*********** CONSTANTES ************/
+    /*------------- CONSTANTES -------------*/
     const int playRadius = 45;        // Tamaño del jugador
     const float playerSpeed = 15.0f;  // Velocidad del jugador
-    const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de meteoros
+    const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de objetos
 
-    /************ VARIABLES *************/
+    /*--------------- VARIABLES ---------------*/
+    /* ESTADOS DEL JUEGO */
+    bool isPlaying = false;
+    bool gameOver = false;
 
-    // ---- ESTADOS DEL JUEGO----
-    bool isPlaying = false; // Determina si esta en juego
-    bool gameOver = false;  // Controla gameover
-    // --------------------------------------------------------
-    float elapsedTime = 0.0f;
-    float rotation = 0.0f; // Rotacion de meteoros
-    int score = 0;         // Inicio del puntaje
-    int lives = 5;         // Vidas Iniciales
-    int level = 1;         // Nivel inicial
-    int seconds = 1.00;    // espera entre niveles
-    int totalseconds = 0;  // -------
-    int minutesT = 0;      // CLOCK
-    int secondsT = 0;      // -------
+    /* JUEGO */
+    float elapsedTime = 0.0f, rotationMeteor = 0.0f;
+    int score = 0, lives = 5, level = 1;
+    short i;
+
+    /* CRONOMETRO */
+    int seconds = 1.00, totalseconds = 0, minutesT = 0, secondsT = 0;
     double timeseconds = 0;
 
+    /*----------- CONFIGURACION VENTANA -----------*/
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.12");
     SetTargetFPS(75);
 
-    /************** Carga de texturas **************/
+    /*----------- Carga de texturas -----------*/
     Texture2D menu, game, gameoverT, cinema[2];
     Texture2D shipTextures[6], coinsTx[6], heartsTx[6];
-    loadTextures(&menu, &game, &gameoverT,cinema, shipTextures, coinsTx, heartsTx);
+    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, coinsTx, heartsTx);
 
-    /************** Carga de sonidos **************/
+    /*----------- Carga de sonidos -----------*/
     InitAudioDevice();
     Music gameMusic, gameover;
     Sound soundcoin;
     loadSounds(&gameMusic, &gameover, &soundcoin);
 
-    /***** Ajustes texturas cambiantes *****/
+    /*-------- Ajustes texturas cambiantes --------*/
     int currentFrame = 0; // indice de la textura actual
     float frameTimeCounter = 0.0f;
     float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
 
     // Posicion jugador
     Vector2 playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
-    // Posicion nave
+    // Centro nave
     Vector2 shipCenter;
 
-    /*************** BUCLE DEL JUEGO ***************/
+    /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
     {
-        if(IsKeyPressed(KEY_F11))
+        if (IsKeyPressed(KEY_F11))
         {
             ToggleFullscreen();
         }
@@ -61,7 +59,7 @@ int main()
             StopMusicStream(gameover); // Detiene musica gameover
             drawMainMenu(&menu);       // Dibuja menu principal
 
-            logicaMenu(&secondsT, &isPlaying);
+            logicaMenu(&secondsT, &isPlaying); // Acciones menu
         }
         else
         {
@@ -84,46 +82,42 @@ int main()
                     frameTimeCounter = 0.0f;               // Reiniciar el contador de tiempo
                 }
 
+                /*--------------- CONTROL MOVIMIENTO NAVE ---------------*/
+                if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+                {
+                    if (playPosition.x + playRadius < SCR_WIDTH)
+                    {
+                        playPosition.x += playerSpeed;
+                    }
+                }
+                if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+                {
+                    if (playPosition.x - playRadius > 0)
+                    {
+                        playPosition.x -= playerSpeed;
+                    }
+                }
+                if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) // Ajuste para la parte superior
+                {
+                    if (playPosition.y - playRadius > 0)
+                    {
+                        playPosition.y -= playerSpeed;
+                    }
+                }
+                if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) // Ajuste para la parte inferior
+                {
+                    if (playPosition.y + playRadius < SCR_HEIGHT)
+                    {
+                        playPosition.y += playerSpeed;
+                    }
+                }
+
+                /*------------------- GENERACION OBJETOS -------------------*/
                 elapsedTime += GetFrameTime(); // Actualizar temporizador
 
-                //------- Controlar movimiento del jugador -------
-                if (IsKeyDown(KEY_RIGHT) && playPosition.x + playRadius < SCR_WIDTH)
-                {
-                    playPosition.x += playerSpeed;
-                }
-                if (IsKeyDown(KEY_D) && playPosition.x + playRadius < SCR_WIDTH)
-                {
-                    playPosition.x += playerSpeed;
-                }
-                if (IsKeyDown(KEY_LEFT) && playPosition.x - playRadius > 0)
-                {
-                    playPosition.x -= playerSpeed;
-                }
-                if (IsKeyDown(KEY_A) && playPosition.x - playRadius > 0)
-                {
-                    playPosition.x -= playerSpeed;
-                }
-                if (IsKeyDown(KEY_UP) && playPosition.y - playRadius > 0) // Ajuste para la parte superior
-                {
-                    playPosition.y -= playerSpeed;
-                }
-                if (IsKeyDown(KEY_W) && playPosition.y - playRadius > 0) // Ajuste para la parte superior
-                {
-                    playPosition.y -= playerSpeed;
-                }
-                if (IsKeyDown(KEY_DOWN) && playPosition.y + playRadius < SCR_HEIGHT) // Ajuste para la parte inferior
-                {
-                    playPosition.y += playerSpeed;
-                }
-                if (IsKeyDown(KEY_S) && playPosition.y + playRadius < SCR_HEIGHT) // Ajuste para la parte inferior
-                {
-                    playPosition.y += playerSpeed;
-                }
-
-                // ---------- GENERACION OBJETOS ----------
                 if (elapsedTime >= spawnInterval)
                 {
-                    for (int i = 0; i < MAX_GRAY_METEORS; i++)
+                    for (i = 0; i < MAX_GRAY_METEORS; i++)
                     {
                         if (!grayMeteors[i].active)
                         {
@@ -131,7 +125,7 @@ int main()
                             break;
                         }
                     }
-                    for (int i = 0; i < MAX_BROWN_METEORS; i++)
+                    for (i = 0; i < MAX_BROWN_METEORS; i++)
                     {
                         if (!brownMeteors[i].active)
                         {
@@ -139,7 +133,7 @@ int main()
                             break;
                         }
                     }
-                    for (int i = 0; i < MAX_COINS; i++)
+                    for (i = 0; i < MAX_COINS; i++)
                     {
                         if (!coins[i].active)
                         {
@@ -147,7 +141,7 @@ int main()
                             break;
                         }
                     }
-                    for (int i = 0; i < MAX_HEARTS; i++)
+                    for (i = 0; i < MAX_HEARTS; i++)
                     {
                         if (!hearts[i].active)
                         {
@@ -160,10 +154,10 @@ int main()
 
                 /*------------------ FISICAS Y COLISIONES ------------------*/
                 // Velocidad de rotacion meteoros
-                rotation += 2.5f;
+                rotationMeteor += 2.5f;
 
                 // Meteoro gris
-                for (int i = 0; i < MAX_GRAY_METEORS; i++)
+                for (i = 0; i < MAX_GRAY_METEORS; i++)
                 {
                     if (grayMeteors[i].active)
                     {
@@ -186,7 +180,7 @@ int main()
                     }
                 }
                 // Meteoro cafe
-                for (int i = 0; i < MAX_BROWN_METEORS; i++)
+                for (i = 0; i < MAX_BROWN_METEORS; i++)
                 {
                     if (brownMeteors[i].active)
                     {
@@ -209,9 +203,8 @@ int main()
                     }
                 }
 
-                /*------------------ OBJETOS ------------------*/
                 // Moneda (Incrementador de puntos)
-                for (int i = 0; i < MAX_COINS; i++)
+                for (i = 0; i < MAX_COINS; i++)
                 {
                     if (coins[i].active)
                     {
@@ -231,7 +224,7 @@ int main()
                     }
                 }
                 // Corazon (Vida adicional)
-                for (int i = 0; i < MAX_HEARTS; i++)
+                for (i = 0; i < MAX_HEARTS; i++)
                 {
                     if (hearts[i].active)
                     {
@@ -249,13 +242,12 @@ int main()
                         }
                     }
                 }
-                /*------------- DIBUJA PARTIDA EN CURSO -------------*/
+                /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
                 BeginDrawing();
-                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &rotation);
+                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &rotationMeteor);
 
                 /*------------------- NIVELES -------------------*/
                 timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
-
                 totalseconds = (int)timeseconds;
                 minutesT = totalseconds / 60;
                 secondsT = totalseconds % 60;
@@ -263,16 +255,14 @@ int main()
                 // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
                 DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
 
-                EndDrawing();
-
                 Levels(cinema, &score, &level, &elapsedTime, &playPosition, &seconds, &lives);
-                /*------------------- ------ -------------------*/
+                /*--------------------- FIN DIBUJO ---------------------*/
 
                 if (gameOver)
                 {
                     minutesT = 0, secondsT = 0, totalseconds = 0, timeseconds = 0;
 
-                    rotation = 0;              // Reiniciar rotacion
+                    rotationMeteor = 0;        // Reiniciar rotacion
                     currentFrame = 0;          // Reiniciar currentFrame
                     resetItems(&playPosition); // Reinicia posicion y desactiva objetos
 
@@ -280,13 +270,10 @@ int main()
 
                     PlayMusicStream(gameover); // Reproducir musica gameover
                 }
-            }
-            /*-------------------- FIN DE PARTIDA --------------------*/
-
-            /*------------------- GAMEOVER -------------------*/
-            if (gameOver)
-            {
-                BeginDrawing();
+            } /*-------------------- FIN DE PARTIDA --------------------*/
+            else
+            { /*------------------ GAMEOVER TRUE ------------------*/
+                
                 // Reproducir musica gameover
                 UpdateMusicStream(gameover);
 
@@ -306,11 +293,10 @@ int main()
                     isPlaying = false;
                     gameOver = false;
                 }
-                EndDrawing();
+                /*---------------------------------------------------*/
             }
-            /*---------------------------------------------------*/
-
             DrawFPS(20, SCR_HEIGHT - 40);
+            EndDrawing();
         }
     }
 

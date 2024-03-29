@@ -56,13 +56,13 @@ void InitCoin(GameObject *coin);
 void InitHearts(GameObject *heart);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius);
 void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
-void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int numFondos);
+void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int numFondos);        
 // void clock(int *totalseconds, int *minutesT, int *econdsT);
 void resetItems(Vector2 *playPosition);
 void resetStats(int *lives, int *score, int *level, double *timeSeconds);
 
 /* DIBUJO */
-void drawTextCenter(const char *text, int posX, int posY, int tamano, Color color);
+void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 void drawGrayMeteor(float *rotation);
 void drawBrownMeteor(float *rotation);
 void drawCoins(Texture2D *coinsTx);
@@ -70,9 +70,9 @@ void drawHearts(Texture2D *heartsTx);
 
 /************** DESARROLLO DE FUNCIONES **************/
 
-void drawTextCenter(const char *text, int posX, int posY, int tamano, Color color)
+void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color)
 {
-    DrawText(text, SCR_WIDTH / 2 + posX - MeasureText(text, tamano) / 2 + posX, posY, tamano, color);
+    DrawText(text, SCR_WIDTH / 2 + posX - MeasureText(text, fontSize) / 2 + posX, posY, fontSize, color);
 }
 
 // Dibuja menu principal inicial
@@ -260,24 +260,21 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         // Limpiar todas las esferas en la pantalla
         resetItems(playPosition);
         *level = 2; //                         -v-  aqui
-        subtiruloscinematicas("hola como estan todos en este dias --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son",45,7, cinema, 2);
-        subtiruloscinematicas("segundo subtitulo --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son",45,7, cinema, 2);
+        subtiruloscinematicas("hola como estan todos en este dias --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ",45,7, cinema, 2);
+        
+        subtiruloscinematicas("segundo subtitulo --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ",45,7, cinema, 2);
+
+        
         // char str[] = "\"EN ULTIMAS NOTICIAS\"                                      LA PGR DETUVO A DOS DEVELOPER POR PLAGIAR EL CODIGO DE UN JOVEN DE CHILPANCINGO DE LA CARRERA DE SISTEMAS ";
-        // int tamano = 45;
+        // int tamano = 40;
         // int limiteH = 50;
 
-        int longitud = strlen(str);
-        int i;
-        int count;
-        bool cambio = true;
-        int backgroundChangeFrequency = 7;  // Cambiar la imagen de fondo cada 10 letras
-        int lettersPerBackgroundChange = 0; // Contador de letras desde el último cambio de imagen de fondo
-
+        // int longitud = strlen(str);
         // int i;
         // int count;
         // bool cambio = true;
-        // int frecuencia = 7; // Cambiar la imagen de fondo cada 10 letras
-        // int acumulador = 0;  // Contador de letras desde el último cambio de imagen de fondo
+        // int backgroundChangeFrequency = 7;  // Cambiar la imagen de fondo cada 10 letras
+        // int lettersPerBackgroundChange = 0; // Contador de letras desde el último cambio de imagen de fondo
 
         // for (i = 0; i < longitud; i++)
         // {
@@ -293,10 +290,10 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         //         BeginDrawing();
 
         //         // Cambiar la imagen de fondo cuando corresponda
-        //         if (acumulador >= frecuencia)
+        //         if (lettersPerBackgroundChange >= backgroundChangeFrequency)
         //         {
         //             cambio = !cambio;               // Alternar entre las imágenes de fondo
-        //             acumulador = 0; // Reiniciar el contador de letras desde el último cambio
+        //             lettersPerBackgroundChange = 0; // Reiniciar el contador de letras desde el último cambio
         //         }
 
         //         // Dibujar la imagen de fondo correspondiente
@@ -320,13 +317,13 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         //                 y += tamano + 5; // Espacio entre fila
         //             }
         //             // Dibujar cada letra en la posición calculada
-        //             DrawText(TextFormat("%c", str[j]), x + 6, y + 6, tamano, BLACK);
+        //             DrawText(TextFormat("%c", str[j]), x + 4, y + 4, tamano, BLACK);
         //             DrawText(TextFormat("%c", str[j]), x, y, tamano, WHITE);
         //             // Incrementar la posición horizontal para la próxima letra
         //             x += MeasureText(TextFormat("%c", str[j]), tamano) + 10; // Agregar un margen de 10 píxeles entre letras
         //             count++;
         //         }
-        //         acumulador++;
+        //         lettersPerBackgroundChange++;
 
         //         EndDrawing();
         //     }
@@ -336,7 +333,7 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         while (!IsKeyPressed(KEY_S))
         {
             // Limpiar la pantalla y mostrar "Presiona ESPACIO" en el centro
-            DrawText("(S) SKIP", SCR_WIDTH - (100) - MeasureText("(S) SKIP", 50) - (100), SCR_HEIGHT - 50, 50, WHITE);
+            DrawText("(S) SKIP", SCR_WIDTH - (250), SCR_HEIGHT - 70, 50, WHITE);
             // Actualizar la pantalla
             EndDrawing();
         }
@@ -380,7 +377,6 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         resetItems(playPosition);
     }
 }
-
 
 void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int numFondos)
 {
@@ -432,7 +428,6 @@ void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture
 
     }
 }
-
 // Limpiar elementos y posicion jugador
 void resetItems(Vector2 *playPosition)
 {
