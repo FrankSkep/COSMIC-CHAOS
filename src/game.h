@@ -293,9 +293,9 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
 
                 // Dibujar la imagen de fondo correspondiente
                 if (cambio)
-                    DrawTexture(cinema[1], 288, 0, WHITE);
+                    DrawTexture(cinema[0], 288, 0, WHITE);
                 else
-                    DrawTexture(cinema[2], 288, 0, WHITE);
+                    DrawTexture(cinema[1], 288, 0, WHITE);
 
                 int j;
                 float x = limiteH;                // inicio
