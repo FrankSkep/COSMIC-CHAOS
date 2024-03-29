@@ -56,7 +56,7 @@ void InitCoin(GameObject *coin);
 void InitHearts(GameObject *heart);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
 void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
-void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int numFondos);
+void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int frame1, int frame2);
 // void clock(int *totalseconds, int *minutesT, int *econdsT);
 void resetItems(Vector2 *playPosition);
 void resetStats(int *lives, int *score, int *level, double *timeSeconds);
@@ -264,9 +264,9 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         // Limpiar todas las esferas en la pantalla
         resetItems(playPosition);
         *level = 2; //                         -v-  aqui
-        subtiruloscinematicas("hola como estan todos en este dias --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 2);
+        subtiruloscinematicas("hola como estan todos en este dias --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 0,1);
 
-        subtiruloscinematicas("segundo subtitulo --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 2);
+        subtiruloscinematicas("segundo subtitulo --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 0,1);
 
         // char str[] = "\"EN ULTIMAS NOTICIAS\"                                      LA PGR DETUVO A DOS DEVELOPER POR PLAGIAR EL CODIGO DE UN JOVEN DE CHILPANCINGO DE LA CARRERA DE SISTEMAS ";
         // int tamano = 40;
@@ -381,7 +381,7 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
     }
 }
 
-void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int numFondos)
+void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int frame1, int frame2)
 {
     int longitud = strlen(text);
     int i;
@@ -401,9 +401,9 @@ void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture
         BeginDrawing();
         ClearBackground(BLACK);
         if (cambio)
-            DrawTexture(texturas[0], 288, 0, WHITE);
+            DrawTexture(texturas[frame1], 288, 0, WHITE);
         else
-            DrawTexture(texturas[1], 288, 0, WHITE);
+            DrawTexture(texturas[frame2], 288, 0, WHITE);
 
         float x = limiteH;
         float y = (SCR_HEIGHT / 2) * 1.5;
