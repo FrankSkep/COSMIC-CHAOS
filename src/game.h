@@ -235,7 +235,7 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
 {
     if (*score >= 30 && *level == 1)
     {
-        // Limpiar todas las esferas en la pantalla
+        // Limpiar objetos
         resetItems(playPosition);
         *level = 2; //                         -v-  aqui
         subtiruloscinematicas("hola como estan todos en este dias --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 0, 1);
@@ -256,7 +256,7 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         *elapsedTime = 0.0f;
         *score = 0;
         *lives = 5;
-        // Limpiar todas las esferas en la pantalla
+        // Limpiar objetos
         resetItems(playPosition);
     }
 }
@@ -406,7 +406,7 @@ void drawBrownMeteor(float *rotation)
     }
 }
 
-// Dibujar esferas amarillas
+// Dibujar monedas
 void drawCoins(Texture2D *coinsTx)
 {
     Vector2 coinCenter;
@@ -421,7 +421,7 @@ void drawCoins(Texture2D *coinsTx)
     }
 }
 
-// Dibujar esferas Rojas
+// Dibujar corazones
 void drawHearts(Texture2D *heartsTx)
 {
     Vector2 heartCenter;
