@@ -56,12 +56,13 @@ void InitCoin(Ball *coin);
 void InitHearts(Ball *heart);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius);
 void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
+void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int numFondos);
 // void clock(int *totalseconds, int *minutesT, int *econdsT);
 void resetItems(Vector2 *playPosition);
 void resetStats(int *lives, int *score, int *level, double *timeSeconds);
 
 /* DIBUJO */
-void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
+void drawTextCenter(const char *text, int posX, int posY, int tamano, Color color);
 void drawGrayMeteor(float *rotation);
 void drawBrownMeteor(float *rotation);
 void drawCoins(Texture2D *coinsTx);
@@ -69,9 +70,9 @@ void drawHearts(Texture2D *heartsTx);
 
 /************** DESARROLLO DE FUNCIONES **************/
 
-void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color)
+void drawTextCenter(const char *text, int posX, int posY, int tamano, Color color)
 {
-    DrawText(text, SCR_WIDTH / 2 + posX - MeasureText(text, fontSize) / 2 + posX, posY, fontSize, color);
+    DrawText(text, SCR_WIDTH / 2 + posX - MeasureText(text, tamano) / 2 + posX, posY, tamano, color);
 }
 
 // Dibuja menu principal inicial
@@ -259,69 +260,72 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         // Limpiar todas las esferas en la pantalla
         resetItems(playPosition);
         *level = 2; //                         -v-  aqui
-        char str[] = "\"EN ULTIMAS NOTICIAS\"                                      LA PGR DETUVO A DOS DEVELOPER POR PLAGIAR EL CODIGO DE UN JOVEN DE CHILPANCINGO DE LA CARRERA DE SISTEMAS ";
-        int tamano = 40;
-        int limiteH = 50;
+        subtiruloscinematicas("hola como estan todos en este dias --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son",45,7, cinema, 2);
+        subtiruloscinematicas("segundo subtitulo --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son",45,7, cinema, 2);
+        // char str[] = "\"EN ULTIMAS NOTICIAS\"                                      LA PGR DETUVO A DOS DEVELOPER POR PLAGIAR EL CODIGO DE UN JOVEN DE CHILPANCINGO DE LA CARRERA DE SISTEMAS ";
+        // int tamano = 45;
+        // int limiteH = 50;
 
-        int longitud = strlen(str);
-        int i;
-        int count;
-        bool cambio = true;
-        int backgroundChangeFrequency = 7; // Cambiar la imagen de fondo cada 10 letras
-        int lettersPerBackgroundChange = 0;  // Contador de letras desde el último cambio de imagen de fondo
+        // int longitud = strlen(str);
 
-        for (i = 0; i < longitud; i++)
-        {
-            float cinematica1 = GetTime(); // Obtener el tiempo de inicio
-            ClearBackground(BLACK);
-            DrawTexture(cinema[0], 288, 0, WHITE);
-            // Cambiar la imagen de fondo cada 10 letras
+        // int i;
+        // int count;
+        // bool cambio = true;
+        // int frecuencia = 7; // Cambiar la imagen de fondo cada 10 letras
+        // int acumulador = 0;  // Contador de letras desde el último cambio de imagen de fondo
 
-            while (GetTime() - cinematica1 < 0.01)
-            {
-                ClearBackground(BLACK);
+        // for (i = 0; i < longitud; i++)
+        // {
+        //     float cinematica1 = GetTime(); // Obtener el tiempo de inicio
+        //     ClearBackground(BLACK);
+        //     DrawTexture(cinema[0], 288, 0, WHITE);
+        //     // Cambiar la imagen de fondo cada 10 letras
 
-                BeginDrawing();
+        //     while (GetTime() - cinematica1 < 0.01)
+        //     {
+        //         ClearBackground(BLACK);
 
-                // Cambiar la imagen de fondo cuando corresponda
-                if (lettersPerBackgroundChange >= backgroundChangeFrequency)
-                {
-                    cambio = !cambio;               // Alternar entre las imágenes de fondo
-                    lettersPerBackgroundChange = 0; // Reiniciar el contador de letras desde el último cambio
-                }
+        //         BeginDrawing();
 
-                // Dibujar la imagen de fondo correspondiente
-                if (cambio)
-                    DrawTexture(cinema[0], 288, 0, WHITE);
-                else
-                    DrawTexture(cinema[1], 288, 0, WHITE);
+        //         // Cambiar la imagen de fondo cuando corresponda
+        //         if (acumulador >= frecuencia)
+        //         {
+        //             cambio = !cambio;               // Alternar entre las imágenes de fondo
+        //             acumulador = 0; // Reiniciar el contador de letras desde el último cambio
+        //         }
 
-                int j;
-                float x = limiteH;                // inicio
-                float y = (SCR_HEIGHT / 2) * 1.5; //   ↵
+        //         // Dibujar la imagen de fondo correspondiente
+        //         if (cambio)
+        //             DrawTexture(cinema[0], 288, 0, WHITE);
+        //         else
+        //             DrawTexture(cinema[1], 288, 0, WHITE);
 
-                // Mostrar todas las letras hasta el índice actual
-                for (j = 0; j <= i; j++)
-                {
-                    // Verificar si la posición horizontal excede el límite máximo de línea
-                    if (x + MeasureText(TextFormat("%c", str[j]), tamano) > SCR_WIDTH - limiteH)
-                    {
-                        // Si excede, mover a la siguiente línea
-                        x = limiteH;     // Iniciar desde el borde izquierdo
-                        y += tamano + 5; // Espacio entre fila
-                    }
-                    // Dibujar cada letra en la posición calculada
-                    DrawText(TextFormat("%c", str[j]), x + 4, y + 4, tamano, BLACK);
-                    DrawText(TextFormat("%c", str[j]), x, y, tamano, WHITE);
-                    // Incrementar la posición horizontal para la próxima letra
-                    x += MeasureText(TextFormat("%c", str[j]), tamano) + 10; // Agregar un margen de 10 píxeles entre letras
-                    count++;
-                }
-                lettersPerBackgroundChange++;
+        //         int j;
+        //         float x = limiteH;                // inicio
+        //         float y = (SCR_HEIGHT / 2) * 1.5; //   ↵
 
-                EndDrawing();
-            }
-        }
+        //         // Mostrar todas las letras hasta el índice actual
+        //         for (j = 0; j <= i; j++)
+        //         {
+        //             // Verificar si la posición horizontal excede el límite máximo de línea
+        //             if (x + MeasureText(TextFormat("%c", str[j]), tamano) > SCR_WIDTH - limiteH)
+        //             {
+        //                 // Si excede, mover a la siguiente línea
+        //                 x = limiteH;     // Iniciar desde el borde izquierdo
+        //                 y += tamano + 5; // Espacio entre fila
+        //             }
+        //             // Dibujar cada letra en la posición calculada
+        //             DrawText(TextFormat("%c", str[j]), x + 6, y + 6, tamano, BLACK);
+        //             DrawText(TextFormat("%c", str[j]), x, y, tamano, WHITE);
+        //             // Incrementar la posición horizontal para la próxima letra
+        //             x += MeasureText(TextFormat("%c", str[j]), tamano) + 10; // Agregar un margen de 10 píxeles entre letras
+        //             count++;
+        //         }
+        //         acumulador++;
+
+        //         EndDrawing();
+        //     }
+        // }
 
         // Esperar hasta que se presione la tecla Skip
         while (!IsKeyPressed(KEY_S))
@@ -372,17 +376,57 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
     }
 }
 
-// TIEMPO TRASCURRIDO
-// void clock(int *totalseconds, int *minutesT, int *secondsT)
-// {
-//     double timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
-//     *totalseconds = (int)timeseconds;
-//     *minutesT = *totalseconds / 60;
-//     *secondsT = *totalseconds % 60;
 
-//     // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
-//     DrawText(TextFormat("%02d:%02d", *minutesT, *secondsT), 100, 100, 100, WHITE);
-// }
+void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int numFondos)
+{
+    int longitud = strlen(text);
+    int i;
+    int limiteH = 45;
+    int acumulador = 0;
+    bool cambio = true;
+    int seconds=2;
+
+    for (i = 0; i < longitud; i++)
+    {
+        if (acumulador >= frecuencia)
+        {
+            cambio = !cambio;
+            acumulador = 0;
+        }
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+        if (cambio)
+            DrawTexture(texturas[0], 288, 0, WHITE);
+        else
+            DrawTexture(texturas[1], 288, 0, WHITE);
+
+        float x = limiteH;
+        float y = (SCR_HEIGHT / 2)*1.5;
+
+        for (int j = 0; j <= i; j++)
+        {
+            if (x + MeasureText(TextFormat("%c", text[j]), tamano) > SCR_WIDTH - limiteH)
+            {
+                x = limiteH;
+                y += tamano + 5;
+            }
+            DrawText(TextFormat("%c", text[j]), x + 6, y + 6, tamano, BLACK);
+            DrawText(TextFormat("%c", text[j]), x, y, tamano, WHITE);
+
+            x += MeasureText(TextFormat("%c", text[j]), tamano) + 10;
+        }
+        EndDrawing();
+
+        acumulador++;
+    }
+    double startTime2 = GetTime(); // Obtener el tiempo de inicio
+
+    while (GetTime() - startTime2 < seconds)
+    {
+
+    }
+}
 
 // Limpiar elementos y posicion jugador
 void resetItems(Vector2 *playPosition)
