@@ -16,7 +16,7 @@ int main()
     /* JUEGO */
     float elapsedTime = 0.0f, rotationMeteor = 0.0f;
     int score = 0, lives = 5, level = 1;
-    short i;
+    short int i;
 
     /* CRONOMETRO */
     int seconds = 1.00, totalseconds = 0, minutesT = 0, secondsT = 0;
@@ -261,19 +261,15 @@ int main()
                 if (gameOver)
                 {
                     minutesT = 0, secondsT = 0, totalseconds = 0, timeseconds = 0;
-
                     rotationMeteor = 0;        // Reiniciar rotacion
-                    currentFrame = 0;          // Reiniciar currentFrame
                     resetItems(&playPosition); // Reinicia posicion y desactiva objetos
 
                     StopMusicStream(gameMusic); // Detener musica partida
-
                     PlayMusicStream(gameover); // Reproducir musica gameover
                 }
             } /*-------------------- FIN DE PARTIDA --------------------*/
             else
             { /*------------------ GAMEOVER TRUE ------------------*/
-                
                 // Reproducir musica gameover
                 UpdateMusicStream(gameover);
 
