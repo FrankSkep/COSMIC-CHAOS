@@ -43,17 +43,15 @@ int main()
     float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
 
     // Posicion jugador
-    Vector2 playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
+    Vector2 playerPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
     // Centro nave
     Vector2 shipCenter;
 
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
     {
-        if (IsKeyPressed(KEY_F11))
-        {
-            ToggleFullscreen();
-        }
+        if(IsKeyPressed(KEY_F11)) ToggleFullscreen();
+        
         if (!isPlaying) // Menu principal
         {
             StopMusicStream(gameover); // Detiene musica gameover
@@ -71,7 +69,7 @@ int main()
                 PlayMusicStream(gameMusic); // Reproduce musica de la partida
 
                 // Calcula y actualiza la posición del centro de la nave
-                shipCenter = {playPosition.x - shipTextures[currentFrame].width / 2, playPosition.y - shipTextures[currentFrame].height / 2};
+                shipCenter = {playerPosition.x - shipTextures[currentFrame].width / 2, playerPosition.y - shipTextures[currentFrame].height / 2};
 
                 /***** SPRITES *****/
                 frameTimeCounter += GetFrameTime();
@@ -85,30 +83,30 @@ int main()
                 /*--------------- CONTROL MOVIMIENTO NAVE ---------------*/
                 if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
                 {
-                    if (playPosition.x + playRadius < SCR_WIDTH)
+                    if (playerPosition.x + playRadius < SCR_WIDTH)
                     {
-                        playPosition.x += playerSpeed;
+                        playerPosition.x += playerSpeed;
                     }
                 }
                 if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
                 {
-                    if (playPosition.x - playRadius > 0)
+                    if (playerPosition.x - playRadius > 0)
                     {
-                        playPosition.x -= playerSpeed;
+                        playerPosition.x -= playerSpeed;
                     }
                 }
                 if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) // Ajuste para la parte superior
                 {
-                    if (playPosition.y - playRadius > 0)
+                    if (playerPosition.y - playRadius > 0)
                     {
-                        playPosition.y -= playerSpeed;
+                        playerPosition.y -= playerSpeed;
                     }
                 }
                 if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) // Ajuste para la parte inferior
                 {
-                    if (playPosition.y + playRadius < SCR_HEIGHT)
+                    if (playerPosition.y + playRadius < SCR_HEIGHT)
                     {
-                        playPosition.y += playerSpeed;
+                        playerPosition.y += playerSpeed;
                     }
                 }
 
@@ -168,7 +166,7 @@ int main()
                         }
 
                         // Detectar colisión con jugador
-                        if (CheckCollision(playPosition, playRadius, grayMeteors[i].position, GRAY_METEOR_RADIUS))
+                        if (CheckCollision(playerPosition, playRadius, grayMeteors[i].position, GRAY_METEOR_RADIUS))
                         {
                             grayMeteors[i].active = false; // Elimina meteoro tocado
                             lives--;                       // Pierde una vida
@@ -191,7 +189,7 @@ int main()
                         }
 
                         // Detectar colisión con jugador
-                        if (CheckCollision(playPosition, playRadius, brownMeteors[i].position, BROWN_METEOR_RADIUS))
+                        if (CheckCollision(playerPosition, playRadius, brownMeteors[i].position, BROWN_METEOR_RADIUS))
                         {
                             brownMeteors[i].active = false; // Elimina meteoro tocado
                             lives--;                        // Pierde una vida
@@ -215,7 +213,7 @@ int main()
                         }
 
                         // Detectar colisión con jugador y aumentar el contador de puntos
-                        if (CheckCollision(playPosition, playRadius, coins[i].position, COINS_RADIUS))
+                        if (CheckCollision(playerPosition, playRadius, coins[i].position, COINS_RADIUS))
                         {
                             coins[i].active = false;
                             score += 10; // Aumentar el puntaje
@@ -235,7 +233,7 @@ int main()
                         }
 
                         // Detectar colisión con jugador y aumentar vidas
-                        if (CheckCollision(playPosition, playRadius, hearts[i].position, HEARTS_RADIUS))
+                        if (CheckCollision(playerPosition, playRadius, hearts[i].position, HEARTS_RADIUS))
                         {
                             hearts[i].active = false; // Eliminar la esfera tocada
                             lives++;                  // Gana una vida
@@ -255,14 +253,14 @@ int main()
                 // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
                 DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
 
-                Levels(cinema, &score, &level, &elapsedTime, &playPosition, &seconds, &lives);
+                Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &seconds, &lives);
                 /*--------------------- FIN DIBUJO ---------------------*/
 
                 if (gameOver)
                 {
                     minutesT = 0, secondsT = 0, totalseconds = 0, timeseconds = 0;
                     rotationMeteor = 0;        // Reiniciar rotacion
-                    resetItems(&playPosition); // Reinicia posicion y desactiva objetos
+                    resetItems(&playerPosition); // Reinicia posicion y desactiva objetos
 
                     StopMusicStream(gameMusic); // Detener musica partida
                     PlayMusicStream(gameover); // Reproducir musica gameover

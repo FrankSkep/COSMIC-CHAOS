@@ -54,9 +54,9 @@ void InitGrayMeteor(GameObject *grayMeteor);
 void InitBrownMeteor(GameObject *brownMeteor);
 void InitCoin(GameObject *coin);
 void InitHearts(GameObject *heart);
-bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius);
+bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
 void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *seconds, int *lives);
-void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int numFondos);        
+void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int numFondos);
 // void clock(int *totalseconds, int *minutesT, int *econdsT);
 void resetItems(Vector2 *playPosition);
 void resetStats(int *lives, int *score, int *level, double *timeSeconds);
@@ -246,9 +246,13 @@ void InitHearts(GameObject *heart)
 }
 
 // Colisiones
-bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float playRadius)
+bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius)
 {
-    return (sqrt(pow(ballPos.x - playerPos.x, 2) + pow(ballPos.y - playerPos.y, 2)) < (playerRadius + playRadius));
+    float dx = ballPos.x - playerPos.x;
+    float dy = ballPos.y - playerPos.y;
+    float distanceSquared = dx * dx + dy * dy;
+    float radiusSumSquared = (playerRadius + meteorRadius) * (playerRadius + meteorRadius);
+    return distanceSquared < radiusSumSquared;
 }
 
 // Manejo de niveles
@@ -260,11 +264,10 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         // Limpiar todas las esferas en la pantalla
         resetItems(playPosition);
         *level = 2; //                         -v-  aqui
-        subtiruloscinematicas("hola como estan todos en este dias --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ",45,7, cinema, 2);
-        
-        subtiruloscinematicas("segundo subtitulo --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ",45,7, cinema, 2);
+        subtiruloscinematicas("hola como estan todos en este dias --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 2);
 
-        
+        subtiruloscinematicas("segundo subtitulo --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 2);
+
         // char str[] = "\"EN ULTIMAS NOTICIAS\"                                      LA PGR DETUVO A DOS DEVELOPER POR PLAGIAR EL CODIGO DE UN JOVEN DE CHILPANCINGO DE LA CARRERA DE SISTEMAS ";
         // int tamano = 40;
         // int limiteH = 50;
@@ -385,7 +388,7 @@ void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture
     int limiteH = 45;
     int acumulador = 0;
     bool cambio = true;
-    int seconds=2;
+    int seconds = 2;
 
     for (i = 0; i < longitud; i++)
     {
@@ -403,7 +406,7 @@ void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture
             DrawTexture(texturas[1], 288, 0, WHITE);
 
         float x = limiteH;
-        float y = (SCR_HEIGHT / 2)*1.5;
+        float y = (SCR_HEIGHT / 2) * 1.5;
 
         for (int j = 0; j <= i; j++)
         {
@@ -425,7 +428,6 @@ void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture
 
     while (GetTime() - startTime2 < seconds)
     {
-
     }
 }
 // Limpiar elementos y posicion jugador
