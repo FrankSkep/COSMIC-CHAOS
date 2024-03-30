@@ -293,7 +293,6 @@ int main()
                 if (IsKeyDown(KEY_Q))
                 {
                     resetStats(&lives, &score, &level, &timeseconds, &MAX_GRAY);
-                    level=0;
                     isPlaying = false;
                     gameOver = false;
                 }
