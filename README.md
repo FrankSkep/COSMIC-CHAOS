@@ -1,6 +1,4 @@
-# <h1 align="center" style="color:cyan;">COSMIC CHAOS</h1>
-
-
+# <h1 align="center" style="color:#00FFFF;">COSMIC CHAOS</h1>
 ![Captura de pantalla del juego](https://i.ibb.co/9W1YGtq/interfaz.png)
 
 ## <p align="center"><strong>Descripción</strong></p>
