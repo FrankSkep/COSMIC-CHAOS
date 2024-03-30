@@ -15,12 +15,11 @@ int main()
 
     /* JUEGO */
     float elapsedTime = 0.0f, rotationMeteor = 0.0f;
-    int score = 0, lives = 5, level = 0;
-    short int i;
+    short int i, score = 0, lives = 5, level = 0;
 
     /* CRONOMETRO */
     int totalseconds = 0, minutesT = 0, secondsT = 0;
-    double timeseconds = 0;
+    float timeseconds = 0;
 
     /*----------- CONFIGURACION VENTANA -----------*/
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.15");

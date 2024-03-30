@@ -2,7 +2,6 @@
 #define GAME_H
 
 #include "raylib.h"
-#include <math.h>
 #include <string.h>
 
 /******** DIMENSIONES PANTALLA *********/
@@ -12,20 +11,23 @@
 /******** CONSTANTES *********/
 // Meteoros
 #define MAX_GRAY_METEORS 40          // Maximos meteoros en pantalla
-int MAX_GRAY = MAX_GRAY_METEORS;     // Maximos meteoros en pantalla
-const float GRAY_METEOR_RADIUS = 70; // Tamaño
+int MAX_GRAY = MAX_GRAY_METEORS;     // Maximos meteoros nivel
 #define GRAY_METEOR_SPEED 7.0f       // Velocidad de caida
+const float GRAY_METEOR_RADIUS = 70; // Tamaño
+
 #define MAX_BROWN_METEORS 10
-const float BROWN_METEOR_RADIUS = 40;
 #define BROWN_METEOR_SPEED 9.0f
+const float BROWN_METEOR_RADIUS = 40;
+
 // Monedas
 #define MAX_COINS 2            // Maximas monedas en pantalla
-const float COINS_RADIUS = 20; // Tamaño
 #define COINS_SPEED 8.0f       // Velocidad de caida
+const float COINS_RADIUS = 20; // Tamaño
+
 // Corazones
 #define MAX_HEARTS 1            // Maximos corazones en pantalla
-const float HEARTS_RADIUS = 20; // Tamaño
 #define HEARTS_SPEED 9.0f       // Velocidad de caida
+const float HEARTS_RADIUS = 20; // Tamaño
 
 /*------- STRUCT OBJETOS DEL JUEGO -------*/
 typedef struct
@@ -34,48 +36,39 @@ typedef struct
     bool active;
 } GameObject;
 
-/*----------- INSTANCIAS NECESARIAS DE STRUCT 'Ball' -----------*/
+/*--------- INSTANCIAS DE STRUCT 'GameObject' ---------*/
 GameObject grayMeteors[MAX_GRAY_METEORS];
 GameObject brownMeteors[MAX_BROWN_METEORS];
 GameObject coins[MAX_COINS];
 GameObject hearts[MAX_HEARTS];
 
 /*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
-
-/* MENUS DEL JUEGO */
+/* MENUs */
 void drawMainMenu(Texture2D *background);
 void drawHowToPlay();
 void aboutTheGame();
-void gameOverInterface(Texture2D *background, int *score, int *level);
-
-/* LOGICA DEL JUEGO */
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, int *lives, int *score, float *rotation);
 void logicaMenu(int *seconds, bool *isPlaying);
 
-bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
+/* INTERFACES */
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, short *lives, short *score, float *rotation);
+void gameOverInterface(Texture2D *background, short *score, short *level);
+
+/* DIBUJO OBJETOS */
+void drawMeteors(float *rotation);
+void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx);
+void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
+
+/* LOGICA */
 void InitObject(GameObject *object, float *objRadius);
-void Levels(Texture2D *cinema, int *score, int *level, int *MAX_GRAY, float *elapsedTime, Vector2 *playPosition, int *lives);
-void subtiruloscinematicas(const char *text, int tamano, int frecuencia,float seconds, Texture2D *texturas, int frame1, int frame2);
+bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
+void Levels(Texture2D *cinema, short *score, short *level, int *MAX_GRAY, float *elapsedTime, Vector2 *playPosition, short *lives);
+void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, Texture2D *texturas, int frame1, int frame2);
 void skip(void);
 void screenlevel(const char *text, int seconds);
-// void clock(int *totalseconds, int *minutesT, int *econdsT);
 void resetItems(Vector2 *playPosition);
-void resetStats(int *lives, int *score, int *level, double *timeSeconds, int *MAX_GRAY);
-
-/* DIBUJO */
-void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
-void drawGrayMeteor(float *rotation);
-void drawBrownMeteor(float *rotation);
-void drawCoins(Texture2D *coinsTx);
-void drawHearts(Texture2D *heartsTx);
+void resetStats(short *lives, short *score, short *level, float *timeSeconds, int *MAX_GRAY);
 
 /************** DESARROLLO DE FUNCIONES **************/
-
-void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color)
-{
-    DrawText(text, SCR_WIDTH / 2 + posX - MeasureText(text, fontSize) / 2 + posX, posY, fontSize, color);
-}
-
 // Dibuja menu principal inicial
 void drawMainMenu(Texture2D *background) // PANTALLA DE MENU
 {
@@ -143,8 +136,54 @@ void aboutTheGame()
     }
 }
 
+void logicaMenu(int *seconds, bool *isPlaying)
+{
+    if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
+    {
+        *seconds = 0;
+        *isPlaying = true;
+    }
+    if (IsKeyPressed(KEY_A)) // Ir a tutorial como jugar
+    {
+        drawHowToPlay();
+    }
+    if (IsKeyPressed(KEY_E)) // Ir a acerca del juego
+    {
+        aboutTheGame();
+    }
+}
+
+// Dibuja la interfaz de la partida
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, short *lives, short *score, float *rotation)
+{
+    // Dibujar fondo
+    DrawTexture(*gamebg, 0, 0, WHITE);
+
+    // Dibujar puntaje
+    DrawText(TextFormat("SCORE: %04i", *score), SCR_WIDTH - 400, 20, 50, WHITE);
+
+    // Dibujar jugador (nave)
+    DrawTextureV(*ship, *shipPosicion, WHITE);
+
+    // Dibujar los objetos
+    drawMeteors(rotation);
+    drawObjects(coins, hearts);
+
+    // Dibujar vidas
+    DrawText(TextFormat("Vidas: %d", *lives), SCR_WIDTH - 250, SCR_HEIGHT - 140, 50, WHITE);
+
+    for (int i = 0; i < *lives; i++)
+    {
+        DrawText("<3 ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón lleno
+    }
+    for (int i = *lives; i < 5; i++)
+    {
+        DrawText(" - ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón vacío
+    }
+}
+
 // Dibuja la interfaz de juego terminado
-void gameOverInterface(Texture2D *background, int *score, int *level)
+void gameOverInterface(Texture2D *background, short *score, short *level)
 {
     // Fondo
     DrawTexture(*background, 0, 0, WHITE);
@@ -166,52 +205,59 @@ void gameOverInterface(Texture2D *background, int *score, int *level)
     drawTextCenter("(ESC) Exit", 0, 740, 70, MAROON);
 }
 
-// Dibuja la interfaz de la partida
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, int *lives, int *score, float *rotation)
+void drawMeteors(float *rotation)
 {
-    // Dibujar fondo
-    DrawTexture(*gamebg, 0, 0, WHITE);
-
-    // Dibujar puntaje
-    DrawText(TextFormat("SCORE: %04i", *score), SCR_WIDTH - 400, 20, 50, WHITE);
-
-    // Dibujar jugador (nave)
-    DrawTextureV(*ship, *shipPosicion, WHITE);
-
-    // Dibujar los objetos
-    drawGrayMeteor(rotation);
-    drawBrownMeteor(rotation);
-    drawCoins(coins);
-    drawHearts(hearts);
-
-    // Dibujar vidas
-    DrawText(TextFormat("Vidas: %d", *lives), SCR_WIDTH - 250, SCR_HEIGHT - 140, 50, WHITE);
-
-    for (int i = 0; i < *lives; i++)
+    for (int i = 0; i < MAX_GRAY_METEORS; i++)
     {
-        DrawText("<3 ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón lleno
+        if (grayMeteors[i].active)
+        {
+            // Dibujar el cuerpo principal del meteoro (polígono relleno)
+            DrawPoly(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, *rotation, GRAY);
+
+            // Dibujar líneas adicionales para dar textura
+            DrawPolyLinesEx(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, *rotation, 8, DARKGRAY);
+        }
     }
-    for (int i = *lives; i < 5; i++)
+    for (int i = 0; i < MAX_BROWN_METEORS; i++)
     {
-        DrawText(" - ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón vacío
+        if (brownMeteors[i].active)
+        {
+            // Dibujar el cuerpo principal del meteoro (polígono relleno)
+            DrawPoly(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, *rotation, BROWN);
+
+            // Dibujar líneas adicionales para dar textura
+            DrawPolyLinesEx(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, *rotation, 8, DARKGRAY);
+        }
     }
 }
 
-void logicaMenu(int *seconds, bool *isPlaying)
+void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
 {
-    if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
+    Vector2 coinCenter;
+    for (int i = 0; i < MAX_COINS; i++)
     {
-        *seconds = 0;
-        *isPlaying = true;
+        if (coins[i].active)
+        {
+            // Calcular la posición del centro de la moneda
+            coinCenter = {coins[i].position.x - coinsTx->width / 2, coins[i].position.y - coinsTx->height / 2};
+            DrawTextureV(*coinsTx, coinCenter, WHITE);
+        }
     }
-    if (IsKeyPressed(KEY_A)) // Ir a tutorial como jugar
+    Vector2 heartCenter;
+    for (int i = 0; i < MAX_HEARTS; i++)
     {
-        drawHowToPlay();
+        if (hearts[i].active)
+        {
+            // Calcular la posición del centro de la moneda
+            heartCenter = {(float)((int)hearts[i].position.x - heartsTx->width / 2), (float)((int)hearts[i].position.y - heartsTx->height / 2)};
+            DrawTextureV(*heartsTx, heartCenter, RED);
+        }
     }
-    if (IsKeyPressed(KEY_E)) // Ir a acerca del juego
-    {
-        aboutTheGame();
-    }
+}
+
+void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color)
+{
+    DrawText(text, SCR_WIDTH / 2 + posX - MeasureText(text, fontSize) / 2 + posX, posY, fontSize, color);
 }
 
 void InitObject(GameObject *object, const float *objRadius)
@@ -232,26 +278,32 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
 }
 
 // Manejo de niveles
-void Levels(Texture2D *cinema, int *score, int *level, int *MAX_GRAY, float *elapsedTime, Vector2 *playPosition, int *lives)
+void Levels(Texture2D *cinema, short *score, short *level, int *MAX_GRAY, float *elapsedTime, Vector2 *playPosition, short *lives)
 {
     if (*score == 0 && *level == 0)
     {
         *MAX_GRAY = 5;
 
-        subtiruloscinematicas("   INFORME DE ULTIMO MOMENTO                        Hola a todos son las 11:45 am y aqui su servilleta     Javie Alatorre informandolos.", 45, 7, 4, cinema, 4, 5);
-        subtiruloscinematicas("Desde la NASA nos llega el informe de que se acaba  de descubrir un asteroide con un color amarillo el    cual tiene a los cientificos conmosionados ", 45, 7,4, cinema, 0, 1);
-        subtiruloscinematicas("Se rumora que podria contener gran cantidad de oro en su interior y en este momento organizaciones de   todo el mundo estan investigando este suceso ", 45, 7,4, cinema, 0, 1);  
-        subtiruloscinematicas("  Un momento!  Nos informan que el asteroide acaba   de colisionar contra el cinturon de asteroides", 45, 7,3, cinema, 2, 3);
-        subtiruloscinematicas("y efectivamene, contiene gran cantidad de oro, esto deja a las organzaciones en una carrera para ver    quien sera el que se apropie de el ", 45, 7,4, cinema, 2, 3);             UnloadTexture(cinema[2]);UnloadTexture(cinema[3]);
-        subtiruloscinematicas("Olvidenlo, nos informan que españa es el primer      aventado en ir por el, como dicta la historia oro del que lo tenga oro se lo queda ", 45, 7,4, cinema, 6, 7);                  UnloadTexture(cinema[6]);UnloadTexture(cinema[7]);
-        subtiruloscinematicas("nuestros desarolladores han creado una represent- acion grafica de que es lo que podria estar pasando en este momento aya arriba en el espacio ", 45, 7,1, cinema, 4, 5);        UnloadTexture(cinema[4]);UnloadTexture(cinema[5]);
+        subsCinematicas("   INFORME DE ULTIMO MOMENTO                        Hola a todos son las 11:45 am y aqui su servilleta     Javie Alatorre informandolos.", 45, 7, 4, cinema, 4, 5);
+        subsCinematicas("Desde la NASA nos llega el informe de que se acaba  de descubrir un asteroide con un color amarillo el    cual tiene a los cientificos conmosionados ", 45, 7, 4, cinema, 0, 1);
+        subsCinematicas("Se rumora que podria contener gran cantidad de oro en su interior y en este momento organizaciones de   todo el mundo estan investigando este suceso ", 45, 7, 4, cinema, 0, 1);
+        subsCinematicas("  Un momento!  Nos informan que el asteroide acaba   de colisionar contra el cinturon de asteroides", 45, 7, 3, cinema, 2, 3);
+        subsCinematicas("y efectivamene, contiene gran cantidad de oro, esto deja a las organzaciones en una carrera para ver    quien sera el que se apropie de el ", 45, 7, 4, cinema, 2, 3);
+        // UnloadTexture(cinema[2]);
+        // UnloadTexture(cinema[3]);
+        subsCinematicas("Olvidenlo, nos informan que españa es el primer      aventado en ir por el, como dicta la historia oro del que lo tenga oro se lo queda ", 45, 7, 4, cinema, 6, 7);
+        // UnloadTexture(cinema[6]);
+        // UnloadTexture(cinema[7]);
+        subsCinematicas("nuestros desarolladores han creado una represent- acion grafica de que es lo que podria estar pasando en este momento aya arriba en el espacio ", 45, 7, 1, cinema, 4, 5);
+        // UnloadTexture(cinema[4]);
+        // UnloadTexture(cinema[5]);
 
         skip();
         *level = 1;
         *elapsedTime = 0.0f;
         *score = 0;
         *lives = 5;
-    } 
+    }
 
     if (*score >= 30 && *level == 1)
     {
@@ -259,8 +311,8 @@ void Levels(Texture2D *cinema, int *score, int *level, int *MAX_GRAY, float *ela
         resetItems(playPosition);
         *level = 2; //                         -v-  aqui
         *MAX_GRAY = 15;
-        subtiruloscinematicas("aqui iria la cinematica de descanso", 45, 7,1, cinema, 0, 1);
-        subtiruloscinematicas("continuacion de historia", 45, 7,1, cinema, 0, 1);
+        subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, cinema, 0, 1);
+        subsCinematicas("continuacion de historia", 45, 7, 1, cinema, 0, 1);
         skip();
         screenlevel("NIVEL 2", 2);
 
@@ -283,7 +335,7 @@ void Levels(Texture2D *cinema, int *score, int *level, int *MAX_GRAY, float *ela
     }
 }
 // Maximo 160 caracteres - tamaño - frecuencia - tiempo - textura - frame1 y frame2
-void subtiruloscinematicas(const char *text, int tamano, int frecuencia,float seconds, Texture2D *texturas, int frame1, int frame2)
+void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, Texture2D *texturas, int frame1, int frame2)
 {
     int longitud = strlen(text);
     int i;
@@ -330,6 +382,7 @@ void subtiruloscinematicas(const char *text, int tamano, int frecuencia,float se
     {
     }
 }
+
 // Esperar hasta que se presione la tecla Skip
 void skip(void)
 {
@@ -357,7 +410,6 @@ void screenlevel(const char *text, int seconds)
 
         EndDrawing();
     }
-    ClearBackground(BLACK);
 }
 
 // Limpiar elementos y posicion jugador
@@ -385,7 +437,7 @@ void resetItems(Vector2 *playPosition)
     }
 }
 
-void resetStats(int *lives, int *score, int *level, double *timeSeconds, int *MAX_GRAY)
+void resetStats(short *lives, short *score, short *level, float *timeSeconds, int *MAX_GRAY)
 {
     // Reinicia vidas y puntaje
     *lives = 5;
@@ -393,68 +445,6 @@ void resetStats(int *lives, int *score, int *level, double *timeSeconds, int *MA
     *level = 1;
     *timeSeconds = 0;
     *MAX_GRAY = MAX_GRAY_METEORS;
-}
-
-// Dibujar meteoros grises
-void drawGrayMeteor(float *rotation)
-{
-    for (int i = 0; i < MAX_GRAY; i++)
-    {
-        if (grayMeteors[i].active)
-        {
-            // Dibujar el cuerpo principal del meteoro (polígono relleno)
-            DrawPoly(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, *rotation, GRAY);
-
-            // Dibujar líneas adicionales para dar textura
-            DrawPolyLinesEx(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, *rotation, 8, DARKGRAY);
-        }
-    }
-}
-
-// Dibujar meteoros cafe
-void drawBrownMeteor(float *rotation)
-{
-    for (int i = 0; i < MAX_BROWN_METEORS; i++)
-    {
-        if (brownMeteors[i].active)
-        {
-            // Dibujar el cuerpo principal del meteoro (polígono relleno)
-            DrawPoly(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, *rotation, BROWN);
-
-            // Dibujar líneas adicionales para dar textura
-            DrawPolyLinesEx(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, *rotation, 8, DARKGRAY);
-        }
-    }
-}
-
-// Dibujar monedas
-void drawCoins(Texture2D *coinsTx)
-{
-    Vector2 coinCenter;
-    for (int i = 0; i < MAX_COINS; i++)
-    {
-        if (coins[i].active)
-        {
-            // Calcular la posición del centro de la moneda
-            coinCenter = {coins[i].position.x - coinsTx->width / 2, coins[i].position.y - coinsTx->height / 2};
-            DrawTextureV(*coinsTx, coinCenter, WHITE);
-        }
-    }
-}
-
-// Dibujar corazones
-void drawHearts(Texture2D *heartsTx)
-{
-    Vector2 heartCenter;
-    for (int i = 0; i < MAX_HEARTS; i++)
-    {
-        if (hearts[i].active)
-        {
-            // Calcular la posición del centro de la moneda
-            heartCenter = {(float)((int)hearts[i].position.x - heartsTx->width / 2), (float)((int)hearts[i].position.y - heartsTx->height / 2)};
-            DrawTextureV(*heartsTx, heartCenter, RED);
-        }
-    }
 }
 
 #endif
