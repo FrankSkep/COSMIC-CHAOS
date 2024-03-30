@@ -81,7 +81,7 @@ int main()
                     frameTimeCounter = 0.0f;               // Reiniciar el contador de tiempo
                 }
 
-                /*--------------- CONTROL MOVIMIENTO NAVE ---------------*/
+                /*------------------ CONTROLES ------------------*/
                 if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
                 {
                     if (playerPosition.x + playRadius < SCR_WIDTH)
@@ -125,7 +125,7 @@ int main()
                     }
                 }
 
-                /*------------------- GENERACION OBJETOS -------------------*/
+                /*--------------------- GENERACION OBJETOS ---------------------*/
                 elapsedTime += GetFrameTime(); // Actualizar temporizador
 
                 if (elapsedTime >= spawnInterval)
@@ -165,11 +165,9 @@ int main()
                     elapsedTime = 0.0f; // Reiniciar el temporizador
                 }
 
-                /*------------------ FISICAS Y COLISIONES ------------------*/
-                // Velocidad de rotacion meteoros
-                rotationMeteor += 2.5f;
+                /*--------------------- FISICAS Y COLISIONES ---------------------*/
 
-                // Meteoro gris
+                /*----- Meteoro gris -----*/
                 for (i = 0; i < MAX_GRAY; i++)
                 {
                     if (grayMeteors[i].active)
@@ -184,7 +182,7 @@ int main()
                         if (CheckCollision(playerPosition, playRadius, grayMeteors[i].position, GRAY_METEOR_RADIUS))
                         {
                             grayMeteors[i].active = false; // Eliminar objeto tocado
-                            lives--;                       // Pierde una vida
+                            lives--;                      // Pierde una vida
                             if (lives <= 0)
                             {
                                 gameOver = true;
@@ -192,7 +190,7 @@ int main()
                         }
                     }
                 }
-                // Meteoro cafe
+                // /*----- Meteoro cafe -----*/
                 for (i = 0; i < MAX_BROWN_METEORS; i++)
                 {
                     if (brownMeteors[i].active)
@@ -207,7 +205,7 @@ int main()
                         if (CheckCollision(playerPosition, playRadius, brownMeteors[i].position, BROWN_METEOR_RADIUS))
                         {
                             brownMeteors[i].active = false; // Eliminar objeto tocado
-                            lives--;                        // Pierde una vida
+                            lives--;                       // Pierde una vida
                             if (lives <= 0)
                             {
                                 gameOver = true;
@@ -215,8 +213,7 @@ int main()
                         }
                     }
                 }
-
-                // Moneda (Incrementador de puntos)
+                /*----- Moneda (Incrementador de puntos) -----*/
                 for (i = 0; i < MAX_COINS; i++)
                 {
                     if (coins[i].active)
@@ -231,12 +228,12 @@ int main()
                         if (CheckCollision(playerPosition, playRadius, coins[i].position, COINS_RADIUS))
                         {
                             coins[i].active = false; // Eliminar objeto tocado
-                            score += 10;             // Aumentar el puntaje
+                            score += 10;            // Aumentar el puntaje
                             PlaySound(soundcoin);
                         }
                     }
                 }
-                // Corazon (Vida adicional)
+                /*----- Corazon (Vida adicional) -----*/
                 for (i = 0; i < MAX_HEARTS; i++)
                 {
                     if (hearts[i].active)
@@ -251,25 +248,69 @@ int main()
                         if (CheckCollision(playerPosition, playRadius, hearts[i].position, HEARTS_RADIUS))
                         {
                             hearts[i].active = false; // Eliminar objeto tocado
-                            lives++;                  // Gana una vida
+                            lives--;                 // Gana una vida
+                        }
+                    }
+                }
+                /*----- Disparos -----*/
+                for (i = 0; i < MAX_SHOTS; i++)
+                {
+                    if (shots[i].active)
+                    {
+                        // Mover el disparo hacia arriba
+                        shots[i].position.y -= SHOT_SPEED * GetFrameTime();
+
+                        // Comprobar si el disparo está fuera de la pantalla y desactivarlo
+                        if (shots[i].position.y < 0)
+                        {
+                            shots[i].active = false;
+                        }
+
+                        // Comprobar colisión con los meteoros
+                        for (int j = 0; j < MAX_GRAY; j++)
+                        {
+                            if (grayMeteors[j].active)
+                            {
+                                if (CheckCollision(shots[i].position, SHOT_RADIUS, grayMeteors[j].position, GRAY_METEOR_RADIUS))
+                                {
+                                    // Colisión con meteoro gris
+                                    StopSound(shotSound);
+                                    grayMeteors[j].active = false;
+                                    shots[i].active = false;
+                                }
+                            }
+                        }
+
+                        for (int j = 0; j < MAX_BROWN_METEORS; j++)
+                        {
+                            if (brownMeteors[j].active)
+                            {
+                                // Colisión con meteoro café
+                                if (CheckCollision(shots[i].position, SHOT_RADIUS, brownMeteors[j].position, BROWN_METEOR_RADIUS))
+                                {
+                                    StopSound(shotSound);
+                                    brownMeteors[j].active = false;
+                                    shots[i].active = false;
+                                }
+                            }
                         }
                     }
                 }
 
-                UpdateShots(); // Fisicas y colisiones disparos
-
                 /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
                 BeginDrawing();
+                // Velocidad de rotacion meteoros
+                rotationMeteor += 2.5f;
                 gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &rotationMeteor);
 
-                /*--------------- NIVELES ---------------*/
+                /*--------------- ? ---------------*/
                 timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
                 totalseconds = (int)timeseconds;
                 minutesT = totalseconds / 60;
                 secondsT = totalseconds % 60;
-
                 // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
                 DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
+                /*--------------- ? ---------------*/
 
                 Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &lives);
                 /*--------------------------------------------------------*/

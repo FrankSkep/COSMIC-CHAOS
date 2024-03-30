@@ -71,27 +71,31 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 
 /* LOGICA */
 void InitObject(GameObject *object, float *objRadius);
-void UpdateShots();
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
+
 void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives);
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, Texture2D *texturas, int frame1, int frame2);
 void screenlevel(const char *text, int seconds);
+
 void resetItems(Vector2 *playPosition);
 void resetStats(short *lives, short *score, short *level, float *timeSeconds);
 
 /************** DESARROLLO DE FUNCIONES **************/
-// Dibuja menu principal inicial
+
+// Dibuja menu principal
 void drawMainMenu(Texture2D *background) // PANTALLA DE MENU
 {
     BeginDrawing();
-    DrawTexture(*background, 0, 0, WHITE); // Fondo
+
+     // Fondo
+    DrawTexture(*background, 0, 0, WHITE);
 
     // Titulo
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 - MeasureText("COSMIC-CHAOS", 180) / 2, 150, 186, DARKBLUE);
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 6 - MeasureText("COSMIC-CHAOS", 180) / 2 + 3, 145, 183, DARKBLUE);
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 12 - MeasureText("COSMIC-CHAOS", 180) / 2 + 6, 140, 180, BLUE);
 
-    // Subtitulos
+    // Acciones
     drawTextCenter("(ENTER) Start", 2, 502, 60, LIME);
     drawTextCenter("(ENTER) Start", 0, 500, 60, GREEN);
 
@@ -107,7 +111,7 @@ void drawMainMenu(Texture2D *background) // PANTALLA DE MENU
     EndDrawing();
 }
 
-// Dibuja interfaz de como jugar
+// Dibuja pantalla de como jugar
 void drawHowToPlay()
 {
     while (!IsKeyPressed(KEY_Q))
@@ -126,7 +130,7 @@ void drawHowToPlay()
     }
 }
 
-// Dibuja interfaz con informacion acerca del juego
+// Dibuja pantalla con informacion acerca del juego
 void aboutTheGame()
 {
     while (!IsKeyPressed(KEY_Q)) // Bucle para mostrar la interfaz "about"
@@ -147,6 +151,7 @@ void aboutTheGame()
     }
 }
 
+// Maneja acciones del menu principal
 void logicaMenu(int *seconds, bool *isPlaying)
 {
     if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
@@ -164,26 +169,25 @@ void logicaMenu(int *seconds, bool *isPlaying)
     }
 }
 
-// Dibuja la interfaz de la partida
+// Dibuja la interfaz de partida en curso
 void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, short *lives, short *score, float *rotation)
 {
-    // Dibujar fondo
+    // Dibuja fondo
     DrawTexture(*gamebg, 0, 0, WHITE);
 
-    // Dibujar puntaje
+    // Dibuja puntaje
     DrawText(TextFormat("SCORE: %04i", *score), SCR_WIDTH - 400, 20, 50, WHITE);
 
-    // Dibujar jugador (nave)
+    // Dibuja jugador (nave)
     DrawTextureV(*ship, *shipPosicion, WHITE);
 
-    // Dibujar los objetos
+    // Dibuja los elementos moviles del juego
     drawMeteors(rotation);
     drawObjects(coins, hearts);
     DrawShots();
 
-    // Dibujar vidas
+    // Dibuja vidas restantes
     DrawText(TextFormat("Vidas: %d", *lives), SCR_WIDTH - 250, SCR_HEIGHT - 140, 50, WHITE);
-
     for (int i = 0; i < *lives; i++)
     {
         DrawText("<3 ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón lleno
@@ -194,7 +198,7 @@ void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Te
     }
 }
 
-// Dibuja la interfaz de juego terminado
+// Dibuja la interfaz de derrota
 void gameOverInterface(Texture2D *background, short *score, short *level)
 {
     // Fondo
@@ -217,6 +221,7 @@ void gameOverInterface(Texture2D *background, short *score, short *level)
     drawTextCenter("(ESC) Exit", 0, 740, 70, MAROON);
 }
 
+// Dibuja meteoros
 void drawMeteors(float *rotation)
 {
     for (int i = 0; i < MAX_GRAY; i++)
@@ -243,6 +248,7 @@ void drawMeteors(float *rotation)
     }
 }
 
+// Dibujar monedas y corazones
 void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
 {
     Vector2 coinCenter;
@@ -267,7 +273,7 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
     }
 }
 
-// Dibujar los disparos
+// Dibujar disparos
 void DrawShots()
 {
     for (int i = 0; i < MAX_SHOTS; i++)
@@ -279,61 +285,18 @@ void DrawShots()
     }
 }
 
+// Imprimir texto centrado
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color)
 {
     DrawText(text, SCR_WIDTH / 2 + posX - MeasureText(text, fontSize) / 2 + posX, posY, fontSize, color);
 }
 
+// Inicializar cualquier objeto
 void InitObject(GameObject *object, const float *objRadius)
 {
     object->position.x = GetRandomValue(0, SCR_WIDTH);
     object->position.y = -*objRadius * 2;
     object->active = true;
-}
-
-void UpdateShots()
-{
-    for (int i = 0; i < MAX_SHOTS; i++)
-    {
-        if (shots[i].active)
-        {
-            // Mover el disparo hacia arriba
-            shots[i].position.y -= SHOT_SPEED * GetFrameTime();
-
-            // Comprobar si el disparo está fuera de la pantalla y desactivarlo
-            if (shots[i].position.y < 0)
-            {
-                shots[i].active = false;
-            }
-
-            // Comprobar colisión con los meteoros
-            for (int j = 0; j < MAX_GRAY; j++)
-            {
-                if (grayMeteors[j].active)
-                {
-                    if (CheckCollision(shots[i].position, SHOT_RADIUS, grayMeteors[j].position, GRAY_METEOR_RADIUS))
-                    {
-                        // Colisión con meteoro gris
-                        grayMeteors[j].active = false;
-                        shots[i].active = false;
-                    }
-                }
-            }
-
-            for (int j = 0; j < MAX_BROWN_METEORS; j++)
-            {
-                if (brownMeteors[j].active)
-                {
-                    // Colisión con meteoro café
-                    if (CheckCollision(shots[i].position, SHOT_RADIUS, brownMeteors[j].position, BROWN_METEOR_RADIUS))
-                    {
-                        brownMeteors[j].active = false;
-                        shots[i].active = false;
-                    }
-                }
-            }
-        }
-    }
 }
 
 // Colisiones
@@ -470,6 +433,7 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
         ;
 }
 
+// Mostrar pantalla de nivel
 void screenlevel(const char *text, int seconds)
 {
     int tamano = 200;
@@ -484,7 +448,7 @@ void screenlevel(const char *text, int seconds)
     }
 }
 
-// Limpiar elementos y posicion jugador
+// Reiniciar posicion de elementos jugador
 void resetItems(Vector2 *playPosition)
 {
     // Reiniciar posicion nave
@@ -513,13 +477,14 @@ void resetItems(Vector2 *playPosition)
     }
 }
 
+// Reinicia estadisticas
 void resetStats(short *lives, short *score, short *level, float *timeSeconds)
 {
-    // Reinicia vidas, puntaje y dificultad
     *lives = 5;
     *score = 0;
     *level = 1;
     *timeSeconds = 0;
     MAX_GRAY = MAX_METEOR_LV1;
 }
+
 #endif
