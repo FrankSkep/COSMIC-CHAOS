@@ -27,8 +27,8 @@ int main()
 
     /*----------- Carga de texturas -----------*/
     Texture2D menu, game, gameoverT, cinema[8];
-    Texture2D shipTextures[6], coinsTx[6], heartsTx[6];
-    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, coinsTx, heartsTx);
+    Texture2D shipTextures[6], coinsTx[6], heartsTx[6], misil[6];
+    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, coinsTx, heartsTx, misil);
 
     /*----------- Carga de sonidos -----------*/
     InitAudioDevice();
@@ -303,7 +303,7 @@ int main()
                 BeginDrawing();
                 // Velocidad de rotacion meteoros
                 rotationMeteor += 2.5f;
-                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &level, &rotationMeteor);
+                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &lives, &score, &level, &rotationMeteor);
 
                 /*--------------- ? ---------------*/
                 timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
@@ -356,7 +356,7 @@ int main()
     }
 
     // Descarga de recursos
-    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, coinsTx, heartsTx);
+    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, coinsTx, heartsTx, misil);
     unloadSounds(&gameMusic, &gameover, &soundcoin, &shotSound);
 
     CloseAudioDevice();

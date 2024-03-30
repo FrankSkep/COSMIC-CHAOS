@@ -12,13 +12,13 @@ void aboutTheGame();
 void logicaMenu(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, short *lives, short *score, short *level, float *rotation);
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, short *lives, short *score, short *level, float *rotation);
 void gameOverInterface(Texture2D *background, short *score, short *level);
 
 /* DIBUJO OBJETOS */
 void drawMeteors(float *rotation);
 void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx);
-void DrawShots();
+void DrawShots(Texture2D *shotTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
 /* LOGICA */
@@ -122,7 +122,7 @@ void logicaMenu(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, short *lives, short *score, short *level, float *rotation)
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, short *lives, short *score, short *level, float *rotation)
 {
     // Dibuja fondo
     DrawTexture(*gamebg, 0, 0, WHITE);
@@ -139,7 +139,7 @@ void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Te
     // Dibuja los elementos moviles del juego
     drawMeteors(rotation);
     drawObjects(coins, hearts);
-    DrawShots();
+    DrawShots(shotTx);
 
     // Dibuja vidas restantes
     DrawText(TextFormat("LIVES : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
@@ -229,13 +229,17 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
 }
 
 // Dibujar disparos
-void DrawShots()
+void DrawShots(Texture2D *shotTx)
 {
+    // Calcular la posición del centro de la moneda
+    Vector2 shotPos;
+
     for (int i = 0; i < MAX_SHOTS; i++)
     {
         if (shots[i].active)
         {
-            DrawCircleV(shots[i].position, SHOT_RADIUS, RAYWHITE);
+            shotPos = {shots[i].position.x - shotTx->width / 2, shots[i].position.y - shotTx->height / 2};
+            DrawTextureV(*shotTx, shotPos, WHITE);
         }
     }
 }

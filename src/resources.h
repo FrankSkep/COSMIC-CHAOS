@@ -3,15 +3,15 @@
 #include "raylib.h"
 
 /*---------------- PROTOTIPOS ----------------*/
-void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx);
-void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx);
-void loadSounds(Music *game, Music *gameover, Sound *coin);
-void unloadSounds(Music *game, Music *gameover, Sound *coin);
+void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *misil);
+void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *misil);
+void loadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot);
+void unloadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot);
 
 /*---------------- DESARROLLO ----------------*/
 
 // ---- Carga texturas ----
-void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx)
+void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *misil)
 {
     // Fondo menu principal
     *menu = LoadTexture("resources/images/backgrounds/menu.png");
@@ -55,10 +55,18 @@ void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Textu
     heartsTx[3] = LoadTexture("resources/images/hearts/hearth_02.png");
     heartsTx[4] = LoadTexture("resources/images/hearts/hearth_02.png");
     heartsTx[5] = LoadTexture("resources/images/hearts/hearth_02.png");
+
+    // Disparo
+    misil[0] = LoadTexture("resources/images/shot/shot01.png");
+    misil[1] = LoadTexture("resources/images/shot/shot01.png");
+    misil[2] = LoadTexture("resources/images/shot/shot02.png");
+    misil[3] = LoadTexture("resources/images/shot/shot02.png");
+    misil[4] = LoadTexture("resources/images/shot/shot03.png");
+    misil[5] = LoadTexture("resources/images/shot/shot03.png");
 }
 
 // ---- Descarga texturas ----
-void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx)
+void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *misil)
 {
     UnloadTexture(*menu);
     UnloadTexture(*gamebg);
