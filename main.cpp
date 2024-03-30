@@ -248,7 +248,7 @@ int main()
                         if (CheckCollision(playerPosition, playRadius, hearts[i].position, HEARTS_RADIUS))
                         {
                             hearts[i].active = false; // Eliminar objeto tocado
-                            lives--;                 // Gana una vida
+                            lives++;                 // Gana una vida
                         }
                     }
                 }
