@@ -6,7 +6,7 @@ int main()
     /*------------- CONSTANTES -------------*/
     const int playRadius = 45;        // Tamaño del jugador
     const float playerSpeed = 15.0f;  // Velocidad del jugador
-    const float spawnInterval = 0.3f; // Intervalo de tiempo entre la aparición de objetos
+    const float spawnInterval = 0.2f; // Intervalo de tiempo entre la aparición de objetos
 
     /*--------------- VARIABLES ---------------*/
     /* ESTADOS DEL JUEGO */
@@ -15,7 +15,7 @@ int main()
 
     /* JUEGO */
     float elapsedTime = 0.0f, rotationMeteor = 0.0f;
-    int score = 0, lives = 5, level = 1;
+    int score = 0, lives = 5, level = 0;
     short int i;
 
     /* CRONOMETRO */
@@ -27,7 +27,7 @@ int main()
     SetTargetFPS(75);
 
     /*----------- Carga de texturas -----------*/
-    Texture2D menu, game, gameoverT, cinema[2];
+    Texture2D menu, game, gameoverT, cinema[8];
     Texture2D shipTextures[6], coinsTx[6], heartsTx[6];
     loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, coinsTx, heartsTx);
 
@@ -50,6 +50,7 @@ int main()
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
     {
+
         if (IsKeyPressed(KEY_F11))
             ToggleFullscreen();
 
@@ -111,12 +112,20 @@ int main()
                     }
                 }
 
+                if (IsKeyPressed(KEY_P))
+                {
+                    while (!IsKeyPressed(KEY_P))
+                    {
+                        screenlevel("PAUSE", 1);
+                    }
+                }
+
                 /*------------------- GENERACION OBJETOS -------------------*/
                 elapsedTime += GetFrameTime(); // Actualizar temporizador
 
                 if (elapsedTime >= spawnInterval)
                 {
-                    for (i = 0; i < MAX_GRAY_METEORS; i++)
+                    for (i = 0; i < MAX_GRAY; i++)
                     {
                         if (!grayMeteors[i].active)
                         {
@@ -156,7 +165,7 @@ int main()
                 rotationMeteor += 2.5f;
 
                 // Meteoro gris
-                for (i = 0; i < MAX_GRAY_METEORS; i++)
+                for (i = 0; i < MAX_GRAY; i++)
                 {
                     if (grayMeteors[i].active)
                     {
@@ -254,7 +263,7 @@ int main()
                 // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
                 DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
 
-                Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &lives);
+                Levels(cinema, &score, &level, &MAX_GRAY, &elapsedTime, &playerPosition, &lives);
                 /*--------------------------------------------------------*/
 
                 if (gameOver)
@@ -278,13 +287,14 @@ int main()
                 // Vuelve a jugar al presionar enter
                 if (IsKeyDown(KEY_ENTER))
                 {
-                    resetStats(&lives, &score, &level, &timeseconds);
+                    resetStats(&lives, &score, &level, &timeseconds, &MAX_GRAY);
                     gameOver = false;
                 }
                 // Vuelve al menu al presionar Q
                 if (IsKeyDown(KEY_Q))
                 {
-                    resetStats(&lives, &score, &level, &timeseconds);
+                    resetStats(&lives, &score, &level, &timeseconds, &MAX_GRAY);
+                    level=0;
                     isPlaying = false;
                     gameOver = false;
                 }

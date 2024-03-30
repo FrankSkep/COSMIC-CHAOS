@@ -11,7 +11,8 @@
 
 /******** CONSTANTES *********/
 // Meteoros
-#define MAX_GRAY_METEORS 30          // Maximos meteoros en pantalla
+#define MAX_GRAY_METEORS 40          // Maximos meteoros en pantalla
+int MAX_GRAY = MAX_GRAY_METEORS;     // Maximos meteoros en pantalla
 const float GRAY_METEOR_RADIUS = 70; // Tamaño
 #define GRAY_METEOR_SPEED 7.0f       // Velocidad de caida
 #define MAX_BROWN_METEORS 10
@@ -53,13 +54,13 @@ void logicaMenu(int *seconds, bool *isPlaying);
 
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
 void InitObject(GameObject *object, float *objRadius);
-void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *lives);
-void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int frame1, int frame2);
+void Levels(Texture2D *cinema, int *score, int *level, int *MAX_GRAY, float *elapsedTime, Vector2 *playPosition, int *lives);
+void subtiruloscinematicas(const char *text, int tamano, int frecuencia,float seconds, Texture2D *texturas, int frame1, int frame2);
 void skip(void);
 void screenlevel(const char *text, int seconds);
 // void clock(int *totalseconds, int *minutesT, int *econdsT);
 void resetItems(Vector2 *playPosition);
-void resetStats(int *lives, int *score, int *level, double *timeSeconds);
+void resetStats(int *lives, int *score, int *level, double *timeSeconds, int *MAX_GRAY);
 
 /* DIBUJO */
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
@@ -231,15 +232,35 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
 }
 
 // Manejo de niveles
-void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *lives)
+void Levels(Texture2D *cinema, int *score, int *level, int *MAX_GRAY, float *elapsedTime, Vector2 *playPosition, int *lives)
 {
+    if (*score == 0 && *level == 0)
+    {
+        *MAX_GRAY = 5;
+
+        subtiruloscinematicas("   INFORME DE ULTIMO MOMENTO                        Hola a todos son las 11:45 am y aqui su servilleta     Javie Alatorre informandolos.", 45, 7, 4, cinema, 4, 5);
+        subtiruloscinematicas("Desde la NASA nos llega el informe de que se acaba  de descubrir un asteroide con un color amarillo el    cual tiene a los cientificos conmosionados ", 45, 7,4, cinema, 0, 1);
+        subtiruloscinematicas("Se rumora que podria contener gran cantidad de oro en su interior y en este momento organizaciones de   todo el mundo estan investigando este suceso ", 45, 7,4, cinema, 0, 1);  
+        subtiruloscinematicas("  Un momento!  Nos informan que el asteroide acaba   de colisionar contra el cinturon de asteroides", 45, 7,3, cinema, 2, 3);
+        subtiruloscinematicas("y efectivamene, contiene gran cantidad de oro, esto deja a las organzaciones en una carrera para ver    quien sera el que se apropie de el ", 45, 7,4, cinema, 2, 3);             UnloadTexture(cinema[2]);UnloadTexture(cinema[3]);
+        subtiruloscinematicas("Olvidenlo, nos informan que españa es el primer      aventado en ir por el, como dicta la historia oro del que lo tenga oro se lo queda ", 45, 7,4, cinema, 6, 7);                  UnloadTexture(cinema[6]);UnloadTexture(cinema[7]);
+        subtiruloscinematicas("nuestros desarolladores han creado una represent- acion grafica de que es lo que podria estar pasando en este momento aya arriba en el espacio ", 45, 7,1, cinema, 4, 5);        UnloadTexture(cinema[4]);UnloadTexture(cinema[5]);
+
+        skip();
+        *level = 1;
+        *elapsedTime = 0.0f;
+        *score = 0;
+        *lives = 5;
+    } 
+
     if (*score >= 30 && *level == 1)
     {
         // Limpiar objetos
         resetItems(playPosition);
         *level = 2; //                         -v-  aqui
-        subtiruloscinematicas("hola como estan todos en este dias --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 0, 1);
-        subtiruloscinematicas("segundo subtitulo --- ya jalo tu --- texto, tamaño, cada cuanto tiempo, nombre de la textura, cuantas texturas son ", 45, 7, cinema, 0, 1);
+        *MAX_GRAY = 15;
+        subtiruloscinematicas("aqui iria la cinematica de descanso", 45, 7,1, cinema, 0, 1);
+        subtiruloscinematicas("continuacion de historia", 45, 7,1, cinema, 0, 1);
         skip();
         screenlevel("NIVEL 2", 2);
 
@@ -248,9 +269,10 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         *lives = 5;
     }
     // Verificar si el jugador ha alcanzado el nivel 3
-    if (*score >= 20 && *level == 2)
+    if (*score >= 30 && *level == 2)
     {
         *level = 3;
+        *MAX_GRAY = 30;
         screenlevel("NIVEL 3", 2);
 
         *elapsedTime = 0.0f;
@@ -260,16 +282,14 @@ void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vecto
         resetItems(playPosition);
     }
 }
-// Maximo 160 caracteres - tamaño - frecuencia - textura - frame1 y frame2
-void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int frame1, int frame2)
+// Maximo 160 caracteres - tamaño - frecuencia - tiempo - textura - frame1 y frame2
+void subtiruloscinematicas(const char *text, int tamano, int frecuencia,float seconds, Texture2D *texturas, int frame1, int frame2)
 {
     int longitud = strlen(text);
     int i;
     int limiteH = 45;
     int acumulador = 0;
     bool cambio = true;
-    int seconds = 2;
-
     for (i = 0; i < longitud; i++)
     {
         if (acumulador >= frecuencia)
@@ -296,7 +316,7 @@ void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture
                 y += tamano + 5;
             }
             DrawText(TextFormat("%c", text[j]), x + 6, y + 6, tamano, BLACK);
-            DrawText(TextFormat("%c", text[j]), x, y, tamano, WHITE);
+            DrawText(TextFormat("%c", text[j]), x, y, tamano, YELLOW);
 
             x += MeasureText(TextFormat("%c", text[j]), tamano) + 10;
         }
@@ -331,7 +351,7 @@ void screenlevel(const char *text, int seconds)
     {
         // Limpiar la pantalla y mostrar "Nivel #" en el centro
         ClearBackground(BLACK);
-        DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2)-100, tamano, WHITE);
+        DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
 
         // Actualizar la pantalla
 
@@ -347,7 +367,7 @@ void resetItems(Vector2 *playPosition)
     *playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
 
     // Limpiar meteoros
-    for (int i = 0; i < MAX_GRAY_METEORS; i++)
+    for (int i = 0; i < MAX_GRAY; i++)
     {
         grayMeteors[i].active = false;
     }
@@ -365,19 +385,20 @@ void resetItems(Vector2 *playPosition)
     }
 }
 
-void resetStats(int *lives, int *score, int *level, double *timeSeconds)
+void resetStats(int *lives, int *score, int *level, double *timeSeconds, int *MAX_GRAY)
 {
     // Reinicia vidas y puntaje
     *lives = 5;
     *score = 0;
     *level = 1;
     *timeSeconds = 0;
+    *MAX_GRAY = MAX_GRAY_METEORS;
 }
 
 // Dibujar meteoros grises
 void drawGrayMeteor(float *rotation)
 {
-    for (int i = 0; i < MAX_GRAY_METEORS; i++)
+    for (int i = 0; i < MAX_GRAY; i++)
     {
         if (grayMeteors[i].active)
         {
