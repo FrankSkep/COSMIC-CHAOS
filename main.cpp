@@ -267,6 +267,9 @@ int main()
 
                 if (gameOver)
                 {
+                    level = 1;
+                    MAX_GRAY = MAX_GRAY_METEORS;
+                    
                     minutesT = 0, secondsT = 0, totalseconds = 0, timeseconds = 0;
                     rotationMeteor = 0;          // Reiniciar rotacion
                     resetItems(&playerPosition); // Reinicia posicion y desactiva objetos

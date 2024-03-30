@@ -207,7 +207,7 @@ void gameOverInterface(Texture2D *background, short *score, short *level)
 
 void drawMeteors(float *rotation)
 {
-    for (int i = 0; i < MAX_GRAY_METEORS; i++)
+    for (int i = 0; i < MAX_GRAY; i++)
     {
         if (grayMeteors[i].active)
         {
@@ -285,7 +285,6 @@ void Levels(Texture2D *cinema, short *score, short *level, int *MAX_GRAY, float 
         *MAX_GRAY = 5;
 
         // Historia inicial
-
         subsCinematicas("   INFORME DE ULTIMO MOMENTO                        Hola a todos son las 11:45 am y aqui su servilleta     Javie Alatorre informandolos.", 45, 7, 4, cinema, 4, 5);
         subsCinematicas("Desde la NASA nos llega el informe de que se acaba  de descubrir un asteroide con un color amarillo el    cual tiene a los cientificos conmosionados ", 45, 7, 4, cinema, 0, 1);
         subsCinematicas("Se rumora que podria contener gran cantidad de oro en su interior y en este momento organizaciones de   todo el mundo estan investigando este suceso ", 45, 7, 4, cinema, 0, 1);
@@ -308,7 +307,6 @@ void Levels(Texture2D *cinema, short *score, short *level, int *MAX_GRAY, float 
         *MAX_GRAY = 15;
         subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, cinema, 0, 1);
         subsCinematicas("continuacion de historia", 45, 7, 1, cinema, 0, 1);
-        skip();
         screenlevel("NIVEL 2", 2);
 
         *elapsedTime = 0.0f;
@@ -333,11 +331,11 @@ void Levels(Texture2D *cinema, short *score, short *level, int *MAX_GRAY, float 
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, Texture2D *texturas, int frame1, int frame2)
 {
     int longitud = strlen(text);
-    int i;
-    int limiteH = 45;
-    int acumulador = 0;
+    int i, limiteH = 45, acumulador = 0;
     bool cambio = true;
-    for (i = 0; i < longitud; i++)
+    float x, y;
+
+    for (i = 0; i < longitud && !IsKeyPressed(KEY_S); i++)
     {
         if (acumulador >= frecuencia)
         {
@@ -345,20 +343,24 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
             acumulador = 0;
         }
 
-        if(IsKeyPressed(KEY_S)) return;
-
-        // Limpiar la pantalla y mostrar "Presiona ESPACIO" en el centro
+        // Mensaje para saltar cinematica
         DrawText("(S) SKIP", SCR_WIDTH - (250), SCR_HEIGHT - 70, 50, WHITE);
+        // if (IsKeyPressed(KEY_S))
+        //     return; // Si presiona S, sale de la cinematica
 
         BeginDrawing();
         ClearBackground(BLACK);
         if (cambio)
+        {
             DrawTexture(texturas[frame1], 288, 0, WHITE);
+        }
         else
+        {
             DrawTexture(texturas[frame2], 288, 0, WHITE);
+        }
 
-        float x = limiteH;
-        float y = (SCR_HEIGHT / 2) * 1.6;
+        x = limiteH;
+        y = (SCR_HEIGHT / 2) * 1.6;
 
         for (int j = 0; j <= i; j++)
         {
@@ -376,11 +378,13 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
 
         acumulador++;
     }
-    double startTime2 = GetTime(); // Obtener el tiempo de inicio
+    return;
 
-    while (GetTime() - startTime2 < seconds)
-    {
-    }
+    double startTime2 = GetTime(); // Obtener el tiempo de inicio
+    
+    // while (GetTime() - startTime2 < seconds)
+    // {
+    // }
 }
 
 // Esperar hasta que se presione la tecla Skip
@@ -446,5 +450,4 @@ void resetStats(short *lives, short *score, short *level, float *timeSeconds, in
     *timeSeconds = 0;
     *MAX_GRAY = MAX_GRAY_METEORS;
 }
-
 #endif
