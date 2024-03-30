@@ -128,10 +128,10 @@ void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Te
     DrawTexture(*gamebg, 0, 0, WHITE);
 
     // Dibuja puntaje
-    DrawText(TextFormat("SCORE: %04i", *score), SCR_WIDTH - 380, 20, 50, WHITE);
+    DrawText(TextFormat("SCORE : %04i", *score), SCR_WIDTH - 363, 20, 50, WHITE);
 
     // Dibuja nivel
-    DrawText(TextFormat("LEVEL: %i", *level), SCR_WIDTH - 1550, 20, 50, WHITE);
+    DrawText(TextFormat("LEVEL : %i", *level), SCR_WIDTH - 1560, 20, 50, WHITE);
 
     // Dibuja jugador (nave)
     DrawTextureV(*ship, *shipPosicion, WHITE);
@@ -142,14 +142,14 @@ void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Te
     DrawShots();
 
     // Dibuja vidas restantes
-    DrawText(TextFormat("Vidas: %d", *lives), SCR_WIDTH - 250, SCR_HEIGHT - 140, 50, WHITE);
+    DrawText(TextFormat("LIVES : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
     for (int i = 0; i < *lives; i++)
     {
-        DrawText("<3 ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón lleno
+        DrawTexture(*hearts, SCR_WIDTH - 330 + (i * 65), SCR_HEIGHT - 65, RED);
     }
     for (int i = *lives; i < 5; i++)
     {
-        DrawText(" - ", SCR_WIDTH - 350 + (i * 60), SCR_HEIGHT - 60, 50, RED); // Corazón vacío
+        DrawText(" - ", SCR_WIDTH - 330 + (i * 65), SCR_HEIGHT - 60, 50, RED); // Corazón vacío
     }
 }
 
