@@ -267,9 +267,6 @@ int main()
 
                 if (gameOver)
                 {
-                    level = 1;
-                    MAX_GRAY = MAX_GRAY_METEORS;
-                    
                     minutesT = 0, secondsT = 0, totalseconds = 0, timeseconds = 0;
                     rotationMeteor = 0;          // Reiniciar rotacion
                     resetItems(&playerPosition); // Reinicia posicion y desactiva objetos
@@ -289,13 +286,13 @@ int main()
                 // Vuelve a jugar al presionar enter
                 if (IsKeyDown(KEY_ENTER))
                 {
-                    resetStats(&lives, &score, &level, &timeseconds, &MAX_GRAY);
+                    resetStats(&lives, &score, &level, &timeseconds);
                     gameOver = false;
                 }
                 // Vuelve al menu al presionar Q
                 if (IsKeyDown(KEY_Q))
                 {
-                    resetStats(&lives, &score, &level, &timeseconds, &MAX_GRAY);
+                    resetStats(&lives, &score, &level, &timeseconds);
                     isPlaying = false;
                     gameOver = false;
                 }

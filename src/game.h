@@ -11,7 +11,7 @@
 /******** CONSTANTES *********/
 // Meteoros
 #define MAX_GRAY_METEORS 40          // Maximos meteoros en pantalla
-int MAX_GRAY = MAX_GRAY_METEORS;     // Maximos meteoros nivel
+int MAX_GRAY = 5;     // Maximos meteoros nivel
 #define GRAY_METEOR_SPEED 7.0f       // Velocidad de caida
 const float GRAY_METEOR_RADIUS = 70; // Tamaño
 
@@ -63,10 +63,9 @@ void InitObject(GameObject *object, float *objRadius);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
 void Levels(Texture2D *cinema, short *score, short *level, int *MAX_GRAY, float *elapsedTime, Vector2 *playPosition, short *lives);
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, Texture2D *texturas, int frame1, int frame2);
-void skip(void);
 void screenlevel(const char *text, int seconds);
 void resetItems(Vector2 *playPosition);
-void resetStats(short *lives, short *score, short *level, float *timeSeconds, int *MAX_GRAY);
+void resetStats(short *lives, short *score, short *level, float *timeSeconds);
 
 /************** DESARROLLO DE FUNCIONES **************/
 // Dibuja menu principal inicial
@@ -343,13 +342,12 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
             acumulador = 0;
         }
 
-        // Mensaje para saltar cinematica
-        DrawText("(S) SKIP", SCR_WIDTH - (250), SCR_HEIGHT - 70, 50, WHITE);
-        // if (IsKeyPressed(KEY_S))
-        //     return; // Si presiona S, sale de la cinematica
-
         BeginDrawing();
         ClearBackground(BLACK);
+
+        // Mensaje para saltar cinematica
+        DrawText("(S) SKIP", SCR_WIDTH - (250), SCR_HEIGHT - 70, 50, WHITE);
+
         if (cambio)
         {
             DrawTexture(texturas[frame1], 288, 0, WHITE);
@@ -381,22 +379,10 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
     return;
 
     double startTime2 = GetTime(); // Obtener el tiempo de inicio
-    
+
     // while (GetTime() - startTime2 < seconds)
     // {
     // }
-}
-
-// Esperar hasta que se presione la tecla Skip
-void skip(void)
-{
-    while (!IsKeyPressed(KEY_S))
-    {
-        // Limpiar la pantalla y mostrar "Presiona ESPACIO" en el centro
-        DrawText("(S) SKIP", SCR_WIDTH - (250), SCR_HEIGHT - 70, 50, WHITE);
-        // Actualizar la pantalla
-    }
-    EndDrawing();
 }
 
 void screenlevel(const char *text, int seconds)
@@ -441,13 +427,13 @@ void resetItems(Vector2 *playPosition)
     }
 }
 
-void resetStats(short *lives, short *score, short *level, float *timeSeconds, int *MAX_GRAY)
+void resetStats(short *lives, short *score, short *level, float *timeSeconds)
 {
-    // Reinicia vidas y puntaje
+    // Reinicia vidas, puntaje y dificultad
     *lives = 5;
     *score = 0;
     *level = 1;
     *timeSeconds = 0;
-    *MAX_GRAY = MAX_GRAY_METEORS;
+    MAX_GRAY = 5;
 }
 #endif

@@ -25,12 +25,13 @@ COSMIC CHAOS es un videojuego espacial en 2D donde el jugador controla una nave 
 ## Instrucciones de uso
 ### Instalación
 1. Descarga el instalador ['Cosmic-Chaos.exe'](aquiPonerURLdeRelease) desde la página de lanzamientos en este repositorio.
-2. Ejecuta el archivo `Cosmic-Chaos.exe` e instala el juego.
-3. Abre el acceso directo creado en tu escritorio.
+2. Ejecuta el instalador y sigue las instrucciones.
+3. Una vez instalado, se te creara un acceso directo en el escritorio.
+4. Doble click al acceso directo y juega.
 
 **_Si recibes un aviso de virus, ejecuta el archivo ejecutable como administrador o desactiva tu antivirus._**
 
-### Controles básicos
+### Controles
 
 | Acción               | Tecla           |
 |----------------------|-----------------|
