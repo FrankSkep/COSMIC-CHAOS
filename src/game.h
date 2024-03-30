@@ -45,21 +45,21 @@ GameObject hearts[MAX_HEARTS];
 void drawMainMenu(Texture2D *background);
 void drawHowToPlay();
 void aboutTheGame();
-void gameOverInterface(Texture2D *background, int *score, int *level);
+void gameOverInterface(Texture2D *background, short int *score, short int *level);
 
 /* LOGICA DEL JUEGO */
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, int *lives, int *score, float *rotation);
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, short int *lives, short int *score, float *rotation);
 void logicaMenu(int *seconds, bool *isPlaying);
 
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
 void InitObject(GameObject *object, float *objRadius);
-void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *lives);
+void Levels(Texture2D *cinema, short int *score, short int *level, float *elapsedTime, Vector2 *playPosition, short int *lives);
 void subtiruloscinematicas(const char *text, int tamano, int frecuencia, Texture2D *texturas, int frame1, int frame2);
 void skip(void);
 void screenlevel(const char *text, int seconds);
 // void clock(int *totalseconds, int *minutesT, int *econdsT);
 void resetItems(Vector2 *playPosition);
-void resetStats(int *lives, int *score, int *level, double *timeSeconds);
+void resetStats(short int *lives, short int *score, short int *level, double *timeSeconds);
 
 /* DIBUJO */
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
@@ -143,7 +143,7 @@ void aboutTheGame()
 }
 
 // Dibuja la interfaz de juego terminado
-void gameOverInterface(Texture2D *background, int *score, int *level)
+void gameOverInterface(Texture2D *background, short int *score, short int *level)
 {
     // Fondo
     DrawTexture(*background, 0, 0, WHITE);
@@ -166,7 +166,7 @@ void gameOverInterface(Texture2D *background, int *score, int *level)
 }
 
 // Dibuja la interfaz de la partida
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, int *lives, int *score, float *rotation)
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, short int *lives, short int *score, float *rotation)
 {
     // Dibujar fondo
     DrawTexture(*gamebg, 0, 0, WHITE);
@@ -231,7 +231,7 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
 }
 
 // Manejo de niveles
-void Levels(Texture2D *cinema, int *score, int *level, float *elapsedTime, Vector2 *playPosition, int *lives)
+void Levels(Texture2D *cinema, short int *score, short int *level, float *elapsedTime, Vector2 *playPosition, short int *lives)
 {
     if (*score >= 30 && *level == 1)
     {
@@ -365,7 +365,7 @@ void resetItems(Vector2 *playPosition)
     }
 }
 
-void resetStats(int *lives, int *score, int *level, double *timeSeconds)
+void resetStats(short int *lives, short int *score, short int *level, double *timeSeconds)
 {
     // Reinicia vidas y puntaje
     *lives = 5;

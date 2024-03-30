@@ -15,8 +15,8 @@ int main()
 
     /* JUEGO */
     float elapsedTime = 0.0f, rotationMeteor = 0.0f;
-    int score = 0, lives = 5, level = 1;
-    short int i;
+    //int score = 0, lives = 5, level = 1;
+    short int i, score = 0, lives = 5, level = 1;
 
     /* CRONOMETRO */
     int totalseconds = 0, minutesT = 0, secondsT = 0;
