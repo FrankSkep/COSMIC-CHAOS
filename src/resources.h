@@ -22,7 +22,7 @@ void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Textu
     // Fondo gameover
     *gameover = LoadTexture("resources/images/backgrounds/gameover.png");
 
-    // presentador
+    // Presentador
     cinema[0] = LoadTexture("resources/images/backgrounds/cinema1.png");
     cinema[1] = LoadTexture("resources/images/backgrounds/cinema2.png");
     cinema[2] = LoadTexture("resources/images/backgrounds/cinema3.png");
@@ -68,10 +68,13 @@ void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Tex
 
     for (int i = 0; i < 6; i++)
     {
+        UnloadTexture(cinema[i]);
         UnloadTexture(shipTx[i]);
         UnloadTexture(coinsTx[i]);
         UnloadTexture(heartsTx[i]);
     }
+    UnloadTexture(cinema[6]);
+    UnloadTexture(cinema[7]);
 }
 
 // ---- Carga sonidos ----
