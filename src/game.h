@@ -11,9 +11,9 @@
 /******** CONSTANTES *********/
 // Meteoros
 #define MAX_GRAY_METEORS 40          // Maximos meteoros en pantalla
-int MAX_GRAY = 5;     // Maximos meteoros nivel
+int MAX_GRAY = 5;                    // Maximos meteoros nivel
 #define GRAY_METEOR_SPEED 7.0f       // Velocidad de caida
-const float GRAY_METEOR_RADIUS = 70; // Tamaño
+const float GRAY_METEOR_RADIUS = 60; // Tamaño
 
 #define MAX_BROWN_METEORS 10
 #define BROWN_METEOR_SPEED 9.0f
@@ -61,7 +61,7 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 /* LOGICA */
 void InitObject(GameObject *object, float *objRadius);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
-void Levels(Texture2D *cinema, short *score, short *level, int *MAX_GRAY, float *elapsedTime, Vector2 *playPosition, short *lives);
+void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives);
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, Texture2D *texturas, int frame1, int frame2);
 void screenlevel(const char *text, int seconds);
 void resetItems(Vector2 *playPosition);
@@ -277,14 +277,12 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
 }
 
 // Manejo de niveles
-void Levels(Texture2D *cinema, short *score, short *level, int *MAX_GRAY, float *elapsedTime, Vector2 *playPosition, short *lives)
+void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives)
 {
     if (*score == 0 && *level == 0)
     {
-        *MAX_GRAY = 5;
-
         // Historia inicial
-        subsCinematicas("   INFORME DE ULTIMO MOMENTO                        Hola a todos son las 11:45 am y aqui su servilleta     Javie Alatorre informandolos.", 45, 7, 4, cinema, 4, 5);
+        subsCinematicas("   INFORME DE ULTIMO MOMENTO                        Hola a todos son las 11:45 am y aqui su servilleta     Javie Alatorre informandolos.", 45, 7, 2, cinema, 4, 5);
         subsCinematicas("Desde la NASA nos llega el informe de que se acaba  de descubrir un asteroide con un color amarillo el    cual tiene a los cientificos conmosionados ", 45, 7, 4, cinema, 0, 1);
         subsCinematicas("Se rumora que podria contener gran cantidad de oro en su interior y en este momento organizaciones de   todo el mundo estan investigando este suceso ", 45, 7, 4, cinema, 0, 1);
         subsCinematicas("  Un momento!  Nos informan que el asteroide acaba   de colisionar contra el cinturon de asteroides", 45, 7, 3, cinema, 2, 3);
@@ -303,9 +301,8 @@ void Levels(Texture2D *cinema, short *score, short *level, int *MAX_GRAY, float 
         // Limpiar objetos
         resetItems(playPosition);
         *level = 2; //                         -v-  aqui
-        *MAX_GRAY = 15;
         subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, cinema, 0, 1);
-        subsCinematicas("continuacion de historia", 45, 7, 1, cinema, 0, 1);
+        subsCinematicas("continuacion de historia", 45, 7, 2, cinema, 0, 1);
         screenlevel("NIVEL 2", 2);
 
         *elapsedTime = 0.0f;
@@ -315,15 +312,15 @@ void Levels(Texture2D *cinema, short *score, short *level, int *MAX_GRAY, float 
     // Verificar si el jugador ha alcanzado el nivel 3
     if (*score >= 30 && *level == 2)
     {
+        // Limpiar objetos
+        resetItems(playPosition);
+
         *level = 3;
-        *MAX_GRAY = 30;
         screenlevel("NIVEL 3", 2);
 
         *elapsedTime = 0.0f;
         *score = 0;
         *lives = 5;
-        // Limpiar objetos
-        resetItems(playPosition);
     }
 }
 // Maximo 160 caracteres - tamaño - frecuencia - tiempo - textura - frame1 y frame2
@@ -334,7 +331,7 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
     bool cambio = true;
     float x, y;
 
-    for (i = 0; i < longitud && !IsKeyPressed(KEY_S); i++)
+    for (i = 0; i < longitud; i++)
     {
         if (acumulador >= frecuencia)
         {
@@ -347,6 +344,8 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
 
         // Mensaje para saltar cinematica
         DrawText("(S) SKIP", SCR_WIDTH - (250), SCR_HEIGHT - 70, 50, WHITE);
+        if (IsKeyPressed(KEY_S))
+            return; // Saltar cinematica
 
         if (cambio)
         {
@@ -376,13 +375,11 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
 
         acumulador++;
     }
-    return;
 
     double startTime2 = GetTime(); // Obtener el tiempo de inicio
 
-    // while (GetTime() - startTime2 < seconds)
-    // {
-    // }
+    while (GetTime() - startTime2 < seconds) // Pausa entre cada texto
+        ;
 }
 
 void screenlevel(const char *text, int seconds)
@@ -395,9 +392,6 @@ void screenlevel(const char *text, int seconds)
         // Limpiar la pantalla y mostrar "Nivel #" en el centro
         ClearBackground(BLACK);
         DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
-
-        // Actualizar la pantalla
-
         EndDrawing();
     }
 }
@@ -434,6 +428,5 @@ void resetStats(short *lives, short *score, short *level, float *timeSeconds)
     *score = 0;
     *level = 1;
     *timeSeconds = 0;
-    MAX_GRAY = 5;
 }
 #endif

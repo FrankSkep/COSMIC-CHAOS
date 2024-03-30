@@ -65,6 +65,19 @@ int main()
             /*-------------------- PARTIDA --------------------*/
             if (!gameOver)
             {
+                switch (level) // Cantidad de meteoros en cada nivel
+                {
+                    case 1:
+                        MAX_GRAY = 5;
+                        break;
+                    case 2:
+                        MAX_GRAY = 15;
+                        break;
+                    case 3:
+                        MAX_GRAY = 30;
+                        break;
+                }
+
                 StopMusicStream(gameover); // Detiene musica de gameover
                 UpdateMusicStream(gameMusic);
                 PlayMusicStream(gameMusic); // Reproduce musica de la partida
@@ -108,14 +121,6 @@ int main()
                     if (playerPosition.y + playRadius < SCR_HEIGHT)
                     {
                         playerPosition.y += playerSpeed;
-                    }
-                }
-
-                if (IsKeyPressed(KEY_P))
-                {
-                    while (!IsKeyPressed(KEY_P))
-                    {
-                        screenlevel("PAUSE", 1);
                     }
                 }
 
@@ -262,7 +267,7 @@ int main()
                 // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
                 DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
 
-                Levels(cinema, &score, &level, &MAX_GRAY, &elapsedTime, &playerPosition, &lives);
+                Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &lives);
                 /*--------------------------------------------------------*/
 
                 if (gameOver)
