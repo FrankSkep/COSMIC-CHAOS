@@ -37,7 +37,7 @@ int main()
     loadSounds(&gameMusic, &gameover, &soundcoin);
 
     /*-------- Ajustes texturas cambiantes --------*/
-    int currentFrame = 0; // indice de la textura actual
+    short currentFrame = 0; // indice de la textura actual
     float frameTimeCounter = 0.0f;
     float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
 
@@ -65,19 +65,6 @@ int main()
             /*-------------------- PARTIDA --------------------*/
             if (!gameOver)
             {
-                switch (level) // Cantidad de meteoros en cada nivel
-                {
-                    case 1:
-                        MAX_GRAY = 5;
-                        break;
-                    case 2:
-                        MAX_GRAY = 15;
-                        break;
-                    case 3:
-                        MAX_GRAY = 30;
-                        break;
-                }
-
                 StopMusicStream(gameover); // Detiene musica de gameover
                 UpdateMusicStream(gameMusic);
                 PlayMusicStream(gameMusic); // Reproduce musica de la partida

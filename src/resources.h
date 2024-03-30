@@ -63,8 +63,6 @@ void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Tex
     UnloadTexture(*menu);
     UnloadTexture(*gamebg);
     UnloadTexture(*gameover);
-    UnloadTexture(cinema[1]);
-    UnloadTexture(cinema[2]);
 
     for (int i = 0; i < 6; i++)
     {

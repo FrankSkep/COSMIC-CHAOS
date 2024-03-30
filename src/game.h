@@ -8,22 +8,27 @@
 #define SCR_WIDTH 1600 // ANCHO  (X)
 #define SCR_HEIGHT 900 // ALTO (Y)
 
-/******** CONSTANTES *********/
-// Meteoros
+/*------------- CONSTANTES -------------*/
+/*--- DIFICULTAD NIVELES ---*/
+#define MAX_METEOR_LV1 5
+#define MAX_METEOR_LV2 15
+#define MAX_METEOR_LV3 30
+/*--- CANTIDAD INICIAL ---*/
+int MAX_GRAY = MAX_METEOR_LV1; // Maximos meteoros por nivel
+short MAX_BROWN = MAX_METEOR_LV1;
+
+// Meteoro Gris
 #define MAX_GRAY_METEORS 40          // Maximos meteoros en pantalla
-int MAX_GRAY = 5;                    // Maximos meteoros nivel
 #define GRAY_METEOR_SPEED 7.0f       // Velocidad de caida
 const float GRAY_METEOR_RADIUS = 60; // Tamaño
-
+// Meteoro Cafe
 #define MAX_BROWN_METEORS 10
 #define BROWN_METEOR_SPEED 9.0f
 const float BROWN_METEOR_RADIUS = 40;
-
 // Monedas
 #define MAX_COINS 2            // Maximas monedas en pantalla
 #define COINS_SPEED 8.0f       // Velocidad de caida
 const float COINS_RADIUS = 20; // Tamaño
-
 // Corazones
 #define MAX_HEARTS 1            // Maximos corazones en pantalla
 #define HEARTS_SPEED 9.0f       // Velocidad de caida
@@ -290,24 +295,36 @@ void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, V
         subsCinematicas("Olvidenlo, nos informan que españa es el primer      aventado en ir por el, como dicta la historia oro del que lo tenga oro se lo queda ", 45, 7, 4, cinema, 6, 7);
         subsCinematicas("nuestros desarolladores han creado una represent- acion grafica de que es lo que podria estar pasando en este momento aya arriba en el espacio ", 45, 7, 1, cinema, 4, 5);
 
+        /* Estadisticas Nivel 1 */
         *level = 1;
-        *elapsedTime = 0.0f;
         *score = 0;
         *lives = 5;
+        *elapsedTime = 0.0f;
+        MAX_GRAY = MAX_METEOR_LV1;
+        // MAX_BROWN =
+        // MAX_COIN =
+        // MAX_HEART =
     }
 
     if (*score >= 30 && *level == 1)
     {
         // Limpiar objetos
         resetItems(playPosition);
-        *level = 2; //                         -v-  aqui
+
         subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, cinema, 0, 1);
         subsCinematicas("continuacion de historia", 45, 7, 2, cinema, 0, 1);
+
         screenlevel("NIVEL 2", 2);
 
-        *elapsedTime = 0.0f;
+        /* Estadisticas Nivel 2 */
+        *level = 2;
         *score = 0;
         *lives = 5;
+        *elapsedTime = 0.0f;
+        MAX_GRAY = MAX_METEOR_LV2;
+        // MAX_BROWN =
+        // MAX_COIN =
+        // MAX_HEART =
     }
     // Verificar si el jugador ha alcanzado el nivel 3
     if (*score >= 30 && *level == 2)
@@ -315,14 +332,20 @@ void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, V
         // Limpiar objetos
         resetItems(playPosition);
 
-        *level = 3;
         screenlevel("NIVEL 3", 2);
 
-        *elapsedTime = 0.0f;
+        /* Estadisticas Nivel 3 */
+        *level = 3;
         *score = 0;
         *lives = 5;
+        *elapsedTime = 0.0f;
+        MAX_GRAY = MAX_METEOR_LV3;
+        // MAX_BROWN =
+        // MAX_COIN =
+        // MAX_HEART =
     }
 }
+
 // Maximo 160 caracteres - tamaño - frecuencia - tiempo - textura - frame1 y frame2
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, Texture2D *texturas, int frame1, int frame2)
 {
@@ -428,5 +451,6 @@ void resetStats(short *lives, short *score, short *level, float *timeSeconds)
     *score = 0;
     *level = 1;
     *timeSeconds = 0;
+    MAX_GRAY = MAX_METEOR_LV1;
 }
 #endif
