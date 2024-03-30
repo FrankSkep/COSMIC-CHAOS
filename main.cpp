@@ -19,7 +19,7 @@ int main()
     short int i;
 
     /* CRONOMETRO */
-    int seconds = 1.00, totalseconds = 0, minutesT = 0, secondsT = 0;
+    int totalseconds = 0, minutesT = 0, secondsT = 0;
     double timeseconds = 0;
 
     /*----------- CONFIGURACION VENTANA -----------*/
