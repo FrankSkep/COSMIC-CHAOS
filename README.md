@@ -1,4 +1,4 @@
-# <h1 align="text-align:center;">COSMIC CHAOS</h1>
+# <h1 align="center">COSMIC CHAOS</h1>
 
 ![Captura de pantalla del juego](https://i.ibb.co/9W1YGtq/interfaz.png)
 
