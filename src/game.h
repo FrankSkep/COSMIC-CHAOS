@@ -12,7 +12,7 @@ void aboutTheGame();
 void logicaMenu(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, short *lives, short *score, float *rotation);
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, short *lives, short *score, short *level, float *rotation);
 void gameOverInterface(Texture2D *background, short *score, short *level);
 
 /* DIBUJO OBJETOS */
@@ -122,13 +122,16 @@ void logicaMenu(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, short *lives, short *score, float *rotation)
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, short *lives, short *score, short *level, float *rotation)
 {
     // Dibuja fondo
     DrawTexture(*gamebg, 0, 0, WHITE);
 
     // Dibuja puntaje
-    DrawText(TextFormat("SCORE: %04i", *score), SCR_WIDTH - 400, 20, 50, WHITE);
+    DrawText(TextFormat("SCORE: %04i", *score), SCR_WIDTH - 380, 20, 50, WHITE);
+
+    // Dibuja nivel
+    DrawText(TextFormat("LEVEL: %i", *level), SCR_WIDTH - 1550, 20, 50, WHITE);
 
     // Dibuja jugador (nave)
     DrawTextureV(*ship, *shipPosicion, WHITE);

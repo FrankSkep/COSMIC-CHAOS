@@ -274,6 +274,7 @@ int main()
                                 if (CheckCollision(shots[i].position, SHOT_RADIUS, grayMeteors[j].position, GRAY_METEOR_RADIUS))
                                 {
                                     // Colisión con meteoro gris
+                                    score += 5;
                                     StopSound(shotSound);
                                     grayMeteors[j].active = false;
                                     shots[i].active = false;
@@ -288,6 +289,7 @@ int main()
                                 // Colisión con meteoro café
                                 if (CheckCollision(shots[i].position, SHOT_RADIUS, brownMeteors[j].position, BROWN_METEOR_RADIUS))
                                 {
+                                    score += 5;
                                     StopSound(shotSound);
                                     brownMeteors[j].active = false;
                                     shots[i].active = false;
@@ -301,7 +303,7 @@ int main()
                 BeginDrawing();
                 // Velocidad de rotacion meteoros
                 rotationMeteor += 2.5f;
-                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &rotationMeteor);
+                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &level, &rotationMeteor);
 
                 /*--------------- ? ---------------*/
                 timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
@@ -309,7 +311,7 @@ int main()
                 minutesT = totalseconds / 60;
                 secondsT = totalseconds % 60;
                 // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
-                DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
+                //DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
                 /*--------------- ? ---------------*/
 
                 Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &lives);
