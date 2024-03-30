@@ -33,6 +33,10 @@ const float COINS_RADIUS = 20; // Tamaño
 #define MAX_HEARTS 1            // Maximos corazones en pantalla
 #define HEARTS_SPEED 9.0f       // Velocidad de caida
 const float HEARTS_RADIUS = 20; // Tamaño
+// Disparos
+#define MAX_SHOTS 1 // Número máximo de disparos en pantalla
+#define SHOT_SPEED 900.0f
+#define SHOT_RADIUS 6 // Radio de los disparos
 
 /*------- STRUCT OBJETOS DEL JUEGO -------*/
 typedef struct
@@ -46,6 +50,7 @@ GameObject grayMeteors[MAX_GRAY_METEORS];
 GameObject brownMeteors[MAX_BROWN_METEORS];
 GameObject coins[MAX_COINS];
 GameObject hearts[MAX_HEARTS];
+GameObject shots[MAX_SHOTS];
 
 /*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
 /* MENUs */
@@ -61,10 +66,12 @@ void gameOverInterface(Texture2D *background, short *score, short *level);
 /* DIBUJO OBJETOS */
 void drawMeteors(float *rotation);
 void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx);
+void DrawShots();
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
 /* LOGICA */
 void InitObject(GameObject *object, float *objRadius);
+void UpdateShots();
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
 void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives);
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, Texture2D *texturas, int frame1, int frame2);
@@ -172,6 +179,7 @@ void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Te
     // Dibujar los objetos
     drawMeteors(rotation);
     drawObjects(coins, hearts);
+    DrawShots();
 
     // Dibujar vidas
     DrawText(TextFormat("Vidas: %d", *lives), SCR_WIDTH - 250, SCR_HEIGHT - 140, 50, WHITE);
@@ -259,6 +267,18 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
     }
 }
 
+// Dibujar los disparos
+void DrawShots()
+{
+    for (int i = 0; i < MAX_SHOTS; i++)
+    {
+        if (shots[i].active)
+        {
+            DrawCircleV(shots[i].position, SHOT_RADIUS, RAYWHITE);
+        }
+    }
+}
+
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color)
 {
     DrawText(text, SCR_WIDTH / 2 + posX - MeasureText(text, fontSize) / 2 + posX, posY, fontSize, color);
@@ -269,6 +289,51 @@ void InitObject(GameObject *object, const float *objRadius)
     object->position.x = GetRandomValue(0, SCR_WIDTH);
     object->position.y = -*objRadius * 2;
     object->active = true;
+}
+
+void UpdateShots()
+{
+    for (int i = 0; i < MAX_SHOTS; i++)
+    {
+        if (shots[i].active)
+        {
+            // Mover el disparo hacia arriba
+            shots[i].position.y -= SHOT_SPEED * GetFrameTime();
+
+            // Comprobar si el disparo está fuera de la pantalla y desactivarlo
+            if (shots[i].position.y < 0)
+            {
+                shots[i].active = false;
+            }
+
+            // Comprobar colisión con los meteoros
+            for (int j = 0; j < MAX_GRAY; j++)
+            {
+                if (grayMeteors[j].active)
+                {
+                    if (CheckCollision(shots[i].position, SHOT_RADIUS, grayMeteors[j].position, GRAY_METEOR_RADIUS))
+                    {
+                        // Colisión con meteoro gris
+                        grayMeteors[j].active = false;
+                        shots[i].active = false;
+                    }
+                }
+            }
+
+            for (int j = 0; j < MAX_BROWN_METEORS; j++)
+            {
+                if (brownMeteors[j].active)
+                {
+                    // Colisión con meteoro café
+                    if (CheckCollision(shots[i].position, SHOT_RADIUS, brownMeteors[j].position, BROWN_METEOR_RADIUS))
+                    {
+                        brownMeteors[j].active = false;
+                        shots[i].active = false;
+                    }
+                }
+            }
+        }
+    }
 }
 
 // Colisiones
@@ -424,23 +489,27 @@ void resetItems(Vector2 *playPosition)
 {
     // Reiniciar posicion nave
     *playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
-
+    short i;
     // Limpiar meteoros
-    for (int i = 0; i < MAX_GRAY; i++)
+    for (i = 0; i < MAX_GRAY; i++)
     {
         grayMeteors[i].active = false;
     }
-    for (int i = 0; i < MAX_BROWN_METEORS; i++)
+    for (i = 0; i < MAX_BROWN_METEORS; i++)
     {
         brownMeteors[i].active = false;
     }
-    for (int i = 0; i < MAX_COINS; i++)
+    for (i = 0; i < MAX_COINS; i++)
     {
         coins[i].active = false;
     }
-    for (int i = 0; i < MAX_HEARTS; i++)
+    for (i = 0; i < MAX_HEARTS; i++)
     {
         hearts[i].active = false;
+    }
+    for (i = 0; i < MAX_SHOTS; i++)
+    {
+        shots[i].active = false;
     }
 }
 

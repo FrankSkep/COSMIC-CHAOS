@@ -76,19 +76,21 @@ void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Tex
 }
 
 // ---- Carga sonidos ----
-void loadSounds(Music *game, Music *gameover, Sound *coin)
+void loadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot)
 {
     *game = LoadMusicStream("resources/sounds/music.mp3");        // Musica partida
     *gameover = LoadMusicStream("resources/sounds/gameover.mp3"); // Musica gameover
     *coin = LoadSound("resources/sounds/coin.wav");               // Sonido moneda
+    *shot = LoadSound("resources/sounds/shot.mp3");
 }
 
 // ---- Descarga sonidos ----
-void unloadSounds(Music *game, Music *gameover, Sound *coin)
+void unloadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot)
 {
     UnloadMusicStream(*game);
     UnloadMusicStream(*gameover);
     UnloadSound(*coin);
+    UnloadSound(*shot);
 }
 
 #endif

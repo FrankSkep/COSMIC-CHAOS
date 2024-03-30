@@ -33,8 +33,8 @@ int main()
     /*----------- Carga de sonidos -----------*/
     InitAudioDevice();
     Music gameMusic, gameover;
-    Sound soundcoin;
-    loadSounds(&gameMusic, &gameover, &soundcoin);
+    Sound soundcoin, shotSound;
+    loadSounds(&gameMusic, &gameover, &soundcoin, &shotSound);
 
     /*-------- Ajustes texturas cambiantes --------*/
     short currentFrame = 0; // indice de la textura actual
@@ -108,6 +108,20 @@ int main()
                     if (playerPosition.y + playRadius < SCR_HEIGHT)
                     {
                         playerPosition.y += playerSpeed;
+                    }
+                }
+
+                if (IsKeyPressed(KEY_SPACE)) // Activa disparo al pulsar espacio
+                {
+                    for (i = 0; i < MAX_SHOTS; i++)
+                    {
+                        if (!shots[i].active)
+                        {
+                            PlaySound(shotSound);
+                            shots[i].active = true;
+                            shots[i].position = playerPosition; // Posición inicial del disparo
+                            break;
+                        }
                     }
                 }
 
@@ -241,6 +255,9 @@ int main()
                         }
                     }
                 }
+
+                UpdateShots(); // Fisicas y colisiones disparos
+
                 /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
                 BeginDrawing();
                 gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &lives, &score, &rotationMeteor);
@@ -297,7 +314,7 @@ int main()
 
     // Descarga de recursos
     unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, coinsTx, heartsTx);
-    unloadSounds(&gameMusic, &gameover, &soundcoin);
+    unloadSounds(&gameMusic, &gameover, &soundcoin, &shotSound);
 
     CloseAudioDevice();
     CloseWindow();
