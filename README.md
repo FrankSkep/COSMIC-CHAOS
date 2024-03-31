@@ -7,19 +7,24 @@
 
 ## Características
 - **Jugabilidad Adictiva:** Sumérgete en una experiencia de juego emocionante y desafiante que pondrá a prueba tus reflejos y habilidades de esquiva.
+
 - **Sistema de Puntuación y Vidas:** Compite por obtener la puntuación más alta mientras gestionas tus vidas y te esfuerzas por alcanzar nuevos récords.
+
 - **Sistema de Niveles Dinamico:** A medida que avanzas en la partida y acumulas puntos, el juego se vuelve más desafiante con la aparición de más obstáculos. Cuanto más alto sea tu nivel, más intensa será la acción.
+
 - **Objetos coleccionables:** Encuentra monedas para aumentar tu puntuación y corazones para añadir una vida adicional.
+
 - **Ambiente Sonoro Envolvente:** Sumérgete completamente en el juego con efectos de sonido que complementan la acción y la atmósfera del espacio.
 
-## Informacion tecnica
+## Información técnica
 ### **Herramientas utilizadas:**
-**Tecnologias de Desarrollo:**
+**Tecnologías de Desarrollo:**
 - Lenguaje de Programación: `C`
 - Biblioteca Gráfica: `Raylib`
 
 **Graficos:**
-- `GIMP` software para edición y creacion de imágenes de mapas de bits.
+- `GIMP` : software para edición y creacion de imágenes de mapas de bits.
+- `PhotoShop` : editor de fotografías usado principalmente para el retoque de fotografías y gráficos
 
 **Sonido:**
 - ...
@@ -40,7 +45,7 @@
 4. Has doble click al acceso directo y a jugar.
 
 #### macOS y Linux:
-- Proximamente...
+> Proximamente...
 
 
 **_Si recibes un aviso de virus, ejecuta el archivo ejecutable como administrador o desactiva tu antivirus._**
@@ -53,7 +58,7 @@
 | Mover hacia abajo    | S o ↓           |
 | Mover hacia la izq.  | A o ←           |
 | Mover hacia la der.  | D o →           |
-| Disparar             | Space           |
+| Disparar             | SPACE           |
 | Jugar                | ENTER           |
 | Instrucciones        | A               |
 | Información del juego| E               |
