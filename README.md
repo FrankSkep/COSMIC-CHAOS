@@ -14,9 +14,9 @@
 
 ## Informacion tecnica
 ### **Herramientas utilizadas:**
-**Desarrollo:**
-- Lenguaje de Programación: C
-- Biblioteca Gráfica: Raylib
+**Tecnologias de Desarrollo:**
+- Lenguaje de Programación: `C`
+- Biblioteca Gráfica: `Raylib`
 
 **Graficos:**
 - `GIMP` software para edición y creacion de imágenes de mapas de bits.
