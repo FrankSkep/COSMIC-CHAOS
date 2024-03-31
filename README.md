@@ -3,7 +3,7 @@
 
 ## <p align="center"><strong>Descripción</strong></p>
 
-COSMIC CHAOS es un videojuego espacial en 2D donde el jugador controla una nave espacial y debe esquivar y destruir meteoros para sobrevivir, mientras recolecta objetos para ganar puntos y vidas adicionales.
+**COSMIC CHAOS** es un videojuego espacial en 2D donde el jugador controla una nave espacial y debe esquivar y destruir meteoros para sobrevivir, mientras recolecta objetos para ganar puntos y vidas adicionales.
 
 ## Características
 - **Jugabilidad Adictiva:** Sumérgete en una experiencia de juego emocionante y desafiante que pondrá a prueba tus reflejos y habilidades de esquiva.
