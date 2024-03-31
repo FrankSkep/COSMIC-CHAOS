@@ -312,8 +312,7 @@ int main()
                 BeginDrawing();
                 // Velocidad de rotacion meteoros
                 rotationMeteor += 2.5f;
-                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &lives, &score, &level, &rotationMeteor);
-                drawMeteors(&grayMeteor, &brownMeteor, &rotationMeteor);
+                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &grayMeteor, &brownMeteor, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &lives, &score, &level, &rotationMeteor);
 
                 /*--------------- ? ---------------*/
                 timeseconds += GetFrameTime(); // Obtener el tiempo transcurrido en segundos

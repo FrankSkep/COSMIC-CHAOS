@@ -13,13 +13,13 @@ void aboutTheGame();
 void logicaMenu(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, short *lives, short *score, short *level, float *rotation);
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, short *lives, short *score, short *level, float *rotation);
 void gameOverInterface(Texture2D *background, short *score, short *level);
 
 /* DIBUJO OBJETOS */
 void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation);
 void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx);
-void DrawShots(Texture2D *shotTx);
+void drawShots(Texture2D *shotTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
 /* LOGICA */
@@ -124,7 +124,7 @@ void logicaMenu(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, short *lives, short *score, short *level, float *rotation)
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, short *lives, short *score, short *level, float *rotation)
 {
     // Dibuja fondo
     DrawTexture(*gamebg, 0, 0, WHITE);
@@ -139,9 +139,9 @@ void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Te
     DrawTextureV(*ship, *shipPosicion, WHITE);
 
     // Dibuja los elementos moviles del juego
-    // drawMeteors(rotation);
+    drawMeteors(grayMeteor, brownMeteor, rotation);
     drawObjects(coins, hearts);
-    DrawShots(shotTx);
+    drawShots(shotTx);
 
     // Dibuja vidas restantes
     DrawText(TextFormat("LIVES : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
@@ -226,7 +226,7 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
     {
         if (hearts[i].active)
         {
-            // Calcular la posición del centro de la moneda
+            // Calcular la posición del centro del corazon
             heartCenter = {(float)((int)hearts[i].position.x - heartsTx->width / 2), (float)((int)hearts[i].position.y - heartsTx->height / 2)};
             DrawTextureV(*heartsTx, heartCenter, RED);
         }
@@ -234,9 +234,9 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
 }
 
 // Dibujar disparos
-void DrawShots(Texture2D *shotTx)
+void drawShots(Texture2D *shotTx)
 {
-    // Calcular la posición del centro de la moneda
+    // Calcular la posición y centro de la bala
     Vector2 shotPos;
 
     for (int i = 0; i < MAX_SHOTS; i++)
@@ -486,12 +486,13 @@ void screenlevel(const char *text, int seconds)
     }
 }
 
-// Reiniciar posicion de elementos jugador
+// Reiniciar posicion de elementos y jugador
 void resetItems(Vector2 *playPosition)
 {
     // Reiniciar posicion nave
     *playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
     short i;
+
     // Limpiar meteoros
     for (i = 0; i < MAX_GRAY; i++)
     {
@@ -509,6 +510,7 @@ void resetItems(Vector2 *playPosition)
     {
         hearts[i].active = false;
     }
+    // Limpiar disparos
     for (i = 0; i < MAX_SHOTS; i++)
     {
         shots[i].active = false;
