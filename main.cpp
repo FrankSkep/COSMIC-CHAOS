@@ -28,7 +28,8 @@ int main()
     /*----------- Carga de texturas -----------*/
     Texture2D menu, game, gameoverT, cinema[8];
     Texture2D shipTextures[6], coinsTx[6], heartsTx[6], misil[6];
-    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, coinsTx, heartsTx, misil);
+    Texture2D grayMeteor, brownMeteor;
+    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, misil);
 
     /*----------- Carga de sonidos -----------*/
     InitAudioDevice();
@@ -45,6 +46,8 @@ int main()
     Vector2 playerPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
     // Centro nave
     Vector2 shipCenter;
+    // Centro meteoros
+    Vector2 grayCenter, brownCenter;
 
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
@@ -179,10 +182,11 @@ int main()
                         }
 
                         // Detectar colisión con jugador
-                        if (CheckCollision(playerPosition, playRadius, grayMeteors[i].position, GRAY_METEOR_RADIUS))
+                        grayCenter = {grayMeteors[i].position.x - grayMeteor.width / 2, grayMeteors[i].position.y - grayMeteor.height / 2};
+                        if (CheckCollision(playerPosition, playRadius, grayCenter, GRAY_METEOR_RADIUS))
                         {
                             grayMeteors[i].active = false; // Eliminar objeto tocado
-                            lives--;                      // Pierde una vida
+                            lives--;                       // Pierde una vida
                             if (lives <= 0)
                             {
                                 gameOver = true;
@@ -202,10 +206,11 @@ int main()
                         }
 
                         // Detectar colisión con jugador
-                        if (CheckCollision(playerPosition, playRadius, brownMeteors[i].position, BROWN_METEOR_RADIUS))
+                        brownCenter = {brownMeteors[i].position.x - brownMeteor.width / 2, brownMeteors[i].position.y - brownMeteor.height / 2};
+                        if (CheckCollision(playerPosition, playRadius, brownCenter, BROWN_METEOR_RADIUS))
                         {
                             brownMeteors[i].active = false; // Eliminar objeto tocado
-                            lives--;                       // Pierde una vida
+                            lives--;                        // Pierde una vida
                             if (lives <= 0)
                             {
                                 gameOver = true;
@@ -228,7 +233,7 @@ int main()
                         if (CheckCollision(playerPosition, playRadius, coins[i].position, COINS_RADIUS))
                         {
                             coins[i].active = false; // Eliminar objeto tocado
-                            score += 10;            // Aumentar el puntaje
+                            score += 10;             // Aumentar el puntaje
                             PlaySound(soundcoin);
                         }
                     }
@@ -248,7 +253,7 @@ int main()
                         if (CheckCollision(playerPosition, playRadius, hearts[i].position, HEARTS_RADIUS))
                         {
                             hearts[i].active = false; // Eliminar objeto tocado
-                            lives++;                 // Gana una vida
+                            lives++;                  // Gana una vida
                         }
                     }
                 }
@@ -271,7 +276,9 @@ int main()
                         {
                             if (grayMeteors[j].active)
                             {
-                                if (CheckCollision(shots[i].position, SHOT_RADIUS, grayMeteors[j].position, GRAY_METEOR_RADIUS))
+                                // Calcula punto de collision
+                                grayCenter = {grayMeteors[j].position.x - grayMeteor.width / 2, grayMeteors[j].position.y - grayMeteor.height / 2};
+                                if (CheckCollision(shots[i].position, SHOT_RADIUS, grayCenter, GRAY_METEOR_RADIUS))
                                 {
                                     // Colisión con meteoro gris
                                     score += 5;
@@ -286,8 +293,10 @@ int main()
                         {
                             if (brownMeteors[j].active)
                             {
+                                // Calcula punto de collision
+                                brownCenter = {brownMeteors[j].position.x - brownMeteor.width / 2, brownMeteors[j].position.y - brownMeteor.height / 2};
                                 // Colisión con meteoro café
-                                if (CheckCollision(shots[i].position, SHOT_RADIUS, brownMeteors[j].position, BROWN_METEOR_RADIUS))
+                                if (CheckCollision(shots[i].position, SHOT_RADIUS, brownCenter, BROWN_METEOR_RADIUS))
                                 {
                                     score += 5;
                                     StopSound(shotSound);
@@ -304,6 +313,7 @@ int main()
                 // Velocidad de rotacion meteoros
                 rotationMeteor += 2.5f;
                 gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &lives, &score, &level, &rotationMeteor);
+                drawMeteors(&grayMeteor, &brownMeteor, &rotationMeteor);
 
                 /*--------------- ? ---------------*/
                 timeseconds += GetFrameTime(); // Obtener el tiempo transcurrido en segundos
@@ -314,7 +324,7 @@ int main()
                 DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
                 /*--------------- ? ---------------*/
 
-                Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &lives,&totalseconds, &timeseconds);
+                Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &lives, &totalseconds, &timeseconds);
                 /*--------------------------------------------------------*/
 
                 if (gameOver)
@@ -356,7 +366,7 @@ int main()
     }
 
     // Descarga de recursos
-    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, coinsTx, heartsTx, misil);
+    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, misil);
     unloadSounds(&gameMusic, &gameover, &soundcoin, &shotSound);
 
     CloseAudioDevice();

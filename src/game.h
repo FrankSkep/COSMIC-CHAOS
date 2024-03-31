@@ -17,7 +17,7 @@ void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Te
 void gameOverInterface(Texture2D *background, short *score, short *level);
 
 /* DIBUJO OBJETOS */
-void drawMeteors(float *rotation);
+void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation);
 void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx);
 void DrawShots(Texture2D *shotTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
@@ -139,7 +139,7 @@ void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Te
     DrawTextureV(*ship, *shipPosicion, WHITE);
 
     // Dibuja los elementos moviles del juego
-    drawMeteors(rotation);
+    // drawMeteors(rotation);
     drawObjects(coins, hearts);
     DrawShots(shotTx);
 
@@ -179,28 +179,31 @@ void gameOverInterface(Texture2D *background, short *score, short *level)
 }
 
 // Dibuja meteoros
-void drawMeteors(float *rotation)
+void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation)
 {
+    Vector2 grayCenter, brownCenter;
+
     for (int i = 0; i < MAX_GRAY; i++)
     {
         if (grayMeteors[i].active)
         {
-            // Dibujar el cuerpo principal del meteoro (polígono relleno)
-            DrawPoly(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, *rotation, GRAY);
-
-            // Dibujar líneas adicionales para dar textura
-            DrawPolyLinesEx(grayMeteors[i].position, 5, GRAY_METEOR_RADIUS, *rotation, 8, DARKGRAY);
+            // Calcular el punto central de rotación
+            grayCenter = {grayMeteors[i].position.x - grayMeteor->width / 2, grayMeteors[i].position.y - grayMeteor->height / 2};
+            DrawTexturePro(*grayMeteor, (Rectangle){0, 0, (float) grayMeteor->width, (float) grayMeteor->height},
+                           (Rectangle){grayCenter.x, grayCenter.y, (float) grayMeteor->width, (float) grayMeteor->height},
+                           (Vector2){(float) grayMeteor->width / 2, (float) grayMeteor->height / 2}, *rotation, WHITE);
         }
     }
     for (int i = 0; i < MAX_BROWN_METEORS; i++)
     {
         if (brownMeteors[i].active)
         {
-            // Dibujar el cuerpo principal del meteoro (polígono relleno)
-            DrawPoly(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, *rotation, BROWN);
+            // Calcular el punto central de rotación
+            brownCenter = {brownMeteors[i].position.x - brownMeteor->width / 2, brownMeteors[i].position.y - brownMeteor->height / 2};
 
-            // Dibujar líneas adicionales para dar textura
-            DrawPolyLinesEx(brownMeteors[i].position, 5, BROWN_METEOR_RADIUS, *rotation, 8, DARKGRAY);
+            DrawTexturePro(*brownMeteor, (Rectangle){0, 0, (float) brownMeteor->width, (float) brownMeteor->height},
+                           (Rectangle){brownCenter.x, brownCenter.y, (float) brownMeteor->width, (float) brownMeteor->height},
+                           (Vector2){(float) brownMeteor->width / 2, (float) brownMeteor->height / 2}, *rotation, WHITE);
         }
     }
 }
