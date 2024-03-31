@@ -297,7 +297,7 @@ void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, V
         // MAX_HEART =
     }
 
-    if (*score >= 1000 && *level == 1)
+    if (*score >= 30 && *level == 1)
     {
         // Limpiar objetos
         resetItems(playPosition);
