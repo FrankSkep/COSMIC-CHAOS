@@ -306,15 +306,15 @@ int main()
                 gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &lives, &score, &level, &rotationMeteor);
 
                 /*--------------- ? ---------------*/
-                timeseconds = GetTime(); // Obtener el tiempo transcurrido en segundos
-                totalseconds = (int)timeseconds;
+                timeseconds += GetFrameTime(); // Obtener el tiempo transcurrido en segundos
+                totalseconds = timeseconds;
                 minutesT = totalseconds / 60;
                 secondsT = totalseconds % 60;
                 // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
-                //DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
+                DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
                 /*--------------- ? ---------------*/
 
-                Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &lives);
+                Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &lives,&totalseconds, &timeseconds);
                 /*--------------------------------------------------------*/
 
                 if (gameOver)

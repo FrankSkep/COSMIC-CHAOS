@@ -3,6 +3,7 @@
 
 #include "elements.h"
 #include <string.h>
+#include <stdio.h>
 
 /*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
 /* MENUs */
@@ -25,9 +26,10 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 void InitObject(GameObject *object, float *objRadius);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
 
-void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives);
+void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds);
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, Texture2D *texturas, int frame1, int frame2);
 void screenlevel(const char *text, int seconds);
+void screenpoints(int *totalseconds, short *score);
 
 void resetItems(Vector2 *playPosition);
 void resetStats(short *lives, short *score, short *level, float *timeSeconds);
@@ -269,7 +271,7 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
 }
 
 // Manejo de niveles
-void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives)
+void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds)
 {
     if (*score == 0 && *level == 0)
     {
@@ -284,19 +286,23 @@ void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, V
 
         /* Estadisticas Nivel 1 */
         *level = 1;
-        *score = 0;
+        *score = 940;
         *lives = 5;
         *elapsedTime = 0.0f;
+        *timeseconds = 0;
+
         MAX_GRAY = MAX_METEOR_LV1;
         // MAX_BROWN =
         // MAX_COIN =
         // MAX_HEART =
     }
 
-    if (*score >= 30 && *level == 1)
+    if (*score >= 1000 && *level == 1)
     {
         // Limpiar objetos
         resetItems(playPosition);
+        *totalseconds = 135;
+        screenpoints(totalseconds, score);
 
         subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, cinema, 0, 1);
         subsCinematicas("continuacion de historia", 45, 7, 2, cinema, 0, 1);
@@ -308,6 +314,8 @@ void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, V
         *score = 0;
         *lives = 5;
         *elapsedTime = 0.0f;
+        *timeseconds = 0;
+
         MAX_GRAY = MAX_METEOR_LV2;
         // MAX_BROWN =
         // MAX_COIN =
@@ -391,7 +399,75 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
     while (GetTime() - startTime2 < seconds) // Pausa entre cada texto
         ;
 }
+// Mostrar pantalla de puntos
+void screenpoints(int *totalseconds, short *score)
+{
+    // Variables para el puntaje real y el tiempo transcurrido
+    float realScore = 0.0;
+    float tempscore = (*score / *totalseconds) * 1.5;
 
+    // Bucle principal para actualizar la pantalla
+    do
+    {
+        // Iniciar temporizador para controlar el lapso de tiempo entre actualizaciones
+        double startTime = GetTime();
+
+        // Actualizar el tiempo transcurrido
+        while (GetTime() - startTime < 0.001)
+        {
+        } // Esperar 2 segundos antes de la próxima actualización
+        if (*score > 0)
+        {
+            *score -= 2; // Simular una disminución del puntaje
+            if (*score <= 0)
+            {
+                *score = 0;
+                printf("\nscore\n");
+            }
+        }
+        if (*totalseconds > 0)
+        {
+            *totalseconds -= 0.001; // Simular una disminución del tiempo transcurrido
+            if (*totalseconds <= 0)
+            {
+                *totalseconds = 0;
+                printf("\ntime\n");
+            }
+        }
+        if (realScore <= tempscore)
+        {
+            realScore += 0.01;
+            if (realScore >= tempscore)
+            {
+                realScore = tempscore;
+                printf("\nreal score %f\n", realScore);
+            }
+        }
+        // Calcular el puntaje real (puntaje / tiempo)
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
+        DrawText(TextFormat("Tiempo: %02d:%02d", *totalseconds / 60, *totalseconds % 60), 30, 100, 100, WHITE);
+
+        // Dibujar el puntaje obtenido durante el juego
+        DrawText(TextFormat("Oro recolectado: %d", *score), 30, 220, 100, WHITE);
+
+        // Dibujar el puntaje real calculado
+        DrawText(TextFormat("Oto total ganado: %3.2f", realScore), 30, 340, 100, WHITE);
+
+        EndDrawing();
+
+    } while (realScore != tempscore);
+
+    double startTime2 = GetTime(); // Obtener el tiempo de inicio
+
+    while (GetTime() - startTime2 < 2)
+    {
+    }
+    EndDrawing();
+}
 // Mostrar pantalla de nivel
 void screenlevel(const char *text, int seconds)
 {
