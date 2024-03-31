@@ -286,7 +286,7 @@ void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, V
 
         /* Estadisticas Nivel 1 */
         *level = 1;
-        *score = 940;
+        *score = 0;
         *lives = 5;
         *elapsedTime = 0.0f;
         *timeseconds = 0;
@@ -301,7 +301,6 @@ void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, V
     {
         // Limpiar objetos
         resetItems(playPosition);
-        *totalseconds = 135;
         screenpoints(totalseconds, score);
 
         subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, cinema, 0, 1);
@@ -334,6 +333,8 @@ void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, V
         *score = 0;
         *lives = 5;
         *elapsedTime = 0.0f;
+        *timeseconds = 0;
+
         MAX_GRAY = MAX_METEOR_LV3;
         // MAX_BROWN =
         // MAX_COIN =
@@ -404,7 +405,7 @@ void screenpoints(int *totalseconds, short *score)
 {
     // Variables para el puntaje real y el tiempo transcurrido
     float realScore = 0.0;
-    float tempscore = (*score / *totalseconds) * 1.5;
+    float tempscore = (*score / (float)(*totalseconds)) * 1.5;
 
     // Bucle principal para actualizar la pantalla
     do
@@ -415,7 +416,7 @@ void screenpoints(int *totalseconds, short *score)
         // Actualizar el tiempo transcurrido
         while (GetTime() - startTime < 0.001)
         {
-        } // Esperar 2 segundos antes de la próxima actualización
+        } // Esperar
         if (*score > 0)
         {
             *score -= 2; // Simular una disminución del puntaje
@@ -443,10 +444,9 @@ void screenpoints(int *totalseconds, short *score)
                 printf("\nreal score %f\n", realScore);
             }
         }
-        // Calcular el puntaje real (puntaje / tiempo)
+        ClearBackground(BLACK);
 
         BeginDrawing();
-        ClearBackground(BLACK);
 
         // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
         DrawText(TextFormat("Tiempo: %02d:%02d", *totalseconds / 60, *totalseconds % 60), 30, 100, 100, WHITE);
