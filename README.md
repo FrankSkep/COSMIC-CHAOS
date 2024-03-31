@@ -13,13 +13,20 @@
 - **Ambiente Sonoro Envolvente:** Sumérgete completamente en el juego con efectos de sonido que complementan la acción y la atmósfera del espacio.
 
 ## Informacion tecnica
-**Tecnologias utilizadas:**
+### **Herramientas utilizadas:**
+**Desarrollo:**
 - Lenguaje de Programación: C
 - Biblioteca Gráfica: Raylib
 
-**Requisitos del Sistema:**
+**Graficos:**
+- `GIMP` software para edición y creacion de imágenes de mapas de bits.
+
+**Sonido:**
+- ...
+
+### **Requisitos minimos del Sistema:**
 - Memoria RAM: 1.5 GB
-- Procesador: Dual-core (mínimo 2 núcleos)
+- Procesador: Intel o AMD Gen 2, Dual-core
 - Plataforma: Windows
 
 
