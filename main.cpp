@@ -66,8 +66,7 @@ int main()
             menuActions(&secondsT, &isPlaying); // Acciones menu
         }
         else
-        {
-            /*-------------------- PARTIDA --------------------*/
+        { /*-------------------- PARTIDA --------------------*/
             if (!gameOver)
             {
                 StopMusicStream(gameover); // Detiene musica de gameover
@@ -88,21 +87,21 @@ int main()
                 }
 
                 /*------------------ CONTROLES ------------------*/
-                if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+                if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) // Mover hacia la derecha
                 {
                     if (playerPosition.x + playRadius < SCR_WIDTH)
                     {
                         playerPosition.x += playerSpeed;
                     }
                 }
-                if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+                if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) // Mover hacia la izquierda
                 {
                     if (playerPosition.x - playRadius > 0)
                     {
                         playerPosition.x -= playerSpeed;
                     }
                 }
-                if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) // Ajuste para la parte superior
+                if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) // Mover hacia arriba
                 {
                     if (playerPosition.y - playRadius > 0)
                     {
@@ -117,7 +116,7 @@ int main()
                     }
                 }
 
-                if (IsKeyPressed(KEY_SPACE)) // Activa disparo al pulsar espacio
+                if (IsKeyPressed(KEY_SPACE)) // Dispara misil
                 {
                     for (i = 0; i < MAX_SHOTS; i++)
                     {
