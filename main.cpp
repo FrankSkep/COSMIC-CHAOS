@@ -1,5 +1,5 @@
-#include "src/game.h"
-#include "src/resources.h"
+#include "src/game.h"      // Funciones del juego
+#include "src/resources.h" // Texturas y sonidos
 
 int main()
 {
@@ -29,7 +29,7 @@ int main()
     Texture2D menu, game, gameoverT, cinema[8];
     Texture2D shipTextures[6], coinsTx[6], heartsTx[6], heartsFTx[6], heartsETx[6], misil[6], explosionTx[3];
     Texture2D grayMeteor, brownMeteor;
-    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx,heartsFTx,heartsETx, misil, explosionTx);
+    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, heartsFTx, heartsETx, misil, explosionTx);
 
     /*----------- Carga de sonidos -----------*/
     InitAudioDevice();
@@ -53,20 +53,20 @@ int main()
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
     {
-
         if (IsKeyPressed(KEY_F11))
+        {
             ToggleFullscreen();
+        }
 
         if (!isPlaying) // Menu principal
         {
             StopMusicStream(gameover); // Detiene musica gameover
             drawMainMenu(&menu);       // Dibuja menu principal
 
-            logicaMenu(&secondsT, &isPlaying); // Acciones menu
+            menuActions(&secondsT, &isPlaying); // Acciones menu
         }
         else
-        {
-            /*-------------------- PARTIDA --------------------*/
+        { /*-------------------- PARTIDA --------------------*/
             if (!gameOver)
             {
                 StopMusicStream(gameover); // Detiene musica de gameover
@@ -87,28 +87,28 @@ int main()
                 }
 
                 /*------------------ CONTROLES ------------------*/
-                if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+                if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) // Mover hacia la derecha
                 {
                     if (playerPosition.x + playRadius < SCR_WIDTH)
                     {
                         playerPosition.x += playerSpeed;
                     }
                 }
-                if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+                if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) // Mover hacia la izquierda
                 {
                     if (playerPosition.x - playRadius > 0)
                     {
                         playerPosition.x -= playerSpeed;
                     }
                 }
-                if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) // Ajuste para la parte superior
+                if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) // Mover hacia arriba
                 {
                     if (playerPosition.y - playRadius > 0)
                     {
                         playerPosition.y -= playerSpeed;
                     }
                 }
-                if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) // Ajuste para la parte inferior
+                if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) // Mover hacia abajo
                 {
                     if (playerPosition.y + playRadius < SCR_HEIGHT)
                     {
@@ -116,7 +116,7 @@ int main()
                     }
                 }
 
-                if (IsKeyPressed(KEY_SPACE)) // Activa disparo al pulsar espacio
+                if (IsKeyPressed(KEY_SPACE)) // Dispara misil
                 {
                     for (i = 0; i < MAX_SHOTS; i++)
                     {
@@ -273,7 +273,6 @@ int main()
                             {
                                 // Desactivar el disparo después de la animación de explosión
                                 shots[i].active = false;
-                                StopSound(burstMisil);
                                 shots[i].collided = false; // Volver bandera falsa
                             }
                         }
@@ -303,7 +302,7 @@ int main()
                                         score += 5;
                                         grayMeteors[j].active = false;
                                         shots[i].collided = true;
-                                        shots[i].explosionTimer = 0.4f; // Duración de la animación de explosión (0.5 segundos)
+                                        shots[i].explosionTimer = 0.4f; // Duración de la animación de explosión (0.4 segundos)
                                     }
                                 }
                             }
@@ -322,19 +321,23 @@ int main()
                                         score += 5;
                                         brownMeteors[j].active = false;
                                         shots[i].collided = true;
-                                        shots[i].explosionTimer = 0.5f; // Duración de la animación de explosión (0.5 segundos)
+                                        shots[i].explosionTimer = 0.4f; // Duración de la animación de explosión (0.4 segundos)
                                     }
                                 }
                             }
                         }
                     }
                 }
-
                 /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
                 BeginDrawing();
+
                 // Velocidad de rotacion meteoros
                 rotationMeteor += 2.5f;
-                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &grayMeteor, &brownMeteor, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &lives, &score, &level, &rotationMeteor);
+
+                // Dibujar interfaz de la partida
+                drawGameInterface(&game, &heartsTx[currentFrame], &lives, &score, &level);
+                // Dibujar objetos de la partida
+                drawGameElements(&shipTextures[currentFrame], &shipCenter, &grayMeteor, &brownMeteor, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor);
 
                 /*--------------- ? ---------------*/
                 timeseconds += GetFrameTime(); // Obtener el tiempo transcurrido en segundos
@@ -360,7 +363,7 @@ int main()
                 }
             } /*-------------------- FIN DE PARTIDA --------------------*/
             else
-            { /*------------------ GAMEOVER TRUE ------------------*/
+            { /*------------------ GAMEOVER ------------------*/
                 // Reproducir musica gameover
                 UpdateMusicStream(gameover);
 
@@ -388,7 +391,7 @@ int main()
     }
 
     // Descarga de recursos
-    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx,heartsFTx,heartsETx, misil, explosionTx);
+    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, heartsFTx, heartsETx, misil, explosionTx);
     unloadSounds(&gameMusic, &gameover, &soundcoin, &shotSound, &burstMisil);
 
     CloseAudioDevice();
