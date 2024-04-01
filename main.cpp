@@ -108,7 +108,7 @@ int main()
                         playerPosition.y -= playerSpeed;
                     }
                 }
-                if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) // Ajuste para la parte inferior
+                if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) // Mover hacia abajo
                 {
                     if (playerPosition.y + playRadius < SCR_HEIGHT)
                     {
@@ -302,7 +302,7 @@ int main()
                                         score += 5;
                                         grayMeteors[j].active = false;
                                         shots[i].collided = true;
-                                        shots[i].explosionTimer = 0.4f; // Duración de la animación de explosión (0.5 segundos)
+                                        shots[i].explosionTimer = 0.4f; // Duración de la animación de explosión (0.4 segundos)
                                     }
                                 }
                             }
@@ -321,7 +321,7 @@ int main()
                                         score += 5;
                                         brownMeteors[j].active = false;
                                         shots[i].collided = true;
-                                        shots[i].explosionTimer = 0.5f; // Duración de la animación de explosión (0.5 segundos)
+                                        shots[i].explosionTimer = 0.4f; // Duración de la animación de explosión (0.4 segundos)
                                     }
                                 }
                             }
