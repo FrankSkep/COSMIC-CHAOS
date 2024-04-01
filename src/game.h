@@ -423,17 +423,12 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
 void screenpoints(int *totalseconds, short *score)
 {
     // Variables para el puntaje real y el tiempo transcurrido
-    float realScore = 0.0;
-    float tempscore = (*score / (float)(*totalseconds)) * 1.5;
+    float realScore = 0.0, tempscore = (*score / (float)(*totalseconds)) * 1.5;
 
-    // Bucle principal para actualizar la pantalla
     do
     {
-        // Iniciar temporizador para controlar el lapso de tiempo entre actualizaciones
         double startTime = GetTime();
-
-        // Actualizar el tiempo transcurrido
-        while (GetTime() - startTime < 0.001)
+        while (GetTime() - startTime < 0.001)  //Tiempo de espera entre iteracion
         {
         } // Esperar
         if (*score > 0)
@@ -441,51 +436,34 @@ void screenpoints(int *totalseconds, short *score)
             *score -= 2; // Simular una disminución del puntaje
             if (*score <= 0)
             {
-                *score = 0;
-                printf("\nscore\n");
-            }
+                *score = 0;            }
         }
         if (*totalseconds > 0)
         {
             *totalseconds -= 0.001; // Simular una disminución del tiempo transcurrido
             if (*totalseconds <= 0)
             {
-                *totalseconds = 0;
-                printf("\ntime\n");
-            }
+                *totalseconds = 0;            }
         }
         if (realScore <= tempscore)
         {
-            realScore += 0.01;
+            realScore += 0.01;  // simular aumento de puntaje
             if (realScore >= tempscore)
             {
                 realScore = tempscore;
-                printf("\nreal score %f\n", realScore);
             }
         }
         ClearBackground(BLACK);
-
         BeginDrawing();
-
-        // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
         DrawText(TextFormat("Tiempo: %02d:%02d", *totalseconds / 60, *totalseconds % 60), 30, 100, 100, WHITE);
-
-        // Dibujar el puntaje obtenido durante el juego
         DrawText(TextFormat("Oro recolectado: %d", *score), 30, 220, 100, WHITE);
-
-        // Dibujar el puntaje real calculado
         DrawText(TextFormat("Oto total ganado: %3.2f", realScore), 30, 340, 100, WHITE);
-
         EndDrawing();
-
-    } while (realScore != tempscore);
-
-    double startTime2 = GetTime(); // Obtener el tiempo de inicio
-
+    } while (realScore != tempscore); // Termina al llegar a el puntaje real
+    double startTime2 = GetTime(); 
     while (GetTime() - startTime2 < 2)
-    {
+    { // 2 segundos de espera
     }
-    EndDrawing();
 }
 // Mostrar pantalla de nivel
 void screenlevel(const char *text, int seconds)
