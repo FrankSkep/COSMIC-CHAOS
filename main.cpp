@@ -1,5 +1,5 @@
-#include "src/game.h"
-#include "src/resources.h"
+#include "src/game.h"      // Funciones del juego
+#include "src/resources.h" // Texturas y sonidos
 
 int main()
 {
@@ -29,7 +29,7 @@ int main()
     Texture2D menu, game, gameoverT, cinema[8];
     Texture2D shipTextures[6], coinsTx[6], heartsTx[6], heartsFTx[6], heartsETx[6], misil[6], explosionTx[3];
     Texture2D grayMeteor, brownMeteor;
-    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx,heartsFTx,heartsETx, misil, explosionTx);
+    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, heartsFTx, heartsETx, misil, explosionTx);
 
     /*----------- Carga de sonidos -----------*/
     InitAudioDevice();
@@ -53,16 +53,17 @@ int main()
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
     {
-
         if (IsKeyPressed(KEY_F11))
+        {
             ToggleFullscreen();
+        }
 
         if (!isPlaying) // Menu principal
         {
             StopMusicStream(gameover); // Detiene musica gameover
             drawMainMenu(&menu);       // Dibuja menu principal
 
-            logicaMenu(&secondsT, &isPlaying); // Acciones menu
+            menuActions(&secondsT, &isPlaying); // Acciones menu
         }
         else
         {
@@ -273,7 +274,6 @@ int main()
                             {
                                 // Desactivar el disparo después de la animación de explosión
                                 shots[i].active = false;
-                                StopSound(burstMisil);
                                 shots[i].collided = false; // Volver bandera falsa
                             }
                         }
@@ -329,12 +329,16 @@ int main()
                         }
                     }
                 }
-
                 /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
                 BeginDrawing();
+
                 // Velocidad de rotacion meteoros
                 rotationMeteor += 2.5f;
-                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &grayMeteor, &brownMeteor, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &lives, &score, &level, &rotationMeteor);
+
+                // Dibujar interfaz de la partida
+                drawGameInterface(&game, &heartsTx[currentFrame], &lives, &score, &level);
+                // Dibujar objetos de la partida
+                drawGameElements(&shipTextures[currentFrame], &shipCenter, &grayMeteor, &brownMeteor, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor);
 
                 /*--------------- ? ---------------*/
                 timeseconds += GetFrameTime(); // Obtener el tiempo transcurrido en segundos
@@ -360,7 +364,7 @@ int main()
                 }
             } /*-------------------- FIN DE PARTIDA --------------------*/
             else
-            { /*------------------ GAMEOVER TRUE ------------------*/
+            { /*------------------ GAMEOVER ------------------*/
                 // Reproducir musica gameover
                 UpdateMusicStream(gameover);
 
@@ -388,7 +392,7 @@ int main()
     }
 
     // Descarga de recursos
-    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx,heartsFTx,heartsETx, misil, explosionTx);
+    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, heartsFTx, heartsETx, misil, explosionTx);
     unloadSounds(&gameMusic, &gameover, &soundcoin, &shotSound, &burstMisil);
 
     CloseAudioDevice();

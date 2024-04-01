@@ -2,7 +2,6 @@
 #define ELEMENTS_H
 
 #include "raylib.h"
-
 /*------------- CONSTANTES -------------*/
 
 /*--- DIMENSIONES PANTALLA ---*/

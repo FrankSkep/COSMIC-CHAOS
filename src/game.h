@@ -3,17 +3,17 @@
 
 #include "elements.h"
 #include <string.h>
-#include <stdio.h>
 
 /*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
 /* MENUs */
 void drawMainMenu(Texture2D *background);
 void drawHowToPlay();
 void aboutTheGame();
-void logicaMenu(int *seconds, bool *isPlaying);
+void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, short *lives, short *score, short *level, float *rotation);
+void drawGameInterface(Texture2D *gamebg, Texture2D *hearts, short *lives, short *score, short *level);
+void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation);
 void gameOverInterface(Texture2D *background, short *score, short *level);
 
 /* DIBUJO OBJETOS */
@@ -34,7 +34,7 @@ void screenpoints(int *totalseconds, short *score);
 void resetItems(Vector2 *playPosition);
 void resetStats(short *lives, short *score, short *level, float *timeSeconds);
 
-/************** DESARROLLO DE FUNCIONES **************/
+/*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 
 // Dibuja menu principal
 void drawMainMenu(Texture2D *background) // PANTALLA DE MENU
@@ -106,7 +106,7 @@ void aboutTheGame()
 }
 
 // Maneja acciones del menu principal
-void logicaMenu(int *seconds, bool *isPlaying)
+void menuActions(int *seconds, bool *isPlaying)
 {
     if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
     {
@@ -124,7 +124,7 @@ void logicaMenu(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, short *lives, short *score, short *level, float *rotation)
+void drawGameInterface(Texture2D *gamebg, Texture2D *hearts, short *lives, short *score, short *level)
 {
     // Dibuja fondo
     DrawTexture(*gamebg, 0, 0, WHITE);
@@ -135,27 +135,33 @@ void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Te
     // Dibuja nivel
     DrawText(TextFormat("LEVEL : %i", *level), SCR_WIDTH - 1560, 20, 50, WHITE);
 
-    // Dibuja jugador (nave)
-    DrawTextureV(*ship, *shipPosicion, WHITE);
-
-    // Dibuja los elementos moviles del juego
-    drawMeteors(grayMeteor, brownMeteor, rotation);
-    drawObjects(coins, hearts);
-    drawShots(shotTx, explosionTx);
-
     // Dibuja vidas restantes
+    float x;
     DrawText(TextFormat("LIVES : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
     for (int i = 0; i < *lives; i++)
     {
-        float x = SCR_WIDTH - 65 * (i + 1);
+        x = SCR_WIDTH - 65 * (i + 1);
         DrawTexture(*hearts, x, SCR_HEIGHT - 65, RED);
     }
-
     for (int i = *lives; i < 5; i++)
     {
-        float x = SCR_WIDTH - 65 * (i + 1);         // Inicia desde el lado derecho
+        x = SCR_WIDTH - 65 * (i + 1);               // Inicia desde el lado derecho
         DrawText("-", x, SCR_HEIGHT - 60, 50, RED); // Corazón vacío
     }
+}
+
+// Dibuja elementos de la partida
+void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation)
+{
+    // Dibuja jugador (nave)
+    DrawTextureV(*ship, *shipPosicion, WHITE);
+
+    // Dibuja meteoros en rotacion
+    drawMeteors(grayMeteor, brownMeteor, rotation);
+    // Dibuja monedas y corazones
+    drawObjects(coins, hearts);
+    // Dibuja disparos (misiles)
+    drawShots(shotTx, explosionTx);
 }
 
 // Dibuja la interfaz de derrota
@@ -251,15 +257,15 @@ void drawShots(Texture2D *shotTx, Texture2D *explosionTx)
     {
         if (shots[i].active)
         {
-            if (shots[i].collided) // Si ha habido una colisión, dibuja la explosión
-            {
-                shotPos = {shots[i].position.x - explosionTx->width / 2, shots[i].position.y - explosionTx->height / 2};
-                DrawTextureV(*explosionTx, shotPos, WHITE);
-            }
-            else // Si no ha habido colisión, dibuja el misil
+            if (!shots[i].collided) // Si no ha habido colisión, dibuja el misil
             {
                 shotPos = {shots[i].position.x - shotTx->width / 2, shots[i].position.y - shotTx->height / 2};
                 DrawTextureV(*shotTx, shotPos, WHITE);
+            }
+            else // Si ha habido una colisión, dibuja la explosión
+            {
+                shotPos = {shots[i].position.x - explosionTx->width / 2, shots[i].position.y - explosionTx->height / 2};
+                DrawTextureV(*explosionTx, shotPos, WHITE);
             }
         }
     }
@@ -428,7 +434,7 @@ void screenpoints(int *totalseconds, short *score)
     do
     {
         double startTime = GetTime();
-        while (GetTime() - startTime < 0.001)  //Tiempo de espera entre iteracion
+        while (GetTime() - startTime < 0.001) // Tiempo de espera entre iteracion
         {
         } // Esperar
         if (*score > 0)
@@ -436,18 +442,20 @@ void screenpoints(int *totalseconds, short *score)
             *score -= 2; // Simular una disminución del puntaje
             if (*score <= 0)
             {
-                *score = 0;            }
+                *score = 0;
+            }
         }
         if (*totalseconds > 0)
         {
             *totalseconds -= 0.001; // Simular una disminución del tiempo transcurrido
             if (*totalseconds <= 0)
             {
-                *totalseconds = 0;            }
+                *totalseconds = 0;
+            }
         }
         if (realScore <= tempscore)
         {
-            realScore += 0.01;  // simular aumento de puntaje
+            realScore += 0.01; // simular aumento de puntaje
             if (realScore >= tempscore)
             {
                 realScore = tempscore;
@@ -460,7 +468,7 @@ void screenpoints(int *totalseconds, short *score)
         DrawText(TextFormat("Oto total ganado: %3.2f", realScore), 30, 340, 100, WHITE);
         EndDrawing();
     } while (realScore != tempscore); // Termina al llegar a el puntaje real
-    double startTime2 = GetTime(); 
+    double startTime2 = GetTime();
     while (GetTime() - startTime2 < 2)
     { // 2 segundos de espera
     }
