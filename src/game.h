@@ -13,13 +13,13 @@ void aboutTheGame();
 void logicaMenu(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, short *lives, short *score, short *level, float *rotation);
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, short *lives, short *score, short *level, float *rotation);
 void gameOverInterface(Texture2D *background, short *score, short *level);
 
 /* DIBUJO OBJETOS */
 void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation);
 void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx);
-void drawShots(Texture2D *shotTx);
+void drawShots(Texture2D *shotTx, Texture2D *explosionTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
 /* LOGICA */
@@ -124,7 +124,7 @@ void logicaMenu(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, short *lives, short *score, short *level, float *rotation)
+void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, short *lives, short *score, short *level, float *rotation)
 {
     // Dibuja fondo
     DrawTexture(*gamebg, 0, 0, WHITE);
@@ -141,7 +141,7 @@ void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Te
     // Dibuja los elementos moviles del juego
     drawMeteors(grayMeteor, brownMeteor, rotation);
     drawObjects(coins, hearts);
-    drawShots(shotTx);
+    drawShots(shotTx, explosionTx);
 
     // Dibuja vidas restantes
     DrawText(TextFormat("LIVES : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
@@ -187,23 +187,26 @@ void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation)
     {
         if (grayMeteors[i].active)
         {
-            // Calcular el punto central de rotación
+            // Calcular el punto central
             grayCenter = {grayMeteors[i].position.x - grayMeteor->width / 2, grayMeteors[i].position.y - grayMeteor->height / 2};
-            DrawTexturePro(*grayMeteor, (Rectangle){0, 0, (float) grayMeteor->width, (float) grayMeteor->height},
-                           (Rectangle){grayCenter.x, grayCenter.y, (float) grayMeteor->width, (float) grayMeteor->height},
-                           (Vector2){(float) grayMeteor->width / 2, (float) grayMeteor->height / 2}, *rotation, WHITE);
+
+            // Dibujar textura meteoro girando
+            DrawTexturePro(*grayMeteor, (Rectangle){0, 0, (float)grayMeteor->width, (float)grayMeteor->height},
+                           (Rectangle){grayCenter.x, grayCenter.y, (float)grayMeteor->width, (float)grayMeteor->height},
+                           (Vector2){(float)grayMeteor->width / 2, (float)grayMeteor->height / 2}, *rotation, WHITE);
         }
     }
     for (int i = 0; i < MAX_BROWN_METEORS; i++)
     {
         if (brownMeteors[i].active)
         {
-            // Calcular el punto central de rotación
+            // Calcular el punto central
             brownCenter = {brownMeteors[i].position.x - brownMeteor->width / 2, brownMeteors[i].position.y - brownMeteor->height / 2};
 
-            DrawTexturePro(*brownMeteor, (Rectangle){0, 0, (float) brownMeteor->width, (float) brownMeteor->height},
-                           (Rectangle){brownCenter.x, brownCenter.y, (float) brownMeteor->width, (float) brownMeteor->height},
-                           (Vector2){(float) brownMeteor->width / 2, (float) brownMeteor->height / 2}, *rotation, WHITE);
+            // Dibujar textura meteoro girando
+            DrawTexturePro(*brownMeteor, (Rectangle){0, 0, (float)brownMeteor->width, (float)brownMeteor->height},
+                           (Rectangle){brownCenter.x, brownCenter.y, (float)brownMeteor->width, (float)brownMeteor->height},
+                           (Vector2){(float)brownMeteor->width / 2, (float)brownMeteor->height / 2}, *rotation, WHITE);
         }
     }
 }
@@ -211,7 +214,9 @@ void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation)
 // Dibujar monedas y corazones
 void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
 {
-    Vector2 coinCenter;
+    Vector2 coinCenter, heartCenter;
+
+    // Dibujar monedas
     for (int i = 0; i < MAX_COINS; i++)
     {
         if (coins[i].active)
@@ -221,7 +226,7 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
             DrawTextureV(*coinsTx, coinCenter, WHITE);
         }
     }
-    Vector2 heartCenter;
+    // Dibujar corazones
     for (int i = 0; i < MAX_HEARTS; i++)
     {
         if (hearts[i].active)
@@ -234,7 +239,7 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
 }
 
 // Dibujar disparos
-void drawShots(Texture2D *shotTx)
+void drawShots(Texture2D *shotTx, Texture2D *explosionTx)
 {
     // Calcular la posición y centro de la bala
     Vector2 shotPos;
@@ -243,8 +248,16 @@ void drawShots(Texture2D *shotTx)
     {
         if (shots[i].active)
         {
-            shotPos = {shots[i].position.x - shotTx->width / 2, shots[i].position.y - shotTx->height / 2};
-            DrawTextureV(*shotTx, shotPos, WHITE);
+            if (shots[i].collided) // Si ha habido una colisión, dibuja la explosión
+            {
+                shotPos = {shots[i].position.x - explosionTx->width / 2, shots[i].position.y - explosionTx->height / 2};
+                DrawTextureV(*explosionTx, shotPos, WHITE);
+            }
+            else // Si no ha habido colisión, dibuja el misil
+            {
+                shotPos = {shots[i].position.x - shotTx->width / 2, shots[i].position.y - shotTx->height / 2};
+                DrawTextureV(*shotTx, shotPos, WHITE);
+            }
         }
     }
 }

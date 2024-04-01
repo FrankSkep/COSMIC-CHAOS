@@ -3,15 +3,15 @@
 #include "raylib.h"
 
 /*---------------- PROTOTIPOS ----------------*/
-void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *misil);
-void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *misil);
-void loadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot);
-void unloadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot);
+void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *misil, Texture2D *explosion);
+void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *misil, Texture2D *explosion);
+void loadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot, Sound *burstMisil);
+void unloadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot, Sound *burstMisil);
 
 /*---------------- DESARROLLO ----------------*/
 
 // ---- Carga texturas ----
-void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *misil)
+void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *misil, Texture2D *explosion)
 {
     // Fondo menu principal
     *menu = LoadTexture("resources/images/backgrounds/menu.png");
@@ -67,10 +67,15 @@ void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Textu
     misil[3] = LoadTexture("resources/images/shot/shot02.png");
     misil[4] = LoadTexture("resources/images/shot/shot03.png");
     misil[5] = LoadTexture("resources/images/shot/shot03.png");
+
+    // Explosion misil
+    explosion[0] = LoadTexture("resources/images/shot/burst01.png");
+    explosion[1] = LoadTexture("resources/images/shot/burst02.png");
+    explosion[2] = LoadTexture("resources/images/shot/burst03.png");
 }
 
 // ---- Descarga texturas ----
-void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *misil)
+void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *misil, Texture2D *explosion)
 {
     UnloadTexture(*menu);
     UnloadTexture(*gamebg);
@@ -82,6 +87,7 @@ void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Tex
         UnloadTexture(shipTx[i]);
         UnloadTexture(coinsTx[i]);
         UnloadTexture(heartsTx[i]);
+        UnloadTexture(explosion[i]);
     }
     UnloadTexture(*grayMeteor);
     UnloadTexture(*brownMeteor);
@@ -90,21 +96,23 @@ void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Tex
 }
 
 // ---- Carga sonidos ----
-void loadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot)
+void loadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot, Sound *burstMisil)
 {
     *game = LoadMusicStream("resources/sounds/music.mp3");        // Musica partida
     *gameover = LoadMusicStream("resources/sounds/gameover.mp3"); // Musica gameover
     *coin = LoadSound("resources/sounds/coin.wav");               // Sonido moneda
     *shot = LoadSound("resources/sounds/shot.mp3");               // Sonido misil
+    *burstMisil = LoadSound("resources/sounds/burstMisil.mp3");
 }
 
 // ---- Descarga sonidos ----
-void unloadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot)
+void unloadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot, Sound *burstMisil)
 {
     UnloadMusicStream(*game);
     UnloadMusicStream(*gameover);
     UnloadSound(*coin);
     UnloadSound(*shot);
+    UnloadSound(*burstMisil);
 }
 
 #endif

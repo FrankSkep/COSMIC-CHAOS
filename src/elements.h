@@ -46,11 +46,18 @@ typedef struct
     bool active;
 } GameObject;
 
+typedef struct {
+    Vector2 position;
+    bool active;
+    bool collided;
+    float explosionTimer; // Duracion de la animación de explosión
+} Shot;
+
 /*--------- INSTANCIAS DE STRUCT 'GameObject' ---------*/
 GameObject grayMeteors[MAX_GRAY_METEORS];
 GameObject brownMeteors[MAX_BROWN_METEORS];
 GameObject coins[MAX_COINS];
 GameObject hearts[MAX_HEARTS];
-GameObject shots[MAX_SHOTS];
+Shot shots[MAX_SHOTS];
 
 #endif

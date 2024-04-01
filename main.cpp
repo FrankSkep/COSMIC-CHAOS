@@ -27,18 +27,19 @@ int main()
 
     /*----------- Carga de texturas -----------*/
     Texture2D menu, game, gameoverT, cinema[8];
-    Texture2D shipTextures[6], coinsTx[6], heartsTx[6], misil[6];
+    Texture2D shipTextures[6], coinsTx[6], heartsTx[6], misil[6], explosionTx[3];
     Texture2D grayMeteor, brownMeteor;
-    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, misil);
+    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, misil, explosionTx);
 
     /*----------- Carga de sonidos -----------*/
     InitAudioDevice();
     Music gameMusic, gameover;
-    Sound soundcoin, shotSound;
-    loadSounds(&gameMusic, &gameover, &soundcoin, &shotSound);
+    Sound soundcoin, shotSound, burstMisil;
+    loadSounds(&gameMusic, &gameover, &soundcoin, &shotSound, &burstMisil);
 
     /*-------- Ajustes texturas cambiantes --------*/
     short currentFrame = 0; // indice de la textura actual
+    short currentFrameExp = 0;
     float frameTimeCounter = 0.0f;
     float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
 
@@ -77,11 +78,12 @@ int main()
 
                 /***** SPRITES *****/
                 frameTimeCounter += GetFrameTime();
-                // pasado el tiempo, cambia la imagen de la nave
+                // pasado el tiempo, cambia imagen
                 if (frameTimeCounter >= frameSpeed)
                 {
                     currentFrame = (currentFrame + 1) % 6; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
-                    frameTimeCounter = 0.0f;               // Reiniciar el contador de tiempo
+                    currentFrameExp = (currentFrameExp + 1) % 3;
+                    frameTimeCounter = 0.0f; // Reiniciar el contador de tiempo
                 }
 
                 /*------------------ CONTROLES ------------------*/
@@ -120,9 +122,9 @@ int main()
                     {
                         if (!shots[i].active)
                         {
-                            PlaySound(shotSound);
                             shots[i].active = true;
                             shots[i].position = playerPosition; // Posición inicial del disparo
+                            PlaySound(shotSound);
                             break;
                         }
                     }
@@ -262,46 +264,66 @@ int main()
                 {
                     if (shots[i].active)
                     {
-                        // Mover el disparo hacia arriba
-                        shots[i].position.y -= SHOT_SPEED * GetFrameTime();
-
-                        // Comprobar si el disparo está fuera de la pantalla y desactivarlo
-                        if (shots[i].position.y < 0)
+                        if (shots[i].collided)
                         {
-                            shots[i].active = false;
-                        }
+                            // Disminuir el temporizador de la explosión
+                            shots[i].explosionTimer -= GetFrameTime();
 
-                        // Comprobar colisión con los meteoros
-                        for (int j = 0; j < MAX_GRAY; j++)
-                        {
-                            if (grayMeteors[j].active)
+                            if (shots[i].explosionTimer <= 0)
                             {
-                                // Calcula punto de collision
-                                grayCenter = {grayMeteors[j].position.x - grayMeteor.width / 2, grayMeteors[j].position.y - grayMeteor.height / 2};
-                                if (CheckCollision(shots[i].position, SHOT_RADIUS, grayCenter, GRAY_METEOR_RADIUS))
-                                {
-                                    // Colisión con meteoro gris
-                                    score += 5;
-                                    StopSound(shotSound);
-                                    grayMeteors[j].active = false;
-                                    shots[i].active = false;
-                                }
+                                // Desactivar el disparo después de la animación de explosión
+                                shots[i].active = false;
+                                StopSound(burstMisil);
+                                shots[i].collided = false; // Volver bandera falsa
                             }
                         }
-
-                        for (int j = 0; j < MAX_BROWN_METEORS; j++)
+                        else
                         {
-                            if (brownMeteors[j].active)
+                            // Mover el disparo hacia arriba
+                            shots[i].position.y -= SHOT_SPEED * GetFrameTime();
+
+                            // Comprobar si el disparo está fuera de la pantalla y desactivarlo
+                            if (shots[i].position.y < 0)
                             {
-                                // Calcula punto de collision
-                                brownCenter = {brownMeteors[j].position.x - brownMeteor.width / 2, brownMeteors[j].position.y - brownMeteor.height / 2};
-                                // Colisión con meteoro café
-                                if (CheckCollision(shots[i].position, SHOT_RADIUS, brownCenter, BROWN_METEOR_RADIUS))
+                                shots[i].active = false;
+                            }
+
+                            // Comprobar colisión con los meteoros
+                            for (int j = 0; j < MAX_GRAY; j++)
+                            {
+                                if (grayMeteors[j].active)
                                 {
-                                    score += 5;
-                                    StopSound(shotSound);
-                                    brownMeteors[j].active = false;
-                                    shots[i].active = false;
+                                    // Calcula punto de collision
+                                    grayCenter = {grayMeteors[j].position.x - grayMeteor.width / 2, grayMeteors[j].position.y - grayMeteor.height / 2};
+                                    // Colision con meteoro gris
+                                    if (CheckCollision(shots[i].position, SHOT_RADIUS, grayCenter, GRAY_METEOR_RADIUS))
+                                    {
+                                        PlaySound(burstMisil);
+                                        StopSound(shotSound);
+                                        score += 5;
+                                        grayMeteors[j].active = false;
+                                        shots[i].collided = true;
+                                        shots[i].explosionTimer = 0.4f; // Duración de la animación de explosión (0.5 segundos)
+                                    }
+                                }
+                            }
+
+                            for (int j = 0; j < MAX_BROWN_METEORS; j++)
+                            {
+                                if (brownMeteors[j].active)
+                                {
+                                    // Calcula punto de collision
+                                    brownCenter = {brownMeteors[j].position.x - brownMeteor.width / 2, brownMeteors[j].position.y - brownMeteor.height / 2};
+                                    // Colisión con meteoro café
+                                    if (CheckCollision(shots[i].position, SHOT_RADIUS, brownCenter, BROWN_METEOR_RADIUS))
+                                    {
+                                        PlaySound(burstMisil);
+                                        StopSound(shotSound);
+                                        score += 5;
+                                        brownMeteors[j].active = false;
+                                        shots[i].collided = true;
+                                        shots[i].explosionTimer = 0.5f; // Duración de la animación de explosión (0.5 segundos)
+                                    }
                                 }
                             }
                         }
@@ -312,7 +334,7 @@ int main()
                 BeginDrawing();
                 // Velocidad de rotacion meteoros
                 rotationMeteor += 2.5f;
-                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &grayMeteor, &brownMeteor, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &lives, &score, &level, &rotationMeteor);
+                gameInterface(&game, &shipTextures[currentFrame], &shipCenter, &grayMeteor, &brownMeteor, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &lives, &score, &level, &rotationMeteor);
 
                 /*--------------- ? ---------------*/
                 timeseconds += GetFrameTime(); // Obtener el tiempo transcurrido en segundos
@@ -328,6 +350,7 @@ int main()
 
                 if (gameOver)
                 {
+                    ClearBackground(BLACK);
                     minutesT = 0, secondsT = 0, totalseconds = 0, timeseconds = 0;
                     rotationMeteor = 0;          // Reiniciar rotacion
                     resetItems(&playerPosition); // Reinicia posicion y desactiva objetos
@@ -365,8 +388,8 @@ int main()
     }
 
     // Descarga de recursos
-    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, misil);
-    unloadSounds(&gameMusic, &gameover, &soundcoin, &shotSound);
+    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, misil, explosionTx);
+    unloadSounds(&gameMusic, &gameover, &soundcoin, &shotSound, &burstMisil);
 
     CloseAudioDevice();
     CloseWindow();
