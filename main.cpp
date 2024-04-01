@@ -27,9 +27,9 @@ int main()
 
     /*----------- Carga de texturas -----------*/
     Texture2D menu, game, gameoverT, cinema[8];
-    Texture2D shipTextures[6], coinsTx[6], heartsTx[6], misil[6], explosionTx[3];
+    Texture2D shipTextures[6], coinsTx[6], heartsTx[6], heartsFTx[6], heartsETx[6], misil[6], explosionTx[3];
     Texture2D grayMeteor, brownMeteor;
-    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, misil, explosionTx);
+    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx,heartsFTx,heartsETx, misil, explosionTx);
 
     /*----------- Carga de sonidos -----------*/
     InitAudioDevice();
@@ -388,7 +388,7 @@ int main()
     }
 
     // Descarga de recursos
-    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, misil, explosionTx);
+    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx,heartsFTx,heartsETx, misil, explosionTx);
     unloadSounds(&gameMusic, &gameover, &soundcoin, &shotSound, &burstMisil);
 
     CloseAudioDevice();

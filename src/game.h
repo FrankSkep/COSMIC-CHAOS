@@ -147,11 +147,14 @@ void gameInterface(Texture2D *gamebg, Texture2D *ship, Vector2 *shipPosicion, Te
     DrawText(TextFormat("LIVES : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
     for (int i = 0; i < *lives; i++)
     {
-        DrawTexture(*hearts, SCR_WIDTH - 330 + (i * 65), SCR_HEIGHT - 65, RED);
+        float x = SCR_WIDTH - 65 * (i + 1);
+        DrawTexture(*hearts, x, SCR_HEIGHT - 65, RED);
     }
+
     for (int i = *lives; i < 5; i++)
     {
-        DrawText(" - ", SCR_WIDTH - 330 + (i * 65), SCR_HEIGHT - 60, 50, RED); // Corazón vacío
+        float x = SCR_WIDTH - 65 * (i + 1);         // Inicia desde el lado derecho
+        DrawText("-", x, SCR_HEIGHT - 60, 50, RED); // Corazón vacío
     }
 }
 
