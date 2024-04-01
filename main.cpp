@@ -26,7 +26,7 @@ int main()
     SetTargetFPS(75);
 
     /*----------- Carga de texturas -----------*/
-    Texture2D menu, game, gameoverT, cinema[8];
+    Texture2D menu, game, gameoverT, cinema[9];
     Texture2D shipTextures[6], coinsTx[6], heartsTx[6], heartsFTx[6], heartsETx[6], misil[6], explosionTx[3];
     Texture2D grayMeteor, brownMeteor;
     loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, heartsFTx, heartsETx, misil, explosionTx);
@@ -63,7 +63,7 @@ int main()
             StopMusicStream(gameover); // Detiene musica gameover
             drawMainMenu(&menu);       // Dibuja menu principal
 
-            menuActions(&secondsT, &isPlaying); // Acciones menu
+            menuActions(&secondsT, &isPlaying, cinema); // Acciones menu
         }
         else
         { /*-------------------- PARTIDA --------------------*/

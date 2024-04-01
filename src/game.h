@@ -8,8 +8,8 @@
 /* MENUs */
 void drawMainMenu(Texture2D *background);
 void drawHowToPlay();
-void aboutTheGame();
-void menuActions(int *seconds, bool *isPlaying);
+void aboutTheGame(Texture2D *cinema);
+void menuActions(int *seconds, bool *isPlaying, Texture2D *cinema);
 
 /* INTERFACES */
 void drawGameInterface(Texture2D *gamebg, Texture2D *hearts, short *lives, short *score, short *level);
@@ -85,13 +85,14 @@ void drawHowToPlay()
 }
 
 // Dibuja pantalla con informacion acerca del juego
-void aboutTheGame()
+void aboutTheGame(Texture2D *cinema)
 {
     while (!IsKeyPressed(KEY_Q)) // Bucle para mostrar la interfaz "about"
     {
         BeginDrawing();
 
         ClearBackground(BLACK);
+        DrawTexture(cinema[8], 400, 280, WHITE);
 
         drawTextCenter("About the game", 0, 100, 100, RED);
         drawTextCenter("Developers:", 0, 270, 50, YELLOW);
@@ -106,7 +107,7 @@ void aboutTheGame()
 }
 
 // Maneja acciones del menu principal
-void menuActions(int *seconds, bool *isPlaying)
+void menuActions(int *seconds, bool *isPlaying, Texture2D *cinema)
 {
     if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
     {
@@ -119,7 +120,7 @@ void menuActions(int *seconds, bool *isPlaying)
     }
     if (IsKeyPressed(KEY_E)) // Ir a acerca del juego
     {
-        aboutTheGame();
+        aboutTheGame(cinema);
     }
 }
 
