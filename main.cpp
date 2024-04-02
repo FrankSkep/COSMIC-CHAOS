@@ -50,10 +50,8 @@ int main()
     float frameTimeCounter = 0.0f;
     float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
 
-    // Posicion jugador
-    Vector2 playerPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
-    // Centro nave
-    Vector2 shipCenter;
+    // Posicion y centro de jugador/nave
+    Vector2 playerPosition = {(float)SCR_WIDTH / 2 - shipTextures[currentFrame].width / 2, (float)SCR_HEIGHT / 1.1f - shipTextures[currentFrame].height / 2};
     // Centro meteoros
     Vector2 grayCenter, brownCenter;
 
@@ -79,9 +77,6 @@ int main()
                 StopMusicStream(gameover); // Detiene musica de gameover
                 UpdateMusicStream(gameMusic);
                 PlayMusicStream(gameMusic); // Reproduce musica de la partida
-
-                // Calcula y actualiza la posición del centro de la nave
-                shipCenter = {playerPosition.x - shipTextures[currentFrame].width / 2, playerPosition.y - shipTextures[currentFrame].height / 2};
 
                 /***** SPRITES *****/
                 frameTimeCounter += GetFrameTime();
@@ -168,7 +163,7 @@ int main()
                         if (!shots[i].active)
                         {
                             shots[i].active = true;
-                            shots[i].position = shipCenter; // Posición inicial del disparo
+                            shots[i].position = playerPosition; // Posición inicial del disparo
                             PlaySound(shotSound);
                             break;
                         }
@@ -230,7 +225,7 @@ int main()
 
                         // Detectar colisión con jugador
                         grayCenter = {grayMeteors[i].position.x - grayMeteor.width / 2, grayMeteors[i].position.y - grayMeteor.height / 2};
-                        if (CheckCollision(shipCenter, playRadius, grayCenter, GRAY_METEOR_RADIUS))
+                        if (CheckCollision(playerPosition, playRadius, grayCenter, GRAY_METEOR_RADIUS))
                         {
                             grayMeteors[i].active = false; // Eliminar objeto tocado
                             lives--;                       // Pierde una vida
@@ -254,7 +249,7 @@ int main()
 
                         // Detectar colisión con jugador
                         brownCenter = {brownMeteors[i].position.x - brownMeteor.width / 2, brownMeteors[i].position.y - brownMeteor.height / 2};
-                        if (CheckCollision(shipCenter, playRadius, brownCenter, BROWN_METEOR_RADIUS))
+                        if (CheckCollision(playerPosition, playRadius, brownCenter, BROWN_METEOR_RADIUS))
                         {
                             brownMeteors[i].active = false; // Eliminar objeto tocado
                             lives--;                        // Pierde una vida
@@ -277,7 +272,7 @@ int main()
                         }
 
                         // Detectar colisión con jugador y aumentar el contador de puntos
-                        if (CheckCollision(shipCenter, playRadius, coins[i].position, COINS_RADIUS))
+                        if (CheckCollision(playerPosition, playRadius, coins[i].position, COINS_RADIUS))
                         {
                             coins[i].active = false; // Eliminar objeto tocado
                             score += 10;             // Aumentar el puntaje
@@ -297,7 +292,7 @@ int main()
                         }
 
                         // Detectar colisión con jugador y aumentar vidas
-                        if (CheckCollision(shipCenter, playRadius, hearts[i].position, HEARTS_RADIUS))
+                        if (CheckCollision(playerPosition, playRadius, hearts[i].position, HEARTS_RADIUS))
                         {
                             hearts[i].active = false; // Eliminar objeto tocado
                             lives++;                  // Gana una vida
@@ -382,7 +377,7 @@ int main()
                 // Dibujar interfaz de la partida
                 drawGameInterface(&game, &heartsTx[currentFrame], &lives, &score, &level);
                 // Dibujar objetos de la partida
-                drawGameElements(&shipTextures[currentFrame], &shipCenter, &grayMeteor, &brownMeteor, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation, &shipCenter);
+                drawGameElements(&shipTextures[currentFrame], &playerPosition, &grayMeteor, &brownMeteor, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation);
 
                 /*--------------- ? ---------------*/
                 timeseconds += GetFrameTime(); // Obtener el tiempo transcurrido en segundos
