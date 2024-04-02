@@ -4,8 +4,15 @@
 int main()
 {
     /*------------- CONSTANTES -------------*/
-    const int playRadius = 45;        // Tamaño del jugador
-    const float playerSpeed = 15.0f;  // Velocidad del jugador
+    const int playRadius = 45;       // Tamaño del jugador
+    const float playerSpeed = 15.0f; // Velocidad del jugador
+    float playerRotation = 0.0;
+    float rotationSpeed = 2.0;
+    const float maxRotation = 20.0f;  // Máxima rotación hacia la derecha
+    const float minRotation = -20.0f; // Máxima rotación hacia la izquierda
+    const float rotationInterpolationSpeed = 50.0f;    // Definir la velocidad de interpolación para volver a la posición original
+    float currentRotation = 0.0f;    // Variables para la rotación actual y la interpolación de la rotación
+    float targetRotation = 0.0f;
     const float spawnInterval = 0.2f; // Intervalo de tiempo entre la aparición de objetos
 
     /*--------------- VARIABLES ---------------*/
@@ -92,6 +99,11 @@ int main()
                     if (playerPosition.x + playRadius < SCR_WIDTH)
                     {
                         playerPosition.x += playerSpeed;
+                        // Limitar la rotación hacia la derecha
+                        if (currentRotation < maxRotation)
+                        {
+                            currentRotation += rotationSpeed;
+                        }
                     }
                 }
                 if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) // Mover hacia la izquierda
@@ -99,8 +111,41 @@ int main()
                     if (playerPosition.x - playRadius > 0)
                     {
                         playerPosition.x -= playerSpeed;
+
+                        // Limitar la rotación hacia la izquierda
+                        if (currentRotation > minRotation)
+                        {
+                            currentRotation -= rotationSpeed;
+                        }
                     }
                 }
+                // Interpolar la rotación de vuelta a la posición original cuando se suelta la tecla
+                if (!IsKeyDown(KEY_RIGHT) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_A))
+                {
+                    // Si la rotación actual no es igual a la rotación objetivo, interpola hacia la rotación objetivo
+                    if (currentRotation != targetRotation)
+                    {
+                        if (currentRotation < targetRotation)
+                        {
+                            currentRotation += rotationInterpolationSpeed * GetFrameTime();
+                            if (currentRotation > targetRotation)
+                            {
+                                currentRotation = targetRotation;
+                            }
+                        }
+                        else if (currentRotation > targetRotation)
+                        {
+                            currentRotation -= rotationInterpolationSpeed * GetFrameTime();
+                            if (currentRotation < targetRotation)
+                            {
+                                currentRotation = targetRotation;
+                            }
+                        }
+                    }
+                }
+
+                // Actualizar la rotación del jugador
+                playerRotation = currentRotation;
                 if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) // Mover hacia arriba
                 {
                     if (playerPosition.y - playRadius > 0)
@@ -123,7 +168,7 @@ int main()
                         if (!shots[i].active)
                         {
                             shots[i].active = true;
-                            shots[i].position = playerPosition; // Posición inicial del disparo
+                            shots[i].position = shipCenter; // Posición inicial del disparo
                             PlaySound(shotSound);
                             break;
                         }
@@ -185,7 +230,7 @@ int main()
 
                         // Detectar colisión con jugador
                         grayCenter = {grayMeteors[i].position.x - grayMeteor.width / 2, grayMeteors[i].position.y - grayMeteor.height / 2};
-                        if (CheckCollision(playerPosition, playRadius, grayCenter, GRAY_METEOR_RADIUS))
+                        if (CheckCollision(shipCenter, playRadius, grayCenter, GRAY_METEOR_RADIUS))
                         {
                             grayMeteors[i].active = false; // Eliminar objeto tocado
                             lives--;                       // Pierde una vida
@@ -209,7 +254,7 @@ int main()
 
                         // Detectar colisión con jugador
                         brownCenter = {brownMeteors[i].position.x - brownMeteor.width / 2, brownMeteors[i].position.y - brownMeteor.height / 2};
-                        if (CheckCollision(playerPosition, playRadius, brownCenter, BROWN_METEOR_RADIUS))
+                        if (CheckCollision(shipCenter, playRadius, brownCenter, BROWN_METEOR_RADIUS))
                         {
                             brownMeteors[i].active = false; // Eliminar objeto tocado
                             lives--;                        // Pierde una vida
@@ -232,7 +277,7 @@ int main()
                         }
 
                         // Detectar colisión con jugador y aumentar el contador de puntos
-                        if (CheckCollision(playerPosition, playRadius, coins[i].position, COINS_RADIUS))
+                        if (CheckCollision(shipCenter, playRadius, coins[i].position, COINS_RADIUS))
                         {
                             coins[i].active = false; // Eliminar objeto tocado
                             score += 10;             // Aumentar el puntaje
@@ -252,7 +297,7 @@ int main()
                         }
 
                         // Detectar colisión con jugador y aumentar vidas
-                        if (CheckCollision(playerPosition, playRadius, hearts[i].position, HEARTS_RADIUS))
+                        if (CheckCollision(shipCenter, playRadius, hearts[i].position, HEARTS_RADIUS))
                         {
                             hearts[i].active = false; // Eliminar objeto tocado
                             lives++;                  // Gana una vida
@@ -337,7 +382,7 @@ int main()
                 // Dibujar interfaz de la partida
                 drawGameInterface(&game, &heartsTx[currentFrame], &lives, &score, &level);
                 // Dibujar objetos de la partida
-                drawGameElements(&shipTextures[currentFrame], &shipCenter, &grayMeteor, &brownMeteor, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor);
+                drawGameElements(&shipTextures[currentFrame], &shipCenter, &grayMeteor, &brownMeteor, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation, &shipCenter);
 
                 /*--------------- ? ---------------*/
                 timeseconds += GetFrameTime(); // Obtener el tiempo transcurrido en segundos

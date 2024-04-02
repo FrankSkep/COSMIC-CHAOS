@@ -13,10 +13,11 @@ void menuActions(int *seconds, bool *isPlaying, Texture2D *cinema);
 
 /* INTERFACES */
 void drawGameInterface(Texture2D *gamebg, Texture2D *hearts, short *lives, short *score, short *level);
-void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation);
+void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation, Vector2 *shipCenter);
 void gameOverInterface(Texture2D *background, short *score, short *level);
 
 /* DIBUJO OBJETOS */
+void drawPlayer(Texture2D *ship, Vector2 *playerPosition, float *playerRotation, Vector2 *shipCenter);
 void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation);
 void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx);
 void drawShots(Texture2D *shotTx, Texture2D *explosionTx);
@@ -152,11 +153,10 @@ void drawGameInterface(Texture2D *gamebg, Texture2D *hearts, short *lives, short
 }
 
 // Dibuja elementos de la partida
-void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation)
+void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation, Vector2 *shipCenter)
 {
     // Dibuja jugador (nave)
-    DrawTextureV(*ship, *shipPosicion, WHITE);
-
+    drawPlayer(ship, playerPosition, playerRotation, shipCenter);
     // Dibuja meteoros en rotacion
     drawMeteors(grayMeteor, brownMeteor, rotation);
     // Dibuja monedas y corazones
@@ -187,6 +187,17 @@ void gameOverInterface(Texture2D *background, short *score, short *level)
     drawTextCenter("(ESC) Exit", 2, 742, 70, RED);
     drawTextCenter("(ESC) Exit", 0, 740, 70, MAROON);
 }
+
+void drawPlayer(Texture2D *ship, Vector2 *playerPosition, float *playerRotation, Vector2 *shipCenter)
+{
+    // Calcular el punto central del jugador
+    Vector2 playerCenter = *shipCenter;
+    // Dibujar textura del jugador con rotación
+    DrawTexturePro(*ship, (Rectangle){0, 0, (float)ship->width, (float)ship->height},
+                   (Rectangle){playerCenter.x, playerCenter.y, (float)ship->width, (float)ship->height},
+                   (Vector2){(float)ship->width / 2, (float)ship->height / 2}, *playerRotation, WHITE);
+}
+
 
 // Dibuja meteoros
 void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation)
@@ -323,11 +334,11 @@ void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, V
         // MAX_HEART =
     }
 
-    if (*score >= 30 && *level == 1)
+    if (*score >= 50 && *level == 1)
     {
         // Limpiar objetos
         resetItems(playPosition);
-        screenpoints(totalseconds, score);
+        //screenpoints(totalseconds, score);
 
         subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, cinema, 0, 1);
         subsCinematicas("continuacion de historia", 45, 7, 2, cinema, 0, 1);
@@ -347,7 +358,7 @@ void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, V
         // MAX_HEART =
     }
     // Verificar si el jugador ha alcanzado el nivel 3
-    if (*score >= 30 && *level == 2)
+    if (*score >= 50 && *level == 2)
     {
         // Limpiar objetos
         resetItems(playPosition);
