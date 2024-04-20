@@ -24,7 +24,7 @@ void drawShots(Texture2D *shotTx, Texture2D *explosionTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
 /* LOGICA */
-void InitObject(GameObject *object, float *objRadius);
+void InitObject(GameObject *object, const float *objRadius);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
 
 void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds);
@@ -196,7 +196,6 @@ void drawPlayer(Texture2D *ship, Vector2 *playerPosition, float *playerRotation)
                    (Vector2){(float)ship->width / 2, (float)ship->height / 2}, *playerRotation, WHITE);
 }
 
-
 // Dibuja meteoros
 void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation)
 {
@@ -207,7 +206,8 @@ void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation)
         if (grayMeteors[i].active)
         {
             // Calcular el punto central
-            grayCenter = {grayMeteors[i].position.x - grayMeteor->width / 2, grayMeteors[i].position.y - grayMeteor->height / 2};
+            grayCenter.x = grayMeteors[i].position.x - grayMeteor->width / 2;
+            grayCenter.y = grayMeteors[i].position.y - grayMeteor->height / 2;
 
             // Dibujar textura meteoro girando
             DrawTexturePro(*grayMeteor, (Rectangle){0, 0, (float)grayMeteor->width, (float)grayMeteor->height},
@@ -220,7 +220,8 @@ void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation)
         if (brownMeteors[i].active)
         {
             // Calcular el punto central
-            brownCenter = {brownMeteors[i].position.x - brownMeteor->width / 2, brownMeteors[i].position.y - brownMeteor->height / 2};
+            brownCenter.x = brownMeteors[i].position.x - brownMeteor->width / 2;
+            brownCenter.y = brownMeteors[i].position.y - brownMeteor->height / 2;
 
             // Dibujar textura meteoro girando
             DrawTexturePro(*brownMeteor, (Rectangle){0, 0, (float)brownMeteor->width, (float)brownMeteor->height},
@@ -241,7 +242,8 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
         if (coins[i].active)
         {
             // Calcular la posición del centro de la moneda
-            coinCenter = {coins[i].position.x - coinsTx->width / 2, coins[i].position.y - coinsTx->height / 2};
+            coinCenter.x = coins[i].position.x - coinsTx->width / 2;
+            coinCenter.y = coins[i].position.y - coinsTx->height / 2;
             DrawTextureV(*coinsTx, coinCenter, WHITE);
         }
     }
@@ -251,7 +253,8 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
         if (hearts[i].active)
         {
             // Calcular la posición del centro del corazon
-            heartCenter = {(float)((int)hearts[i].position.x - heartsTx->width / 2), (float)((int)hearts[i].position.y - heartsTx->height / 2)};
+            heartCenter.x = (float)((int)hearts[i].position.x - heartsTx->width / 2);
+            heartCenter.y = (float)((int)hearts[i].position.y - heartsTx->height / 2);
             DrawTextureV(*heartsTx, heartCenter, RED);
         }
     }
@@ -269,12 +272,14 @@ void drawShots(Texture2D *shotTx, Texture2D *explosionTx)
         {
             if (!shots[i].collided) // Si no ha habido colisión, dibuja el misil
             {
-                shotPos = {shots[i].position.x - shotTx->width / 2, shots[i].position.y - shotTx->height / 2};
+                shotPos.x = shots[i].position.x - shotTx->width / 2;
+                shotPos.y = shots[i].position.y - shotTx->height / 2;
                 DrawTextureV(*shotTx, shotPos, WHITE);
             }
             else // Si ha habido una colisión, dibuja la explosión
             {
-                shotPos = {shots[i].position.x - explosionTx->width / 2, shots[i].position.y - explosionTx->height / 2};
+                shotPos.x = shots[i].position.x - explosionTx->width / 2;
+                shotPos.y = shots[i].position.y - explosionTx->height / 2;
                 DrawTextureV(*explosionTx, shotPos, WHITE);
             }
         }
@@ -336,7 +341,7 @@ void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, V
     {
         // Limpiar objetos
         resetItems(playPosition);
-        //screenpoints(totalseconds, score);
+        // screenpoints(totalseconds, score);
 
         subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, cinema, 0, 1);
         subsCinematicas("continuacion de historia", 45, 7, 2, cinema, 0, 1);
@@ -502,7 +507,8 @@ void screenlevel(const char *text, int seconds)
 void resetItems(Vector2 *playPosition)
 {
     // Reiniciar posicion nave
-    *playPosition = {(float)SCR_WIDTH / 2, (float)SCR_HEIGHT / 1.1f};
+    (*playPosition).x = (float)SCR_WIDTH / 2;
+    (*playPosition).y = (float)SCR_HEIGHT / 1.1f;
     short i;
 
     // Limpiar meteoros

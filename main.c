@@ -8,10 +8,10 @@ int main()
     const float playerSpeed = 15.0f; // Velocidad del jugador
     float playerRotation = 0.0;
     float rotationSpeed = 2.0;
-    const float maxRotation = 20.0f;  // Máxima rotación hacia la derecha
-    const float minRotation = -20.0f; // Máxima rotación hacia la izquierda
-    const float rotationInterpolationSpeed = 50.0f;    // Definir la velocidad de interpolación para volver a la posición original
-    float currentRotation = 0.0f;    // Variables para la rotación actual y la interpolación de la rotación
+    const float maxRotation = 20.0f;                // Máxima rotación hacia la derecha
+    const float minRotation = -20.0f;               // Máxima rotación hacia la izquierda
+    const float rotationInterpolationSpeed = 50.0f; // Definir la velocidad de interpolación para volver a la posición original
+    float currentRotation = 0.0f;                   // Variables para la rotación actual y la interpolación de la rotación
     float targetRotation = 0.0f;
     const float spawnInterval = 0.2f; // Intervalo de tiempo entre la aparición de objetos
 
@@ -224,7 +224,8 @@ int main()
                         }
 
                         // Detectar colisión con jugador
-                        grayCenter = {grayMeteors[i].position.x - grayMeteor.width / 2, grayMeteors[i].position.y - grayMeteor.height / 2};
+                        grayCenter.x = grayMeteors[i].position.x - grayMeteor.width / 2;
+                        grayCenter.y = grayMeteors[i].position.y - grayMeteor.height / 2;
                         if (CheckCollision(playerPosition, playRadius, grayCenter, GRAY_METEOR_RADIUS))
                         {
                             grayMeteors[i].active = false; // Eliminar objeto tocado
@@ -248,7 +249,8 @@ int main()
                         }
 
                         // Detectar colisión con jugador
-                        brownCenter = {brownMeteors[i].position.x - brownMeteor.width / 2, brownMeteors[i].position.y - brownMeteor.height / 2};
+                        brownCenter.x = brownMeteors[i].position.x - brownMeteor.width / 2;
+                        brownCenter.y = brownMeteors[i].position.y - brownMeteor.height / 2;
                         if (CheckCollision(playerPosition, playRadius, brownCenter, BROWN_METEOR_RADIUS))
                         {
                             brownMeteors[i].active = false; // Eliminar objeto tocado
@@ -333,8 +335,9 @@ int main()
                                 if (grayMeteors[j].active)
                                 {
                                     // Calcula punto de collision
-                                    grayCenter = {grayMeteors[j].position.x - grayMeteor.width / 2, grayMeteors[j].position.y - grayMeteor.height / 2};
-                                    // Colision con meteoro gris
+                                    grayCenter.x = grayMeteors[j].position.x - grayMeteor.width / 2;
+                                    grayCenter.y = grayMeteors[j].position.y - grayMeteor.height / 2;
+                                    //  Colision con meteoro gris
                                     if (CheckCollision(shots[i].position, SHOT_RADIUS, grayCenter, GRAY_METEOR_RADIUS))
                                     {
                                         PlaySound(burstMisil);
@@ -352,8 +355,9 @@ int main()
                                 if (brownMeteors[j].active)
                                 {
                                     // Calcula punto de collision
-                                    brownCenter = {brownMeteors[j].position.x - brownMeteor.width / 2, brownMeteors[j].position.y - brownMeteor.height / 2};
-                                    // Colisión con meteoro café
+                                    brownCenter.x = brownMeteors[j].position.x - brownMeteor.width / 2;
+                                    brownCenter.y = brownMeteors[j].position.y - brownMeteor.height / 2;
+                                    //  Colisión con meteoro café
                                     if (CheckCollision(shots[i].position, SHOT_RADIUS, brownCenter, BROWN_METEOR_RADIUS))
                                     {
                                         PlaySound(burstMisil);
