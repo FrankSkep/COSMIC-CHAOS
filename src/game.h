@@ -247,6 +247,10 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
             coinCenter.y = coins[i].position.y - coinsTx->height / 2;
             DrawTextureV(*coinsTx, coinCenter, WHITE);
         }
+        if(coins2[i].active)
+        {
+            DrawCircle(coins2[i].position.x, coins2[i].position.y, COINS_RADIUS, RED);
+        }
     }
     // Dibujar corazones
     for (int i = 0; i < MAX_HEARTS; i++)
@@ -486,8 +490,7 @@ void screenpoints(int *totalseconds, short *score)
     } while (realScore != tempscore); // Termina al llegar a el puntaje real
     double startTime2 = GetTime();
     while (GetTime() - startTime2 < 2)
-    { // 2 segundos de espera
-    }
+        ;
 }
 
 void pausa()
@@ -495,7 +498,7 @@ void pausa()
     int tamano = 200;
     const char text[] = "Paused";
 
-    while (IsKeyDown(KEY_P))
+    if (IsKeyDown(KEY_P))
     {
         do
         {

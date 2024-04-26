@@ -46,7 +46,8 @@ typedef struct
     bool active;
 } GameObject;
 
-typedef struct {
+typedef struct
+{
     Vector2 position;
     bool active;
     bool collided;
@@ -57,6 +58,7 @@ typedef struct {
 GameObject grayMeteors[MAX_GRAY_METEORS];
 GameObject brownMeteors[MAX_BROWN_METEORS];
 GameObject coins[MAX_COINS];
+GameObject coins2[MAX_COINS]; // Coin 2
 GameObject hearts[MAX_HEARTS];
 Shot shots[MAX_SHOTS];
 

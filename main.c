@@ -196,6 +196,7 @@ int main()
                         if (!coins[i].active)
                         {
                             InitObject(&coins[i], &COINS_RADIUS);
+                            InitObject(&coins2[i], &COINS_RADIUS);
                             break;
                         }
                     }
@@ -278,6 +279,24 @@ int main()
                         {
                             coins[i].active = false; // Eliminar objeto tocado
                             score += 10;             // Aumentar el puntaje
+                            PlaySound(soundcoin);
+                        }
+                    }
+
+                    // Moneda tipo 2 (Operacion matematica)
+                    if (coins2[i].active)
+                    {
+                        coins2[i].position.y += COINS_SPEED;
+                        if (coins2[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
+                        {
+                            coins2[i].active = false;
+                        }
+
+                        // Detectar colisión con jugador y aumentar el contador de puntos
+                        if (CheckCollision(playerPosition, playRadius, coins2[i].position, COINS_RADIUS))
+                        {
+                            coins2[i].active = false; // Eliminar objeto tocado
+                            // score += 10;             // Aumentar el puntaje
                             PlaySound(soundcoin);
                         }
                     }
