@@ -29,6 +29,7 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
 
 void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds);
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, Texture2D *texturas, int frame1, int frame2);
+void pausa();
 void screenlevel(const char *text, int seconds);
 void screenpoints(int *totalseconds, short *score);
 
@@ -488,6 +489,22 @@ void screenpoints(int *totalseconds, short *score)
     { // 2 segundos de espera
     }
 }
+
+void pausa()
+{
+    int tamano = 200;
+    const char text[] = "Paused";
+
+    while (IsKeyDown(KEY_P))
+    {
+        do
+        {
+            DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
+            EndDrawing();
+        } while (!IsKeyDown(KEY_ENTER));
+    }
+}
+
 // Mostrar pantalla de nivel
 void screenlevel(const char *text, int seconds)
 {

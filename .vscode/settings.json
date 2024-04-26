@@ -2,7 +2,9 @@
     "files.associations": {
         "stdio.h": "c",
         "conio.h": "c",
-        "pregunta.C": "cpp"
+        "pregunta.C": "cpp",
+        "game.h": "c",
+        "elements.h": "c"
     },
     "python.testing.unittestArgs": [
         "-v",

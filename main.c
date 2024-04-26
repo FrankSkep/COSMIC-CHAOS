@@ -372,6 +372,7 @@ int main()
                         }
                     }
                 }
+                pausa();
                 /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
                 BeginDrawing();
 
