@@ -4,7 +4,8 @@
         "conio.h": "c",
         "pregunta.C": "cpp",
         "game.h": "c",
-        "elements.h": "c"
+        "elements.h": "c",
+        "resources.h": "c"
     },
     "python.testing.unittestArgs": [
         "-v",

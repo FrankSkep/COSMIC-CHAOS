@@ -1,10 +1,4 @@
-#ifndef ELEMENTS_H
-#define ELEMENTS_H
-
-#include "raylib.h"
-#include <stdbool.h>
 /*------------- CONSTANTES -------------*/
-
 /*--- DIMENSIONES PANTALLA ---*/
 #define SCR_WIDTH 1600 // ANCHO  (X)
 #define SCR_HEIGHT 900 // ALTO (Y)
@@ -61,5 +55,3 @@ GameObject coins[MAX_COINS];
 GameObject coins2[MAX_COINS]; // Coin 2
 GameObject hearts[MAX_HEARTS];
 Shot shots[MAX_SHOTS];
-
-#endif

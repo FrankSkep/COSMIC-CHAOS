@@ -1,5 +1,7 @@
-#include "src/game.h"      // Funciones del juego
+#include "raylib.h"
 #include "src/resources.h" // Texturas y sonidos
+#include "src/elements.h"
+#include "src/game.h"      // Funciones del juego
 
 int main()
 {
@@ -29,21 +31,16 @@ int main()
     float timeseconds = 0;
 
     /*----------- CONFIGURACION VENTANA -----------*/
-    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.15");
+    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.18");
     SetTargetFPS(75);
-
     loadingScreen();
+
     /*----------- Carga de texturas -----------*/
-    Texture2D menu, game, gameoverT, cinema[9];
-    Texture2D shipTextures[6], coinsTx[6], heartsTx[6], heartsFTx[6], heartsETx[6], misil[6], explosionTx[3];
-    Texture2D grayMeteor, brownMeteor;
-    loadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, heartsFTx, heartsETx, misil, explosionTx);
+    loadTextures();
 
     /*----------- Carga de sonidos -----------*/
     InitAudioDevice();
-    Music gameMusic, gameover;
-    Sound soundcoin, shotSound, burstMisil;
-    loadSounds(&gameMusic, &gameover, &soundcoin, &shotSound, &burstMisil);
+    loadSounds();
 
     /*-------- Ajustes texturas cambiantes --------*/
     short currentFrame = 0; // indice de la textura actual
@@ -52,7 +49,7 @@ int main()
     float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
 
     // Posicion y centro de jugador/nave
-    Vector2 playerPosition = {(float)SCR_WIDTH / 2 - shipTextures[currentFrame].width / 2, (float)SCR_HEIGHT / 1.1f - shipTextures[currentFrame].height / 2};
+    Vector2 playerPosition = {(float)SCR_WIDTH / 2 - shipTx[currentFrame].width / 2, (float)SCR_HEIGHT / 1.1f - shipTx[currentFrame].height / 2};
     // Centro meteoros
     Vector2 grayCenter, brownCenter;
 
@@ -67,9 +64,9 @@ int main()
         if (!isPlaying) // Menu principal
         {
             StopMusicStream(gameover); // Detiene musica gameover
-            drawMainMenu(&menu);       // Dibuja menu principal
+            drawMainMenu();       // Dibuja menu principal
 
-            menuActions(&secondsT, &isPlaying, cinema); // Acciones menu
+            menuActions(&secondsT, &isPlaying); // Acciones menu
         }
         else
         { /*-------------------- PARTIDA --------------------*/
@@ -400,9 +397,9 @@ int main()
                 rotationMeteor += 2.5f;
 
                 // Dibujar interfaz de la partida
-                drawGameInterface(&game, &heartsTx[currentFrame], &lives, &score, &level);
+                drawGameInterface(&heartsTx[currentFrame], &lives, &score, &level);
                 // Dibujar objetos de la partida
-                drawGameElements(&shipTextures[currentFrame], &playerPosition, &grayMeteor, &brownMeteor, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation);
+                drawGameElements(&shipTx[currentFrame], &playerPosition, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation);
 
                 /*--------------- ? ---------------*/
                 timeseconds += GetFrameTime(); // Obtener el tiempo transcurrido en segundos
@@ -413,7 +410,7 @@ int main()
                 DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, 20, 100, WHITE);
                 /*--------------- ? ---------------*/
 
-                Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &lives, &totalseconds, &timeseconds);
+                Levels(&score, &level, &elapsedTime, &playerPosition, &lives, &totalseconds, &timeseconds);
                 /*---------------   -----------------------------------------*/
 
                 if (gameOver)
@@ -433,7 +430,7 @@ int main()
                 UpdateMusicStream(gameover);
 
                 // Dibuja interfaz
-                gameOverInterface(&gameoverT, &score, &level);
+                gameOverInterface(&score, &level);
 
                 // Vuelve a jugar al presionar enter
                 if (IsKeyDown(KEY_ENTER))
@@ -456,9 +453,8 @@ int main()
     }
 
     // Descarga de recursos
-    unloadTextures(&menu, &game, &gameoverT, cinema, shipTextures, &grayMeteor, &brownMeteor, coinsTx, heartsTx, heartsFTx, heartsETx, misil, explosionTx);
-    unloadSounds(&gameMusic, &gameover, &soundcoin, &shotSound, &burstMisil);
-
+    unloadTextures();
+    unloadSounds();
     CloseAudioDevice();
     CloseWindow();
     return 0;

@@ -1,26 +1,31 @@
-#ifndef RESOURCES_H
-#define RESOURCES_H
-#include "raylib.h"
-
 /*---------------- PROTOTIPOS ----------------*/
-void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *heartsFTx, Texture2D *heartsETx, Texture2D *misil, Texture2D *explosion);
-void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *heartsFTx, Texture2D *heartsETx, Texture2D *misil, Texture2D *explosion);
-void loadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot, Sound *burstMisil);
-void unloadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot, Sound *burstMisil);
+void loadTextures();
+void unloadTextures();
+void loadSounds();
+void unloadSounds();
 
 /*---------------- DESARROLLO ----------------*/
 
+/*** Texturas ***/
+Texture2D menu, game, gameoverT, cinema[9];
+Texture2D shipTx[6], coinsTx[6], heartsTx[6], heartsFTx[6], heartsETx[6], misil[6], explosionTx[3];
+Texture2D grayMeteor, brownMeteor;
+
+/*** Sonidos ***/
+Music gameMusic, gameover;
+Sound soundcoin, shotSound, burstMisil;
+
 // ---- Carga texturas ----
-void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *heartsFTx, Texture2D *heartsETx, Texture2D *misil, Texture2D *explosion)
+void loadTextures()
 {
     // Fondo menu principal
-    *menu = LoadTexture("resources/images/backgrounds/menu.png");
+    menu = LoadTexture("resources/images/backgrounds/menu.png");
 
     // Fondo partida
-    *gamebg = LoadTexture("resources/images/backgrounds/game.png");
+    game = LoadTexture("resources/images/backgrounds/game.png");
 
     // Fondo gameover
-    *gameover = LoadTexture("resources/images/backgrounds/gameover.png");
+    gameoverT = LoadTexture("resources/images/backgrounds/gameover.png");
 
     // Presentador
     cinema[0] = LoadTexture("resources/images/backgrounds/cinema1.png");
@@ -42,8 +47,8 @@ void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Textu
     shipTx[5] = LoadTexture("resources/images/ship/ship03.png");
 
     // Meteoros
-    *grayMeteor = LoadTexture("resources/images/meteors/grayMeteor.png");
-    *brownMeteor = LoadTexture("resources/images/meteors/brownMeteor.png");
+    grayMeteor = LoadTexture("resources/images/meteors/grayMeteor.png");
+    brownMeteor = LoadTexture("resources/images/meteors/brownMeteor.png");
 
     // Monedas
     coinsTx[0] = LoadTexture("resources/images/coins/coin_01.png");
@@ -61,19 +66,19 @@ void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Textu
     heartsTx[4] = LoadTexture("resources/images/hearts/hearth_02.png");
     heartsTx[5] = LoadTexture("resources/images/hearts/hearth_02.png");
 
-    heartsFTx[0] = LoadTexture("resources/images/hearts/heathF_00.png");
-    heartsFTx[1] = LoadTexture("resources/images/hearts/heathF_01.png");
-    heartsFTx[2] = LoadTexture("resources/images/hearts/heathF_02.png");
-    heartsFTx[3] = LoadTexture("resources/images/hearts/heathF_00.png");
-    heartsFTx[4] = LoadTexture("resources/images/hearts/heathF_01.png");
-    heartsFTx[5] = LoadTexture("resources/images/hearts/heathF_02.png");
+    // heartsFTx[0] = LoadTexture("resources/images/hearts/heathF_00.png");
+    // heartsFTx[1] = LoadTexture("resources/images/hearts/heathF_01.png");
+    // heartsFTx[2] = LoadTexture("resources/images/hearts/heathF_02.png");
+    // heartsFTx[3] = LoadTexture("resources/images/hearts/heathF_00.png");
+    // heartsFTx[4] = LoadTexture("resources/images/hearts/heathF_01.png");
+    // heartsFTx[5] = LoadTexture("resources/images/hearts/heathF_02.png");
 
-    heartsETx[0] = LoadTexture("resources/images/hearts/heathE_00.png");
-    heartsETx[1] = LoadTexture("resources/images/hearts/heathE_01.png");
-    heartsETx[2] = LoadTexture("resources/images/hearts/heathE_02.png");
-    heartsETx[3] = LoadTexture("resources/images/hearts/heathE_03.png");
-    heartsETx[4] = LoadTexture("resources/images/hearts/heathE_04.png");
-    heartsETx[5] = LoadTexture("resources/images/hearts/heathE_05.png");
+    // heartsETx[0] = LoadTexture("resources/images/hearts/heathE_00.png");
+    // heartsETx[1] = LoadTexture("resources/images/hearts/heathE_01.png");
+    // heartsETx[2] = LoadTexture("resources/images/hearts/heathE_02.png");
+    // heartsETx[3] = LoadTexture("resources/images/hearts/heathE_03.png");
+    // heartsETx[4] = LoadTexture("resources/images/hearts/heathE_04.png");
+    // heartsETx[5] = LoadTexture("resources/images/hearts/heathE_05.png");
 
     // Disparo
     misil[0] = LoadTexture("resources/images/shot/shot01.png");
@@ -84,17 +89,17 @@ void loadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Textu
     misil[5] = LoadTexture("resources/images/shot/shot03.png");
 
     // Explosion misil
-    explosion[0] = LoadTexture("resources/images/shot/burst01.png");
-    explosion[1] = LoadTexture("resources/images/shot/burst02.png");
-    explosion[2] = LoadTexture("resources/images/shot/burst03.png");
+    explosionTx[0] = LoadTexture("resources/images/shot/burst01.png");
+    explosionTx[1] = LoadTexture("resources/images/shot/burst02.png");
+    explosionTx[2] = LoadTexture("resources/images/shot/burst03.png");
 }
 
 // ---- Descarga texturas ----
-void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Texture2D *cinema, Texture2D *shipTx, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coinsTx, Texture2D *heartsTx, Texture2D *heartsFTx, Texture2D *heartsETx, Texture2D *misil, Texture2D *explosion)
+void unloadTextures()
 {
-    UnloadTexture(*menu);
-    UnloadTexture(*gamebg);
-    UnloadTexture(*gameover);
+    UnloadTexture(menu);
+    UnloadTexture(game);
+    UnloadTexture(gameoverT);
 
     for (int i = 0; i < 6; i++)
     {
@@ -103,7 +108,7 @@ void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Tex
         UnloadTexture(heartsTx[i]);
         UnloadTexture(heartsFTx[i]);
         UnloadTexture(heartsETx[i]);
-        UnloadTexture(explosion[i]);
+        UnloadTexture(explosionTx[i]);
     }
 
     for (int i = 0; i < 9; i++)
@@ -111,28 +116,26 @@ void unloadTextures(Texture2D *menu, Texture2D *gamebg, Texture2D *gameover, Tex
         UnloadTexture(cinema[i]);
     }
 
-    UnloadTexture(*grayMeteor);
-    UnloadTexture(*brownMeteor);
+    UnloadTexture(grayMeteor);
+    UnloadTexture(brownMeteor);
 }
 
 // ---- Carga sonidos ----
-void loadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot, Sound *burstMisil)
+void loadSounds()
 {
-    *game = LoadMusicStream("resources/sounds/music.mp3");        // Musica partida
-    *gameover = LoadMusicStream("resources/sounds/gameover.mp3"); // Musica gameover
-    *coin = LoadSound("resources/sounds/coin.wav");               // Sonido moneda
-    *shot = LoadSound("resources/sounds/shot.mp3");               // Sonido misil
-    *burstMisil = LoadSound("resources/sounds/burstMisil.mp3");
+    gameMusic = LoadMusicStream("resources/sounds/music.mp3");   // Musica partida
+    gameover = LoadMusicStream("resources/sounds/gameover.mp3"); // Musica gameover
+    soundcoin = LoadSound("resources/sounds/coin.wav");          // Sonido moneda
+    shotSound = LoadSound("resources/sounds/shot.mp3");          // Sonido misil
+    burstMisil = LoadSound("resources/sounds/burstMisil.mp3");
 }
 
 // ---- Descarga sonidos ----
-void unloadSounds(Music *game, Music *gameover, Sound *coin, Sound *shot, Sound *burstMisil)
+void unloadSounds()
 {
-    UnloadMusicStream(*game);
-    UnloadMusicStream(*gameover);
-    UnloadSound(*coin);
-    UnloadSound(*shot);
-    UnloadSound(*burstMisil);
+    UnloadMusicStream(gameMusic);
+    UnloadMusicStream(gameover);
+    UnloadSound(soundcoin);
+    UnloadSound(shotSound);
+    UnloadSound(burstMisil);
 }
-
-#endif

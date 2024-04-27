@@ -1,25 +1,22 @@
-#ifndef GAME_H
-#define GAME_H
-
-#include "elements.h"
+#include <stdbool.h>
 #include <string.h>
 
 /*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
 /* MENUs */
 void loadingScreen();
-void drawMainMenu(Texture2D *background);
+void drawMainMenu();
 void drawHowToPlay();
-void aboutTheGame(Texture2D *cinema);
-void menuActions(int *seconds, bool *isPlaying, Texture2D *cinema);
+void aboutTheGame();
+void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void drawGameInterface(Texture2D *gamebg, Texture2D *hearts, short *lives, short *score, short *level);
-void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
-void gameOverInterface(Texture2D *background, short *score, short *level);
+void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level);
+void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
+void gameOverInterface(short *score, short *level);
 
 /* DIBUJO OBJETOS */
 void drawPlayer(Texture2D *ship, Vector2 *playerPosition, float *playerRotation);
-void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation);
+void drawMeteors(float *rotation);
 void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx);
 void drawShots(Texture2D *shotTx, Texture2D *explosionTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
@@ -28,7 +25,7 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 void InitObject(GameObject *object, const float *objRadius);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
 
-void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds);
+void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds);
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, Texture2D *texturas, int frame1, int frame2);
 void pausa();
 void screenlevel(const char *text, int seconds);
@@ -50,12 +47,12 @@ void loadingScreen()
 }
 
 // Dibuja menu principal
-void drawMainMenu(Texture2D *background) // PANTALLA DE MENU
+void drawMainMenu() // PANTALLA DE MENU
 {
     BeginDrawing();
 
     // Fondo
-    DrawTexture(*background, 0, 0, WHITE);
+    DrawTexture(menu, 0, 0, WHITE);
 
     // Titulo
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 - MeasureText("COSMIC-CHAOS", 180) / 2, 150, 186, DARKBLUE);
@@ -98,7 +95,7 @@ void drawHowToPlay()
 }
 
 // Dibuja pantalla con informacion acerca del juego
-void aboutTheGame(Texture2D *cinema)
+void aboutTheGame()
 {
     while (!IsKeyPressed(KEY_Q)) // Bucle para mostrar la interfaz "about"
     {
@@ -120,7 +117,7 @@ void aboutTheGame(Texture2D *cinema)
 }
 
 // Maneja acciones del menu principal
-void menuActions(int *seconds, bool *isPlaying, Texture2D *cinema)
+void menuActions(int *seconds, bool *isPlaying)
 {
     if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
     {
@@ -133,15 +130,15 @@ void menuActions(int *seconds, bool *isPlaying, Texture2D *cinema)
     }
     if (IsKeyPressed(KEY_E)) // Ir a acerca del juego
     {
-        aboutTheGame(cinema);
+        aboutTheGame();
     }
 }
 
 // Dibuja la interfaz de partida en curso
-void drawGameInterface(Texture2D *gamebg, Texture2D *hearts, short *lives, short *score, short *level)
+void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level)
 {
     // Dibuja fondo
-    DrawTexture(*gamebg, 0, 0, WHITE);
+    DrawTexture(game, 0, 0, WHITE);
 
     // Dibuja puntaje
     DrawText(TextFormat("SCORE : %04i", *score), SCR_WIDTH - 363, 20, 50, WHITE);
@@ -165,12 +162,12 @@ void drawGameInterface(Texture2D *gamebg, Texture2D *hearts, short *lives, short
 }
 
 // Dibuja elementos de la partida
-void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMeteor, Texture2D *brownMeteor, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation)
+void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation)
 {
     // Dibuja jugador (nave)
     drawPlayer(ship, playerPosition, playerRotation);
     // Dibuja meteoros en rotacion
-    drawMeteors(grayMeteor, brownMeteor, rotation);
+    drawMeteors(rotation);
     // Dibuja monedas y corazones
     drawObjects(coins, hearts);
     // Dibuja disparos (misiles)
@@ -178,10 +175,10 @@ void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *grayMet
 }
 
 // Dibuja la interfaz de derrota
-void gameOverInterface(Texture2D *background, short *score, short *level)
+void gameOverInterface(short *score, short *level)
 {
     // Fondo
-    DrawTexture(*background, 0, 0, WHITE);
+    DrawTexture(gameoverT, 0, 0, WHITE);
 
     // Dibujar ventana de "Game Over"
     drawTextCenter("GAME OVER", 2, 232, 130, WHITE);
@@ -209,7 +206,7 @@ void drawPlayer(Texture2D *ship, Vector2 *playerPosition, float *playerRotation)
 }
 
 // Dibuja meteoros
-void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation)
+void drawMeteors(float *rotation)
 {
     Vector2 grayCenter, brownCenter;
 
@@ -218,13 +215,13 @@ void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation)
         if (grayMeteors[i].active)
         {
             // Calcular el punto central
-            grayCenter.x = grayMeteors[i].position.x - grayMeteor->width / 2;
-            grayCenter.y = grayMeteors[i].position.y - grayMeteor->height / 2;
+            grayCenter.x = grayMeteors[i].position.x - grayMeteor.width / 2;
+            grayCenter.y = grayMeteors[i].position.y - grayMeteor.height / 2;
 
             // Dibujar textura meteoro girando
-            DrawTexturePro(*grayMeteor, (Rectangle){0, 0, (float)grayMeteor->width, (float)grayMeteor->height},
-                           (Rectangle){grayCenter.x, grayCenter.y, (float)grayMeteor->width, (float)grayMeteor->height},
-                           (Vector2){(float)grayMeteor->width / 2, (float)grayMeteor->height / 2}, *rotation, WHITE);
+            DrawTexturePro(grayMeteor, (Rectangle){0, 0, (float)grayMeteor.width, (float)grayMeteor.height},
+                           (Rectangle){grayCenter.x, grayCenter.y, (float)grayMeteor.width, (float)grayMeteor.height},
+                           (Vector2){(float)grayMeteor.width / 2, (float)grayMeteor.height / 2}, *rotation, WHITE);
         }
     }
     for (int i = 0; i < MAX_BROWN_METEORS; i++)
@@ -232,13 +229,13 @@ void drawMeteors(Texture2D *grayMeteor, Texture2D *brownMeteor, float *rotation)
         if (brownMeteors[i].active)
         {
             // Calcular el punto central
-            brownCenter.x = brownMeteors[i].position.x - brownMeteor->width / 2;
-            brownCenter.y = brownMeteors[i].position.y - brownMeteor->height / 2;
+            brownCenter.x = brownMeteors[i].position.x - brownMeteor.width / 2;
+            brownCenter.y = brownMeteors[i].position.y - brownMeteor.height / 2;
 
             // Dibujar textura meteoro girando
-            DrawTexturePro(*brownMeteor, (Rectangle){0, 0, (float)brownMeteor->width, (float)brownMeteor->height},
-                           (Rectangle){brownCenter.x, brownCenter.y, (float)brownMeteor->width, (float)brownMeteor->height},
-                           (Vector2){(float)brownMeteor->width / 2, (float)brownMeteor->height / 2}, *rotation, WHITE);
+            DrawTexturePro(brownMeteor, (Rectangle){0, 0, (float)brownMeteor.width, (float)brownMeteor.height},
+                           (Rectangle){brownCenter.x, brownCenter.y, (float)brownMeteor.width, (float)brownMeteor.height},
+                           (Vector2){(float)brownMeteor.width / 2, (float)brownMeteor.height / 2}, *rotation, WHITE);
         }
     }
 }
@@ -327,7 +324,7 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
 }
 
 // Manejo de niveles
-void Levels(Texture2D *cinema, short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds)
+void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds)
 {
     if (*score == 0 && *level == 0)
     {
@@ -575,5 +572,3 @@ void resetStats(short *lives, short *score, short *level, float *timeSeconds)
     *timeSeconds = 0;
     MAX_GRAY = MAX_METEOR_LV1;
 }
-
-#endif
