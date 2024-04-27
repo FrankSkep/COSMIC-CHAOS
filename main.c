@@ -32,6 +32,7 @@ int main()
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.15");
     SetTargetFPS(75);
 
+    loadingScreen();
     /*----------- Carga de texturas -----------*/
     Texture2D menu, game, gameoverT, cinema[9];
     Texture2D shipTextures[6], coinsTx[6], heartsTx[6], heartsFTx[6], heartsETx[6], misil[6], explosionTx[3];
@@ -413,7 +414,7 @@ int main()
                 /*--------------- ? ---------------*/
 
                 Levels(cinema, &score, &level, &elapsedTime, &playerPosition, &lives, &totalseconds, &timeseconds);
-                /*--------------------------------------------------------*/
+                /*---------------   -----------------------------------------*/
 
                 if (gameOver)
                 {

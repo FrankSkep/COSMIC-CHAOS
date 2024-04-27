@@ -6,6 +6,7 @@
 
 /*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
 /* MENUs */
+void loadingScreen();
 void drawMainMenu(Texture2D *background);
 void drawHowToPlay();
 void aboutTheGame(Texture2D *cinema);
@@ -37,6 +38,11 @@ void resetItems(Vector2 *playPosition);
 void resetStats(short *lives, short *score, short *level, float *timeSeconds);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
+
+void loadingScreen()
+{
+    screenlevel("Cargando...", 1);
+}
 
 // Dibuja menu principal
 void drawMainMenu(Texture2D *background) // PANTALLA DE MENU
@@ -247,7 +253,7 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
             coinCenter.y = coins[i].position.y - coinsTx->height / 2;
             DrawTextureV(*coinsTx, coinCenter, WHITE);
         }
-        if(coins2[i].active)
+        if (coins2[i].active)
         {
             DrawCircle(coins2[i].position.x, coins2[i].position.y, COINS_RADIUS, RED);
         }
@@ -504,7 +510,7 @@ void pausa()
         {
             DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
             EndDrawing();
-        } while (!IsKeyDown(KEY_ENTER));
+        } while (!IsKeyPressed(KEY_ENTER));
     }
 }
 
