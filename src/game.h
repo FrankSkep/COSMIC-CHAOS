@@ -26,7 +26,7 @@ void InitObject(GameObject *object, const float *objRadius);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
 
 void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds);
-void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, Texture2D *texturas, int frame1, int frame2);
+void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, int frame1, int frame2);
 void pausa();
 void screenlevel(const char *text, int seconds);
 void screenpoints(int *totalseconds, short *score);
@@ -329,13 +329,13 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
     if (*score == 0 && *level == 0)
     {
         // Historia inicial
-        subsCinematicas("   INFORME DE ULTIMO MOMENTO                        Hola a todos son las 11:45 am y aqui su servilleta     Javie Alatorre informandolos.", 45, 7, 2, cinema, 4, 5);
-        subsCinematicas("Desde la NASA nos llega el informe de que se acaba  de descubrir un asteroide con un color amarillo el    cual tiene a los cientificos conmosionados ", 45, 7, 4, cinema, 0, 1);
-        subsCinematicas("Se rumora que podria contener gran cantidad de oro en su interior y en este momento organizaciones de   todo el mundo estan investigando este suceso ", 45, 7, 4, cinema, 0, 1);
-        subsCinematicas("  Un momento!  Nos informan que el asteroide acaba   de colisionar contra el cinturon de asteroides", 45, 7, 3, cinema, 2, 3);
-        subsCinematicas("y efectivamene, contiene gran cantidad de oro, esto deja a las organzaciones en una carrera para ver    quien sera el que se apropie de el ", 45, 7, 4, cinema, 2, 3);
-        subsCinematicas("Olvidenlo, nos informan que españa es el primer      aventado en ir por el, como dicta la historia oro del que lo tenga oro se lo queda ", 45, 7, 4, cinema, 6, 7);
-        subsCinematicas("nuestros desarolladores han creado una represent- acion grafica de que es lo que podria estar pasando en este momento aya arriba en el espacio ", 45, 7, 1, cinema, 4, 5);
+        subsCinematicas("   INFORME DE ULTIMO MOMENTO                        Hola a todos son las 11:45 am y aqui su servilleta     Javie Alatorre informandolos.", 45, 7, 2, 4, 5);
+        subsCinematicas("Desde la NASA nos llega el informe de que se acaba  de descubrir un asteroide con un color amarillo el    cual tiene a los cientificos conmosionados ", 45, 7, 4, 0, 1);
+        subsCinematicas("Se rumora que podria contener gran cantidad de oro en su interior y en este momento organizaciones de   todo el mundo estan investigando este suceso ", 45, 7, 4, 0, 1);
+        subsCinematicas("  Un momento!  Nos informan que el asteroide acaba   de colisionar contra el cinturon de asteroides", 45, 7, 3, 2, 3);
+        subsCinematicas("y efectivamene, contiene gran cantidad de oro, esto deja a las organzaciones en una carrera para ver    quien sera el que se apropie de el ", 45, 7, 4, 2, 3);
+        subsCinematicas("Olvidenlo, nos informan que españa es el primer      aventado en ir por el, como dicta la historia oro del que lo tenga oro se lo queda ", 45, 7, 4, 6, 7);
+        subsCinematicas("nuestros desarolladores han creado una represent- acion grafica de que es lo que podria estar pasando en este momento aya arriba en el espacio ", 45, 7, 1, 4, 5);
 
         /* Estadisticas Nivel 1 */
         *level = 1;
@@ -356,8 +356,8 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
         resetItems(playPosition);
         // screenpoints(totalseconds, score);
 
-        subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, cinema, 0, 1);
-        subsCinematicas("continuacion de historia", 45, 7, 2, cinema, 0, 1);
+        subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, 0, 1);
+        subsCinematicas("continuacion de historia", 45, 7, 2, 0, 1);
 
         screenlevel("NIVEL 2", 2);
 
@@ -396,7 +396,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
 }
 
 // Maximo 160 caracteres - tamaño - frecuencia - tiempo - textura - frame1 y frame2
-void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, Texture2D *texturas, int frame1, int frame2)
+void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, int frame1, int frame2)
 {
     int longitud = strlen(text);
     int i, limiteH = 45, acumulador = 0;
@@ -421,11 +421,11 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
 
         if (cambio)
         {
-            DrawTexture(texturas[frame1], 288, 0, WHITE);
+            DrawTexture(cinema[frame1], 288, 0, WHITE);
         }
         else
         {
-            DrawTexture(texturas[frame2], 288, 0, WHITE);
+            DrawTexture(cinema[frame2], 288, 0, WHITE);
         }
 
         x = limiteH;
