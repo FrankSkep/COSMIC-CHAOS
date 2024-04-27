@@ -11,7 +11,7 @@ void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
 void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level);
-void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
+void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
 void gameOverInterface(short *score, short *level);
 
 /* DIBUJO OBJETOS */
@@ -162,14 +162,14 @@ void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *lev
 }
 
 // Dibuja elementos de la partida
-void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coins, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation)
+void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation)
 {
     // Dibuja jugador (nave)
     drawPlayer(ship, playerPosition, playerRotation);
     // Dibuja meteoros en rotacion
     drawMeteors(rotation);
     // Dibuja monedas y corazones
-    drawObjects(coins, hearts);
+    drawObjects(coinGold, hearts);
     // Dibuja disparos (misiles)
     drawShots(shotTx, explosionTx);
 }
@@ -248,16 +248,16 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
     // Dibujar monedas
     for (int i = 0; i < MAX_COINS; i++)
     {
-        if (coins[i].active)
+        if (coinGold[i].active)
         {
             // Calcular la posición del centro de la moneda
-            coinCenter.x = coins[i].position.x - coinsTx->width / 2;
-            coinCenter.y = coins[i].position.y - coinsTx->height / 2;
+            coinCenter.x = coinGold[i].position.x - coinsTx->width / 2;
+            coinCenter.y = coinGold[i].position.y - coinsTx->height / 2;
             DrawTextureV(*coinsTx, coinCenter, WHITE);
         }
-        if (coins2[i].active)
+        if (coinRed[i].active)
         {
-            DrawCircle(coins2[i].position.x, coins2[i].position.y, COINS_RADIUS, RED);
+            DrawCircle(coinRed[i].position.x, coinRed[i].position.y, COINS_RADIUS, RED);
         }
     }
     // Dibujar corazones
@@ -550,7 +550,11 @@ void resetItems(Vector2 *playPosition)
     }
     for (i = 0; i < MAX_COINS; i++)
     {
-        coins[i].active = false;
+        coinGold[i].active = false;
+    }
+    for (i = 0; i < MAX_COINS; i++)
+    {
+        coinRed[i].active = false;
     }
     for (i = 0; i < MAX_HEARTS; i++)
     {

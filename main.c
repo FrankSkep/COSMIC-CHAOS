@@ -191,10 +191,10 @@ int main()
                     }
                     for (i = 0; i < MAX_COINS; i++)
                     {
-                        if (!coins[i].active)
+                        if (!coinGold[i].active)
                         {
-                            InitObject(&coins[i], &COINS_RADIUS);
-                            InitObject(&coins2[i], &COINS_RADIUS);
+                            InitObject(&coinGold[i], &COINS_RADIUS);
+                            InitObject(&coinRed[i], &COINS_RADIUS);
                             break;
                         }
                     }
@@ -264,36 +264,36 @@ int main()
                 /*----- Moneda (Incrementador de puntos) -----*/
                 for (i = 0; i < MAX_COINS; i++)
                 {
-                    if (coins[i].active)
+                    if (coinGold[i].active)
                     {
-                        coins[i].position.y += COINS_SPEED;
-                        if (coins[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
+                        coinGold[i].position.y += COINS_SPEED;
+                        if (coinGold[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
                         {
-                            coins[i].active = false;
+                            coinGold[i].active = false;
                         }
 
                         // Detectar colisión con jugador y aumentar el contador de puntos
-                        if (CheckCollision(playerPosition, playRadius, coins[i].position, COINS_RADIUS))
+                        if (CheckCollision(playerPosition, playRadius, coinGold[i].position, COINS_RADIUS))
                         {
-                            coins[i].active = false; // Eliminar objeto tocado
+                            coinGold[i].active = false; // Eliminar objeto tocado
                             score += 10;             // Aumentar el puntaje
                             PlaySound(soundcoin);
                         }
                     }
 
                     // Moneda tipo 2 (Operacion matematica)
-                    if (coins2[i].active)
+                    if (coinRed[i].active)
                     {
-                        coins2[i].position.y += COINS_SPEED;
-                        if (coins2[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
+                        coinRed[i].position.y += COINS_SPEED;
+                        if (coinRed[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
                         {
-                            coins2[i].active = false;
+                            coinRed[i].active = false;
                         }
 
                         // Detectar colisión con jugador y aumentar el contador de puntos
-                        if (CheckCollision(playerPosition, playRadius, coins2[i].position, COINS_RADIUS))
+                        if (CheckCollision(playerPosition, playRadius, coinRed[i].position, COINS_RADIUS))
                         {
-                            coins2[i].active = false; // Eliminar objeto tocado
+                            coinRed[i].active = false; // Eliminar objeto tocado
                             // score += 10;             // Aumentar el puntaje
                             PlaySound(soundcoin);
                         }
