@@ -41,7 +41,12 @@ void resetStats(short *lives, short *score, short *level, float *timeSeconds);
 
 void loadingScreen()
 {
-    screenlevel("Cargando...", 1);
+    BeginDrawing();
+    const char texto[] = "Cargando...";
+    const int tam = 80;
+    ClearBackground(BLACK);
+    DrawText(texto, SCR_WIDTH / 2 - MeasureText(texto, tam) / 2, (SCR_HEIGHT / 2) - 100, tam, WHITE);
+    EndDrawing();
 }
 
 // Dibuja menu principal
