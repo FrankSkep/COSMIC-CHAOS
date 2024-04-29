@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include "src/resources.h" // Texturas y sonidos
 #include "src/elements.h"
-#include "src/game.h"      // Funciones del juego
+#include "src/game.h" // Funciones del juego
 
 int main()
 {
@@ -64,7 +64,7 @@ int main()
         if (!isPlaying) // Menu principal
         {
             StopMusicStream(gameover); // Detiene musica gameover
-            drawMainMenu();       // Dibuja menu principal
+            drawMainMenu();            // Dibuja menu principal
 
             menuActions(&secondsT, &isPlaying); // Acciones menu
         }
@@ -276,7 +276,7 @@ int main()
                         if (CheckCollision(playerPosition, playRadius, coinGold[i].position, COINS_RADIUS))
                         {
                             coinGold[i].active = false; // Eliminar objeto tocado
-                            score += 10;             // Aumentar el puntaje
+                            score += 10;                // Aumentar el puntaje
                             PlaySound(soundcoin);
                         }
                     }

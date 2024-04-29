@@ -106,8 +106,8 @@ void unloadTextures()
         UnloadTexture(shipTx[i]);
         UnloadTexture(coinsTx[i]);
         UnloadTexture(heartsTx[i]);
-        UnloadTexture(heartsFTx[i]);
-        UnloadTexture(heartsETx[i]);
+        //UnloadTexture(heartsFTx[i]);
+        //UnloadTexture(heartsETx[i]);
         UnloadTexture(explosionTx[i]);
     }
 
