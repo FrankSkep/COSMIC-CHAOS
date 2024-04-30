@@ -235,20 +235,20 @@ void gameOverInterface(short *score, short *level)
     DrawTexture(gameoverT, 0, 0, WHITE);
 
     // Dibujar ventana de "Game Over"
-    drawTextCenter("FIN DEL JUEGO", 2, 232, 130, WHITE);
-    drawTextCenter("FIN DEL JUEGO", 0, 230, 130, RED);
+    drawTextCenter("FIN DEL JUEGO", 2, 232, 110, WHITE);
+    drawTextCenter("FIN DEL JUEGO", 0, 230, 110, RED);
 
-    DrawText(TextFormat("PUNTAJE: %04i", *score), SCR_WIDTH / 2 - MeasureText(TextFormat("PUNTAJE: %04i", *score), 70) / 2, SCR_HEIGHT / 2 + 10, 70, RAYWHITE);
-    DrawText(TextFormat("NIVEL: %1i", *level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", *level), 70) / 2, SCR_HEIGHT / 2 - 50, 70, RAYWHITE);
+    DrawText(TextFormat("PUNTAJE: %04i", *score), SCR_WIDTH / 2 - MeasureText(TextFormat("PUNTAJE: %04i", *score), 60) / 2, SCR_HEIGHT / 2 + 10, 60, RAYWHITE);
+    DrawText(TextFormat("NIVEL: %1i", *level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", *level), 60) / 2, SCR_HEIGHT / 2 - 50, 60, RAYWHITE);
 
-    drawTextCenter("(ENTER) Jugar de nuevo", 2, 582, 70, LIME);
-    drawTextCenter("(ENTER) Jugar de nuevo", 0, 580, 70, GREEN);
+    drawTextCenter("(ENTER) Jugar de nuevo", 2, 582, 60, LIME);
+    drawTextCenter("(ENTER) Jugar de nuevo", 0, 580, 60, GREEN);
 
-    drawTextCenter("(Q) Volver al menu", 2, 662, 70, DARKPURPLE);
-    drawTextCenter("(Q) Volver al menu", 0, 660, 70, MAGENTA);
+    drawTextCenter("(Q) Volver al menu", 2, 662, 60, DARKPURPLE);
+    drawTextCenter("(Q) Volver al menu", 0, 660, 60, MAGENTA);
 
-    drawTextCenter("(ESC) Salir", 2, 742, 70, RED);
-    drawTextCenter("(ESC) Salir", 0, 740, 70, MAROON);
+    drawTextCenter("(ESC) Salir", 2, 742, 60, RED);
+    drawTextCenter("(ESC) Salir", 0, 740, 60, MAROON);
 }
 
 void drawPlayer(Texture2D *ship, Vector2 *playerPosition, float *playerRotation)
