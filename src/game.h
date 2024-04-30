@@ -167,16 +167,14 @@ void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *lev
 
 void ingresarNickName(char *inputText)
 {
-    // Variable para rastrear el índice actual de la cadena de entrada
-    int letterCount = 0, key;
+    int letterCount = 0; // Contador de caracteres
+    int key;             // Captura letra ingresada
 
     while (!IsKeyPressed(KEY_ENTER) && !WindowShouldClose())
     {
-        // ------- INPUT NAME PLAYER -------
         // Terminar cadena cuando presione enter
         if (IsKeyPressed(KEY_ENTER) && letterCount < MAX_INPUT_CHARS)
         {
-            // Agregar el carácter nulo al final de la cadena
             inputText[letterCount] = '\0';
         }
         else
@@ -184,16 +182,14 @@ void ingresarNickName(char *inputText)
             // Capturar tecla presionada
             key = GetKeyPressed();
 
-            // Verificar si la tecla es un carácter imprimible y hay espacio disponible en la cadena
+            // Verificar si la tecla es un carácter imprimible y hay espacio disponible
             if ((key >= 32) && (key <= 125) && (letterCount < MAX_INPUT_CHARS))
             {
-                // Agregar el carácter a la cadena
                 inputText[letterCount] = (char)key;
                 letterCount++;
             }
-            // Verificar si se presionó la tecla de retroceso para borrar un carácter
             else
-            { // Retroceder un carácter y borrarlo
+            { // Borrar caracter - tecla retroceso
                 if (IsKeyPressed(KEY_BACKSPACE) && letterCount > 0)
                 {
                     letterCount--;
@@ -201,18 +197,17 @@ void ingresarNickName(char *inputText)
                 }
             }
         }
-        // Dibujar
+        // DIBUJO
         BeginDrawing();
-
         ClearBackground(BLACK);
 
         DrawText("Bienvenido a Cosmic Chaos", (SCR_WIDTH - MeasureText("Bienvenido a Cosmic Chaos", 70)) / 2, 100, 70, GREEN);
         DrawText("Ingresa tu nombre de usuario:", (SCR_WIDTH - MeasureText("Ingresa tu nombre de usuario:", 40)) / 2, SCR_HEIGHT / 2 - 25, 40, GREEN);
 
-        // Cuadro de entrada de texto
+        // Posicion cuadro entrada de texto
         float inputBoxX = (SCR_WIDTH - 450) / 2;
 
-        // Dibujar el cuadro de entrada de texto
+        // Dibujo caja de texto y texto
         DrawRectangleLines(inputBoxX, SCR_HEIGHT / 2 + 50, 450, 60, WHITE);
         DrawText(inputText, inputBoxX + 15, SCR_HEIGHT / 2 + 60, 40, WHITE);
 
