@@ -1,6 +1,7 @@
 #include "raylib.h"
-#include "src/resources.h" // Texturas y sonidos
 #include "src/elements.h"
+#include "src/resources.h" // Texturas y sonidos
+// #include "src/elements.h#include "src/elements.h"
 #include "src/game.h" // Funciones del juego
 
 int main()
@@ -33,7 +34,6 @@ int main()
     /*----------- CONFIGURACION VENTANA -----------*/
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.18");
     SetTargetFPS(75);
-    loadingScreen();
 
     /*----------- Carga de texturas -----------*/
     loadTextures();

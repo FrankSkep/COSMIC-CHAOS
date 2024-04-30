@@ -1,5 +1,6 @@
 /*---------------- PROTOTIPOS ----------------*/
 void loadTextures();
+void loadingScreen(const char msg[]);
 void unloadTextures();
 void loadSounds();
 void unloadSounds();
@@ -27,6 +28,7 @@ void loadTextures()
     // Fondo gameover
     gameoverT = LoadTexture("resources/images/backgrounds/gameover.png");
 
+    loadingScreen("Cargando..");
     // Presentador
     cinema[0] = LoadTexture("resources/images/backgrounds/cinema1.png");
     cinema[1] = LoadTexture("resources/images/backgrounds/cinema2.png");
@@ -35,9 +37,10 @@ void loadTextures()
     cinema[4] = LoadTexture("resources/images/backgrounds/cinema5.png");
     cinema[5] = LoadTexture("resources/images/backgrounds/cinema6.png");
     cinema[6] = LoadTexture("resources/images/backgrounds/cinema7.png");
+    loadingScreen("Cargando...");
     cinema[7] = LoadTexture("resources/images/backgrounds/cinema8.png");
     cinema[8] = LoadTexture("resources/images/backgrounds/cinema9.png");
-
+    
     // Nave
     shipTx[0] = LoadTexture("resources/images/ship/ship01.png");
     shipTx[1] = LoadTexture("resources/images/ship/ship01.png");
@@ -49,7 +52,7 @@ void loadTextures()
     // Meteoros
     grayMeteor = LoadTexture("resources/images/meteors/grayMeteor.png");
     brownMeteor = LoadTexture("resources/images/meteors/brownMeteor.png");
-
+    loadingScreen("Cargando.");
     // Monedas
     coinsTx[0] = LoadTexture("resources/images/coins/coin_01.png");
     coinsTx[1] = LoadTexture("resources/images/coins/coin_02.png");
@@ -59,6 +62,7 @@ void loadTextures()
     coinsTx[5] = LoadTexture("resources/images/coins/coin_06.png");
 
     // Corazones
+    loadingScreen("Cargando..");
     heartsTx[0] = LoadTexture("resources/images/hearts/hearth_01.png");
     heartsTx[1] = LoadTexture("resources/images/hearts/hearth_01.png");
     heartsTx[2] = LoadTexture("resources/images/hearts/hearth_01.png");
@@ -82,6 +86,7 @@ void loadTextures()
 
     // Disparo
     misil[0] = LoadTexture("resources/images/shot/shot01.png");
+    loadingScreen("Cargando...");
     misil[1] = LoadTexture("resources/images/shot/shot01.png");
     misil[2] = LoadTexture("resources/images/shot/shot02.png");
     misil[3] = LoadTexture("resources/images/shot/shot02.png");
@@ -92,6 +97,16 @@ void loadTextures()
     explosionTx[0] = LoadTexture("resources/images/shot/burst01.png");
     explosionTx[1] = LoadTexture("resources/images/shot/burst02.png");
     explosionTx[2] = LoadTexture("resources/images/shot/burst03.png");
+}
+
+void loadingScreen(const char msg[])
+{
+    BeginDrawing();
+    // const char texto[] = "Cargando...";
+    const int tam = 80;
+    ClearBackground(BLACK);
+    DrawText(msg, SCR_WIDTH / 2 - MeasureText(msg, tam) / 2, (SCR_HEIGHT / 2) - 100, tam, WHITE);
+    EndDrawing();
 }
 
 // ---- Descarga texturas ----

@@ -3,7 +3,6 @@
 
 /*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
 /* MENUs */
-void loadingScreen();
 void drawMainMenu();
 void drawHowToPlay();
 void aboutTheGame();
@@ -36,17 +35,6 @@ void resetItems(Vector2 *playPosition);
 void resetStats(short *lives, short *score, short *level, float *timeSeconds);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
-
-void loadingScreen()
-{
-    BeginDrawing();
-    const char texto[] = "Cargando...";
-    const int tam = 80;
-    ClearBackground(BLACK);
-    DrawText(texto, SCR_WIDTH / 2 - MeasureText(texto, tam) / 2, (SCR_HEIGHT / 2) - 100, tam, WHITE);
-    EndDrawing();
-}
-
 // Dibuja menu principal
 void drawMainMenu() // PANTALLA DE MENU
 {
