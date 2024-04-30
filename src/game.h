@@ -11,7 +11,7 @@ void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
 void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level, const char *nickname);
-void ingresarTexto(char *inputText);
+void ingresarNickName(char *inputText);
 void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
 void gameOverInterface(short *score, short *level);
 
@@ -83,14 +83,12 @@ void drawHowToPlay()
     {
         BeginDrawing();
         ClearBackground(BLACK);
-
         drawTextCenter("HOW TO PLAY: ", 0, 100, 100, BLUE);
-        DrawText("- MOVE WITH THE ARROUS <-  ->", 40, SCR_HEIGHT / 2 + 40, 50, WHITE);
-        DrawText("- AVOID COLLIDING WITH ASTEROIDS", 40, SCR_HEIGHT / 2 + 110, 50, GRAY);
-        DrawText("- COLLECT POINTS", 40, SCR_HEIGHT / 2 + 180, 50, YELLOW);
-        DrawText("- SURVIVE BY COLLECTING LIVES", 40, SCR_HEIGHT / 2 + 250, 50, RED);
-        DrawText("(Q) Back to menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GREEN);
-
+        DrawText("- Muevete con las flechas o WASD", 40, SCR_HEIGHT / 2 + 40, 50, WHITE);
+        DrawText("- Disparar (ESPACIO)", 40, SCR_HEIGHT / 2 + 110, 50, GRAY);
+        DrawText("- PAUSA (P)", 40, SCR_HEIGHT / 2 + 250, 50, RED);
+        DrawText("- Gana puntos, vidas y sobrevive", 40, SCR_HEIGHT / 2 + 180, 50, YELLOW);
+        DrawText("(Q) Volver al menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GREEN);
         EndDrawing();
     }
 }
@@ -105,13 +103,13 @@ void aboutTheGame()
         ClearBackground(BLACK);
         DrawTexture(cinema[8], 400, 280, WHITE);
 
-        drawTextCenter("About the game", 0, 100, 100, RED);
-        drawTextCenter("Developers:", 0, 270, 50, YELLOW);
+        drawTextCenter("Acerca del juego", 0, 100, 100, RED);
+        drawTextCenter("Desarrolladores:", 0, 270, 50, YELLOW);
         drawTextCenter("- Francisco Cornejo", 0, 340, 50, GREEN);
         drawTextCenter("- Diego Ibarra", 0, 400, 50, GREEN);
-        drawTextCenter("Sounds:", 0, 580, 50, GOLD);
-        drawTextCenter("Unnamed", 0, 640, 50, LIME);
-        drawTextCenter("(Q) Back to menu", 0, 800, 50, GOLD);
+        // drawTextCenter("Sounds:", 0, 580, 50, GOLD);
+        // drawTextCenter("Unnamed", 0, 640, 50, LIME);
+        drawTextCenter("(Q) Volver al menu", 0, 800, 50, GOLD);
 
         EndDrawing();
     }
@@ -142,22 +140,19 @@ void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *lev
     DrawTexture(game, 0, 0, WHITE);
 
     // Dibuja puntaje
-    DrawText(TextFormat("SCORE : %04i", *score), SCR_WIDTH - 363, 20, 50, WHITE);
+    DrawText(TextFormat("PUNTAJE : %04i", *score), SCR_WIDTH - 390, 20, 50, WHITE);
 
     // Dibuja nivel
-    DrawText(TextFormat("LEVEL : %i", *level), SCR_WIDTH - 1560, 20, 50, WHITE);
+    DrawText(TextFormat("NIVEL : %i", *level), SCR_WIDTH - 1560, 20, 50, WHITE);
 
     // ******** Dibujar Nombre jugador *********
-    // Obtener el ancho del texto
-    float textWidth = MeasureText(TextFormat("PLAYER : %s", nickname), 40);
-    // Calcular la posición horizontal centrada
+    float textWidth = MeasureText(TextFormat("JUGADOR : %s", nickname), 40);
     float posX = (SCR_WIDTH - textWidth) / 2;
-    // Dibujar el texto centrado
-    DrawText(TextFormat("PLAYER : %s", nickname), posX, 20, 40, YELLOW);
+    DrawText(TextFormat("JUGADOR : %s", nickname), posX, 20, 40, YELLOW);
 
     // Dibuja vidas restantes
     float x;
-    DrawText(TextFormat("LIVES : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
+    DrawText(TextFormat("VIDAS : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
     for (int i = 0; i < *lives; i++)
     {
         x = SCR_WIDTH - 65 * (i + 1);
@@ -170,27 +165,59 @@ void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *lev
     }
 }
 
-void ingresarTexto(char *inputText)
+void ingresarNickName(char *inputText)
 {
-    // Dibujar
-    BeginDrawing();
+    // Variable para rastrear el índice actual de la cadena de entrada
+    int letterCount = 0, key;
 
-    ClearBackground(BLACK);
+    while (!IsKeyPressed(KEY_ENTER) && !WindowShouldClose())
+    {
+        // ------- INPUT NAME PLAYER -------
+        // Terminar cadena cuando presione enter
+        if (IsKeyPressed(KEY_ENTER) && letterCount < MAX_INPUT_CHARS)
+        {
+            // Agregar el carácter nulo al final de la cadena
+            inputText[letterCount] = '\0';
+        }
+        else
+        {
+            // Capturar tecla presionada
+            key = GetKeyPressed();
 
-    // Dibujar el texto de bienvenida centrado
-    DrawText("Bienvenido a Cosmic Chaos", (SCR_WIDTH - MeasureText("Bienvenido a Cosmic Chaos", 70)) / 2, 100, 70, GREEN);
+            // Verificar si la tecla es un carácter imprimible y hay espacio disponible en la cadena
+            if ((key >= 32) && (key <= 125) && (letterCount < MAX_INPUT_CHARS))
+            {
+                // Agregar el carácter a la cadena
+                inputText[letterCount] = (char)key;
+                letterCount++;
+            }
+            // Verificar si se presionó la tecla de retroceso para borrar un carácter
+            else
+            { // Retroceder un carácter y borrarlo
+                if (IsKeyPressed(KEY_BACKSPACE) && letterCount > 0)
+                {
+                    letterCount--;
+                    inputText[letterCount] = '\0';
+                }
+            }
+        }
+        // Dibujar
+        BeginDrawing();
 
-    // Dibujar el mensaje para solicitar al usuario que ingrese texto
-    DrawText("Ingrese su nombre de usuario:", (SCR_WIDTH - MeasureText("Ingresa tu nombre de usuario:", 40)) / 2 - 50, SCR_HEIGHT / 2, 40, GREEN);
+        ClearBackground(BLACK);
 
-    // Centrar el cuadro de entrada de texto horizontalmente
-    float inputBoxX = (SCR_WIDTH - 400) / 2;
+        DrawText("Bienvenido a Cosmic Chaos", (SCR_WIDTH - MeasureText("Bienvenido a Cosmic Chaos", 70)) / 2, 100, 70, GREEN);
+        DrawText("Ingresa tu nombre de usuario:", (SCR_WIDTH - MeasureText("Ingresa tu nombre de usuario:", 40)) / 2, SCR_HEIGHT / 2 - 25, 40, GREEN);
 
-    // Dibujar el cuadro de entrada de texto
-    DrawRectangleLines(inputBoxX, SCR_HEIGHT / 2 + 50, 400, 60, WHITE);
-    DrawText(inputText, inputBoxX + 10, SCR_HEIGHT / 2 + 60, 40, WHITE);
+        // Cuadro de entrada de texto
+        float inputBoxX = (SCR_WIDTH - 450) / 2;
 
-    EndDrawing();
+        // Dibujar el cuadro de entrada de texto
+        DrawRectangleLines(inputBoxX, SCR_HEIGHT / 2 + 50, 450, 60, WHITE);
+        DrawText(inputText, inputBoxX + 15, SCR_HEIGHT / 2 + 60, 40, WHITE);
+
+        EndDrawing();
+    }
 }
 
 // Dibuja elementos de la partida
@@ -213,20 +240,20 @@ void gameOverInterface(short *score, short *level)
     DrawTexture(gameoverT, 0, 0, WHITE);
 
     // Dibujar ventana de "Game Over"
-    drawTextCenter("GAME OVER", 2, 232, 130, WHITE);
-    drawTextCenter("GAME OVER", 0, 230, 130, RED);
+    drawTextCenter("FIN DEL JUEGO", 2, 232, 130, WHITE);
+    drawTextCenter("FIN DEL JUEGO", 0, 230, 130, RED);
 
-    DrawText(TextFormat("Score: %04i", *score), SCR_WIDTH / 2 - MeasureText(TextFormat("Score: %04i", *score), 70) / 2, SCR_HEIGHT / 2 + 10, 70, RAYWHITE);
-    DrawText(TextFormat("Level: %1i", *level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", *level), 70) / 2, SCR_HEIGHT / 2 - 50, 70, RAYWHITE);
+    DrawText(TextFormat("PUNTAJE: %04i", *score), SCR_WIDTH / 2 - MeasureText(TextFormat("PUNTAJE: %04i", *score), 70) / 2, SCR_HEIGHT / 2 + 10, 70, RAYWHITE);
+    DrawText(TextFormat("NIVEL: %1i", *level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", *level), 70) / 2, SCR_HEIGHT / 2 - 50, 70, RAYWHITE);
 
-    drawTextCenter("(ENTER) Play Again", 2, 582, 70, LIME);
-    drawTextCenter("(ENTER) Play Again", 0, 580, 70, GREEN);
+    drawTextCenter("(ENTER) Jugar de nuevo", 2, 582, 70, LIME);
+    drawTextCenter("(ENTER) Jugar de nuevo", 0, 580, 70, GREEN);
 
-    drawTextCenter("(Q) Back to menu", 2, 662, 70, DARKPURPLE);
-    drawTextCenter("(Q) Back to menu", 0, 660, 70, MAGENTA);
+    drawTextCenter("(Q) Volver al menu", 2, 662, 70, DARKPURPLE);
+    drawTextCenter("(Q) Volver al menu", 0, 660, 70, MAGENTA);
 
-    drawTextCenter("(ESC) Exit", 2, 742, 70, RED);
-    drawTextCenter("(ESC) Exit", 0, 740, 70, MAROON);
+    drawTextCenter("(ESC) Salir", 2, 742, 70, RED);
+    drawTextCenter("(ESC) Salir", 0, 740, 70, MAROON);
 }
 
 void drawPlayer(Texture2D *ship, Vector2 *playerPosition, float *playerRotation)

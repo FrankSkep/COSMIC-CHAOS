@@ -2,7 +2,7 @@
 /*--- DIMENSIONES PANTALLA ---*/
 #define SCR_WIDTH 1600 // ANCHO  (X)
 #define SCR_HEIGHT 900 // ALTO (Y)
-#define MAX_INPUT_CHARS 20
+#define MAX_INPUT_CHARS 30
 
 /* Ajustes Niveles */
 #define MAX_METEOR_LV1 5
