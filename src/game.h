@@ -10,7 +10,8 @@ void aboutTheGame();
 void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level);
+void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level, const char *nickname);
+void ingresarTexto(char *inputText);
 void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
 void gameOverInterface(short *score, short *level);
 
@@ -135,7 +136,7 @@ void menuActions(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level)
+void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level, const char *nickname)
 {
     // Dibuja fondo
     DrawTexture(game, 0, 0, WHITE);
@@ -145,6 +146,14 @@ void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *lev
 
     // Dibuja nivel
     DrawText(TextFormat("LEVEL : %i", *level), SCR_WIDTH - 1560, 20, 50, WHITE);
+
+    // ******** Dibujar Nombre jugador *********
+    // Obtener el ancho del texto
+    float textWidth = MeasureText(TextFormat("PLAYER : %s", nickname), 40);
+    // Calcular la posición horizontal centrada
+    float posX = (SCR_WIDTH - textWidth) / 2;
+    // Dibujar el texto centrado
+    DrawText(TextFormat("PLAYER : %s", nickname), posX, 20, 40, YELLOW);
 
     // Dibuja vidas restantes
     float x;
@@ -159,6 +168,29 @@ void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *lev
         x = SCR_WIDTH - 65 * (i + 1);               // Inicia desde el lado derecho
         DrawText("-", x, SCR_HEIGHT - 60, 50, RED); // Corazón vacío
     }
+}
+
+void ingresarTexto(char *inputText)
+{
+    // Dibujar
+    BeginDrawing();
+
+    ClearBackground(BLACK);
+
+    // Dibujar el texto de bienvenida centrado
+    DrawText("Bienvenido a Cosmic Chaos", (SCR_WIDTH - MeasureText("Bienvenido a Cosmic Chaos", 70)) / 2, 100, 70, GREEN);
+
+    // Dibujar el mensaje para solicitar al usuario que ingrese texto
+    DrawText("Ingrese su nombre de usuario:", (SCR_WIDTH - MeasureText("Ingresa tu nombre de usuario:", 40)) / 2 - 50, SCR_HEIGHT / 2, 40, GREEN);
+
+    // Centrar el cuadro de entrada de texto horizontalmente
+    float inputBoxX = (SCR_WIDTH - 400) / 2;
+
+    // Dibujar el cuadro de entrada de texto
+    DrawRectangleLines(inputBoxX, SCR_HEIGHT / 2 + 50, 400, 60, WHITE);
+    DrawText(inputText, inputBoxX + 10, SCR_HEIGHT / 2 + 60, 40, WHITE);
+
+    EndDrawing();
 }
 
 // Dibuja elementos de la partida
@@ -417,7 +449,9 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
         // Mensaje para saltar cinematica
         DrawText("(S) SKIP", SCR_WIDTH - (250), SCR_HEIGHT - 70, 50, WHITE);
         if (IsKeyPressed(KEY_S))
+        {
             return; // Saltar cinematica
+        }
 
         if (cambio)
         {
@@ -433,6 +467,11 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
 
         for (int j = 0; j <= i; j++)
         {
+            if (IsKeyPressed(KEY_S))
+            {
+                return; // Saltar cinematica
+            }
+
             if (x + MeasureText(TextFormat("%c", text[j]), tamano) > SCR_WIDTH - limiteH)
             {
                 x = limiteH;
@@ -503,14 +542,16 @@ void screenpoints(int *totalseconds, short *score)
 
 void pausa()
 {
-    int tamano = 200;
-    const char text[] = "Paused";
+    int tamano = 160;
+    const char text[] = "Pausa";
+    const char text2[] = "(Enter) Reanudar partida";
 
     if (IsKeyDown(KEY_P))
     {
         do
         {
-            DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
+            DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 165, tamano, WHITE);
+            DrawText(text2, SCR_WIDTH / 2 - MeasureText(text2, 80) / 2, (SCR_HEIGHT / 2) + 150, 80, WHITE);
             EndDrawing();
         } while (!IsKeyPressed(KEY_ENTER));
     }
@@ -519,7 +560,7 @@ void pausa()
 // Mostrar pantalla de nivel
 void screenlevel(const char *text, int seconds)
 {
-    int tamano = 200;
+    int tamano = 180;
     double startTime2 = GetTime(); // Obtener el tiempo de inicio
 
     while (GetTime() - startTime2 < seconds)
