@@ -1,11 +1,9 @@
 /*---------------- PROTOTIPOS ----------------*/
-void loadTextures();
 void loadingScreen(const char msg[]);
+void loadTextures();
 void unloadTextures();
 void loadSounds();
 void unloadSounds();
-
-/*---------------- DESARROLLO ----------------*/
 
 /*** Texturas ***/
 Texture2D menu, game, gameoverT, cinema[9];
@@ -15,6 +13,16 @@ Texture2D grayMeteor, brownMeteor;
 /*** Sonidos ***/
 Music gameMusic, gameover;
 Sound soundcoin, shotSound, burstMisil;
+
+// ---- Pantalla de carga inicial ----
+void loadingScreen(const char msg[])
+{
+    BeginDrawing();
+    const int tam = 80;
+    ClearBackground(BLACK);
+    DrawText(msg, SCR_WIDTH / 2 - MeasureText(msg, tam) / 2, (SCR_HEIGHT / 2) - 100, tam, WHITE);
+    EndDrawing();
+}
 
 // ---- Carga texturas ----
 void loadTextures()
@@ -40,7 +48,7 @@ void loadTextures()
     loadingScreen("Cargando...");
     cinema[7] = LoadTexture("resources/images/backgrounds/cinema8.png");
     cinema[8] = LoadTexture("resources/images/backgrounds/cinema9.png");
-    
+
     // Nave
     shipTx[0] = LoadTexture("resources/images/ship/ship01.png");
     shipTx[1] = LoadTexture("resources/images/ship/ship01.png");
@@ -70,20 +78,6 @@ void loadTextures()
     heartsTx[4] = LoadTexture("resources/images/hearts/hearth_02.png");
     heartsTx[5] = LoadTexture("resources/images/hearts/hearth_02.png");
 
-    // heartsFTx[0] = LoadTexture("resources/images/hearts/heathF_00.png");
-    // heartsFTx[1] = LoadTexture("resources/images/hearts/heathF_01.png");
-    // heartsFTx[2] = LoadTexture("resources/images/hearts/heathF_02.png");
-    // heartsFTx[3] = LoadTexture("resources/images/hearts/heathF_00.png");
-    // heartsFTx[4] = LoadTexture("resources/images/hearts/heathF_01.png");
-    // heartsFTx[5] = LoadTexture("resources/images/hearts/heathF_02.png");
-
-    // heartsETx[0] = LoadTexture("resources/images/hearts/heathE_00.png");
-    // heartsETx[1] = LoadTexture("resources/images/hearts/heathE_01.png");
-    // heartsETx[2] = LoadTexture("resources/images/hearts/heathE_02.png");
-    // heartsETx[3] = LoadTexture("resources/images/hearts/heathE_03.png");
-    // heartsETx[4] = LoadTexture("resources/images/hearts/heathE_04.png");
-    // heartsETx[5] = LoadTexture("resources/images/hearts/heathE_05.png");
-
     // Disparo
     misil[0] = LoadTexture("resources/images/shot/shot01.png");
     loadingScreen("Cargando...");
@@ -99,16 +93,6 @@ void loadTextures()
     explosionTx[2] = LoadTexture("resources/images/shot/burst03.png");
 }
 
-void loadingScreen(const char msg[])
-{
-    BeginDrawing();
-    // const char texto[] = "Cargando...";
-    const int tam = 80;
-    ClearBackground(BLACK);
-    DrawText(msg, SCR_WIDTH / 2 - MeasureText(msg, tam) / 2, (SCR_HEIGHT / 2) - 100, tam, WHITE);
-    EndDrawing();
-}
-
 // ---- Descarga texturas ----
 void unloadTextures()
 {
@@ -121,8 +105,6 @@ void unloadTextures()
         UnloadTexture(shipTx[i]);
         UnloadTexture(coinsTx[i]);
         UnloadTexture(heartsTx[i]);
-        //UnloadTexture(heartsFTx[i]);
-        //UnloadTexture(heartsETx[i]);
         UnloadTexture(explosionTx[i]);
     }
 

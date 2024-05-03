@@ -599,11 +599,11 @@ void resetItems(Vector2 *playPosition)
     {
         brownMeteors[i].active = false;
     }
-    for (i = 0; i < MAX_COINS; i++)
+    for (i = 0; i < MAX_COINS; i++) // GOLD COIN
     {
         coinGold[i].active = false;
     }
-    for (i = 0; i < MAX_COINS; i++)
+    for (i = 0; i < MAX_COINS; i++) // RED COIN
     {
         coinRed[i].active = false;
     }
