@@ -40,6 +40,7 @@ void resetStats(short *lives, short *score, short *level, float *timeSeconds);
 void obtenerFechaAct(int *dia, int *mes, int *anio);
 void appendScoresToFile(const char *filename, Tdata player);
 void DrawScoresTable(const char *filename);
+void drawQuestion(bool *mostrarPregunta);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -742,4 +743,45 @@ void DrawScoresTable(const char *filename)
 
         EndDrawing();
     }
+}
+
+void drawQuestion(bool *mostrarPregunta)
+{
+    const char *pregunta = "¿Cuánto es 2 + 2?";
+    const char *opcion1 = "a) 3";
+    const char *opcion2 = "b) 4";
+    const char *opcion3 = "c) 5";
+
+    do
+    {
+        // Dibuja la pregunta y las opciones en la pantalla
+        drawTextCenter(pregunta, 0, 280, 60, YELLOW);
+        drawTextCenter(opcion1, 0, 350, 45, GREEN);
+        drawTextCenter(opcion2, 0, 400, 45, GREEN);
+        drawTextCenter(opcion3, 0, 450, 45, GREEN);
+
+        // Espera la entrada del jugador para seleccionar una respuesta
+        if (IsKeyPressed(KEY_A))
+        {
+            drawTextCenter("IncorrectoXD", 0, 500, 45, RED);
+            *mostrarPregunta = false;
+        }
+        else if (IsKeyPressed(KEY_B))
+        {
+            drawTextCenter("Correcto ! es 'Hola Mundo'", 0, 500, 45, GREEN);
+            *mostrarPregunta = false;
+        }
+        else if (IsKeyPressed(KEY_C))
+        {
+            drawTextCenter("IncorrectoXD", 0, 500, 45, RED);
+            *mostrarPregunta = false;
+        }
+        EndDrawing();
+    } while (*mostrarPregunta);
+
+    // Espera entre cada pregunta
+    float seconds = 1.5;
+    double startTime2 = GetTime(); // Obtener el tiempo de inicio
+    while (GetTime() - startTime2 < seconds)
+        ;
 }

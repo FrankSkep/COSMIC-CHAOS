@@ -62,6 +62,7 @@ int main()
     obtenerFechaAct(&data.dia, &data.mes, &data.anio);
 
     bool guardar = false;
+    bool mostrarPregunta = false;
 
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
@@ -306,7 +307,7 @@ int main()
                         if (CheckCollision(playerPosition, playRadius, coinRed[i].position, COINS_RADIUS))
                         {
                             coinRed[i].active = false; // Eliminar objeto tocado
-                            // score += 10;             // Aumentar el puntaje
+                            mostrarPregunta = true;
                             PlaySound(soundcoin);
                         }
                     }
@@ -411,6 +412,11 @@ int main()
                 drawGameInterface(&heartsTx[currentFrame], &lives, &score, &level, data.name);
                 // Dibujar objetos de la partida
                 drawGameElements(&shipTx[currentFrame], &playerPosition, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation);
+
+                if (mostrarPregunta)
+                {
+                    drawQuestion(&mostrarPregunta);
+                }
 
                 /*--------------- ? ---------------*/
                 timeseconds += GetFrameTime(); // Obtener el tiempo transcurrido en segundos
