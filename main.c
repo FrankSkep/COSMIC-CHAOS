@@ -1,7 +1,6 @@
 #include "raylib.h"
 #include "src/elements.h"
 #include "src/resources.h" // Texturas y sonidos
-// #include "src/elements.h#include "src/elements.h"
 #include "src/game.h" // Funciones del juego
 
 int main()
