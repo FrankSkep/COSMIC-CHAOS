@@ -2,6 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
+#include <stdlib.h> // Necesario para RAND_MAX y rand()
 
 /*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
 /* MENUs */
@@ -35,12 +36,14 @@ void screenpoints(int *totalseconds, short *score);
 
 void resetItems(Vector2 *playPosition);
 void resetStats(short *lives, short *score, short *level, float *timeSeconds);
+void secondspause(float seconds);
 
 // Datos jugador
 void obtenerFechaAct(int *dia, int *mes, int *anio);
 void appendScoresToFile(const char *filename, Tdata player);
 void DrawScoresTable(const char *filename);
-void drawQuestion(bool *mostrarPregunta);
+void mezclarArray(char **array, int size);
+void drawQuestion(bool *mostrarPregunta, Pregunta *preguntas, int numPreguntas);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -412,7 +415,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
     {
         // Limpiar objetos
         resetItems(playPosition);
-        // screenpoints(totalseconds, score);
+        screenpoints(totalseconds, score);
 
         subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, 0, 1);
         subsCinematicas("continuacion de historia", 45, 7, 2, 0, 1);
@@ -526,10 +529,7 @@ void screenpoints(int *totalseconds, short *score)
 
     do
     {
-        double startTime = GetTime();
-        while (GetTime() - startTime < 0.001) // Tiempo de espera entre iteracion
-        {
-        } // Esperar
+        secondspause(0.001); // Esperar
         if (*score > 0)
         {
             *score -= 2; // Simular una disminución del puntaje
@@ -561,9 +561,7 @@ void screenpoints(int *totalseconds, short *score)
         DrawText(TextFormat("Oto total ganado: %3.2f", realScore), 30, 340, 100, WHITE);
         EndDrawing();
     } while (realScore != tempscore); // Termina al llegar a el puntaje real
-    double startTime2 = GetTime();
-    while (GetTime() - startTime2 < 2)
-        ;
+    secondspause(2);
 }
 
 void pausa()
@@ -745,43 +743,64 @@ void DrawScoresTable(const char *filename)
     }
 }
 
-void drawQuestion(bool *mostrarPregunta)
+void mezclarArray(char **array, int size)
 {
-    const char *pregunta = "¿Cuánto es 2 + 2?";
-    const char *opcion1 = "a) 3";
-    const char *opcion2 = "b) 4";
-    const char *opcion3 = "c) 5";
+    for (int i = size - 1; i > 0; i--)
+    {
+        int j = rand() % (i + 1);
+        if (i != j)
+        {
+            char *temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
+}
+void drawQuestion(bool *mostrarPregunta, Pregunta *preguntas, int numPreguntas)
+{
+    int indicePregunta = rand() % numPreguntas;
+    Pregunta preguntaActual = preguntas[indicePregunta];
+
+    // Hacer una copia de las opciones de respuesta
+    char *opcionesBarajadas[4];
+    memcpy(opcionesBarajadas, preguntaActual.opciones, sizeof(preguntaActual.opciones));
+
+    mezclarArray(opcionesBarajadas, 4);
 
     do
     {
-        // Dibuja la pregunta y las opciones en la pantalla
-        drawTextCenter(pregunta, 0, 280, 60, YELLOW);
-        drawTextCenter(opcion1, 0, 350, 45, GREEN);
-        drawTextCenter(opcion2, 0, 400, 45, GREEN);
-        drawTextCenter(opcion3, 0, 450, 45, GREEN);
+        drawTextCenter(preguntaActual.pregunta, 0, 280, 60, YELLOW);
+        for (int i = 0; i < 4; i++)
+        {
+            char opcionLabel = 'A' + i;
+            drawTextCenter(TextFormat("%c) %s", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, GREEN);
+        }
 
-        // Espera la entrada del jugador para seleccionar una respuesta
-        if (IsKeyPressed(KEY_A))
+        for (int i = 0; i < 4; i++)
         {
-            drawTextCenter("IncorrectoXD", 0, 500, 45, RED);
-            *mostrarPregunta = false;
-        }
-        else if (IsKeyPressed(KEY_B))
-        {
-            drawTextCenter("Correcto ! es 'Hola Mundo'", 0, 500, 45, GREEN);
-            *mostrarPregunta = false;
-        }
-        else if (IsKeyPressed(KEY_C))
-        {
-            drawTextCenter("IncorrectoXD", 0, 500, 45, RED);
-            *mostrarPregunta = false;
+            if (IsKeyPressed(KEY_A + i))
+            {
+                if (strcmp(opcionesBarajadas[i], preguntaActual.opciones[preguntaActual.respuestaCorrecta]) == 0)
+                {
+                    drawTextCenter("¡Correcto!", 0, 650, 45, GREEN);
+                }
+                else
+                {
+                    drawTextCenter("¡Incorrecto!", 0, 650, 45, RED);
+                }
+                *mostrarPregunta = false;
+                break; 
+            }
         }
         EndDrawing();
     } while (*mostrarPregunta);
 
     // Espera entre cada pregunta
-    float seconds = 1.5;
-    double startTime2 = GetTime(); // Obtener el tiempo de inicio
+    secondspause(1.5);
+}
+void secondspause(float seconds)
+{
+    double startTime2 = GetTime(); 
     while (GetTime() - startTime2 < seconds)
         ;
 }

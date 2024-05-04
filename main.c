@@ -45,7 +45,7 @@ int main()
     short currentFrame = 0; // indice de la textura actual
     short currentFrameExp = 0;
     float frameTimeCounter = 0.0f;
-    float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/4 de segundo)
+    float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/8 de segundo)
 
     // Posicion y centro de jugador/nave
     Vector2 playerPosition = {(float)SCR_WIDTH / 2 - shipTx[currentFrame].width / 2, (float)SCR_HEIGHT / 1.1f - shipTx[currentFrame].height / 2};
@@ -63,13 +63,14 @@ int main()
 
     bool guardar = false;
     bool mostrarPregunta = false;
-
+    int h = 1;
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
     {
-        if (IsKeyPressed(KEY_F11))
+        if (h == 1)
         {
-            ToggleFullscreen();
+            // ToggleFullscreen();
+            h = 0;
         }
 
         if (!isPlaying) // Menu principal
@@ -415,7 +416,7 @@ int main()
 
                 if (mostrarPregunta)
                 {
-                    drawQuestion(&mostrarPregunta);
+                    drawQuestion(&mostrarPregunta, preguntas, numPreguntas);
                 }
 
                 /*--------------- ? ---------------*/

@@ -99,6 +99,7 @@ void unloadTextures()
     UnloadTexture(menu);
     UnloadTexture(game);
     UnloadTexture(gameoverT);
+    loadingScreen("ADIOS.");
 
     for (int i = 0; i < 6; i++)
     {
