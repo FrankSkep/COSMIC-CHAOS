@@ -2,6 +2,7 @@
 #define SCR_WIDTH 1600     // ANCHO PANTALLA (X)
 #define SCR_HEIGHT 900     // ALTO PANTALLA (Y)
 #define MAX_INPUT_CHARS 30 // MAX CARACTERES PARA EL NOMBRE
+#define MAX_PLAYERS 100
 
 /*------ OBSTACULOS POR NIVEL ------*/
 #define MAX_METEOR_LV1 5
@@ -36,24 +37,34 @@ const float HEARTS_RADIUS = 20; // Tamaño
 #define SHOT_RADIUS 6     // Tamaño
 
 /*--------- STRUCTS ---------*/
-typedef struct
+typedef struct _object
 {
     Vector2 position;
     bool active;
-} GameObject;
+} TGameObject;
 
-typedef struct
+typedef struct _ball
 {
     Vector2 position;
     bool active;
     bool collided;        // Bandera colision misil
     float explosionTimer; // Duracion de la animación de explosión
-} Shot;
+} Tshot;
+
+typedef struct _playerData
+{
+    char name[MAX_INPUT_CHARS + 1];
+    int maxLevel;
+    int score;
+    int dia;
+    int mes;
+    int anio;
+} Tdata;
 
 /*--------- INSTANCIAS DE STRUCTs ---------*/
-GameObject grayMeteors[MAX_GRAY_METEORS];
-GameObject brownMeteors[MAX_BROWN_METEORS];
-GameObject coinGold[MAX_COINS];
-GameObject coinRed[MAX_COINS];
-GameObject hearts[MAX_HEARTS];
-Shot shots[MAX_SHOTS];
+TGameObject grayMeteors[MAX_GRAY_METEORS];
+TGameObject brownMeteors[MAX_BROWN_METEORS];
+TGameObject coinGold[MAX_COINS];
+TGameObject coinRed[MAX_COINS];
+TGameObject hearts[MAX_HEARTS];
+Tshot shots[MAX_SHOTS];

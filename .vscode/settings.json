@@ -5,7 +5,8 @@
         "pregunta.C": "cpp",
         "game.h": "c",
         "elements.h": "c",
-        "resources.h": "c"
+        "resources.h": "c",
+        "typeinfo": "c"
     },
     "python.testing.unittestArgs": [
         "-v",

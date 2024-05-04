@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include "src/elements.h"
 #include "src/resources.h" // Texturas y sonidos
-#include "src/game.h" // Funciones del juego
+#include "src/game.h"      // Funciones del juego
 
 int main()
 {
@@ -52,9 +52,16 @@ int main()
     // Centro meteoros
     Vector2 grayCenter, brownCenter;
 
-    // ------- INPUT NAME PLAYER -------
-    char playerName[MAX_INPUT_CHARS + 1] = "\0";
-    ingresarNickName(playerName);
+    // ------- DATOS JUGADOR -------
+    Tdata data;
+    char name[MAX_INPUT_CHARS + 1];
+    ingresarNickName(name);
+    strcpy(data.name, name);
+    data.score = 0;
+    data.maxLevel = 0;
+    obtenerFechaAct(&data.dia, &data.mes, &data.anio);
+
+    bool guardar = false;
 
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
@@ -66,9 +73,9 @@ int main()
 
         if (!isPlaying) // Menu principal
         {
-            StopMusicStream(gameover);          // Detiene musica gameover
-            drawMainMenu();                     // Dibuja menu principal
-            menuActions(&secondsT, &isPlaying); // Acciones menu
+            StopMusicStream(gameover);                    // Detiene musica gameover
+            drawMainMenu();                               // Dibuja menu principal
+            menuActions(&secondsT, &isPlaying, &guardar); // Acciones menu
         }
         else
         { /*-------------------- PARTIDA --------------------*/
@@ -401,7 +408,7 @@ int main()
                 rotationMeteor += 2.5f;
 
                 // Dibujar interfaz de la partida
-                drawGameInterface(&heartsTx[currentFrame], &lives, &score, &level, playerName);
+                drawGameInterface(&heartsTx[currentFrame], &lives, &score, &level, data.name);
                 // Dibujar objetos de la partida
                 drawGameElements(&shipTx[currentFrame], &playerPosition, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation);
 
@@ -423,6 +430,16 @@ int main()
                     minutesT = 0, secondsT = 0, totalseconds = 0, timeseconds = 0;
                     rotationMeteor = 0;          // Reiniciar rotacion
                     resetItems(&playerPosition); // Reinicia posicion y desactiva objetos
+
+                    // Actualiza mejor puntaje
+                    if (score > data.score)
+                    {
+                        data.score = score;
+                    }
+                    if (level > data.maxLevel)
+                    {
+                        data.maxLevel = level;
+                    }
 
                     StopMusicStream(gameMusic); // Detener musica partida
                     PlayMusicStream(gameover);  // Reproducir musica gameover
@@ -454,6 +471,12 @@ int main()
             DrawFPS(20, SCR_HEIGHT - 40);
             EndDrawing();
         }
+    }
+
+    // Agregar estadisticas al archivo .dat
+    if (guardar)
+    {
+        appendScoresToFile("record.dat", data);
     }
 
     // Descarga de recursos

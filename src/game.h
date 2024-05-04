@@ -1,16 +1,18 @@
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
+#include <stdio.h>
 
 /*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
 /* MENUs */
 void drawMainMenu();
 void drawHowToPlay();
 void aboutTheGame();
-void menuActions(int *seconds, bool *isPlaying);
+void menuActions(int *seconds, bool *isPlaying, bool *guardar);
 
 /* INTERFACES */
 void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level, const char *nickname);
-void ingresarNickName(char *inputText);
+void ingresarNickName(char inputText[]);
 void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
 void gameOverInterface(short *score, short *level);
 
@@ -22,7 +24,7 @@ void drawShots(Texture2D *shotTx, Texture2D *explosionTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
 /* LOGICA */
-void InitObject(GameObject *object, const float *objRadius);
+void InitObject(TGameObject *object, const float *objRadius);
 bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
 
 void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds);
@@ -33,6 +35,11 @@ void screenpoints(int *totalseconds, short *score);
 
 void resetItems(Vector2 *playPosition);
 void resetStats(short *lives, short *score, short *level, float *timeSeconds);
+
+// Datos jugador
+void obtenerFechaAct(int *dia, int *mes, int *anio);
+void appendScoresToFile(const char *filename, Tdata player);
+void DrawScoresTable(const char *filename);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -49,17 +56,20 @@ void drawMainMenu() // PANTALLA DE MENU
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 12 - MeasureText("COSMIC-CHAOS", 180) / 2 + 6, 140, 180, BLUE);
 
     // Acciones
-    drawTextCenter("(ENTER) Start", 2, 502, 60, LIME);
-    drawTextCenter("(ENTER) Start", 0, 500, 60, GREEN);
+    drawTextCenter("(ENTER) Iniciar", 2, 482, 60, LIME);
+    drawTextCenter("(ENTER) Iniciar", 0, 480, 60, GREEN);
 
-    drawTextCenter("(A) How to play", 2, 582, 60, DARKPURPLE);
-    drawTextCenter("(A) How to play", 0, 580, 60, PURPLE);
+    drawTextCenter("(A) Como jugar", 2, 562, 60, DARKPURPLE);
+    drawTextCenter("(A) Como jugar", 0, 560, 60, PURPLE);
 
-    drawTextCenter("(E) About the game", 2, 662, 60, GRAY);
-    drawTextCenter("(E) About the game", 0, 660, 60, YELLOW);
+    drawTextCenter("(E) Acerca del juego", 2, 642, 60, GRAY);
+    drawTextCenter("(E) Acerca del juego", 0, 640, 60, YELLOW);
 
-    drawTextCenter("(ESC) Exit", 2, 742, 60, DARKGRAY);
-    drawTextCenter("(ESC) Exit", 0, 740, 60, RED);
+    drawTextCenter("(H) Historial de juego", 2, 722, 60, SKYBLUE);
+    drawTextCenter("(H) Historial de juego", 0, 720, 60, BLUE);
+
+    drawTextCenter("(ESC) Salir", 2, 802, 60, DARKGRAY);
+    drawTextCenter("(ESC) Salir", 2, 800, 60, RED);
 
     EndDrawing();
 }
@@ -71,7 +81,7 @@ void drawHowToPlay()
     {
         BeginDrawing();
         ClearBackground(BLACK);
-        drawTextCenter("HOW TO PLAY: ", 0, 100, 100, BLUE);
+        drawTextCenter("COMO JUGAR: ", 0, 100, 100, BLUE);
         DrawText("- Muevete con las flechas o WASD", 40, SCR_HEIGHT / 2 + 40, 50, WHITE);
         DrawText("- Disparar (ESPACIO)", 40, SCR_HEIGHT / 2 + 110, 50, GRAY);
         DrawText("- PAUSA (P)", 40, SCR_HEIGHT / 2 + 250, 50, RED);
@@ -104,12 +114,13 @@ void aboutTheGame()
 }
 
 // Maneja acciones del menu principal
-void menuActions(int *seconds, bool *isPlaying)
+void menuActions(int *seconds, bool *isPlaying, bool *guardar)
 {
     if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
     {
         *seconds = 0;
         *isPlaying = true;
+        *guardar = true;
     }
     if (IsKeyPressed(KEY_A)) // Ir a tutorial como jugar
     {
@@ -118,6 +129,10 @@ void menuActions(int *seconds, bool *isPlaying)
     if (IsKeyPressed(KEY_E)) // Ir a acerca del juego
     {
         aboutTheGame();
+    }
+    if (IsKeyPressed(KEY_H))
+    {
+        DrawScoresTable("record.dat");
     }
 }
 
@@ -153,7 +168,7 @@ void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *lev
     }
 }
 
-void ingresarNickName(char *inputText)
+void ingresarNickName(char inputText[])
 {
     int letterCount = 0; // Contador de caracteres
     int key;             // Captura letra ingresada
@@ -348,7 +363,7 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 }
 
 // Inicializar cualquier objeto
-void InitObject(GameObject *object, const float *objRadius)
+void InitObject(TGameObject *object, const float *objRadius)
 {
     object->position.x = GetRandomValue(0, SCR_WIDTH);
     object->position.y = -*objRadius * 2;
@@ -626,4 +641,171 @@ void resetStats(short *lives, short *score, short *level, float *timeSeconds)
     *level = 1;
     *timeSeconds = 0;
     MAX_GRAY = MAX_METEOR_LV1;
+}
+
+void obtenerFechaAct(int *dia, int *mes, int *anio)
+{
+    time_t tiempoActual = time(NULL);
+    struct tm *fecha = localtime(&tiempoActual); // DD/MM/AAAA
+    *dia = fecha->tm_mday;
+    *mes = fecha->tm_mon + 1;
+    *anio = fecha->tm_year + 1900;
+}
+
+void appendScoresToFile(const char *filename, Tdata player)
+{
+    FILE *file = fopen(filename, "ab");
+
+    if (file == NULL)
+    {
+        printf("No se pudo abrir el archivo %s\n", filename);
+        return;
+    }
+
+    fwrite(&player, sizeof(Tdata), 1, file);
+
+    fclose(file);
+}
+
+void DrawScoresTable(const char *filename)
+{
+    FILE *file = fopen(filename, "rb");
+    if (file == NULL)
+    {
+        printf("No se pudo abrir el archivo %s\n", filename);
+        return;
+    }
+
+    Tdata players[MAX_PLAYERS];
+    int numPlayers = 0;
+
+    while (fread(&players[numPlayers], sizeof(Tdata), 1, file) == 1)
+    {
+        numPlayers++;
+    }
+
+    fclose(file);
+
+    // Calcular posición y dimensiones de la tabla
+    int tableWidth = SCR_WIDTH * 0.6f;   // Porcentaje del ancho de la pantalla
+    int tableHeight = SCR_HEIGHT * 0.6f; // Porcentaje del alto de la pantalla
+    int tablePosX = (SCR_WIDTH - tableWidth) / 2;
+    int tablePosY = (SCR_HEIGHT - tableHeight) / 2;
+
+    int cellWidth = tableWidth / 4;
+    int cellHeight = 50;
+    int scrollOffset = 0;
+    int maxVisibleRows = (tableHeight - 50) / cellHeight; // Calcula el número máximo de filas visibles
+
+    while (!IsKeyPressed(KEY_Q))
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        drawTextCenter("HISTORIAL DE JUEGOS", 0, 50, 50, WHITE);
+        drawTextCenter("(Q) Volver al menu", 0, 750, 40, RED);
+
+        // Dibujar encabezados de la tabla
+        DrawRectangleLines(tablePosX, tablePosY, tableWidth, cellHeight, WHITE);
+        DrawText("Name", tablePosX + cellWidth * 0.5f - MeasureText("Name", 20) / 2, tablePosY + 10, 20, YELLOW);
+        DrawText("Max Level", tablePosX + cellWidth * 1.5f - MeasureText("Max Level", 20) / 2, tablePosY + 10, 20, YELLOW);
+        DrawText("Score", tablePosX + cellWidth * 2.5f - MeasureText("Score", 20) / 2, tablePosY + 10, 20, YELLOW);
+        DrawText("Date", tablePosX + cellWidth * 3.5f - MeasureText("Date", 20) / 2, tablePosY + 10, 20, YELLOW);
+
+        // Dibujar cada jugador en la tabla
+        for (int i = 0; i < maxVisibleRows; i++)
+        {
+            int playerIndex = i + scrollOffset;
+            if (playerIndex >= 0 && playerIndex < numPlayers)
+            {
+                // Ajusta las coordenadas de dibujo para dejar un espacio entre el borde superior de la celda y el texto
+                float textPosY = tablePosY + cellHeight + cellHeight * i + 10; // Ajusta el valor 10 según sea necesario
+
+                DrawText(players[playerIndex].name, tablePosX + cellWidth * 0.5f - MeasureText(players[playerIndex].name, 20) / 2, textPosY, 20, GREEN);
+                DrawText(TextFormat("%d", players[playerIndex].maxLevel), tablePosX + cellWidth * 1.5f - MeasureText(TextFormat("%d", players[playerIndex].maxLevel), 20) / 2, textPosY, 20, GREEN);
+                DrawText(TextFormat("%d", players[playerIndex].score), tablePosX + cellWidth * 2.5f - MeasureText(TextFormat("%d", players[playerIndex].score), 20) / 2, textPosY, 20, GREEN);
+                DrawText(TextFormat("%d/%d/%d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), tablePosX + cellWidth * 3.5f - MeasureText(TextFormat("%d/%d/%d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), 20) / 2, textPosY, 20, GREEN);
+            }
+        }
+
+        // Control de desplazamiento
+        if (IsKeyDown(KEY_UP) && scrollOffset > 0)
+        {
+            scrollOffset -= 1;
+        }
+        if (IsKeyDown(KEY_DOWN) && scrollOffset < numPlayers - maxVisibleRows)
+        {
+            scrollOffset += 1;
+        }
+
+        EndDrawing();
+    }
+    // FILE *file = fopen(filename, "rb");
+    // if (file == NULL)
+    // {
+    //     printf("No se pudo abrir el archivo %s\n", filename);
+    //     return;
+    // }
+
+    // Tdata players[MAX_PLAYERS];
+    // int numPlayers = 0;
+
+    // while (fread(&players[numPlayers], sizeof(Tdata), 1, file) == 1)
+    // {
+    //     numPlayers++;
+    // }
+
+    // fclose(file);
+
+    // // Calcular posición y dimensiones de la tabla
+    // int tableWidth = SCR_WIDTH * 0.6f;   // Porcentaje del ancho de la pantalla
+    // int tableHeight = SCR_HEIGHT * 0.6f; // Porcentaje del alto de la pantalla
+    // int tablePosX = (SCR_WIDTH - tableWidth) / 2;
+    // int tablePosY = (SCR_HEIGHT - tableHeight) / 2;
+
+    // int cellWidth = tableWidth / 4;
+    // int cellHeight = 50;
+    // int scrollOffset = 0;
+    // int maxVisibleRows = (tableHeight - 50) / cellHeight; // Calcula el número máximo de filas visibles
+
+    // while (!IsKeyPressed(KEY_Q))
+    // {
+    //     BeginDrawing();
+    //     ClearBackground(BLACK);
+    //     drawTextCenter("HISTORIAL DE JUEGOS", 0, 50, 50, WHITE);
+
+    //     // Dibujar encabezados de la tabla
+    //     DrawRectangleLines(tablePosX, tablePosY, tableWidth, cellHeight, WHITE);
+    //     DrawText("Name", tablePosX + cellWidth * 0.5f, tablePosY + 10, 20, YELLOW);
+    //     DrawText("Max Level", tablePosX + cellWidth * 1.5f, tablePosY + 10, 20, YELLOW);
+    //     DrawText("Score", tablePosX + cellWidth * 2.5f, tablePosY + 10, 20, YELLOW);
+    //     DrawText("Date", tablePosX + cellWidth * 3.5f, tablePosY + 10, 20, YELLOW);
+
+    //     // Dibujar cada jugador en la tabla
+    //     for (int i = 0; i < maxVisibleRows; i++)
+    //     {
+    //         int playerIndex = i + scrollOffset;
+    //         if (playerIndex >= 0 && playerIndex < numPlayers)
+    //         {
+    //             // Ajusta las coordenadas de dibujo para dejar un espacio entre el borde superior de la celda y el texto
+    //             float textPosY = tablePosY + cellHeight + cellHeight * i + 10; // Ajusta el valor 10 según sea necesario
+
+    //             DrawText(players[playerIndex].name, tablePosX + cellWidth * 0.5f, textPosY, 20, GREEN);
+    //             DrawText(TextFormat("%d", players[playerIndex].maxLevel), tablePosX + cellWidth * 1.5f, textPosY, 20, GREEN);
+    //             DrawText(TextFormat("%d", players[playerIndex].score), tablePosX + cellWidth * 2.5f, textPosY, 20, GREEN);
+    //             DrawText(TextFormat("%d/%d/%d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), tablePosX + cellWidth * 3.5f, textPosY, 20, GREEN);
+    //         }
+    //     }
+
+    //     // Control de desplazamiento
+    //     if (IsKeyDown(KEY_UP) && scrollOffset > 0)
+    //     {
+    //         scrollOffset -= 1;
+    //     }
+    //     if (IsKeyDown(KEY_DOWN) && scrollOffset < numPlayers - maxVisibleRows)
+    //     {
+    //         scrollOffset += 1;
+    //     }
+
+    //     EndDrawing();
+    // }
 }
