@@ -643,6 +643,7 @@ void resetStats(short *lives, short *score, short *level, float *timeSeconds)
     MAX_GRAY = MAX_METEOR_LV1;
 }
 
+// Obtiene fecha actual
 void obtenerFechaAct(int *dia, int *mes, int *anio)
 {
     time_t tiempoActual = time(NULL);
@@ -652,6 +653,7 @@ void obtenerFechaAct(int *dia, int *mes, int *anio)
     *anio = fecha->tm_year + 1900;
 }
 
+// Agrega estadisticas del jugador al archivo .dat
 void appendScoresToFile(const char *filename, Tdata player)
 {
     FILE *file = fopen(filename, "ab");
@@ -667,6 +669,7 @@ void appendScoresToFile(const char *filename, Tdata player)
     fclose(file);
 }
 
+// Dibuja la tabla para mostrar los datos del .dat
 void DrawScoresTable(const char *filename)
 {
     FILE *file = fopen(filename, "rb");
@@ -739,73 +742,4 @@ void DrawScoresTable(const char *filename)
 
         EndDrawing();
     }
-    // FILE *file = fopen(filename, "rb");
-    // if (file == NULL)
-    // {
-    //     printf("No se pudo abrir el archivo %s\n", filename);
-    //     return;
-    // }
-
-    // Tdata players[MAX_PLAYERS];
-    // int numPlayers = 0;
-
-    // while (fread(&players[numPlayers], sizeof(Tdata), 1, file) == 1)
-    // {
-    //     numPlayers++;
-    // }
-
-    // fclose(file);
-
-    // // Calcular posición y dimensiones de la tabla
-    // int tableWidth = SCR_WIDTH * 0.6f;   // Porcentaje del ancho de la pantalla
-    // int tableHeight = SCR_HEIGHT * 0.6f; // Porcentaje del alto de la pantalla
-    // int tablePosX = (SCR_WIDTH - tableWidth) / 2;
-    // int tablePosY = (SCR_HEIGHT - tableHeight) / 2;
-
-    // int cellWidth = tableWidth / 4;
-    // int cellHeight = 50;
-    // int scrollOffset = 0;
-    // int maxVisibleRows = (tableHeight - 50) / cellHeight; // Calcula el número máximo de filas visibles
-
-    // while (!IsKeyPressed(KEY_Q))
-    // {
-    //     BeginDrawing();
-    //     ClearBackground(BLACK);
-    //     drawTextCenter("HISTORIAL DE JUEGOS", 0, 50, 50, WHITE);
-
-    //     // Dibujar encabezados de la tabla
-    //     DrawRectangleLines(tablePosX, tablePosY, tableWidth, cellHeight, WHITE);
-    //     DrawText("Name", tablePosX + cellWidth * 0.5f, tablePosY + 10, 20, YELLOW);
-    //     DrawText("Max Level", tablePosX + cellWidth * 1.5f, tablePosY + 10, 20, YELLOW);
-    //     DrawText("Score", tablePosX + cellWidth * 2.5f, tablePosY + 10, 20, YELLOW);
-    //     DrawText("Date", tablePosX + cellWidth * 3.5f, tablePosY + 10, 20, YELLOW);
-
-    //     // Dibujar cada jugador en la tabla
-    //     for (int i = 0; i < maxVisibleRows; i++)
-    //     {
-    //         int playerIndex = i + scrollOffset;
-    //         if (playerIndex >= 0 && playerIndex < numPlayers)
-    //         {
-    //             // Ajusta las coordenadas de dibujo para dejar un espacio entre el borde superior de la celda y el texto
-    //             float textPosY = tablePosY + cellHeight + cellHeight * i + 10; // Ajusta el valor 10 según sea necesario
-
-    //             DrawText(players[playerIndex].name, tablePosX + cellWidth * 0.5f, textPosY, 20, GREEN);
-    //             DrawText(TextFormat("%d", players[playerIndex].maxLevel), tablePosX + cellWidth * 1.5f, textPosY, 20, GREEN);
-    //             DrawText(TextFormat("%d", players[playerIndex].score), tablePosX + cellWidth * 2.5f, textPosY, 20, GREEN);
-    //             DrawText(TextFormat("%d/%d/%d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), tablePosX + cellWidth * 3.5f, textPosY, 20, GREEN);
-    //         }
-    //     }
-
-    //     // Control de desplazamiento
-    //     if (IsKeyDown(KEY_UP) && scrollOffset > 0)
-    //     {
-    //         scrollOffset -= 1;
-    //     }
-    //     if (IsKeyDown(KEY_DOWN) && scrollOffset < numPlayers - maxVisibleRows)
-    //     {
-    //         scrollOffset += 1;
-    //     }
-
-    //     EndDrawing();
-    // }
 }
