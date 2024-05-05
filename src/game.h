@@ -418,7 +418,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
         subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, 0, 1);
         subsCinematicas("continuacion de historia", 45, 7, 2, 0, 1);
 
-        screenMessage("NIVEL 2", 2, 1);
+        screenMessage("NIVEL 2", 2, true);
 
         /* Estadisticas Nivel 2 */
         *level = 2;
@@ -438,7 +438,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
         // Limpiar objetos
         resetItems(playPosition);
 
-        screenMessage("NIVEL 3", 2, 1);
+        screenMessage("NIVEL 3", 2, true);
 
         /* Estadisticas Nivel 3 */
         *level = 3;
