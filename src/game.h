@@ -45,7 +45,7 @@ void DrawScoresTable(const char *filename);
 
 // CUESTIONARIO
 void mezclarArray(char **array, int size);
-void drawQuestion(bool *showQuestion, Pregunta *preguntas, int numPreguntas);
+void drawQuestion(bool *showQuestion, int *correctAnswers);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -204,10 +204,10 @@ void ingresarNickName(char inputText[])
         }
         // DIBUJO
         BeginDrawing();
-        ClearBackground(BLACK);
+        DrawTexture(startTx, 0, 0, WHITE);
 
-        DrawText("Bienvenido a Cosmic Chaos", (SCR_WIDTH - MeasureText("Bienvenido a Cosmic Chaos", 70)) / 2, 100, 70, GREEN);
-        DrawText("Ingresa tu nombre de usuario:", (SCR_WIDTH - MeasureText("Ingresa tu nombre de usuario:", 40)) / 2, SCR_HEIGHT / 2 - 25, 40, GREEN);
+        DrawText("Bienvenid@ a Cosmic Chaos!", (SCR_WIDTH - MeasureText("Bienvenid@ a Cosmic Chaos!", 80)) / 2, 100, 80, RAYWHITE);
+        DrawText("Ingresa tu nombre de usuario y presiona enter:", (SCR_WIDTH - MeasureText("Ingresa tu nombre de usuario y presiona enter:", 40)) / 2, SCR_HEIGHT / 2 - 25, 40, WHITE);
 
         // Posicion cuadro entrada de texto
         float inputBoxX = (SCR_WIDTH - 450) / 2;
@@ -691,7 +691,7 @@ void DrawScoresTable(const char *filename)
     int tablePosX = (SCR_WIDTH - tableWidth) / 2;
     int tablePosY = (SCR_HEIGHT - tableHeight) / 2;
 
-    int cellWidth = tableWidth / 4;
+    int cellWidth = tableWidth / 5; // Ajustar para la nueva columna
     int cellHeight = 50;
     int scrollOffset = 0;
     int maxVisibleRows = (tableHeight - 50) / cellHeight; // Calcula el número máximo de filas visibles
@@ -699,16 +699,17 @@ void DrawScoresTable(const char *filename)
     while (!IsKeyPressed(KEY_Q))
     {
         BeginDrawing();
-        ClearBackground(BLACK);
+        DrawTexture(scoreboardTx, 0, 0, WHITE);
         drawTextCenter("HISTORIAL DE JUEGOS", 0, 50, 50, WHITE);
         drawTextCenter("(Q) Volver al menu", 0, 750, 40, RED);
 
         // Dibujar encabezados de la tabla
         DrawRectangleLines(tablePosX, tablePosY, tableWidth, cellHeight, WHITE);
-        DrawText("Name", tablePosX + cellWidth * 0.5f - MeasureText("Name", 20) / 2, tablePosY + 10, 20, YELLOW);
-        DrawText("Max Level", tablePosX + cellWidth * 1.5f - MeasureText("Max Level", 20) / 2, tablePosY + 10, 20, YELLOW);
-        DrawText("Score", tablePosX + cellWidth * 2.5f - MeasureText("Score", 20) / 2, tablePosY + 10, 20, YELLOW);
-        DrawText("Date", tablePosX + cellWidth * 3.5f - MeasureText("Date", 20) / 2, tablePosY + 10, 20, YELLOW);
+        DrawText("Name", tablePosX + cellWidth * 0.5f - MeasureText("Name", 20) / 2, tablePosY + 10, 20, WHITE);
+        DrawText("Max Level", tablePosX + cellWidth * 1.5f - MeasureText("Max Level", 20) / 2, tablePosY + 10, 20, WHITE);
+        DrawText("Score", tablePosX + cellWidth * 2.5f - MeasureText("Score", 20) / 2, tablePosY + 10, 20, WHITE);
+        DrawText("Max Correct", tablePosX + cellWidth * 3.5f - MeasureText("Max Correct", 20) / 2, tablePosY + 10, 20, WHITE); // Nuevo encabezado
+        DrawText("Date", tablePosX + cellWidth * 4.5f - MeasureText("Date", 20) / 2, tablePosY + 10, 20, WHITE);
 
         // Dibujar cada jugador en la tabla
         for (int i = 0; i < maxVisibleRows; i++)
@@ -716,13 +717,14 @@ void DrawScoresTable(const char *filename)
             int playerIndex = i + scrollOffset;
             if (playerIndex >= 0 && playerIndex < numPlayers)
             {
-                // Ajusta las coordenadas de dibujo para dejar un espacio entre el borde superior de la celda y el texto
-                float textPosY = tablePosY + cellHeight + cellHeight * i + 10; // Ajusta el valor 10 según sea necesario
+                // Espacio entre el borde superior de la celda y el texto
+                float textPosY = tablePosY + cellHeight + cellHeight * i + 10;
 
-                DrawText(players[playerIndex].name, tablePosX + cellWidth * 0.5f - MeasureText(players[playerIndex].name, 20) / 2, textPosY, 20, GREEN);
-                DrawText(TextFormat("%d", players[playerIndex].maxLevel), tablePosX + cellWidth * 1.5f - MeasureText(TextFormat("%d", players[playerIndex].maxLevel), 20) / 2, textPosY, 20, GREEN);
-                DrawText(TextFormat("%d", players[playerIndex].score), tablePosX + cellWidth * 2.5f - MeasureText(TextFormat("%d", players[playerIndex].score), 20) / 2, textPosY, 20, GREEN);
-                DrawText(TextFormat("%d/%d/%d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), tablePosX + cellWidth * 3.5f - MeasureText(TextFormat("%d/%d/%d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), 20) / 2, textPosY, 20, GREEN);
+                DrawText(players[playerIndex].name, tablePosX + cellWidth * 0.5f - MeasureText(players[playerIndex].name, 20) / 2, textPosY, 20, YELLOW);
+                DrawText(TextFormat("%d", players[playerIndex].maxLevel), tablePosX + cellWidth * 1.5f - MeasureText(TextFormat("%d", players[playerIndex].maxLevel), 20) / 2, textPosY, 20, YELLOW);
+                DrawText(TextFormat("%d", players[playerIndex].score), tablePosX + cellWidth * 2.5f - MeasureText(TextFormat("%d", players[playerIndex].score), 20) / 2, textPosY, 20, YELLOW);
+                DrawText(TextFormat("%d", players[playerIndex].maxCorrectAnswers), tablePosX + cellWidth * 3.5f - MeasureText(TextFormat("%d", players[playerIndex].maxCorrectAnswers), 20) / 2, textPosY, 20, YELLOW); // Nuevo campo
+                DrawText(TextFormat("%d/%d/%d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), tablePosX + cellWidth * 4.5f - MeasureText(TextFormat("%d/%d/%d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), 20) / 2, textPosY, 20, YELLOW);
             }
         }
 
@@ -753,7 +755,7 @@ void mezclarArray(char **array, int size)
         }
     }
 }
-void drawQuestion(bool *showQuestion, Pregunta *preguntas, int numPreguntas)
+void drawQuestion(bool *showQuestion, int *correctAnswers)
 {
     int indicePregunta = rand() % numPreguntas;
     Pregunta preguntaActual = preguntas[indicePregunta];
@@ -765,12 +767,12 @@ void drawQuestion(bool *showQuestion, Pregunta *preguntas, int numPreguntas)
     do
     {
         BeginDrawing();
-        ClearBackground(BLACK);
+        DrawTexture(questionTx, 0, 0, WHITE);
         drawTextCenter(preguntaActual.pregunta, 0, 280, 60, YELLOW);
         for (int i = 0; i < 4; i++)
         {
             char opcionLabel = 'A' + i;
-            drawTextCenter(TextFormat("%c) %s", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, BLUE);
+            drawTextCenter(TextFormat("%c) %s", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, WHITE);
         }
 
         for (int i = 0; i < 4; i++)
@@ -780,6 +782,7 @@ void drawQuestion(bool *showQuestion, Pregunta *preguntas, int numPreguntas)
                 if (strcmp(opcionesBarajadas[i], preguntaActual.opciones[preguntaActual.respuestaCorrecta]) == 0)
                 {
                     drawTextCenter("¡Correcto!", 0, 650, 45, GREEN);
+                    (*correctAnswers)++;
                 }
                 else
                 {

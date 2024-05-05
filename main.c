@@ -57,6 +57,8 @@ int main()
     strcpy(data.name, name);
     data.score = 0;
     data.maxLevel = 0;
+    data.maxCorrectAnswers = 0;
+    int correctAnswers = 0;
     getDate(&data.dia, &data.mes, &data.anio);
 
     bool saveProgress = false; // Guardar estadisticas de jugador
@@ -414,7 +416,7 @@ int main()
                     {
                         PlaySound(soundcoin);
                         PlaySound(soundcoin);
-                        screenMessage("¡GOO!", 0.5, false);
+                        screenMessage("¡GO!", 0.5, false);
                         contin = 0;
                         continuar = false;
                     }
@@ -439,7 +441,7 @@ int main()
                 }
                 if (showQuestion)
                 {
-                    drawQuestion(&showQuestion, preguntas, numPreguntas);
+                    drawQuestion(&showQuestion, &correctAnswers);
                     continuar = true;
                     contin = 1;
                 }
@@ -473,6 +475,11 @@ int main()
                     {
                         data.maxLevel = level;
                     }
+                    if (correctAnswers > data.maxCorrectAnswers)
+                    {
+                        data.maxCorrectAnswers = correctAnswers;
+                    }
+                    correctAnswers = 0;
 
                     StopMusicStream(gameMusic); // Detener musica partida
                     PlayMusicStream(gameover);  // Reproducir musica gameover

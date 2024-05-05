@@ -56,6 +56,7 @@ typedef struct _playerData
     char name[MAX_INPUT_CHARS + 1];
     int maxLevel;
     int score;
+    int maxCorrectAnswers;
     int dia;
     int mes;
     int anio;
