@@ -31,8 +31,7 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
 void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds);
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, int frame1, int frame2);
 void pausa();
-void screenlevel(const char *text, float seconds);
-void textransp(const char *text, float seconds);
+void screenMessage(const char *text, float seconds, bool background);
 void screenpoints(int *totalseconds, short *score);
 
 void resetItems(Vector2 *playPosition);
@@ -419,7 +418,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
         subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, 0, 1);
         subsCinematicas("continuacion de historia", 45, 7, 2, 0, 1);
 
-        screenlevel("NIVEL 2", 2);
+        screenMessage("NIVEL 2", 2, 1);
 
         /* Estadisticas Nivel 2 */
         *level = 2;
@@ -439,7 +438,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
         // Limpiar objetos
         resetItems(playPosition);
 
-        screenlevel("NIVEL 3", 2);
+        screenMessage("NIVEL 3", 2, 1);
 
         /* Estadisticas Nivel 3 */
         *level = 3;
@@ -581,21 +580,14 @@ void pausa()
 }
 
 // Mostrar pantalla de nivel
-void screenlevel(const char *text, float seconds)
+void screenMessage(const char *text, float seconds, bool background)
 {
     int tamano = 180;
 
-    // Limpiar la pantalla y mostrar "Nivel #" en el centro
-    ClearBackground(BLACK);
-    DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
-    EndDrawing();
-    secondspause(seconds);
-}
-void textransp(const char *text, float seconds)
-{
-    int tamano = 180;
-
-    // Limpiar la pantalla y mostrar "Nivel #" en el centro
+    if (background)
+    {
+        ClearBackground(BLACK);
+    }
     DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
     EndDrawing();
     secondspause(seconds);
@@ -770,9 +762,9 @@ void drawQuestion(bool *showQuestion, Pregunta *preguntas, int numPreguntas)
     char *opcionesBarajadas[4];
     memcpy(opcionesBarajadas, preguntaActual.opciones, sizeof(preguntaActual.opciones));
 
-
     do
-    {        BeginDrawing();
+    {
+        BeginDrawing();
         ClearBackground(BLACK);
         drawTextCenter(preguntaActual.pregunta, 0, 280, 60, YELLOW);
         for (int i = 0; i < 4; i++)
