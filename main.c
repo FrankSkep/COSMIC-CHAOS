@@ -190,7 +190,7 @@ int main()
                             break;
                         }
                     }
-                    for (i = 0; i < MAX_BROWN_METEORS; i++)
+                    for (i = 0; i < MAX_BROWN; i++)
                     {
                         if (!brownMeteors[i].active)
                         {
@@ -253,7 +253,7 @@ int main()
                     }
                 }
                 // /*----- Meteoro cafe -----*/
-                for (i = 0; i < MAX_BROWN_METEORS; i++)
+                for (i = 0; i < MAX_BROWN; i++)
                 {
                     if (brownMeteors[i].active)
                     {
@@ -388,7 +388,7 @@ int main()
                                     }
                                 }
                             }
-                            for (int j = 0; j < MAX_BROWN_METEORS; j++)
+                            for (int j = 0; j < MAX_BROWN; j++)
                             {
                                 if (brownMeteors[j].active)
                                 {

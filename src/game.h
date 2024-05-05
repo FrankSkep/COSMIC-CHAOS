@@ -286,7 +286,7 @@ void drawMeteors(float *rotation)
                            (Vector2){(float)grayMeteor.width / 2, (float)grayMeteor.height / 2}, *rotation, WHITE);
         }
     }
-    for (int i = 0; i < MAX_BROWN_METEORS; i++)
+    for (int i = 0; i < MAX_BROWN; i++)
     {
         if (brownMeteors[i].active)
         {
@@ -391,13 +391,13 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
     if (*score == 0 && *level == 0)
     {
         // Historia inicial
-        subsCinematicas("   INFORME DE ULTIMO MOMENTO                        Hola a todos son las 11:45 am y aqui su servilleta     Javie Alatorre informandolos.", 45, 7, 2, 4, 5);
-        subsCinematicas("Desde la NASA nos llega el informe de que se acaba  de descubrir un asteroide con un color amarillo el    cual tiene a los cientificos conmosionados ", 45, 7, 4, 0, 1);
-        subsCinematicas("Se rumora que podria contener gran cantidad de oro en su interior y en este momento organizaciones de   todo el mundo estan investigando este suceso ", 45, 7, 4, 0, 1);
-        subsCinematicas("  Un momento!  Nos informan que el asteroide acaba   de colisionar contra el cinturon de asteroides", 45, 7, 3, 2, 3);
-        subsCinematicas("y efectivamene, contiene gran cantidad de oro, esto deja a las organzaciones en una carrera para ver    quien sera el que se apropie de el ", 45, 7, 4, 2, 3);
-        subsCinematicas("Olvidenlo, nos informan que españa es el primer      aventado en ir por el, como dicta la historia oro del que lo tenga oro se lo queda ", 45, 7, 4, 6, 7);
-        subsCinematicas("nuestros desarolladores han creado una represent- acion grafica de que es lo que podria estar pasando en este momento aya arriba en el espacio ", 45, 7, 1, 4, 5);
+        // subsCinematicas("   INFORME DE ULTIMO MOMENTO                        Hola a todos son las 11:45 am y aqui su servilleta     Javie Alatorre informandolos.", 45, 7, 2, 4, 5);
+        // subsCinematicas("Desde la NASA nos llega el informe de que se acaba  de descubrir un asteroide con un color amarillo el    cual tiene a los cientificos conmosionados ", 45, 7, 4, 0, 1);
+        // subsCinematicas("Se rumora que podria contener gran cantidad de oro en su interior y en este momento organizaciones de   todo el mundo estan investigando este suceso ", 45, 7, 4, 0, 1);
+        // subsCinematicas("  Un momento!  Nos informan que el asteroide acaba   de colisionar contra el cinturon de asteroides", 45, 7, 3, 2, 3);
+        // subsCinematicas("y efectivamene, contiene gran cantidad de oro, esto deja a las organzaciones en una carrera para ver    quien sera el que se apropie de el ", 45, 7, 4, 2, 3);
+        // subsCinematicas("Olvidenlo, nos informan que españa es el primer      aventado en ir por el, como dicta la historia oro del que lo tenga oro se lo queda ", 45, 7, 4, 6, 7);
+        // subsCinematicas("nuestros desarolladores han creado una represent- acion grafica de que es lo que podria estar pasando en este momento aya arriba en el espacio ", 45, 7, 1, 4, 5);
 
         /* Estadisticas Nivel 1 */
         *level = 1;
@@ -407,7 +407,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
         *timeseconds = 0;
 
         MAX_GRAY = MAX_METEOR_LV1;
-        // MAX_BROWN =
+        MAX_BROWN = MAX_METEOR_LV1;
         // MAX_COIN =
         // MAX_HEART =
     }
@@ -418,8 +418,8 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
         resetItems(playPosition);
         // screenpoints(totalseconds, score);
 
-        subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, 0, 1);
-        subsCinematicas("continuacion de historia", 45, 7, 2, 0, 1);
+        // subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, 0, 1);
+        // subsCinematicas("continuacion de historia", 45, 7, 2, 0, 1);
 
         screenMessage("NIVEL 2", 2, true);
 
@@ -431,7 +431,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
         *timeseconds = 0;
 
         MAX_GRAY = MAX_METEOR_LV2;
-        // MAX_BROWN =
+        MAX_BROWN = MAX_METEOR_LV2;
         // MAX_COIN =
         // MAX_HEART =
     }
@@ -451,7 +451,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
         *timeseconds = 0;
 
         MAX_GRAY = MAX_METEOR_LV3;
-        // MAX_BROWN =
+        MAX_BROWN = MAX_METEOR_LV3;
         // MAX_COIN =
         // MAX_HEART =
     }
@@ -609,10 +609,11 @@ void resetItems(Vector2 *playPosition)
     {
         grayMeteors[i].active = false;
     }
-    for (i = 0; i < MAX_BROWN_METEORS; i++)
+    for (i = 0; i < MAX_BROWN; i++)
     {
         brownMeteors[i].active = false;
     }
+    // Limpiar monedas
     for (i = 0; i < MAX_COINS; i++) // GOLD COIN
     {
         coinGold[i].active = false;
@@ -621,6 +622,7 @@ void resetItems(Vector2 *playPosition)
     {
         coinRed[i].active = false;
     }
+    // Limpiar corazones
     for (i = 0; i < MAX_HEARTS; i++)
     {
         hearts[i].active = false;

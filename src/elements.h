@@ -1,39 +1,38 @@
 /*--- CONSTANTES ---*/
-#define SCR_WIDTH 1600     // ANCHO PANTALLA (X)
-#define SCR_HEIGHT 900     // ALTO PANTALLA (Y)
-#define MAX_PLAYERS 100
-#define MAX_LEN_NAME 30
+#define SCR_WIDTH 1600  // ANCHO PANTALLA (X)
+#define SCR_HEIGHT 900  // ALTO PANTALLA (Y)
+#define MAX_PLAYERS 100 // MAXIMOS JUGADORES A GUARDAR
+#define MAX_LEN_NAME 30 // LONGITUD MAXIMA DEL NICK
 
-/*------ OBSTACULOS POR NIVEL ------*/
+/*------ CANTIDAD DE OBJETOS POR NIVEL ------*/
 #define MAX_METEOR_LV1 5
 #define MAX_METEOR_LV2 15
 #define MAX_METEOR_LV3 30
-/* Cantidad inicial */
-short MAX_GRAY = MAX_METEOR_LV1;  // Maximos meteoros gris por nivel
-short MAX_BROWN = MAX_METEOR_LV1; // Maximos meteoros cafe por nivel
+
 int shieldActive = 0;
 
-/*------- OBSTACULOS DEL JUEGO -------*/
-// Meteoro gris
-#define MAX_GRAY_METEORS 40          // Maximos meteoros en pantalla
+/*---- METEORO GRIS ----*/
+short MAX_GRAY = MAX_METEOR_LV1;     // Maximos meteoros gris por nivel
 #define GRAY_METEOR_SPEED 7.0f       // Velocidad de caida
 const float GRAY_METEOR_RADIUS = 60; // Tamaño
-// Meteoro cafe
-#define MAX_BROWN_METEORS 10          // Maximos meteoros en pantalla
+
+/*---- METEORO CAFE ----*/
+short MAX_BROWN = MAX_METEOR_LV1;     // Maximos meteoros cafe por nivel
 #define BROWN_METEOR_SPEED 9.0f       // Velocidad de caida
 const float BROWN_METEOR_RADIUS = 40; // Tamaño
 
-/*------- OBJETOS DEL JUEGO -------*/
-// Monedas
+/*---- MONEDAS ----*/
 #define MAX_COINS 2            // Maximas monedas en pantalla
 #define COINS_SPEED 8.0f       // Velocidad de caida
 const float COINS_RADIUS = 20; // Tamaño
-// Corazones
+
+/*---- CORAZONES ----*/
 #define MAX_HEARTS 1            // Maximos corazones en pantalla
 #define HEARTS_SPEED 9.0f       // Velocidad de caida
 const float HEARTS_RADIUS = 20; // Tamaño
-// Disparos
-#define MAX_SHOTS 1       // Numero máximo de disparos en pantalla
+
+/*---- DISPAROS ----*/
+#define MAX_SHOTS 1       // Maximos disparos en pantalla
 #define SHOT_SPEED 900.0f // Velocidad del misil
 #define SHOT_RADIUS 6     // Tamaño
 
@@ -63,16 +62,16 @@ typedef struct _playerData
     int anio;
 } Tdata;
 
-typedef struct
+typedef struct _preguntas
 {
     const char *pregunta;
     const char *opciones[4];
-    int respuestaCorrecta; // indice de la respuesta correcta (0, 1, 2 o 3)
+    int respuestaCorrecta;
 } Pregunta;
 
 /*--------- INSTANCIAS DE STRUCTs ---------*/
-TGameObject grayMeteors[MAX_GRAY_METEORS];
-TGameObject brownMeteors[MAX_BROWN_METEORS];
+TGameObject grayMeteors[MAX_METEOR_LV3];
+TGameObject brownMeteors[MAX_METEOR_LV3];
 TGameObject coinGold[MAX_COINS];
 TGameObject coinRed[MAX_COINS];
 TGameObject hearts[MAX_HEARTS];
