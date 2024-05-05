@@ -11,6 +11,7 @@
 /* Cantidad inicial */
 short MAX_GRAY = MAX_METEOR_LV1;  // Maximos meteoros gris por nivel
 short MAX_BROWN = MAX_METEOR_LV1; // Maximos meteoros cafe por nivel
+int shieldActive = 0;
 
 /*------- OBSTACULOS DEL JUEGO -------*/
 // Meteoro gris
