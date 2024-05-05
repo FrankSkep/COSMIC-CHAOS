@@ -704,7 +704,8 @@ void DrawScoresTable(const char *filename)
         BeginDrawing();
         DrawTexture(scoreboardTx, 0, 0, WHITE);
         drawTextCenter("HISTORIAL DE JUEGOS", 0, 50, 50, WHITE);
-        drawTextCenter("(Q) Volver al menu", 0, 750, 40, RED);
+        drawTextCenter("(UP , DOWN) Navegar en la tabla", 0, 750, 40, PURPLE);
+        drawTextCenter("(Q) Volver al menu", 0, 820, 40, RED);
 
         // Dibujar encabezados de la tabla
         DrawRectangleLines(tablePosX, tablePosY, tableWidth, cellHeight, WHITE);
