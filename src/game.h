@@ -12,7 +12,7 @@ void aboutTheGame();
 void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level, const char *nickname);
+void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level, const char *nickname, short *correctAnsw);
 void ingresarNickName(char inputText[]);
 void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
 void gameOverInterface(short *score, short *level);
@@ -45,7 +45,7 @@ void DrawScoresTable(const char *filename);
 
 // CUESTIONARIO
 void mezclarArray(char **array, int size);
-void drawQuestion(bool *showQuestion, int *correctAnswers);
+void drawQuestion(bool *showQuestion, short *correctAnswers);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -139,25 +139,28 @@ void menuActions(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level, const char *nickname)
+void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level, const char *nickname, short *correctAnsw)
 {
     // Dibuja fondo
     DrawTexture(game, 0, 0, WHITE);
 
     // Dibuja puntaje
-    DrawText(TextFormat("PUNTAJE : %04i", *score), SCR_WIDTH - 430, 20, 50, WHITE);
+    DrawText(TextFormat("Puntos : %04i", *score), SCR_WIDTH - 320, 20, 45, WHITE);
 
     // Dibuja nivel
-    DrawText(TextFormat("NIVEL : %i", *level), SCR_WIDTH - 1560, 20, 50, WHITE);
+    DrawText(TextFormat("Nivel : %i", *level), SCR_WIDTH - 1580, 20, 45, WHITE);
 
     // ******** Dibujar Nombre jugador *********
-    float textWidth = MeasureText(TextFormat("JUGADOR : %s", nickname), 40);
+    float textWidth = MeasureText(TextFormat("Jugador : %s", nickname), 40);
     float posX = (SCR_WIDTH - textWidth) / 2;
-    DrawText(TextFormat("JUGADOR : %s", nickname), posX, 20, 40, YELLOW);
+    DrawText(TextFormat("Jugador : %s", nickname), posX, 20, 40, YELLOW);
 
     // Dibuja vidas restantes
     float x;
-    DrawText(TextFormat("VIDAS : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
+    DrawText(TextFormat("Vidas : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
+
+    DrawText(TextFormat("Resp. Correctas : %d", *correctAnsw), 20, SCR_HEIGHT - 120, 35, WHITE);
+
     for (int i = 0; i < *lives; i++)
     {
         x = SCR_WIDTH - 65 * (i + 1);
@@ -178,7 +181,7 @@ void ingresarNickName(char inputText[])
     while (!IsKeyPressed(KEY_ENTER) && !WindowShouldClose())
     {
         // Terminar cadena cuando presione enter
-        if (IsKeyPressed(KEY_ENTER) && letterCount < MAX_INPUT_CHARS)
+        if (IsKeyPressed(KEY_ENTER) && letterCount < MAX_LEN_NAME)
         {
             inputText[letterCount] = '\0';
         }
@@ -705,11 +708,11 @@ void DrawScoresTable(const char *filename)
 
         // Dibujar encabezados de la tabla
         DrawRectangleLines(tablePosX, tablePosY, tableWidth, cellHeight, WHITE);
-        DrawText("Name", tablePosX + cellWidth * 0.5f - MeasureText("Name", 20) / 2, tablePosY + 10, 20, WHITE);
-        DrawText("Max Level", tablePosX + cellWidth * 1.5f - MeasureText("Max Level", 20) / 2, tablePosY + 10, 20, WHITE);
-        DrawText("Score", tablePosX + cellWidth * 2.5f - MeasureText("Score", 20) / 2, tablePosY + 10, 20, WHITE);
-        DrawText("Max Correct", tablePosX + cellWidth * 3.5f - MeasureText("Max Correct", 20) / 2, tablePosY + 10, 20, WHITE); // Nuevo encabezado
-        DrawText("Date", tablePosX + cellWidth * 4.5f - MeasureText("Date", 20) / 2, tablePosY + 10, 20, WHITE);
+        DrawText("Nombre", tablePosX + cellWidth * 0.5f - MeasureText("Nombre", 20) / 2, tablePosY + 10, 20, WHITE);
+        DrawText("Nivel alcanzado", tablePosX + cellWidth * 1.5f - MeasureText("Nivel alcanzado", 20) / 2, tablePosY + 10, 20, WHITE);
+        DrawText("Puntaje", tablePosX + cellWidth * 2.5f - MeasureText("Puntaje", 20) / 2, tablePosY + 10, 20, WHITE);
+        DrawText("Aciertos Maximos", tablePosX + cellWidth * 3.5f - MeasureText("Aciertos Maximos", 20) / 2, tablePosY + 10, 20, WHITE); // Nuevo encabezado
+        DrawText("Fecha", tablePosX + cellWidth * 4.5f - MeasureText("Date", 20) / 2, tablePosY + 10, 20, WHITE);
 
         // Dibujar cada jugador en la tabla
         for (int i = 0; i < maxVisibleRows; i++)
@@ -724,7 +727,7 @@ void DrawScoresTable(const char *filename)
                 DrawText(TextFormat("%d", players[playerIndex].maxLevel), tablePosX + cellWidth * 1.5f - MeasureText(TextFormat("%d", players[playerIndex].maxLevel), 20) / 2, textPosY, 20, YELLOW);
                 DrawText(TextFormat("%d", players[playerIndex].score), tablePosX + cellWidth * 2.5f - MeasureText(TextFormat("%d", players[playerIndex].score), 20) / 2, textPosY, 20, YELLOW);
                 DrawText(TextFormat("%d", players[playerIndex].maxCorrectAnswers), tablePosX + cellWidth * 3.5f - MeasureText(TextFormat("%d", players[playerIndex].maxCorrectAnswers), 20) / 2, textPosY, 20, YELLOW); // Nuevo campo
-                DrawText(TextFormat("%d/%d/%d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), tablePosX + cellWidth * 4.5f - MeasureText(TextFormat("%d/%d/%d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), 20) / 2, textPosY, 20, YELLOW);
+                DrawText(TextFormat("%02d/%02d/%d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), tablePosX + cellWidth * 4.5f - MeasureText(TextFormat("%02d/%02d/%02d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), 20) / 2, textPosY, 20, YELLOW);
             }
         }
 
@@ -755,8 +758,78 @@ void mezclarArray(char **array, int size)
         }
     }
 }
-void drawQuestion(bool *showQuestion, int *correctAnswers)
+void drawQuestion(bool *showQuestion, short *correctAnswers)
 {
+    Pregunta preguntas[] = {
+        {"¿Cuál es el cuarto planeta del sistema solar?", // 1
+         {"Venus", "Marte", "Jupiter", "Urano"},
+         1},
+        {"¿Cual es el tercer planeta del sistema solar?", // 2
+         {"Mercurio", "Tierra", "Jupiter", "Marte"},
+         1},
+        {"¿Cuál es el quinto planeta del sistema solar?", // 3
+         {"Marte", "Jupiter", "Tierra", "Saturno"},
+         1},
+        {"¿Cuál es el sexto planeta del sistema solar?", // 4
+         {"Tierra", "Saturno", "Jupiter", "Urano"},
+         1},
+        {"¿Cuál es el séptimo planeta del sistema solar?", // 5
+         {"Venus", "Urano", "Neptuno", "Saturno"},
+         1},
+        {"¿Cuál es el octavo planeta del sistema solar?", // 6
+         {"Urano", "Neptuno", "Urano", "Venus"},
+         1},
+        {"¿Cuál es el primer planeta del sistema solar?", // 7
+         {"Plutón", "Mercurio", "Tierra", "Marte"},
+         1},
+        {"¿Cuantos planetas tiene el sistema solar?", // 8
+         {"10", "8", "12", "14"},
+         1},
+        {"¿Cuál es el planeta mas caliente del sistema solar?", // 9
+         {"Tierra", "Venus", "Neptuno", "Saturno"},
+         1},
+        {"¿Qué planeta es conocido como el 'Gigante de hielo'?", // 10
+         {"Venus", "Jupiter", "Urano", "Neptuno"},
+         2},
+        {"¿Cuantas lunas tiene marte?", // 11
+         {"1", "2", "3", "4"},
+         1},
+        {"¿Cual es la estrella más cercana a la Tierra?", // 12
+         {"Alfa Centauri", "Sol", "Sirio", "Vega"},
+         1},
+        {"¿Cuál es el planeta más grande del sistema solar?", // 13
+         {"Marte", "Jupiter", "Urano", "Saturno"},
+         1},
+        {"¿Cuál es el planeta más cercano al Sol?", // 14
+         {"Venus", "Mercurio", "Tierra", "Marte"},
+         1},
+        {"¿Cuál es el nombre de la luna de la Tierra?", // 15
+         {"Apolo", "Luna", "Ganimedes", "Titán"},
+         1},
+        {"¿Qué planeta es conocido como el 'Planeta Rojo'?", // 16
+         {"Venus", "Marte", "Mercurio", "Jupiter"},
+         1},
+        {"¿Cuál es el planeta conocido por sus anillos?", // 17
+         {"Neptuno", "Saturno", "Urano", "Jupiter"},
+         1},
+        {"¿Cuál es el planeta más pequeño del sistema solar?", // 18
+         {"Saturno", "Mercurio", "Urano", "Neptuno"},
+         1},
+        {"¿Qué planeta es conocido como el 'Gigante Gaseoso'?", // 19
+         {"Mercurio", "Jupiter", "Neptuno", "Saturno"},
+         1},
+        {"¿Cuál es el planeta más alejado del Sol?", // 20
+         {"Plutón", "Neptuno", "Urano", "Saturno"},
+         1},
+        {"¿Cuntas lunas tiene jupiter?", // 21
+         {"2", "95", "75", "15"},
+         1},
+        {"¿Que planeta tiene la luna mas grande?", // 22
+         {"Venus", "Jupiter", "Urano", "Neptuno"},
+         1},
+    };
+    int numPreguntas = sizeof(preguntas) / sizeof(preguntas[0]);
+
     int indicePregunta = rand() % numPreguntas;
     Pregunta preguntaActual = preguntas[indicePregunta];
 
@@ -768,7 +841,7 @@ void drawQuestion(bool *showQuestion, int *correctAnswers)
     {
         BeginDrawing();
         DrawTexture(questionTx, 0, 0, WHITE);
-        drawTextCenter(preguntaActual.pregunta, 0, 280, 60, YELLOW);
+        drawTextCenter(preguntaActual.pregunta, 0, 280, 55, YELLOW);
         for (int i = 0; i < 4; i++)
         {
             char opcionLabel = 'A' + i;
