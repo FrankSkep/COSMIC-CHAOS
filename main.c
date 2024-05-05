@@ -237,10 +237,17 @@ int main()
                         if (CheckCollision(playerPosition, playRadius, grayCenter, GRAY_METEOR_RADIUS))
                         {
                             grayMeteors[i].active = false; // Eliminar objeto tocado
-                            lives--;                       // Pierde una vida
-                            if (lives <= 0)
+                            if (shieldActive <= 0)
                             {
-                                gameOver = true;
+                                lives--; // Pierde una vida
+                                if (lives <= 0)
+                                {
+                                    gameOver = true;
+                                }
+                            }
+                            else
+                            {
+                                shieldActive--;
                             }
                         }
                     }
@@ -262,10 +269,17 @@ int main()
                         if (CheckCollision(playerPosition, playRadius, brownCenter, BROWN_METEOR_RADIUS))
                         {
                             brownMeteors[i].active = false; // Eliminar objeto tocado
-                            lives--;                        // Pierde una vida
-                            if (lives <= 0)
+                            if (shieldActive <= 0)
                             {
-                                gameOver = true;
+                                lives--; // Pierde una vida
+                                if (lives <= 0)
+                                {
+                                    gameOver = true;
+                                }
+                            }
+                            else
+                            {
+                                shieldActive--;
                             }
                         }
                     }
@@ -406,7 +420,10 @@ int main()
                 drawGameInterface(&heartsTx[currentFrame], &lives, &score, &level, data.name, &correctAnswers);
                 // Dibujar objetos de la partida
                 drawGameElements(&shipTx[currentFrame], &playerPosition, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation);
-
+                if (shieldActive > 0)
+                {
+                    DrawText(TextFormat("ESCUDOS:%02d", shieldActive), 20, SCR_HEIGHT - 170, 85, YELLOW);
+                }
                 // Animacion despues de responder pregunta
                 if (continuar)
                 {

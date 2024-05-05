@@ -832,6 +832,7 @@ void drawQuestion(bool *showQuestion, short *correctAnswers)
     int numPreguntas = sizeof(preguntas) / sizeof(preguntas[0]);
 
     int indicePregunta = rand() % numPreguntas;
+    bool respuestaCorrecta = false;
     Pregunta preguntaActual = preguntas[indicePregunta];
 
     // Hacer una copia de las opciones de respuesta
@@ -856,6 +857,7 @@ void drawQuestion(bool *showQuestion, short *correctAnswers)
                 if (strcmp(opcionesBarajadas[i], preguntaActual.opciones[preguntaActual.respuestaCorrecta]) == 0)
                 {
                     drawTextCenter("¡Correcto!", 0, 650, 45, GREEN);
+                    respuestaCorrecta = true;
                     (*correctAnswers)++;
                 }
                 else
@@ -868,6 +870,10 @@ void drawQuestion(bool *showQuestion, short *correctAnswers)
         }
         EndDrawing();
     } while (*showQuestion);
+    if (respuestaCorrecta)
+    {
+        shieldActive = 2;
+    }
 
     // Espera entre cada pregunta
     secondspause(1.5);
