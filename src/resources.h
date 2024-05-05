@@ -96,10 +96,10 @@ void loadTextures()
 // ---- Descarga texturas ----
 void unloadTextures()
 {
+    loadingScreen("ADIOS.");
     UnloadTexture(menu);
     UnloadTexture(game);
     UnloadTexture(gameoverT);
-    loadingScreen("ADIOS.");
 
     for (int i = 0; i < 6; i++)
     {

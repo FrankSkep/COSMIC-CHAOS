@@ -54,7 +54,7 @@ int main()
 
     // ------- DATOS JUGADOR -------
     Tdata data;
-    char name[MAX_INPUT_CHARS + 1];
+    char name[MAX_INPUT_CHARS + 1] = "";
     ingresarNickName(name);
     strcpy(data.name, name);
     data.score = 0;
@@ -77,7 +77,7 @@ int main()
         {
             StopMusicStream(gameover);                    // Detiene musica gameover
             drawMainMenu();                               // Dibuja menu principal
-            menuActions(&secondsT, &isPlaying, &guardar); // Acciones menu
+            menuActions(&secondsT, &isPlaying); // Acciones menu
         }
         else
         { /*-------------------- PARTIDA --------------------*/
@@ -438,6 +438,7 @@ int main()
                     rotationMeteor = 0;          // Reiniciar rotacion
                     resetItems(&playerPosition); // Reinicia posicion y desactiva objetos
 
+                    guardar = true;
                     // Actualiza mejor puntaje
                     if (score > data.score)
                     {

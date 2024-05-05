@@ -9,7 +9,7 @@
 void drawMainMenu();
 void drawHowToPlay();
 void aboutTheGame();
-void menuActions(int *seconds, bool *isPlaying, bool *guardar);
+void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
 void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level, const char *nickname);
@@ -31,7 +31,7 @@ bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, floa
 void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds);
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, int frame1, int frame2);
 void pausa();
-void screenlevel(const char *text, int seconds);
+void screenlevel(const char *text, float seconds);
 void screenpoints(int *totalseconds, short *score);
 
 void resetItems(Vector2 *playPosition);
@@ -118,13 +118,12 @@ void aboutTheGame()
 }
 
 // Maneja acciones del menu principal
-void menuActions(int *seconds, bool *isPlaying, bool *guardar)
+void menuActions(int *seconds, bool *isPlaying)
 {
     if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
     {
         *seconds = 0;
         *isPlaying = true;
-        *guardar = true;
     }
     if (IsKeyPressed(KEY_A)) // Ir a tutorial como jugar
     {
@@ -582,18 +581,15 @@ void pausa()
 }
 
 // Mostrar pantalla de nivel
-void screenlevel(const char *text, int seconds)
+void screenlevel(const char *text, float seconds)
 {
     int tamano = 180;
-    double startTime2 = GetTime(); // Obtener el tiempo de inicio
 
-    while (GetTime() - startTime2 < seconds)
-    {
-        // Limpiar la pantalla y mostrar "Nivel #" en el centro
-        ClearBackground(BLACK);
-        DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
-        EndDrawing();
-    }
+    // Limpiar la pantalla y mostrar "Nivel #" en el centro
+    ClearBackground(BLACK);
+    DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
+    EndDrawing();
+    secondspause(seconds);
 }
 
 // Reiniciar posicion de elementos y jugador
@@ -789,7 +785,7 @@ void drawQuestion(bool *mostrarPregunta, Pregunta *preguntas, int numPreguntas)
                     drawTextCenter("¡Incorrecto!", 0, 650, 45, RED);
                 }
                 *mostrarPregunta = false;
-                break; 
+                break;
             }
         }
         EndDrawing();
@@ -800,7 +796,7 @@ void drawQuestion(bool *mostrarPregunta, Pregunta *preguntas, int numPreguntas)
 }
 void secondspause(float seconds)
 {
-    double startTime2 = GetTime(); 
+    double startTime2 = GetTime();
     while (GetTime() - startTime2 < seconds)
         ;
 }
