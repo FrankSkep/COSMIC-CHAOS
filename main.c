@@ -61,6 +61,8 @@ int main()
 
     bool saveProgress = false; // Guardar estadisticas de jugador
     bool showQuestion = false; // Mostrar pregunta
+    bool continuar = false;    // Mostrar pregunta
+    int contin = 0;            // Mostrar pregunta
 
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
@@ -406,9 +408,40 @@ int main()
                 // Dibujar objetos de la partida
                 drawGameElements(&shipTx[currentFrame], &playerPosition, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation);
 
+                if (continuar)
+                {
+                    if (contin == 4)
+                    {
+                        PlaySound(soundcoin);
+                        PlaySound(soundcoin);
+                        textransp("¡GOO!", 0.5);
+                        contin = 0;
+                        continuar = false;
+                    }
+                    if (contin == 3)
+                    {
+                        PlaySound(soundcoin);
+                        textransp("1", 0.7);
+                        contin = 4;
+                    }
+                    if (contin == 2)
+                    {
+                        PlaySound(soundcoin);
+                        textransp("2", 0.7);
+                        contin = 3;
+                    }
+                    if (contin == 1)
+                    {
+                        PlaySound(soundcoin);
+                        textransp("3", 0.7);
+                        contin = 2;
+                    }
+                }
                 if (showQuestion)
                 {
                     drawQuestion(&showQuestion, preguntas, numPreguntas);
+                    continuar = true;
+                    contin = 1;
                 }
 
                 /*--------------- ? ---------------*/

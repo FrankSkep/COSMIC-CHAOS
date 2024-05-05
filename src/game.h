@@ -32,6 +32,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, int frame1, int frame2);
 void pausa();
 void screenlevel(const char *text, float seconds);
+void textransp(const char *text, float seconds);
 void screenpoints(int *totalseconds, short *score);
 
 void resetItems(Vector2 *playPosition);
@@ -42,6 +43,8 @@ void secondspause(float seconds);
 void getDate(int *dia, int *mes, int *anio);
 void appendScoresToFile(const char *filename, Tdata player);
 void DrawScoresTable(const char *filename);
+
+// CUESTIONARIO
 void mezclarArray(char **array, int size);
 void drawQuestion(bool *showQuestion, Pregunta *preguntas, int numPreguntas);
 
@@ -110,7 +113,6 @@ void aboutTheGame()
         drawTextCenter("- Francisco Cornejo", 0, 340, 50, GREEN);
         drawTextCenter("- Diego Ibarra", 0, 400, 50, GREEN);
         drawTextCenter("(Q) Volver al menu", 0, 800, 50, GOLD);
-
         EndDrawing();
     }
 }
@@ -589,6 +591,15 @@ void screenlevel(const char *text, float seconds)
     EndDrawing();
     secondspause(seconds);
 }
+void textransp(const char *text, float seconds)
+{
+    int tamano = 180;
+
+    // Limpiar la pantalla y mostrar "Nivel #" en el centro
+    DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
+    EndDrawing();
+    secondspause(seconds);
+}
 
 // Reiniciar posicion de elementos y jugador
 void resetItems(Vector2 *playPosition)
@@ -759,10 +770,10 @@ void drawQuestion(bool *showQuestion, Pregunta *preguntas, int numPreguntas)
     char *opcionesBarajadas[4];
     memcpy(opcionesBarajadas, preguntaActual.opciones, sizeof(preguntaActual.opciones));
 
-    mezclarArray(opcionesBarajadas, 4);
 
     do
-    {
+    {        BeginDrawing();
+        ClearBackground(BLACK);
         drawTextCenter(preguntaActual.pregunta, 0, 280, 60, YELLOW);
         for (int i = 0; i < 4; i++)
         {

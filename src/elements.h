@@ -75,36 +75,73 @@ TGameObject coinGold[MAX_COINS];
 TGameObject coinRed[MAX_COINS];
 TGameObject hearts[MAX_HEARTS];
 Tshot shots[MAX_SHOTS];
+
 Pregunta preguntas[] = {
-    {"¿Cual es el tercer planeta del sistema solar?", // 1
+    {"¿Cuál es el cuarto planeta del sistema solar?", // 1
+     {"Venus", "Marte", "Jupiter", "Urano"},
+     1},
+    {"¿Cual es el tercer planeta del sistema solar?", // 2
      {"Mercurio", "Tierra", "Jupiter", "Marte"},
      1},
-    {"¿Cual es la estrella más cercana a la Tierra?", // 2
+    {"¿Cuál es el quinto planeta del sistema solar?", // 3
+     {"Marte", "Jupiter", "Tierra", "Saturno"},
+     1},
+    {"¿Cuál es el sexto planeta del sistema solar?", // 4
+     {"Tierra", "Saturno", "Jupiter", "Urano"},
+     1},
+    {"¿Cuál es el séptimo planeta del sistema solar?", // 5
+     {"Venus", "Urano", "Neptuno", "Saturno"},
+     1},
+    {"¿Cuál es el octavo planeta del sistema solar?", // 6
+     {"Urano", "Neptuno", "Urano", "Venus"},
+     1},
+    {"¿Cuál es el primer planeta del sistema solar?", // 7
+     {"Plutón", "Mercurio", "Tierra", "Marte"},
+     1},
+    {"¿Cuantos planetas tiene el sistema solar?", // 8
+     {"10", "8", "12", "14"},
+     1},
+    {"¿Cuál es el planeta mas caliente del sistema solar?", // 9
+     {"Tierra", "Venus", "Neptuno", "Saturno"},
+     1},
+    {"¿Qué planeta es conocido como el 'Gigante de hielo'?", // 10
+     {"Venus", "Jupiter", "Urano", "Neptuno"},
+     2},
+    {"¿Cuantas lunas tiene marte?", // 11
+     {"1", "2", "3", "4"},
+     1},
+    {"¿Cual es la estrella más cercana a la Tierra?", // 12
      {"Alfa Centauri", "Sol", "Sirio", "Vega"},
      1},
-    {"¿Cuál es el planeta más grande del sistema solar?", // 3
+    {"¿Cuál es el planeta más grande del sistema solar?", // 13
      {"Marte", "Jupiter", "Urano", "Saturno"},
      1},
-    {"¿Cuál es el planeta más cercano al Sol?", // 4
+    {"¿Cuál es el planeta más cercano al Sol?", // 14
      {"Venus", "Mercurio", "Tierra", "Marte"},
      1},
-    {"¿Cuál es el nombre de la luna de la Tierra?", // 5
+    {"¿Cuál es el nombre de la luna de la Tierra?", // 15
      {"Apolo", "Luna", "Ganimedes", "Titán"},
      1},
-    {"¿Qué planeta es conocido como el 'Planeta Rojo'?", // 6
+    {"¿Qué planeta es conocido como el 'Planeta Rojo'?", // 16
      {"Venus", "Marte", "Mercurio", "Jupiter"},
      1},
-    {"¿Cuál es el planeta conocido por sus anillos?", // 7
+    {"¿Cuál es el planeta conocido por sus anillos?", // 17
      {"Neptuno", "Saturno", "Urano", "Jupiter"},
      1},
-    {"¿Cuál es el planeta más pequeño del sistema solar?", // 8
+    {"¿Cuál es el planeta más pequeño del sistema solar?", // 18
      {"Saturno", "Mercurio", "Urano", "Neptuno"},
      1},
-    {"¿Qué planeta es conocido como el 'Gigante Gaseoso'?", // 9
+    {"¿Qué planeta es conocido como el 'Gigante Gaseoso'?", // 19
      {"Mercurio", "Jupiter", "Neptuno", "Saturno"},
      1},
-    {"¿Cuál es el planeta más alejado del Sol?", // 10
+    {"¿Cuál es el planeta más alejado del Sol?", // 20
      {"Plutón", "Neptuno", "Urano", "Saturno"},
+     1},
+    {"¿Cuntas lunas tiene jupiter?", // 21
+     {"2", "95", "75", "15"},
+     1},
+    {"¿Que planeta tiene la luna mas grande?", // 22
+     {"Venus", "Jupiter", "Urano", "Neptuno"},
      1},
 };
 int numPreguntas = sizeof(preguntas) / sizeof(preguntas[0]);
