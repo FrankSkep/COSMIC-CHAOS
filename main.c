@@ -414,26 +414,26 @@ int main()
                     {
                         PlaySound(soundcoin);
                         PlaySound(soundcoin);
-                        screenlevel("¡GOO!", 0.5, 0);
+                        screenMessage("¡GOO!", 0.5, 0);
                         contin = 0;
                         continuar = false;
                     }
                     if (contin == 3)
                     {
                         PlaySound(soundcoin);
-                        screenlevel("1", 0.7, 0);
+                        screenMessage("1", 0.7, 0);
                         contin = 4;
                     }
                     if (contin == 2)
                     {
                         PlaySound(soundcoin);
-                        screenlevel("2", 0.7, 0);
+                        screenMessage("2", 0.7, 0);
                         contin = 3;
                     }
                     if (contin == 1)
                     {
                         PlaySound(soundcoin);
-                        screenlevel("3", 0.7, 0);
+                        screenMessage("3", 0.7, 0);
                         contin = 2;
                     }
                 }
