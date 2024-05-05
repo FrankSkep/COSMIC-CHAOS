@@ -189,7 +189,7 @@ void ingresarNickName(char inputText[])
             key = GetKeyPressed();
 
             // Verificar si la tecla es un carácter imprimible y hay espacio disponible
-            if ((key >= 32) && (key <= 125) && (letterCount < MAX_INPUT_CHARS))
+            if ((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 97 && key <= 122))
             {
                 inputText[letterCount] = (char)key;
                 letterCount++;
