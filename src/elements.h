@@ -61,6 +61,13 @@ typedef struct _playerData
     int anio;
 } Tdata;
 
+typedef struct
+{
+    const char *pregunta;
+    const char *opciones[4];
+    int respuestaCorrecta; // indice de la respuesta correcta (0, 1, 2 o 3)
+} Pregunta;
+
 /*--------- INSTANCIAS DE STRUCTs ---------*/
 TGameObject grayMeteors[MAX_GRAY_METEORS];
 TGameObject brownMeteors[MAX_BROWN_METEORS];
@@ -68,44 +75,35 @@ TGameObject coinGold[MAX_COINS];
 TGameObject coinRed[MAX_COINS];
 TGameObject hearts[MAX_HEARTS];
 Tshot shots[MAX_SHOTS];
-
-typedef struct
-{
-    const char *pregunta;
-    const char *opciones[4]; 
-    int respuestaCorrecta;   // indice de la respuesta correcta (0, 1, 2 o 3)
-} Pregunta;
-
-// siempre poner la correcta en la pocionion "2"
 Pregunta preguntas[] = {
-    {"¿Cual es el tercer planeta del sistema solar?",           //1
+    {"¿Cual es el tercer planeta del sistema solar?", // 1
      {"Mercurio", "Tierra", "Jupiter", "Marte"},
      1},
-    {"¿Cual es la estrella más cercana a la Tierra?",           //2
+    {"¿Cual es la estrella más cercana a la Tierra?", // 2
      {"Alfa Centauri", "Sol", "Sirio", "Vega"},
      1},
-    {"¿Cuál es el planeta más grande del sistema solar?",       //3
+    {"¿Cuál es el planeta más grande del sistema solar?", // 3
      {"Marte", "Jupiter", "Urano", "Saturno"},
      1},
-    {"¿Cuál es el planeta más cercano al Sol?",                 //4
+    {"¿Cuál es el planeta más cercano al Sol?", // 4
      {"Venus", "Mercurio", "Tierra", "Marte"},
      1},
-    {"¿Cuál es el nombre de la luna de la Tierra?",             //5
+    {"¿Cuál es el nombre de la luna de la Tierra?", // 5
      {"Apolo", "Luna", "Ganimedes", "Titán"},
      1},
-    {"¿Qué planeta es conocido como el 'Planeta Rojo'?",        //6
+    {"¿Qué planeta es conocido como el 'Planeta Rojo'?", // 6
      {"Venus", "Marte", "Mercurio", "Jupiter"},
      1},
-    {"¿Cuál es el planeta conocido por sus anillos?",           //7
+    {"¿Cuál es el planeta conocido por sus anillos?", // 7
      {"Neptuno", "Saturno", "Urano", "Jupiter"},
      1},
-    {"¿Cuál es el planeta más pequeño del sistema solar?",      //8
+    {"¿Cuál es el planeta más pequeño del sistema solar?", // 8
      {"Saturno", "Mercurio", "Urano", "Neptuno"},
      1},
-    {"¿Qué planeta es conocido como el 'Gigante Gaseoso'?",     //9
+    {"¿Qué planeta es conocido como el 'Gigante Gaseoso'?", // 9
      {"Mercurio", "Jupiter", "Neptuno", "Saturno"},
      1},
-    {"¿Cuál es el planeta más alejado del Sol?",                //10
+    {"¿Cuál es el planeta más alejado del Sol?", // 10
      {"Plutón", "Neptuno", "Urano", "Saturno"},
      1},
 };

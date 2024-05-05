@@ -31,13 +31,11 @@ int main()
     float timeseconds = 0;
 
     /*----------- CONFIGURACION VENTANA -----------*/
-    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.18");
+    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 1.0");
     SetTargetFPS(75);
 
-    /*----------- Carga de texturas -----------*/
+    /*----------- Carga de texturas y sonidos -----------*/
     loadTextures();
-
-    /*----------- Carga de sonidos -----------*/
     InitAudioDevice();
     loadSounds();
 
@@ -59,24 +57,18 @@ int main()
     strcpy(data.name, name);
     data.score = 0;
     data.maxLevel = 0;
-    obtenerFechaAct(&data.dia, &data.mes, &data.anio);
+    getDate(&data.dia, &data.mes, &data.anio);
 
-    bool guardar = false;
-    bool mostrarPregunta = false;
-    int h = 1;
+    bool saveProgress = false; // Guardar estadisticas de jugador
+    bool showQuestion = false; // Mostrar pregunta
+
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
     {
-        if (h == 1)
-        {
-            // ToggleFullscreen();
-            h = 0;
-        }
-
         if (!isPlaying) // Menu principal
         {
-            StopMusicStream(gameover);                    // Detiene musica gameover
-            drawMainMenu();                               // Dibuja menu principal
+            StopMusicStream(gameover);          // Detiene musica gameover
+            drawMainMenu();                     // Dibuja menu principal
             menuActions(&secondsT, &isPlaying); // Acciones menu
         }
         else
@@ -89,7 +81,7 @@ int main()
 
                 /***** SPRITES *****/
                 frameTimeCounter += GetFrameTime();
-                // pasado el tiempo, cambia imagen
+                // Pasado el tiempo, cambia imagen
                 if (frameTimeCounter >= frameSpeed)
                 {
                     currentFrame = (currentFrame + 1) % 6; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
@@ -308,7 +300,7 @@ int main()
                         if (CheckCollision(playerPosition, playRadius, coinRed[i].position, COINS_RADIUS))
                         {
                             coinRed[i].active = false; // Eliminar objeto tocado
-                            mostrarPregunta = true;
+                            showQuestion = true;
                             PlaySound(soundcoin);
                         }
                     }
@@ -414,9 +406,9 @@ int main()
                 // Dibujar objetos de la partida
                 drawGameElements(&shipTx[currentFrame], &playerPosition, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation);
 
-                if (mostrarPregunta)
+                if (showQuestion)
                 {
-                    drawQuestion(&mostrarPregunta, preguntas, numPreguntas);
+                    drawQuestion(&showQuestion, preguntas, numPreguntas);
                 }
 
                 /*--------------- ? ---------------*/
@@ -438,7 +430,7 @@ int main()
                     rotationMeteor = 0;          // Reiniciar rotacion
                     resetItems(&playerPosition); // Reinicia posicion y desactiva objetos
 
-                    guardar = true;
+                    saveProgress = true;
                     // Actualiza mejor puntaje
                     if (score > data.score)
                     {
@@ -482,7 +474,7 @@ int main()
     }
 
     // Agregar estadisticas al archivo .dat
-    if (guardar)
+    if (saveProgress)
     {
         appendScoresToFile("record.dat", data);
     }

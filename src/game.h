@@ -39,11 +39,11 @@ void resetStats(short *lives, short *score, short *level, float *timeSeconds);
 void secondspause(float seconds);
 
 // Datos jugador
-void obtenerFechaAct(int *dia, int *mes, int *anio);
+void getDate(int *dia, int *mes, int *anio);
 void appendScoresToFile(const char *filename, Tdata player);
 void DrawScoresTable(const char *filename);
 void mezclarArray(char **array, int size);
-void drawQuestion(bool *mostrarPregunta, Pregunta *preguntas, int numPreguntas);
+void drawQuestion(bool *showQuestion, Pregunta *preguntas, int numPreguntas);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -109,8 +109,6 @@ void aboutTheGame()
         drawTextCenter("Desarrolladores:", 0, 270, 50, YELLOW);
         drawTextCenter("- Francisco Cornejo", 0, 340, 50, GREEN);
         drawTextCenter("- Diego Ibarra", 0, 400, 50, GREEN);
-        // drawTextCenter("Sounds:", 0, 580, 50, GOLD);
-        // drawTextCenter("Unnamed", 0, 640, 50, LIME);
         drawTextCenter("(Q) Volver al menu", 0, 800, 50, GOLD);
 
         EndDrawing();
@@ -146,7 +144,7 @@ void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *lev
     DrawTexture(game, 0, 0, WHITE);
 
     // Dibuja puntaje
-    DrawText(TextFormat("PUNTAJE : %04i", *score), SCR_WIDTH - 390, 20, 50, WHITE);
+    DrawText(TextFormat("PUNTAJE : %04i", *score), SCR_WIDTH - 430, 20, 50, WHITE);
 
     // Dibuja nivel
     DrawText(TextFormat("NIVEL : %i", *level), SCR_WIDTH - 1560, 20, 50, WHITE);
@@ -414,7 +412,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
     {
         // Limpiar objetos
         resetItems(playPosition);
-        screenpoints(totalseconds, score);
+        // screenpoints(totalseconds, score);
 
         subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, 0, 1);
         subsCinematicas("continuacion de historia", 45, 7, 2, 0, 1);
@@ -639,7 +637,7 @@ void resetStats(short *lives, short *score, short *level, float *timeSeconds)
 }
 
 // Obtiene fecha actual
-void obtenerFechaAct(int *dia, int *mes, int *anio)
+void getDate(int *dia, int *mes, int *anio)
 {
     time_t tiempoActual = time(NULL);
     struct tm *fecha = localtime(&tiempoActual); // DD/MM/AAAA
@@ -752,7 +750,7 @@ void mezclarArray(char **array, int size)
         }
     }
 }
-void drawQuestion(bool *mostrarPregunta, Pregunta *preguntas, int numPreguntas)
+void drawQuestion(bool *showQuestion, Pregunta *preguntas, int numPreguntas)
 {
     int indicePregunta = rand() % numPreguntas;
     Pregunta preguntaActual = preguntas[indicePregunta];
@@ -769,7 +767,7 @@ void drawQuestion(bool *mostrarPregunta, Pregunta *preguntas, int numPreguntas)
         for (int i = 0; i < 4; i++)
         {
             char opcionLabel = 'A' + i;
-            drawTextCenter(TextFormat("%c) %s", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, GREEN);
+            drawTextCenter(TextFormat("%c) %s", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, BLUE);
         }
 
         for (int i = 0; i < 4; i++)
@@ -784,12 +782,12 @@ void drawQuestion(bool *mostrarPregunta, Pregunta *preguntas, int numPreguntas)
                 {
                     drawTextCenter("¡Incorrecto!", 0, 650, 45, RED);
                 }
-                *mostrarPregunta = false;
+                *showQuestion = false;
                 break;
             }
         }
         EndDrawing();
-    } while (*mostrarPregunta);
+    } while (*showQuestion);
 
     // Espera entre cada pregunta
     secondspause(1.5);
