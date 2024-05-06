@@ -1,15 +1,12 @@
-/*--- CONSTANTES ---*/
 #define SCR_WIDTH 1600  // ANCHO PANTALLA (X)
 #define SCR_HEIGHT 900  // ALTO PANTALLA (Y)
 #define MAX_PLAYERS 100 // MAXIMOS JUGADORES A GUARDAR
 #define MAX_LEN_NAME 30 // LONGITUD MAXIMA DEL NICK
 
-/*------ CANTIDAD DE OBJETOS POR NIVEL ------*/
+/*----- CANTIDAD DE OBJETOS POR NIVEL -----*/
 #define MAX_METEOR_LV1 5
 #define MAX_METEOR_LV2 15
 #define MAX_METEOR_LV3 30
-
-int shieldActive = 0;
 
 /*---- METEORO GRIS ----*/
 short MAX_GRAY = MAX_METEOR_LV1;     // Maximos meteoros gris por nivel

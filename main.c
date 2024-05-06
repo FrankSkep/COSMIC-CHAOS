@@ -20,7 +20,7 @@ int main()
     bool gameOver = false;
 
     /* JUEGO */
-    short int i, score = 0, lives = 5, level = 0, correctAnswers = 0;
+    short int i, score = 0, lives = 5, level = 0, correctAnswers = 0, shieldActive = 0;
     float elapsedTime = 0.0f, rotationMeteor = 0.0f;
     float playerRotation = 0.0;
     float currentRotation = 0.0f;
@@ -71,6 +71,8 @@ int main()
         if (!isPlaying) // Menu principal
         {
             StopMusicStream(gameover);          // Detiene musica gameover
+            PlayMusicStream(menuMusic);
+            UpdateMusicStream(menuMusic);
             drawMainMenu();                     // Dibuja menu principal
             menuActions(&secondsT, &isPlaying); // Acciones menu
         }
@@ -78,6 +80,7 @@ int main()
         { /*-------------------- PARTIDA --------------------*/
             if (!gameOver)
             {
+                StopMusicStream(menuMusic);
                 StopMusicStream(gameover); // Detiene musica de gameover
                 UpdateMusicStream(gameMusic);
                 PlayMusicStream(gameMusic); // Reproduce musica de la partida
@@ -417,13 +420,10 @@ int main()
                 rotationMeteor += 2.5f; // Velocidad de rotacion meteoros
 
                 // Dibujar interfaz de la partida
-                drawGameInterface(&heartsTx[currentFrame], &lives, &score, &level, data.name, &correctAnswers);
+                drawGameInterface(hearthF[currentFrame], hearthE[currentFrame], &lives, &score, &level, data.name, &correctAnswers, &shieldActive);
                 // Dibujar objetos de la partida
                 drawGameElements(&shipTx[currentFrame], &playerPosition, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation);
-                if (shieldActive > 0)
-                {
-                    DrawText(TextFormat("ESCUDOS:%02d", shieldActive), 20, SCR_HEIGHT - 170, 85, YELLOW);
-                }
+
                 // Animacion despues de responder pregunta
                 if (continuar)
                 {
@@ -457,7 +457,7 @@ int main()
 
                 if (showQuestion) // Si se activo la bandera al tomar moneda roja
                 {
-                    drawQuestion(&showQuestion, &correctAnswers);
+                    drawQuestion(&showQuestion, &correctAnswers, &shieldActive);
                     continuar = true;
                     contin = 1;
                 }

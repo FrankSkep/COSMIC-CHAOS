@@ -7,11 +7,12 @@ void unloadSounds();
 
 /*** Texturas ***/
 Texture2D menu, game, gameoverT, scoreboardTx, questionTx, startTx, cinema[9];
+Texture2D hearthE[6], hearthF[6];
 Texture2D shipTx[6], coinsTx[6], heartsTx[6], heartsFTx[6], heartsETx[6], misil[6], explosionTx[3];
 Texture2D grayMeteor, brownMeteor;
 
 /*** Sonidos ***/
-Music gameMusic, gameover;
+Music menuMusic, gameMusic, gameover;
 Sound soundcoin, shotSound, burstMisil;
 
 // ---- Pantalla de carga inicial ----
@@ -45,6 +46,22 @@ void loadTextures()
 
     // Fondo pantalla inicial
     startTx = LoadTexture("resources/images/backgrounds/startbg.png");
+
+    // Corazones de vidas llenos
+    hearthF[0] = LoadTexture("resources/images/hearts/hearthF_00.png");
+    hearthF[1] = LoadTexture("resources/images/hearts/hearthF_00.png");
+    hearthF[2] = LoadTexture("resources/images/hearts/hearthF_01.png");
+    hearthF[3] = LoadTexture("resources/images/hearts/hearthF_01.png");
+    hearthF[4] = LoadTexture("resources/images/hearts/hearthF_02.png");
+    hearthF[5] = LoadTexture("resources/images/hearts/hearthF_02.png");
+
+    // Corazones de Vidas Vacios
+    hearthE[0] = LoadTexture("resources/images/hearts/hearthE_00.png");
+    hearthE[1] = LoadTexture("resources/images/hearts/hearthE_01.png");
+    hearthE[2] = LoadTexture("resources/images/hearts/hearthE_02.png");
+    hearthE[3] = LoadTexture("resources/images/hearts/hearthE_03.png");
+    hearthE[4] = LoadTexture("resources/images/hearts/hearthE_04.png");
+    hearthE[5] = LoadTexture("resources/images/hearts/hearthE_05.png");
 
     // Presentador
     cinema[0] = LoadTexture("resources/images/backgrounds/cinema1.png");
@@ -121,6 +138,8 @@ void unloadTextures()
         UnloadTexture(shipTx[i]);
         UnloadTexture(coinsTx[i]);
         UnloadTexture(heartsTx[i]);
+        UnloadTexture(hearthE[i]);
+        UnloadTexture(hearthF[i]);
         if (i < 3)
         {
             UnloadTexture(explosionTx[i]);
@@ -139,16 +158,18 @@ void unloadTextures()
 // ---- Carga sonidos ----
 void loadSounds()
 {
-    gameMusic = LoadMusicStream("resources/sounds/music.mp3");   // Musica partida
-    gameover = LoadMusicStream("resources/sounds/gameover.mp3"); // Musica gameover
-    soundcoin = LoadSound("resources/sounds/coin.wav");          // Sonido moneda
-    shotSound = LoadSound("resources/sounds/shot.mp3");          // Sonido misil
-    burstMisil = LoadSound("resources/sounds/burstMisil.mp3");
+    menuMusic = LoadMusicStream("resources/sounds/mainmenu.mp3"); // Musica menu principal
+    gameMusic = LoadMusicStream("resources/sounds/music.mp3");    // Musica partida
+    gameover = LoadMusicStream("resources/sounds/gameover.mp3");  // Musica gameover
+    soundcoin = LoadSound("resources/sounds/coin.wav");           // Sonido moneda
+    shotSound = LoadSound("resources/sounds/shot.mp3");           // Sonido misil
+    burstMisil = LoadSound("resources/sounds/burstMisil.mp3");    // Sonido explosion misil
 }
 
 // ---- Descarga sonidos ----
 void unloadSounds()
 {
+    UnloadMusicStream(menuMusic);
     UnloadMusicStream(gameMusic);
     UnloadMusicStream(gameover);
     UnloadSound(soundcoin);

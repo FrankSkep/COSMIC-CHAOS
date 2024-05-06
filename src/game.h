@@ -12,7 +12,7 @@ void aboutTheGame();
 void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level, const char *nickname, short *correctAnsw);
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield);
 void ingresarNickName(char inputText[]);
 void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
 void gameOverInterface(short *score, short *level);
@@ -45,7 +45,7 @@ void DrawScoresTable(const char *filename);
 
 // CUESTIONARIO
 void mezclarArray(char **array, int size);
-void drawQuestion(bool *showQuestion, short *correctAnswers);
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -85,6 +85,7 @@ void drawHowToPlay()
 {
     while (!IsKeyPressed(KEY_Q))
     {
+        UpdateMusicStream(menuMusic);
         BeginDrawing();
         ClearBackground(BLACK);
         drawTextCenter("COMO JUGAR: ", 0, 100, 100, BLUE);
@@ -102,6 +103,7 @@ void aboutTheGame()
 {
     while (!IsKeyPressed(KEY_Q)) // Bucle para mostrar la interfaz "about"
     {
+        UpdateMusicStream(menuMusic);
         BeginDrawing();
 
         ClearBackground(BLACK);
@@ -139,7 +141,7 @@ void menuActions(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *level, const char *nickname, short *correctAnsw)
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield)
 {
     // Dibuja fondo
     DrawTexture(game, 0, 0, WHITE);
@@ -164,12 +166,17 @@ void drawGameInterface(Texture2D *hearts, short *lives, short *score, short *lev
     for (int i = 0; i < *lives; i++)
     {
         x = SCR_WIDTH - 65 * (i + 1);
-        DrawTexture(*hearts, x, SCR_HEIGHT - 65, RED);
+        DrawTexture(hearts, x, SCR_HEIGHT - 65, WHITE);
     }
     for (int i = *lives; i < 5; i++)
     {
-        x = SCR_WIDTH - 65 * (i + 1);               // Inicia desde el lado derecho
-        DrawText("-", x, SCR_HEIGHT - 60, 50, RED); // Corazón vacío
+        x = SCR_WIDTH - 65 * (i + 1);                        // Inicia desde el lado derecho
+        DrawTexture(hearthEmpty, x, SCR_HEIGHT - 60, WHITE); // Corazón vacío
+    }
+    // Mostrar tiempo restante escudo
+    if ((*shield) > 0)
+    {
+        DrawText(TextFormat("ESCUDOS : %02d", *shield), 20, SCR_HEIGHT - 180, 60, YELLOW);
     }
 }
 
@@ -180,6 +187,8 @@ void ingresarNickName(char inputText[])
 
     while (!IsKeyPressed(KEY_ENTER) && !WindowShouldClose())
     {
+        PlayMusicStream(menuMusic);
+        UpdateMusicStream(menuMusic);
         // Terminar cadena cuando presione enter
         if (IsKeyPressed(KEY_ENTER) && letterCount < MAX_LEN_NAME)
         {
@@ -642,6 +651,7 @@ void resetStats(short *lives, short *score, short *level, float *timeSeconds)
     *level = 1;
     *timeSeconds = 0;
     MAX_GRAY = MAX_METEOR_LV1;
+    MAX_BROWN = MAX_METEOR_LV1;
 }
 
 // Obtiene fecha actual
@@ -703,6 +713,7 @@ void DrawScoresTable(const char *filename)
 
     while (!IsKeyPressed(KEY_Q))
     {
+        UpdateMusicStream(menuMusic);
         BeginDrawing();
         DrawTexture(scoreboardTx, 0, 0, WHITE);
         drawTextCenter("HISTORIAL DE JUEGOS", 0, 50, 50, WHITE);
@@ -761,7 +772,7 @@ void mezclarArray(char **array, int size)
         }
     }
 }
-void drawQuestion(bool *showQuestion, short *correctAnswers)
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield)
 {
     Pregunta preguntas[] = {
         {"¿Cuál es el cuarto planeta del sistema solar?", // 1
@@ -834,7 +845,6 @@ void drawQuestion(bool *showQuestion, short *correctAnswers)
     int numPreguntas = sizeof(preguntas) / sizeof(preguntas[0]);
 
     int indicePregunta = rand() % numPreguntas;
-    bool respuestaCorrecta = false;
     Pregunta preguntaActual = preguntas[indicePregunta];
 
     // Hacer una copia de las opciones de respuesta
@@ -859,7 +869,7 @@ void drawQuestion(bool *showQuestion, short *correctAnswers)
                 if (strcmp(opcionesBarajadas[i], preguntaActual.opciones[preguntaActual.respuestaCorrecta]) == 0)
                 {
                     drawTextCenter("¡Correcto!", 0, 650, 45, GREEN);
-                    respuestaCorrecta = true;
+                    *shield = 2;
                     (*correctAnswers)++;
                 }
                 else
@@ -872,10 +882,6 @@ void drawQuestion(bool *showQuestion, short *correctAnswers)
         }
         EndDrawing();
     } while (*showQuestion);
-    if (respuestaCorrecta)
-    {
-        shieldActive = 2;
-    }
 
     // Espera entre cada pregunta
     secondspause(1.5);
