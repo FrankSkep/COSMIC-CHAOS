@@ -12,7 +12,7 @@ void aboutTheGame();
 void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield);
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds);
 void ingresarNickName(char inputText[]);
 void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
 void gameOverInterface(short *score, short *level);
@@ -141,7 +141,7 @@ void menuActions(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield)
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds)
 {
     // Dibuja fondo
     DrawTexture(game, 0, 0, WHITE);
@@ -150,7 +150,7 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, sh
     DrawText(TextFormat("Puntos : %04i", *score), SCR_WIDTH - 320, 20, 45, WHITE);
 
     // Dibuja nivel
-    DrawText(TextFormat("Nivel : %i", *level), SCR_WIDTH - 1580, 20, 45, WHITE);
+    DrawText(TextFormat("Nivel : %i", *level), 20, 20, 45, WHITE);
 
     // ******** Dibujar Nombre jugador *********
     float textWidth = MeasureText(TextFormat("Jugador : %s", nickname), 40);
@@ -161,7 +161,7 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, sh
     float x;
     DrawText(TextFormat("Vidas : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
 
-    DrawText(TextFormat("Resp. Correctas : %d", *correctAnsw), 20, SCR_HEIGHT - 120, 35, WHITE);
+    DrawText(TextFormat("Resp. Correctas : %d", *correctAnsw), 20, SCR_HEIGHT - 90, 35, WHITE);
 
     for (int i = 0; i < *lives; i++)
     {
@@ -171,13 +171,13 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, sh
     for (int i = *lives; i < 5; i++)
     {
         x = SCR_WIDTH - 65 * (i + 1);                        // Inicia desde el lado derecho
-        DrawTexture(hearthEmpty, x, SCR_HEIGHT - 60, WHITE); // Corazón vacío
+        DrawTexture(hearthEmpty, x, SCR_HEIGHT - 65, WHITE); // Corazón vacío
     }
-    // Mostrar tiempo restante escudo
-    if ((*shield) > 0)
-    {
-        DrawText(TextFormat("ESCUDOS : %02d", *shield), 20, SCR_HEIGHT - 180, 60, YELLOW);
-    }
+    // Mostrar estado de los powerups
+    DrawText(TextFormat("ESCUDOS : %02d", *shield), 20, 80, 35, YELLOW);
+
+    // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
+    DrawText(TextFormat("%02d:%02d", *minutes, *seconds), 20, SCR_HEIGHT - 50, 50, WHITE);
 }
 
 void ingresarNickName(char inputText[])

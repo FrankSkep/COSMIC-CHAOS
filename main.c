@@ -70,7 +70,7 @@ int main()
     {
         if (!isPlaying) // Menu principal
         {
-            StopMusicStream(gameover);          // Detiene musica gameover
+            StopMusicStream(gameover); // Detiene musica gameover
             PlayMusicStream(menuMusic);
             UpdateMusicStream(menuMusic);
             drawMainMenu();                     // Dibuja menu principal
@@ -420,7 +420,7 @@ int main()
                 rotationMeteor += 2.5f; // Velocidad de rotacion meteoros
 
                 // Dibujar interfaz de la partida
-                drawGameInterface(hearthF[currentFrame], hearthE[currentFrame], &lives, &score, &level, data.name, &correctAnswers, &shieldActive);
+                drawGameInterface(hearthF[currentFrame], hearthE[currentFrame], &lives, &score, &level, data.name, &correctAnswers, &shieldActive, &minutesT, &secondsT);
                 // Dibujar objetos de la partida
                 drawGameElements(&shipTx[currentFrame], &playerPosition, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation);
 
@@ -462,16 +462,12 @@ int main()
                     contin = 1;
                 }
 
-                /*--------------- ? ---------------*/
+                /*-------- TIEMPO TRANSCURRIDO --------*/
                 timeseconds += GetFrameTime(); // Obtener el tiempo transcurrido en segundos
                 totalseconds = timeseconds;
                 minutesT = totalseconds / 60;
                 secondsT = totalseconds % 60;
-                // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
-                DrawText(TextFormat("%02d:%02d", minutesT, secondsT), 20, SCR_HEIGHT - 90, 60, WHITE);
-                /*--------------- ? ---------------*/
                 Levels(&score, &level, &elapsedTime, &playerPosition, &lives, &totalseconds, &timeseconds);
-                /*---------------   -----------------------------------------*/
 
                 if (gameOver)
                 {
@@ -506,6 +502,8 @@ int main()
             { /*------------------ GAMEOVER ------------------*/
                 // Reproducir musica gameover
                 UpdateMusicStream(gameover);
+
+                StopMusicStream(menuMusic);
 
                 // Dibuja interfaz
                 gameOverInterface(&score, &level);
