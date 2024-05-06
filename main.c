@@ -5,6 +5,7 @@
 
 int main()
 {
+    srand(time(NULL));
     /*------------- CONSTANTES -------------*/
     const int playRadius = 45;       // Tamaño del jugador
     const float playerSpeed = 15.0f; // Velocidad del jugador
@@ -34,7 +35,7 @@ int main()
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 1.0");
     SetTargetFPS(75);
 
-    /*----------- Carga de texturas y sonidos -----------*/
+    /*------- Carga de texturas y sonidos -------*/
     loadTextures();
     InitAudioDevice();
     loadSounds();

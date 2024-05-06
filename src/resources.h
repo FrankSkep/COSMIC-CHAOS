@@ -158,12 +158,16 @@ void unloadTextures()
 // ---- Carga sonidos ----
 void loadSounds()
 {
+    loadingScreen("Cargando....");
     menuMusic = LoadMusicStream("resources/sounds/mainmenu.mp3"); // Musica menu principal
     gameMusic = LoadMusicStream("resources/sounds/music.mp3");    // Musica partida
-    gameover = LoadMusicStream("resources/sounds/gameover.mp3");  // Musica gameover
-    soundcoin = LoadSound("resources/sounds/coin.wav");           // Sonido moneda
-    shotSound = LoadSound("resources/sounds/shot.mp3");           // Sonido misil
-    burstMisil = LoadSound("resources/sounds/burstMisil.mp3");    // Sonido explosion misil
+    loadingScreen("Cargando.");
+    gameover = LoadMusicStream("resources/sounds/gameover.mp3"); // Musica gameover
+    soundcoin = LoadSound("resources/sounds/coin.wav");          // Sonido moneda
+    loadingScreen("Cargando..");
+    shotSound = LoadSound("resources/sounds/shot.mp3");        // Sonido misil
+    burstMisil = LoadSound("resources/sounds/burstMisil.mp3"); // Sonido explosion misil
+    loadingScreen("Cargando...");
 }
 
 // ---- Descarga sonidos ----

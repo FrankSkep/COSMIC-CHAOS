@@ -2,7 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
-#include <stdlib.h> // Necesario para RAND_MAX y rand()
+#include <stdlib.h>
 
 /*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
 /* MENUs */
