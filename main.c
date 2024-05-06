@@ -485,7 +485,6 @@ int main()
                     {
                         data.maxCorrectAnswers = correctAnswers;
                     }
-                    correctAnswers = 0; // Reinicia contador temporal de aciertos
 
                     StopMusicStream(gameMusic); // Detener musica partida
                     PlayMusicStream(gameover);  // Reproducir musica gameover
@@ -504,13 +503,13 @@ int main()
                 // Vuelve a jugar al presionar enter
                 if (IsKeyDown(KEY_ENTER))
                 {
-                    resetStats(&lives, &score, &level, &timeseconds);
+                    resetStats(&lives, &score, &level, &correctAnswers, &timeseconds);
                     gameOver = false;
                 }
                 // Vuelve al menu al presionar Q
                 if (IsKeyDown(KEY_Q))
                 {
-                    resetStats(&lives, &score, &level, &timeseconds);
+                    resetStats(&lives, &score, &level, &correctAnswers, &timeseconds);
                     isPlaying = false;
                     gameOver = false;
                 }

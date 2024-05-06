@@ -36,7 +36,7 @@ void screenMessage(const char *text, float seconds, bool background);
 void screenpoints(int *totalseconds, short *score);
 
 void resetItems(Vector2 *playPosition);
-void resetStats(short *lives, short *score, short *level, float *timeSeconds);
+void resetStats(short *lives, short *score, short *level, short *correctAns, float *timeSeconds);
 void secondspause(float seconds);
 
 // Datos jugador
@@ -659,11 +659,12 @@ void resetItems(Vector2 *playPosition)
 }
 
 // Reinicia estadisticas
-void resetStats(short *lives, short *score, short *level, float *timeSeconds)
+void resetStats(short *lives, short *score, short *level, short *correctAns, float *timeSeconds)
 {
     *lives = 5;
     *score = 0;
     *level = 1;
+    *correctAns = 0;
     *timeSeconds = 0;
     MAX_GRAY = MAX_METEOR_LV1;
     MAX_BROWN = MAX_METEOR_LV1;
