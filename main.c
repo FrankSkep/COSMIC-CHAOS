@@ -51,14 +51,7 @@ int main()
     Vector2 grayCenter, brownCenter;
 
     // ------- DATOS JUGADOR -------
-    char name[MAX_LEN_NAME] = "";
-    ingresarNickName(name);
-    Tdata data;
-    strcpy(data.name, name);                   // Usuario
-    data.score = 0;                            // Mejor puntuacion
-    data.maxLevel = 0;                         // Maximo Nivel alcanzado
-    data.maxCorrectAnswers = 0;                // Maximas respuestas correctas
-    getDate(&data.dia, &data.mes, &data.anio); // Fecha del reporte
+    Tdata data = getDataPlayer();
 
     bool saveProgress = false; // Guardar estadisticas de jugador
     bool showQuestion = false; // Mostrar pregunta

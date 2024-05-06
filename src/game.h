@@ -14,6 +14,7 @@ void menuActions(int *seconds, bool *isPlaying);
 /* INTERFACES */
 void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds);
 void ingresarNickName(char inputText[]);
+Tdata getDataPlayer();
 void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
 void gameOverInterface(short *score, short *level);
 
@@ -230,6 +231,20 @@ void ingresarNickName(char inputText[])
 
         EndDrawing();
     }
+}
+
+// Obtiene datos a guardar del jugador
+Tdata getDataPlayer()
+{
+    char name[MAX_LEN_NAME] = "";
+    ingresarNickName(name);
+    Tdata data;
+    strcpy(data.name, name);                   // Usuario
+    data.score = 0;                            // Mejor puntuacion
+    data.maxLevel = 0;                         // Maximo Nivel alcanzado
+    data.maxCorrectAnswers = 0;                // Maximas respuestas correctas
+    getDate(&data.dia, &data.mes, &data.anio); // Fecha del reporte
+    return data;
 }
 
 // Dibuja elementos de la partida
