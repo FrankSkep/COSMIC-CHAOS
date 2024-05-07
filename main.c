@@ -6,6 +6,7 @@
 int main()
 {
     srand(time(NULL));
+    seleccPreguntas();
     /*------------- CONSTANTES -------------*/
     const int playRadius = 45;       // Tamaño del jugador
     const float playerSpeed = 15.0f; // Velocidad del jugador

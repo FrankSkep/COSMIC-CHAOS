@@ -2,6 +2,8 @@
 #define SCR_HEIGHT 900  // ALTO PANTALLA (Y)
 #define MAX_PLAYERS 100 // MAXIMOS JUGADORES A GUARDAR
 #define MAX_LEN_NAME 30 // LONGITUD MAXIMA DEL NICK
+#define PREG_SELEC 15
+#define TOTAL_PREG 22
 
 /*----- CANTIDAD DE OBJETOS POR NIVEL -----*/
 #define MAX_METEOR_LV1 5
@@ -61,10 +63,10 @@ typedef struct _playerData
 
 typedef struct _preguntas
 {
-    const char *pregunta;
-    const char *opciones[4];
+    char pregunta[60];
+    char opciones[4][20];
     int respuestaCorrecta;
-} Pregunta;
+} Tpregunta;
 
 /*--------- INSTANCIAS DE STRUCTs ---------*/
 TGameObject grayMeteors[MAX_METEOR_LV3];
@@ -73,3 +75,4 @@ TGameObject coinGold[MAX_COINS];
 TGameObject coinRed[MAX_COINS];
 TGameObject hearts[MAX_HEARTS];
 Tshot shots[MAX_SHOTS];
+Tpregunta preguntas[TOTAL_PREG];
