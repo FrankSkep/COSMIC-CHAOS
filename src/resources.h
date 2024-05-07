@@ -7,8 +7,8 @@ void unloadSounds();
 
 /*** Texturas ***/
 Texture2D menu, game, gameoverT, scoreboardTx, questionTx, startTx, cinema[9];
-Texture2D hearthE[6], hearthF[6];
-Texture2D shipTx[6], coinsTx[6], heartsTx[6], heartsFTx[6], heartsETx[6], misil[6], explosionTx[3];
+Texture2D hearthE[6], hearthF[3], shield, forceF[6];
+Texture2D shipTx[3], coinsTx[6], heartsTx[3], misil, explosionTx[3];
 Texture2D grayMeteor, brownMeteor;
 
 /*** Sonidos ***/
@@ -49,11 +49,8 @@ void loadTextures()
 
     // Corazones de vidas llenos
     hearthF[0] = LoadTexture("resources/images/hearts/hearthF_00.png");
-    hearthF[1] = LoadTexture("resources/images/hearts/hearthF_00.png");
-    hearthF[2] = LoadTexture("resources/images/hearts/hearthF_01.png");
-    hearthF[3] = LoadTexture("resources/images/hearts/hearthF_01.png");
-    hearthF[4] = LoadTexture("resources/images/hearts/hearthF_02.png");
-    hearthF[5] = LoadTexture("resources/images/hearts/hearthF_02.png");
+    hearthF[1] = LoadTexture("resources/images/hearts/hearthF_01.png");
+    hearthF[2] = LoadTexture("resources/images/hearts/hearthF_02.png");
 
     // Corazones de Vidas Vacios
     hearthE[0] = LoadTexture("resources/images/hearts/hearthE_00.png");
@@ -62,6 +59,15 @@ void loadTextures()
     hearthE[3] = LoadTexture("resources/images/hearts/hearthE_03.png");
     hearthE[4] = LoadTexture("resources/images/hearts/hearthE_04.png");
     hearthE[5] = LoadTexture("resources/images/hearts/hearthE_05.png");
+
+    shield = LoadTexture("resources/images/shield/shield.png");
+
+    forceF[0] = LoadTexture("resources/images/shield/forceField_00.png");
+    forceF[1] = LoadTexture("resources/images/shield/forceField_01.png");
+    forceF[2] = LoadTexture("resources/images/shield/forceField_02.png");
+    forceF[3] = LoadTexture("resources/images/shield/forceField_03.png");
+    forceF[4] = LoadTexture("resources/images/shield/forceField_04.png");
+    forceF[5] = LoadTexture("resources/images/shield/forceField_05.png");
 
     // Presentador
     cinema[0] = LoadTexture("resources/images/backgrounds/cinema1.png");
@@ -78,12 +84,9 @@ void loadTextures()
 
     // Nave
     shipTx[0] = LoadTexture("resources/images/ship/ship01.png");
-    shipTx[1] = LoadTexture("resources/images/ship/ship01.png");
-    shipTx[2] = LoadTexture("resources/images/ship/ship02.png");
-    shipTx[3] = LoadTexture("resources/images/ship/ship02.png");
+    shipTx[1] = LoadTexture("resources/images/ship/ship02.png");
     loadingScreen("Cargando....");
-    shipTx[4] = LoadTexture("resources/images/ship/ship03.png");
-    shipTx[5] = LoadTexture("resources/images/ship/ship03.png");
+    shipTx[2] = LoadTexture("resources/images/ship/ship03.png");
 
     // Meteoros
     grayMeteor = LoadTexture("resources/images/meteors/grayMeteor.png");
@@ -100,21 +103,13 @@ void loadTextures()
 
     // Corazones
     heartsTx[0] = LoadTexture("resources/images/hearts/hearth_01.png");
-    heartsTx[1] = LoadTexture("resources/images/hearts/hearth_01.png");
     loadingScreen("Cargando..");
-    heartsTx[2] = LoadTexture("resources/images/hearts/hearth_01.png");
-    heartsTx[3] = LoadTexture("resources/images/hearts/hearth_02.png");
-    heartsTx[4] = LoadTexture("resources/images/hearts/hearth_02.png");
-    heartsTx[5] = LoadTexture("resources/images/hearts/hearth_02.png");
+    heartsTx[1] = LoadTexture("resources/images/hearts/hearth_01.png");
+    heartsTx[2] = LoadTexture("resources/images/hearts/hearth_02.png");
 
     // Disparo
-    misil[0] = LoadTexture("resources/images/shot/shot01.png");
-    misil[1] = LoadTexture("resources/images/shot/shot01.png");
+    misil = LoadTexture("resources/images/shot/shot01.png");
     loadingScreen("Cargando...");
-    misil[2] = LoadTexture("resources/images/shot/shot02.png");
-    misil[3] = LoadTexture("resources/images/shot/shot02.png");
-    misil[4] = LoadTexture("resources/images/shot/shot03.png");
-    misil[5] = LoadTexture("resources/images/shot/shot03.png");
 
     // Explosion misil
     explosionTx[0] = LoadTexture("resources/images/shot/burst01.png");
@@ -135,13 +130,13 @@ void unloadTextures()
 
     for (int i = 0; i < 6; i++)
     {
-        UnloadTexture(shipTx[i]);
         UnloadTexture(coinsTx[i]);
         UnloadTexture(heartsTx[i]);
         UnloadTexture(hearthE[i]);
-        UnloadTexture(hearthF[i]);
         if (i < 3)
         {
+            UnloadTexture(shipTx[i]);
+            UnloadTexture(hearthF[i]);
             UnloadTexture(explosionTx[i]);
         }
     }

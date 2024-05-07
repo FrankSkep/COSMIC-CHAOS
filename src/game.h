@@ -12,17 +12,16 @@ void aboutTheGame();
 void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds);
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds);
 void ingresarNickName(char inputText[]);
 Tdata getDataPlayer();
-void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
 void gameOverInterface(short *score, short *level);
 
 /* DIBUJO OBJETOS */
-void drawPlayer(Texture2D *ship, Vector2 *playerPosition, float *playerRotation);
-void drawMeteors(float *rotation);
-void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx);
-void drawShots(Texture2D *shotTx, Texture2D *explosionTx);
+void drawPlayer(Texture2D ship, Texture2D forceF, Vector2 *playerPosition, float *playerRotation, short shield);
+void drawMeteors(float rotation);
+void drawObjects(Texture2D coinsTx, Texture2D heartsTx);
+void drawShots(Texture2D shotTx, Texture2D *explosionTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
 /* LOGICA */
@@ -143,7 +142,7 @@ void menuActions(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds)
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds)
 {
     // Dibuja fondo
     DrawTexture(game, 0, 0, WHITE);
@@ -160,10 +159,10 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, sh
     DrawText(TextFormat("Jugador : %s", nickname), posX, 20, 40, YELLOW);
 
     // Dibuja vidas restantes
-    float x;
     DrawText(TextFormat("Vidas : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
 
     DrawText(TextFormat("Resp. Correctas : %d", *correctAnsw), 20, SCR_HEIGHT - 90, 35, WHITE);
+    float x;
 
     for (int i = 0; i < *lives; i++)
     {
@@ -175,6 +174,12 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, sh
         x = SCR_WIDTH - 65 * (i + 1);                        // Inicia desde el lado derecho
         DrawTexture(hearthEmpty, x, SCR_HEIGHT - 65, WHITE); // Corazón vacío
     }
+    for (int i = 0; i < *shield; i++)
+    {
+        x = SCR_WIDTH - 65 * (i + 1) - 65 * *lives;
+        DrawTexture(shieldTx, x, SCR_HEIGHT - 70, WHITE);
+    }
+
     // Mostrar estado de los powerups
     DrawText(TextFormat("ESCUDOS : %02d", *shield), 20, 80, 35, YELLOW);
 
@@ -248,19 +253,6 @@ Tdata getDataPlayer()
     return data;
 }
 
-// Dibuja elementos de la partida
-void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation)
-{
-    // Dibuja jugador (nave)
-    drawPlayer(ship, playerPosition, playerRotation);
-    // Dibuja meteoros en rotacion
-    drawMeteors(rotation);
-    // Dibuja monedas y corazones
-    drawObjects(coinGold, hearts);
-    // Dibuja disparos (misiles)
-    drawShots(shotTx, explosionTx);
-}
-
 // Dibuja la interfaz de derrota
 void gameOverInterface(short *score, short *level)
 {
@@ -284,16 +276,23 @@ void gameOverInterface(short *score, short *level)
     drawTextCenter("(ESC) Salir", 0, 740, 60, MAROON);
 }
 
-void drawPlayer(Texture2D *ship, Vector2 *playerPosition, float *playerRotation)
+void drawPlayer(Texture2D ship, Texture2D forceF, Vector2 *playerPosition, float *playerRotation, short shield)
 {
     // Dibujar textura del jugador con rotación
-    DrawTexturePro(*ship, (Rectangle){0, 0, (float)ship->width, (float)ship->height},
-                   (Rectangle){playerPosition->x, playerPosition->y, (float)ship->width, (float)ship->height},
-                   (Vector2){(float)ship->width / 2, (float)ship->height / 2}, *playerRotation, WHITE);
+    DrawTexturePro(ship, (Rectangle){0, 0, (float)ship.width, (float)ship.height},
+                   (Rectangle){playerPosition->x, playerPosition->y, (float)ship.width, (float)ship.height},
+                   (Vector2){(float)ship.width / 2, (float)ship.height / 2}, *playerRotation, WHITE);
+
+    if (shield > 0)
+    {
+        DrawTexturePro(forceF, (Rectangle){0, 0, (float)forceF.width, (float)forceF.height},
+                       (Rectangle){playerPosition->x, playerPosition->y, (float)forceF.width, (float)forceF.height},
+                       (Vector2){(float)forceF.width / 2, (float)forceF.height / 2}, *playerRotation, WHITE);
+    }
 }
 
 // Dibuja meteoros
-void drawMeteors(float *rotation)
+void drawMeteors(float rotation)
 {
     Vector2 grayCenter, brownCenter;
 
@@ -308,7 +307,7 @@ void drawMeteors(float *rotation)
             // Dibujar textura meteoro girando
             DrawTexturePro(grayMeteor, (Rectangle){0, 0, (float)grayMeteor.width, (float)grayMeteor.height},
                            (Rectangle){grayCenter.x, grayCenter.y, (float)grayMeteor.width, (float)grayMeteor.height},
-                           (Vector2){(float)grayMeteor.width / 2, (float)grayMeteor.height / 2}, *rotation, WHITE);
+                           (Vector2){(float)grayMeteor.width / 2, (float)grayMeteor.height / 2}, rotation, WHITE);
         }
     }
     for (int i = 0; i < MAX_BROWN; i++)
@@ -322,13 +321,13 @@ void drawMeteors(float *rotation)
             // Dibujar textura meteoro girando
             DrawTexturePro(brownMeteor, (Rectangle){0, 0, (float)brownMeteor.width, (float)brownMeteor.height},
                            (Rectangle){brownCenter.x, brownCenter.y, (float)brownMeteor.width, (float)brownMeteor.height},
-                           (Vector2){(float)brownMeteor.width / 2, (float)brownMeteor.height / 2}, *rotation, WHITE);
+                           (Vector2){(float)brownMeteor.width / 2, (float)brownMeteor.height / 2}, rotation, WHITE);
         }
     }
 }
 
 // Dibujar monedas y corazones
-void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
+void drawObjects(Texture2D coinsTx, Texture2D heartsTx)
 {
     Vector2 coinCenter, heartCenter;
 
@@ -338,9 +337,9 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
         if (coinGold[i].active)
         {
             // Calcular la posición del centro de la moneda
-            coinCenter.x = coinGold[i].position.x - coinsTx->width / 2;
-            coinCenter.y = coinGold[i].position.y - coinsTx->height / 2;
-            DrawTextureV(*coinsTx, coinCenter, WHITE);
+            coinCenter.x = coinGold[i].position.x - coinsTx.width / 2;
+            coinCenter.y = coinGold[i].position.y - coinsTx.height / 2;
+            DrawTextureV(coinsTx, coinCenter, WHITE);
         }
         if (coinRed[i].active)
         {
@@ -353,15 +352,15 @@ void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx)
         if (hearts[i].active)
         {
             // Calcular la posición del centro del corazon
-            heartCenter.x = (float)((int)hearts[i].position.x - heartsTx->width / 2);
-            heartCenter.y = (float)((int)hearts[i].position.y - heartsTx->height / 2);
-            DrawTextureV(*heartsTx, heartCenter, RED);
+            heartCenter.x = (float)((int)hearts[i].position.x - heartsTx.width / 2);
+            heartCenter.y = (float)((int)hearts[i].position.y - heartsTx.height / 2);
+            DrawTextureV(heartsTx, heartCenter, RED);
         }
     }
 }
 
 // Dibujar disparos
-void drawShots(Texture2D *shotTx, Texture2D *explosionTx)
+void drawShots(Texture2D shotTx, Texture2D *explosionTx)
 {
     // Calcular la posición y centro de la bala
     Vector2 shotPos;
@@ -372,9 +371,9 @@ void drawShots(Texture2D *shotTx, Texture2D *explosionTx)
         {
             if (!shots[i].collided) // Si no ha habido colisión, dibuja el misil
             {
-                shotPos.x = shots[i].position.x - shotTx->width / 2;
-                shotPos.y = shots[i].position.y - shotTx->height / 2;
-                DrawTextureV(*shotTx, shotPos, WHITE);
+                shotPos.x = shots[i].position.x - shotTx.width / 2;
+                shotPos.y = shots[i].position.y - shotTx.height / 2;
+                DrawTextureV(shotTx, shotPos, WHITE);
             }
             else // Si ha habido una colisión, dibuja la explosión
             {
@@ -815,6 +814,7 @@ void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield)
     // Hacer una copia de las opciones de respuesta
     char opcionesBarajadas[4][20];
     memcpy(opcionesBarajadas, preguntaActual.opciones, sizeof(preguntaActual.opciones));
+    mezclarArray(opcionesBarajadas, 4);
 
     do
     {

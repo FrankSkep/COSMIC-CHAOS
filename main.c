@@ -408,16 +408,21 @@ int main()
                         }
                     }
                 }
-                pausa(); // Verifica si se pulso 'P', para pausar el juego
+                rotationMeteor += 2.5f; // Velocidad de rotacion meteoros
+                pausa();                // Verifica si se pulso 'P', para pausar el juego
 
                 /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
                 BeginDrawing();
-                rotationMeteor += 2.5f; // Velocidad de rotacion meteoros
-
                 // Dibujar interfaz de la partida
-                drawGameInterface(hearthF[currentFrame], hearthE[currentFrame], &lives, &score, &level, data.name, &correctAnswers, &shieldActive, &minutesT, &secondsT);
-                // Dibujar objetos de la partida
-                drawGameElements(&shipTx[currentFrame], &playerPosition, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation);
+                drawGameInterface(hearthF[currentFrameExp], hearthE[currentFrame], shield, &lives, &score, &level, data.name, &correctAnswers, &shieldActive, &minutesT, &secondsT); // Dibujar objetos de la partida
+                // Dibuja jugador (nave)
+                drawPlayer(shipTx[currentFrameExp], forceF[currentFrame], &playerPosition, &playerRotation, shieldActive);
+                // Dibuja meteoros en rotacion
+                drawMeteors(rotationMeteor);
+                // Dibuja monedas y corazones
+                drawObjects(coinsTx[currentFrame], heartsTx[currentFrameExp]);
+                // Dibuja disparos (misiles)
+                drawShots(misil, &explosionTx[currentFrameExp]);
 
                 // Animacion despues de responder pregunta
                 if (continuar)
