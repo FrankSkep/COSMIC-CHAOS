@@ -865,6 +865,7 @@ void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield)
     // Hacer una copia de las opciones de respuesta
     char *opcionesBarajadas[4];
     memcpy(opcionesBarajadas, preguntaActual.opciones, sizeof(preguntaActual.opciones));
+    mezclarArray(opcionesBarajadas, 4);
 
     do
     {
