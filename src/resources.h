@@ -70,6 +70,8 @@ void loadTextures()
     forceF[4] = LoadTexture("resources/images/shield/forceField_04.png");
     forceF[5] = LoadTexture("resources/images/shield/forceField_05.png");
     
+    forceF[5] = LoadTexture("resources/images/shield/shield.png");
+    
     // Presentador
     cinema[0] = LoadTexture("resources/images/backgrounds/cinema1.png");
     loadingScreen("Cargando..");
