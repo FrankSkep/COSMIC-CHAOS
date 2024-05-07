@@ -181,7 +181,7 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
     }
 
     // Mostrar estado de los powerups
-    DrawText(TextFormat("ESCUDOS : %02d", *shield), 20, 80, 35, YELLOW);
+    DrawText(TextFormat("MUNICION : %02d", *shield), 20, 80, 35, YELLOW);
 
     // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
     DrawText(TextFormat("%02d:%02d", *minutes, *seconds), 20, SCR_HEIGHT - 50, 50, WHITE);
