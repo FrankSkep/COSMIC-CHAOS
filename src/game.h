@@ -44,7 +44,7 @@ void appendScoresToFile(const char *filename, Tdata player);
 void DrawScoresTable(const char *filename);
 
 // CUESTIONARIO
-void mezclarArray(char **array, int size);
+void mezclarArray(char array[][20], int size);
 void seleccPreguntas();
 void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield);
 
@@ -773,16 +773,17 @@ void DrawScoresTable(const char *filename)
     }
 }
 
-void mezclarArray(char **array, int size)
+void mezclarArray(char array[][20], int size)
 {
+    char temp[20];
     for (int i = size - 1; i > 0; i--)
     {
         int j = rand() % (i + 1);
         if (i != j)
         {
-            char *temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
+            strcpy(temp, array[i]);
+            strcpy(array[i], array[j]);
+            strcpy(array[j], temp);
         }
     }
 }
