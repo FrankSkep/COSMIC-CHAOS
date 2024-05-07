@@ -414,8 +414,7 @@ int main()
                 rotationMeteor += 2.5f; // Velocidad de rotacion meteoros
 
                 // Dibujar interfaz de la partida
-                drawGameInterface(hearthF[currentFrame], hearthE[currentFrame], &lives, &score, &level, data.name, &correctAnswers, &shieldActive, &minutesT, &secondsT);
-                // Dibujar objetos de la partida
+                drawGameInterface(hearthF[currentFrame], hearthE[currentFrame], forceF[currentFrame], &lives, &score, &level, data.name, &correctAnswers, &shieldActive, &minutesT, &secondsT);                // Dibujar objetos de la partida
                 drawGameElements(&shipTx[currentFrame], &playerPosition, &coinsTx[currentFrame], &heartsTx[currentFrame], &misil[currentFrame], &explosionTx[currentFrameExp], &rotationMeteor, &playerPosition, &playerRotation);
 
                 // Animacion despues de responder pregunta

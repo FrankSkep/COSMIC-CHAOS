@@ -12,7 +12,7 @@ void aboutTheGame();
 void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds);
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D forceField, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds);
 void ingresarNickName(char inputText[]);
 Tdata getDataPlayer();
 void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
@@ -142,7 +142,7 @@ void menuActions(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds)
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D forceField, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds)
 {
     // Dibuja fondo
     DrawTexture(game, 0, 0, WHITE);
@@ -174,6 +174,12 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, short *lives, sh
         x = SCR_WIDTH - 65 * (i + 1);                        // Inicia desde el lado derecho
         DrawTexture(hearthEmpty, x, SCR_HEIGHT - 65, WHITE); // Corazón vacío
     }
+    for (int i = 0; i < *shield; i++)
+    {
+        float x = SCR_WIDTH - 80 * (i + 1);
+        DrawTexture(forceField, x, SCR_HEIGHT - 65, WHITE);
+    }
+
     // Mostrar estado de los powerups
     DrawText(TextFormat("ESCUDOS : %02d", *shield), 20, 80, 35, YELLOW);
 
