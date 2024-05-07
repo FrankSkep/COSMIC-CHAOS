@@ -12,14 +12,14 @@ void aboutTheGame();
 void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D forceField, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds);
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds);
 void ingresarNickName(char inputText[]);
 Tdata getDataPlayer();
-void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation);
+void drawGameElements(Texture2D *ship, Texture2D *forceF, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation, short *shield);
 void gameOverInterface(short *score, short *level);
 
 /* DIBUJO OBJETOS */
-void drawPlayer(Texture2D *ship, Vector2 *playerPosition, float *playerRotation);
+void drawPlayer(Texture2D *ship, Texture2D *forceF, Vector2 *playerPosition, float *playerRotation, short *shield);
 void drawMeteors(float *rotation);
 void drawObjects(Texture2D *coinsTx, Texture2D *heartsTx);
 void drawShots(Texture2D *shotTx, Texture2D *explosionTx);
@@ -142,7 +142,7 @@ void menuActions(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D forceField, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds)
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds)
 {
     // Dibuja fondo
     DrawTexture(game, 0, 0, WHITE);
@@ -159,10 +159,10 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D forceF
     DrawText(TextFormat("Jugador : %s", nickname), posX, 20, 40, YELLOW);
 
     // Dibuja vidas restantes
-    float x;
     DrawText(TextFormat("Vidas : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
 
     DrawText(TextFormat("Resp. Correctas : %d", *correctAnsw), 20, SCR_HEIGHT - 90, 35, WHITE);
+    float x;
 
     for (int i = 0; i < *lives; i++)
     {
@@ -176,8 +176,8 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D forceF
     }
     for (int i = 0; i < *shield; i++)
     {
-        float x = SCR_WIDTH - 80 * (i + 1);
-        DrawTexture(forceField, x, SCR_HEIGHT - 65, WHITE);
+        x = SCR_WIDTH - 65 * (i + 1) - 65 * *lives;
+        DrawTexture(shieldTx, x, SCR_HEIGHT - 70, WHITE);
     }
 
     // Mostrar estado de los powerups
@@ -254,10 +254,10 @@ Tdata getDataPlayer()
 }
 
 // Dibuja elementos de la partida
-void drawGameElements(Texture2D *ship, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation)
+void drawGameElements(Texture2D *ship, Texture2D *forceF, Vector2 *shipPosicion, Texture2D *coinGold, Texture2D *hearts, Texture2D *shotTx, Texture2D *explosionTx, float *rotation, Vector2 *playerPosition, float *playerRotation, short *shield)
 {
     // Dibuja jugador (nave)
-    drawPlayer(ship, playerPosition, playerRotation);
+    drawPlayer(ship, forceF, playerPosition, playerRotation, shield);
     // Dibuja meteoros en rotacion
     drawMeteors(rotation);
     // Dibuja monedas y corazones
@@ -289,12 +289,19 @@ void gameOverInterface(short *score, short *level)
     drawTextCenter("(ESC) Salir", 0, 740, 60, MAROON);
 }
 
-void drawPlayer(Texture2D *ship, Vector2 *playerPosition, float *playerRotation)
+void drawPlayer(Texture2D *ship, Texture2D *forceF, Vector2 *playerPosition, float *playerRotation, short *shield)
 {
     // Dibujar textura del jugador con rotación
     DrawTexturePro(*ship, (Rectangle){0, 0, (float)ship->width, (float)ship->height},
                    (Rectangle){playerPosition->x, playerPosition->y, (float)ship->width, (float)ship->height},
                    (Vector2){(float)ship->width / 2, (float)ship->height / 2}, *playerRotation, WHITE);
+
+    if (*shield > 0)
+    {
+        DrawTexturePro(*forceF, (Rectangle){0, 0, (float)forceF->width, (float)forceF->height},
+                       (Rectangle){playerPosition->x, playerPosition->y, (float)forceF->width, (float)forceF->height},
+                       (Vector2){(float)forceF->width / 2, (float)forceF->height / 2}, *playerRotation, WHITE);
+    }
 }
 
 // Dibuja meteoros

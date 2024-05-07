@@ -7,7 +7,7 @@ void unloadSounds();
 
 /*** Texturas ***/
 Texture2D menu, game, gameoverT, scoreboardTx, questionTx, startTx, cinema[9];
-Texture2D hearthE[6], hearthF[6], forceF[6];
+Texture2D hearthE[6], hearthF[6], shield[6], forceF[6];
 Texture2D shipTx[6], coinsTx[6], heartsTx[6], heartsFTx[6], heartsETx[6], misil[6], explosionTx[3];
 Texture2D grayMeteor, brownMeteor;
 
@@ -63,15 +63,20 @@ void loadTextures()
     hearthE[4] = LoadTexture("resources/images/hearts/hearthE_04.png");
     hearthE[5] = LoadTexture("resources/images/hearts/hearthE_05.png");
 
+    shield[0] = LoadTexture("resources/images/shield/shield.png");
+    shield[1] = LoadTexture("resources/images/shield/shield.png");
+    shield[2] = LoadTexture("resources/images/shield/shield.png");
+    shield[3] = LoadTexture("resources/images/shield/shield.png");
+    shield[4] = LoadTexture("resources/images/shield/shield.png");
+    shield[5] = LoadTexture("resources/images/shield/shield.png");
+
     forceF[0] = LoadTexture("resources/images/shield/forceField_00.png");
     forceF[1] = LoadTexture("resources/images/shield/forceField_01.png");
     forceF[2] = LoadTexture("resources/images/shield/forceField_02.png");
     forceF[3] = LoadTexture("resources/images/shield/forceField_03.png");
     forceF[4] = LoadTexture("resources/images/shield/forceField_04.png");
     forceF[5] = LoadTexture("resources/images/shield/forceField_05.png");
-    
-    forceF[5] = LoadTexture("resources/images/shield/shield.png");
-    
+
     // Presentador
     cinema[0] = LoadTexture("resources/images/backgrounds/cinema1.png");
     loadingScreen("Cargando..");
