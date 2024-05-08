@@ -12,7 +12,7 @@ void aboutTheGame();
 void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds);
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield,short *totalAmmun, int *minutes, int *seconds);
 void ingresarNickName(char inputText[]);
 Tdata getDataPlayer();
 void gameOverInterface(short *score, short *level);
@@ -46,7 +46,7 @@ void DrawScoresTable(const char *filename);
 // CUESTIONARIO
 void mezclarArray(char array[][20], int size);
 void seleccPreguntas();
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield);
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *totalAmmun);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -142,7 +142,7 @@ void menuActions(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, int *minutes, int *seconds)
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield,short *totalAmmun, int *minutes, int *seconds)
 {
     // Dibuja fondo
     DrawTexture(game, 0, 0, WHITE);
@@ -181,7 +181,7 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
     }
 
     // Mostrar estado de los powerups
-    DrawText(TextFormat("MUNICION : %02d", *shield), 20, 80, 35, YELLOW);
+    DrawText(TextFormat("MUNICION : %02d", *totalAmmun), 20, 80, 35, YELLOW);
 
     // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
     DrawText(TextFormat("%02d:%02d", *minutes, *seconds), 20, SCR_HEIGHT - 50, 50, WHITE);
@@ -807,7 +807,7 @@ void seleccPreguntas()
     fclose(pregsArch);
 }
 
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield)
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *totalAmmun)
 {
     int indicePregunta = rand() % PREG_SELEC;
     Tpregunta preguntaActual = preguntas[indicePregunta];
@@ -836,6 +836,7 @@ void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield)
                 {
                     drawTextCenter("¡Correcto!", 0, 650, 45, GREEN);
                     *shield = 2;
+                    (*totalAmmun)++;
                     (*correctAnswers)++;
                 }
                 else
