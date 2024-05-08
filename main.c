@@ -22,7 +22,7 @@ int main()
     bool gameOver = false;
 
     /* JUEGO */
-    short int i, score = 0, lives = 5, level = 0, correctAnswers = 0, shieldActive = 0, totalAmmun = 1;
+    short int i, score = 0, lives = 5, level = 0, correctAnswers = 0, shieldActive = 0, totalMunicion = 1;
     float elapsedTime = 0.0f, rotationMeteor = 0.0f;
     float playerRotation = 0.0;
     float currentRotation = 0.0f;
@@ -172,15 +172,14 @@ int main()
                     {
                         if (!shots[i].active)
                         {
-                            shots[i].active = true;
-                            // if (totalAmmun>0)
-                            // {
-                            totalAmmun--;
-                            // }
-
-                            shots[i].position = playerPosition; // Posición inicial del disparo
-                            PlaySound(shotSound);
-                            break;
+                            if (totalMunicion > 0)
+                            {
+                                shots[i].active = true;
+                                shots[i].position = playerPosition; // Posición inicial del disparo
+                                PlaySound(shotSound);
+                                totalMunicion--;
+                                break;
+                            }
                         }
                     }
                 }
@@ -215,7 +214,7 @@ int main()
                             break;
                         }
                     }
-                    for (i = 0; i < MAX_HEARTS; i++)
+                    for (i = 0; i < MAX_HEART; i++)
                     {
                         if (!hearts[i].active)
                         {
@@ -331,7 +330,7 @@ int main()
                     }
                 }
                 /*----- Corazon (Vida adicional) -----*/
-                for (i = 0; i < MAX_HEARTS; i++)
+                for (i = 0; i < MAX_HEART; i++)
                 {
                     if (hearts[i].active)
                     {
@@ -352,71 +351,66 @@ int main()
                 /*----- Disparos -----*/
                 for (i = 0; i < MAX_SHOTS; i++)
                 {
-                    if (totalAmmun >= 0)
+                    if (shots[i].active)
                     {
-
-                        if (shots[i].active)
+                        if (shots[i].collided)
                         {
-                            if (shots[i].collided)
-                            {
-                                // Disminuir el temporizador de la explosión
-                                shots[i].explosionTimer -= GetFrameTime();
+                            // Disminuir el temporizador de la explosión
+                            shots[i].explosionTimer -= GetFrameTime();
 
-                                if (shots[i].explosionTimer <= 0)
-                                {
-                                    // Desactivar el disparo después de la animación de explosión
-                                    shots[i].active = false;
-                                    shots[i].collided = false;
-                                }
+                            if (shots[i].explosionTimer <= 0)
+                            {
+                                // Desactivar el disparo después de la animación de explosión
+                                shots[i].active = false;
+                                shots[i].collided = false;
                             }
-                            else
+                        }
+                        else
+                        {
+                            // Mover el disparo hacia arriba
+                            shots[i].position.y -= SHOT_SPEED * GetFrameTime();
+
+                            // Comprobar si el disparo está fuera de la pantalla y desactivarlo
+                            if (shots[i].position.y < 0)
                             {
-                                // Mover el disparo hacia arriba
-                                shots[i].position.y -= SHOT_SPEED * GetFrameTime();
+                                shots[i].active = false;
+                            }
 
-                                // Comprobar si el disparo está fuera de la pantalla y desactivarlo
-                                if (shots[i].position.y < 0)
+                            for (int j = 0; j < MAX_GRAY; j++)
+                            {
+                                if (grayMeteors[j].active)
                                 {
-                                    // totalAmmun--;
-                                    shots[i].active = false;
-                                }
-
-                                for (int j = 0; j < MAX_GRAY; j++)
-                                {
-                                    if (grayMeteors[j].active)
+                                    // Calcula punto de collision
+                                    grayCenter.x = grayMeteors[j].position.x - grayMeteor.width / 2;
+                                    grayCenter.y = grayMeteors[j].position.y - grayMeteor.height / 2;
+                                    //  Colision con meteoro gris
+                                    if (CheckCollision(shots[i].position, SHOT_RADIUS, grayCenter, GRAY_METEOR_RADIUS))
                                     {
-                                        // Calcula punto de collision
-                                        grayCenter.x = grayMeteors[j].position.x - grayMeteor.width / 2;
-                                        grayCenter.y = grayMeteors[j].position.y - grayMeteor.height / 2;
-                                        //  Colision con meteoro gris
-                                        if (CheckCollision(shots[i].position, SHOT_RADIUS, grayCenter, GRAY_METEOR_RADIUS))
-                                        {
-                                            PlaySound(burstMisil);
-                                            StopSound(shotSound);
-                                            score += 5;
-                                            grayMeteors[j].active = false;
-                                            shots[i].collided = true;
-                                            shots[i].explosionTimer = 0.4f; // Duracion animacion de explosión (0.4 segundos)
-                                        }
+                                        PlaySound(burstMisil);
+                                        StopSound(shotSound);
+                                        score += 5;
+                                        grayMeteors[j].active = false;
+                                        shots[i].collided = true;
+                                        shots[i].explosionTimer = 0.4f; // Duracion animacion de explosión (0.4 segundos)
                                     }
                                 }
-                                for (int j = 0; j < MAX_BROWN; j++)
+                            }
+                            for (int j = 0; j < MAX_BROWN; j++)
+                            {
+                                if (brownMeteors[j].active)
                                 {
-                                    if (brownMeteors[j].active)
+                                    // Calcula punto de collision
+                                    brownCenter.x = brownMeteors[j].position.x - brownMeteor.width / 2;
+                                    brownCenter.y = brownMeteors[j].position.y - brownMeteor.height / 2;
+                                    //  Colisión con meteoro café
+                                    if (CheckCollision(shots[i].position, SHOT_RADIUS, brownCenter, BROWN_METEOR_RADIUS))
                                     {
-                                        // Calcula punto de collision
-                                        brownCenter.x = brownMeteors[j].position.x - brownMeteor.width / 2;
-                                        brownCenter.y = brownMeteors[j].position.y - brownMeteor.height / 2;
-                                        //  Colisión con meteoro café
-                                        if (CheckCollision(shots[i].position, SHOT_RADIUS, brownCenter, BROWN_METEOR_RADIUS))
-                                        {
-                                            PlaySound(burstMisil);
-                                            StopSound(shotSound);
-                                            score += 5;
-                                            brownMeteors[j].active = false;
-                                            shots[i].collided = true;
-                                            shots[i].explosionTimer = 0.4f; // Duracion animacion de explosión (0.4 segundos)
-                                        }
+                                        PlaySound(burstMisil);
+                                        StopSound(shotSound);
+                                        score += 5;
+                                        brownMeteors[j].active = false;
+                                        shots[i].collided = true;
+                                        shots[i].explosionTimer = 0.4f; // Duracion animacion de explosión (0.4 segundos)
                                     }
                                 }
                             }
@@ -429,7 +423,7 @@ int main()
                 /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
                 BeginDrawing();
                 // Dibujar interfaz de la partida
-                drawGameInterface(hearthF[currentFrameExp], hearthE[currentFrame], shield, &lives, &score, &level, data.name, &correctAnswers, &shieldActive, &totalAmmun, &minutesT, &secondsT); // Dibujar objetos de la partida
+                drawGameInterface(hearthF[currentFrameExp], hearthE[currentFrame], shield, &lives, &score, &level, data.name, &correctAnswers, &shieldActive, totalMunicion, &minutesT, &secondsT); // Dibujar objetos de la partida
                 // Dibuja jugador (nave)
                 drawPlayer(shipTx[currentFrameExp], forceF[currentFrame], &playerPosition, &playerRotation, shieldActive);
                 // Dibuja meteoros en rotacion
@@ -470,9 +464,9 @@ int main()
                     }
                 }
 
-                if (showQuestion) // Si se activo la bandera al tomar moneda roja
+                if (showQuestion) // Si tomo moneda de pregunta
                 {
-                    drawQuestion(&showQuestion, &correctAnswers, &shieldActive, &totalAmmun);
+                    drawQuestion(&showQuestion, &correctAnswers, &shieldActive, &totalMunicion);
                     continuar = true;
                     contin = 1;
                 }
@@ -490,7 +484,7 @@ int main()
                     rotationMeteor = 0;          // Reiniciar rotacion
                     resetItems(&playerPosition); // Reinicia posicion y desactiva objetos
 
-                    saveProgress = true; // Al terminar un juego, ya puede guardar progreso
+                    saveProgress = true; // Al terminar almenos un juego, ya puede guardar progreso
 
                     // Actualizar mejor puntaje
                     if (score > data.score)
@@ -520,18 +514,18 @@ int main()
                 StopMusicStream(menuMusic);
 
                 // Dibuja interfaz
-                gameOverInterface(&score, &level);
+                gameOverInterface(score, level);
 
                 // Vuelve a jugar al presionar enter
                 if (IsKeyDown(KEY_ENTER))
                 {
-                    resetStats(&lives, &score, &level, &correctAnswers, &timeseconds);
+                    resetStats(&lives, &score, &level, &correctAnswers, &totalMunicion, &timeseconds);
                     gameOver = false;
                 }
                 // Vuelve al menu al presionar Q
                 if (IsKeyDown(KEY_Q))
                 {
-                    resetStats(&lives, &score, &level, &correctAnswers, &timeseconds);
+                    resetStats(&lives, &score, &level, &correctAnswers, &totalMunicion, &timeseconds);
                     isPlaying = false;
                     gameOver = false;
                 }

@@ -127,24 +127,25 @@ void unloadTextures()
     UnloadTexture(scoreboardTx);
     UnloadTexture(questionTx);
     UnloadTexture(startTx);
+    UnloadTexture(misil);
 
     for (int i = 0; i < 6; i++)
     {
         UnloadTexture(coinsTx[i]);
-        UnloadTexture(heartsTx[i]);
         UnloadTexture(hearthE[i]);
         if (i < 3)
         {
+            UnloadTexture(heartsTx[i]);
             UnloadTexture(shipTx[i]);
             UnloadTexture(hearthF[i]);
             UnloadTexture(explosionTx[i]);
         }
     }
 
-    for (int i = 0; i < 9; i++)
-    {
-        UnloadTexture(cinema[i]);
-    }
+    // for (int i = 0; i < 9; i++)
+    // {
+    //     UnloadTexture(cinema[i]);
+    // }
 
     UnloadTexture(grayMeteor);
     UnloadTexture(brownMeteor);

@@ -12,10 +12,10 @@ void aboutTheGame();
 void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield,short *totalAmmun, int *minutes, int *seconds);
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, short municion, int *minutes, int *seconds);
 void ingresarNickName(char inputText[]);
 Tdata getDataPlayer();
-void gameOverInterface(short *score, short *level);
+void gameOverInterface(short score, short level);
 
 /* DIBUJO OBJETOS */
 void drawPlayer(Texture2D ship, Texture2D forceF, Vector2 *playerPosition, float *playerRotation, short shield);
@@ -35,7 +35,7 @@ void screenMessage(const char *text, float seconds, bool background);
 void screenpoints(int *totalseconds, short *score);
 
 void resetItems(Vector2 *playPosition);
-void resetStats(short *lives, short *score, short *level, short *correctAns, float *timeSeconds);
+void resetStats(short *lives, short *score, short *level, short *correctAns, short *municion, float *timeSeconds);
 void secondspause(float seconds);
 
 // Datos jugador
@@ -46,7 +46,7 @@ void DrawScoresTable(const char *filename);
 // CUESTIONARIO
 void mezclarArray(char array[][20], int size);
 void seleccPreguntas();
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *totalAmmun);
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -142,7 +142,7 @@ void menuActions(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield,short *totalAmmun, int *minutes, int *seconds)
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, short municion, int *minutes, int *seconds)
 {
     // Dibuja fondo
     DrawTexture(game, 0, 0, WHITE);
@@ -181,7 +181,7 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
     }
 
     // Mostrar estado de los powerups
-    DrawText(TextFormat("MUNICION : %02d", *totalAmmun), 20, 80, 35, YELLOW);
+    DrawText(TextFormat("MUNICION : %02d", municion), 20, 80, 35, YELLOW);
 
     // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
     DrawText(TextFormat("%02d:%02d", *minutes, *seconds), 20, SCR_HEIGHT - 50, 50, WHITE);
@@ -254,7 +254,7 @@ Tdata getDataPlayer()
 }
 
 // Dibuja la interfaz de derrota
-void gameOverInterface(short *score, short *level)
+void gameOverInterface(short score, short level)
 {
     // Fondo
     DrawTexture(gameoverT, 0, 0, WHITE);
@@ -263,8 +263,8 @@ void gameOverInterface(short *score, short *level)
     drawTextCenter("FIN DEL JUEGO", 2, 232, 110, WHITE);
     drawTextCenter("FIN DEL JUEGO", 0, 230, 110, RED);
 
-    DrawText(TextFormat("PUNTAJE: %04i", *score), SCR_WIDTH / 2 - MeasureText(TextFormat("PUNTAJE: %04i", *score), 60) / 2, SCR_HEIGHT / 2 + 10, 60, RAYWHITE);
-    DrawText(TextFormat("NIVEL: %1i", *level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", *level), 60) / 2, SCR_HEIGHT / 2 - 50, 60, RAYWHITE);
+    DrawText(TextFormat("PUNTAJE: %04i", score), SCR_WIDTH / 2 - MeasureText(TextFormat("PUNTAJE: %04i", score), 60) / 2, SCR_HEIGHT / 2 + 10, 60, RAYWHITE);
+    DrawText(TextFormat("NIVEL: %1i", level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", level), 60) / 2, SCR_HEIGHT / 2 - 50, 60, RAYWHITE);
 
     drawTextCenter("(ENTER) Jugar de nuevo", 2, 582, 60, LIME);
     drawTextCenter("(ENTER) Jugar de nuevo", 0, 580, 60, GREEN);
@@ -347,7 +347,7 @@ void drawObjects(Texture2D coinsTx, Texture2D heartsTx)
         }
     }
     // Dibujar corazones
-    for (int i = 0; i < MAX_HEARTS; i++)
+    for (int i = 0; i < MAX_HEART; i++)
     {
         if (hearts[i].active)
         {
@@ -432,8 +432,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
 
         MAX_GRAY = MAX_METEOR_LV1;
         MAX_BROWN = MAX_METEOR_LV1;
-        // MAX_COIN =
-        // MAX_HEART =
+        MAX_HEART = MAX_HEART_LV1;
     }
 
     if (*score >= 50 && *level == 1)
@@ -456,8 +455,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
 
         MAX_GRAY = MAX_METEOR_LV2;
         MAX_BROWN = MAX_METEOR_LV2;
-        // MAX_COIN =
-        // MAX_HEART =
+        MAX_HEART = MAX_HEART_LV2;
     }
     // Verificar si el jugador ha alcanzado el nivel 3
     if (*score >= 50 && *level == 2)
@@ -476,8 +474,7 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
 
         MAX_GRAY = MAX_METEOR_LV3;
         MAX_BROWN = MAX_METEOR_LV3;
-        // MAX_COIN =
-        // MAX_HEART =
+        MAX_HEART = MAX_HEART_LV3;
     }
 }
 
@@ -647,7 +644,7 @@ void resetItems(Vector2 *playPosition)
         coinRed[i].active = false;
     }
     // Limpiar corazones
-    for (i = 0; i < MAX_HEARTS; i++)
+    for (i = 0; i < MAX_HEART; i++)
     {
         hearts[i].active = false;
     }
@@ -659,7 +656,7 @@ void resetItems(Vector2 *playPosition)
 }
 
 // Reinicia estadisticas
-void resetStats(short *lives, short *score, short *level, short *correctAns, float *timeSeconds)
+void resetStats(short *lives, short *score, short *level, short *correctAns, short *municion, float *timeSeconds)
 {
     *lives = 5;
     *score = 0;
@@ -668,6 +665,7 @@ void resetStats(short *lives, short *score, short *level, short *correctAns, flo
     *timeSeconds = 0;
     MAX_GRAY = MAX_METEOR_LV1;
     MAX_BROWN = MAX_METEOR_LV1;
+    MAX_HEART = MAX_HEART_LV1;
 }
 
 // Obtiene fecha actual
@@ -807,7 +805,7 @@ void seleccPreguntas()
     fclose(pregsArch);
 }
 
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *totalAmmun)
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion)
 {
     int indicePregunta = rand() % PREG_SELEC;
     Tpregunta preguntaActual = preguntas[indicePregunta];
@@ -836,7 +834,7 @@ void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, shor
                 {
                     drawTextCenter("¡Correcto!", 0, 650, 45, GREEN);
                     *shield = 2;
-                    (*totalAmmun)++;
+                    (*municion)++;
                     (*correctAnswers)++;
                 }
                 else

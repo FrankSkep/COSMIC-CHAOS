@@ -9,6 +9,9 @@
 #define MAX_METEOR_LV1 5
 #define MAX_METEOR_LV2 15
 #define MAX_METEOR_LV3 30
+#define MAX_HEART_LV1 1
+#define MAX_HEART_LV2 2
+#define MAX_HEART_LV3 3
 
 /*---- METEORO GRIS ----*/
 short MAX_GRAY = MAX_METEOR_LV1;     // Maximos meteoros gris por nivel
@@ -26,12 +29,12 @@ const float BROWN_METEOR_RADIUS = 40; // Tamaño
 const float COINS_RADIUS = 20; // Tamaño
 
 /*---- CORAZONES ----*/
-#define MAX_HEARTS 1            // Maximos corazones en pantalla
+short MAX_HEART = MAX_HEART_LV1;
 #define HEARTS_SPEED 9.0f       // Velocidad de caida
 const float HEARTS_RADIUS = 20; // Tamaño
 
 /*---- DISPAROS ----*/
-#define MAX_SHOTS 1       // Maximos disparos en pantalla
+#define MAX_SHOTS 10       // Maximos disparos en pantalla
 #define SHOT_SPEED 900.0f // Velocidad del misil
 #define SHOT_RADIUS 6     // Tamaño
 
@@ -73,6 +76,6 @@ TGameObject grayMeteors[MAX_METEOR_LV3];
 TGameObject brownMeteors[MAX_METEOR_LV3];
 TGameObject coinGold[MAX_COINS];
 TGameObject coinRed[MAX_COINS];
-TGameObject hearts[MAX_HEARTS];
+TGameObject hearts[MAX_HEART_LV3];
 Tshot shots[MAX_SHOTS];
 Tpregunta preguntas[TOTAL_PREG];
