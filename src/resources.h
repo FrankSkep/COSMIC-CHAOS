@@ -6,10 +6,13 @@ void loadSounds();
 void unloadSounds();
 
 /*** Texturas ***/
-Texture2D menu, game, gameoverT, scoreboardTx, questionTx, startTx, cinema[9];
+Texture2D menu, game, gameoverT, scoreboardTx, questionTx, startTx;
 Texture2D hearthE[6], hearthF[3], shield, forceF[6];
 Texture2D shipTx[3], coinsTx[6], heartsTx[3], misil, explosionTx[3];
 Texture2D grayMeteor, brownMeteor;
+
+// Sin usar
+Texture2D cinema[9];
 
 /*** Sonidos ***/
 Music menuMusic, gameMusic, gameover;
@@ -133,11 +136,12 @@ void unloadTextures()
     {
         UnloadTexture(coinsTx[i]);
         UnloadTexture(hearthE[i]);
+        UnloadTexture(forceF[i]);
         if (i < 3)
         {
-            UnloadTexture(heartsTx[i]);
             UnloadTexture(shipTx[i]);
             UnloadTexture(hearthF[i]);
+            UnloadTexture(heartsTx[i]);
             UnloadTexture(explosionTx[i]);
         }
     }
@@ -146,7 +150,7 @@ void unloadTextures()
     // {
     //     UnloadTexture(cinema[i]);
     // }
-
+    UnloadTexture(shield);
     UnloadTexture(grayMeteor);
     UnloadTexture(brownMeteor);
 }

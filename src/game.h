@@ -46,6 +46,7 @@ void DrawScoresTable(const char *filename);
 // CUESTIONARIO
 void mezclarArray(char array[][20], int size);
 void seleccPreguntas();
+int busqSecuencial(int vect[], int m, int num);
 void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
@@ -789,20 +790,38 @@ void mezclarArray(char array[][20], int size)
 void seleccPreguntas()
 {
     FILE *pregsArch = fopen("resources/preguntas.dat", "rb");
-    int posiciones[PREG_SELEC]; // Arreglo para posiciones aleatorias
+    int posiciones[PREG_SELEC];
 
+    // Gen. posiciones sin repetir, para selec. preguntas
+    int pos;
     for (int i = 0; i < PREG_SELEC; i++)
     {
-        posiciones[i] = rand() % TOTAL_PREG;
+        do
+        {
+            pos = rand() % TOTAL_PREG;
+        } while (busqSecuencial(posiciones, i, pos) != -1);
+        posiciones[i] = pos;
     }
 
-    // Seleccionar preguntas
+    // Seleccionar N preguntas del .dat
     for (int i = 0; i < PREG_SELEC; i++)
     {
         fseek(pregsArch, posiciones[i] * sizeof(Tpregunta), SEEK_SET);
         fread(&preguntas[i], sizeof(Tpregunta), 1, pregsArch);
     }
     fclose(pregsArch);
+}
+
+int busqSecuencial(int vect[], int m, int num)
+{
+    for (int i = 0; i < m; i++)
+    {
+        if (vect[i] == num)
+        {
+            return i;
+        }
+    }
+    return -1;
 }
 
 void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion)

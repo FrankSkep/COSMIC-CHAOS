@@ -34,7 +34,7 @@ short MAX_HEART = MAX_HEART_LV1;
 const float HEARTS_RADIUS = 20; // Tamaño
 
 /*---- DISPAROS ----*/
-#define MAX_SHOTS 10       // Maximos disparos en pantalla
+#define MAX_SHOTS 10      // Maximos disparos en pantalla
 #define SHOT_SPEED 900.0f // Velocidad del misil
 #define SHOT_RADIUS 6     // Tamaño
 
