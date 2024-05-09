@@ -12,7 +12,7 @@ void aboutTheGame();
 void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short lives, short score, short level, const char *nickname, short correctAnsw, short shield, short municion, int minutes, int seconds);
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short lives, short score, short level, const char *nickname, short racha, short shield, short municion, int minutes, int seconds);
 void ingresarNickName(char inputText[]);
 Tdata getDataPlayer();
 void gameOverInterface(short score, short level);
@@ -47,7 +47,7 @@ void DrawScoresTable(const char *filename);
 void mezclarArray(char array[][20], int size);
 void seleccPreguntas();
 int busqSecuencial(int vect[], int m, int num);
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion, short *lives, short object);
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *racha, short *shield, short *municion, short *lives, short object);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -146,7 +146,7 @@ void menuActions(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short lives, short score, short level, const char *nickname, short correctAnsw, short shield, short municion, int minutes, int seconds)
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short lives, short score, short level, const char *nickname, short racha, short shield, short municion, int minutes, int seconds)
 {
     // Dibuja fondo
     DrawTexture(game, 0, 0, WHITE);
@@ -165,7 +165,7 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
     // Dibuja vidas restantes
     DrawText(TextFormat("Vidas : %d", lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
 
-    DrawText(TextFormat("Resp. Correctas : %d", correctAnsw), 20, SCR_HEIGHT - 90, 35, WHITE);
+    DrawText(TextFormat("Racha Aciertos : %d", racha), 20, SCR_HEIGHT - 90, 35, WHITE);
     float x;
 
     for (int i = 0; i < lives; i++)
@@ -846,7 +846,7 @@ int busqSecuencial(int vect[], int m, int num)
     return -1;
 }
 
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion, short *lives, short object)
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *racha, short *shield, short *municion, short *lives, short object)
 {
     int indicePregunta = rand() % PREG_SELEC;
     Tpregunta preguntaActual = preguntas[indicePregunta];
@@ -886,13 +886,15 @@ void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, shor
                         (*municion) += 3;
                     }
                     (*correctAnswers)++;
-                    if ((*correctAnswers) % 3 == 0) // 1 Vida adicional por cada racha de 3 aciertos
+                    (*racha)++;
+                    if ((*racha) % 3 == 0) // 1 Vida adicional por cada racha de 3 aciertos
                     {
                         (*lives)++;
                     }
                 }
                 else
                 {
+                    *racha = 0;
                     drawTextCenter("¡Incorrecto!", 0, 650, 45, RED);
                 }
                 *showQuestion = false;

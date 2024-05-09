@@ -23,7 +23,7 @@ int main()
     bool gameOver = false;
 
     /* JUEGO */
-    short int i, score = 0, lives = 5, level = 0, correctAnswers = 0, shieldActive = 0, totalMunicion = 9, object;
+    short i, score = 0, lives = 5, level = 0, correctAnswers = 0, rachaAciertos = 0, shieldActive = 0, totalMunicion = 9, object;
     float elapsedTime1 = 0.0f, elapsedTime2 = 0.0f, rotationMeteor = 0.0f;
     float playerRotation = 0.0;
     float currentRotation = 0.0f;
@@ -463,7 +463,7 @@ int main()
                 /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
                 BeginDrawing();
                 // Dibujar interfaz de la partida
-                drawGameInterface(hearthF[currentFrameExp], hearthE[currentFrame], shield, lives, score, level, data.name, correctAnswers, shieldActive, totalMunicion, minutesT, secondsT); // Dibujar objetos de la partida
+                drawGameInterface(hearthF[currentFrameExp], hearthE[currentFrame], shield, lives, score, level, data.name, rachaAciertos, shieldActive, totalMunicion, minutesT, secondsT); // Dibujar objetos de la partida
                 // Dibuja jugador (nave)
                 drawPlayer(shipTx[currentFrameExp], forceF[currentFrame], &playerPosition, &playerRotation, shieldActive);
                 // Dibuja meteoros en rotacion
@@ -506,7 +506,7 @@ int main()
 
                 if (showQuestion) // Si tomo moneda de pregunta
                 {
-                    drawQuestion(&showQuestion, &correctAnswers, &shieldActive, &totalMunicion, &lives, object);
+                    drawQuestion(&showQuestion, &correctAnswers, &rachaAciertos, &shieldActive, &totalMunicion, &lives, object);
                     continuar = true;
                     contin = 1;
                 }
