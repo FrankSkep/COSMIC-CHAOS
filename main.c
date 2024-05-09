@@ -15,6 +15,7 @@ int main()
     const float minRotation = -20.0f;               // Máxima rotación hacia la izquierda
     const float rotationInterpolationSpeed = 50.0f; // Definir la velocidad de interpolación para volver a la posición original
     const float spawnInterval = 0.2f;               // Intervalo de tiempo entre la aparición de objetos
+    const float spawnIntervalPU = 1.2f;
 
     /*--------------- VARIABLES ---------------*/
     /* ESTADOS DEL JUEGO */
@@ -22,8 +23,8 @@ int main()
     bool gameOver = false;
 
     /* JUEGO */
-    short int i, score = 0, lives = 5, level = 0, correctAnswers = 0, shieldActive = 0, totalMunicion = 1;
-    float elapsedTime = 0.0f, rotationMeteor = 0.0f;
+    short int i, score = 0, lives = 5, level = 0, correctAnswers = 0, shieldActive = 0, totalMunicion = 9, object;
+    float elapsedTime1 = 0.0f, elapsedTime2 = 0.0f, rotationMeteor = 0.0f;
     float playerRotation = 0.0;
     float currentRotation = 0.0f;
     float targetRotation = 0.0f;
@@ -33,7 +34,7 @@ int main()
     float timeseconds = 0;
 
     /*----------- CONFIGURACION VENTANA -----------*/
-    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 1.0");
+    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.4");
     SetTargetFPS(75);
 
     /*------- Carga de texturas y sonidos -------*/
@@ -185,9 +186,9 @@ int main()
                 }
 
                 /*--------------------- GENERACION OBJETOS ---------------------*/
-                elapsedTime += GetFrameTime(); // Actualizar temporizador
-
-                if (elapsedTime >= spawnInterval)
+                elapsedTime1 += GetFrameTime(); // Actualizar temporizador
+                elapsedTime2 += GetFrameTime();
+                if (elapsedTime1 >= spawnInterval)
                 {
                     for (i = 0; i < MAX_GRAY; i++)
                     {
@@ -210,10 +211,10 @@ int main()
                         if (!coinGold[i].active)
                         {
                             InitObject(&coinGold[i], &COINS_RADIUS); // Moneda tipo 1
-                            InitObject(&coinRed[i], &COINS_RADIUS);  // Moneda tipo 2 (Pregunta)
                             break;
                         }
                     }
+
                     for (i = 0; i < MAX_HEART; i++)
                     {
                         if (!hearts[i].active)
@@ -222,7 +223,26 @@ int main()
                             break;
                         }
                     }
-                    elapsedTime = 0.0f; // Reiniciar el temporizador
+                    elapsedTime1 = 0.0f; // Reiniciar el temporizador
+                }
+                if (elapsedTime2 >= spawnIntervalPU)
+                {
+                    for (i = 0; i < MAX_OBJECT; i++)
+                    {
+                        if (!shieldB[i].active)
+                        {
+                            InitObject(&shieldB[i], &COINS_RADIUS); // Moneda tipo 2 (Pregunta)                            InitObject(&shieldB[i], &COINS_RADIUS);  // Moneda tipo 2 (Pregunta)
+                        }
+                    }
+                    for (i = 0; i < MAX_OBJECT; i++)
+                    {
+                        if (!municiones[i].active)
+                        {
+                            InitObject(&municiones[i], &COINS_RADIUS); // Municiones (Pregunta)                            InitObject(&shieldB[i], &COINS_RADIUS);  // Moneda tipo 2 (Pregunta)
+                            break;
+                        }
+                    }
+                    elapsedTime2 = 0.0f; // Reiniciar el temporizador
                 }
 
                 /*--------------------- FISICAS Y COLISIONES ---------------------*/
@@ -310,25 +330,47 @@ int main()
                             PlaySound(soundcoin);
                         }
                     }
-
+                }
+                for (i = 0; i < MAX_OBJECT; i++)
+                {
                     // Moneda tipo 2 (Pregunta)
-                    if (coinRed[i].active)
+                    if (shieldB[i].active)
                     {
-                        coinRed[i].position.y += COINS_SPEED;
-                        if (coinRed[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
+                        shieldB[i].position.y += SHIELD_SPEED;
+                        if (shieldB[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
                         {
-                            coinRed[i].active = false; // Eliminar al salir de la pantalla
+                            shieldB[i].active = false; // Eliminar al salir de la pantalla
                         }
 
                         // Detectar colisión con jugador y aumentar el contador de puntos
-                        if (CheckCollision(playerPosition, playRadius, coinRed[i].position, COINS_RADIUS))
+                        if (CheckCollision(playerPosition, playRadius, shieldB[i].position, COINS_RADIUS))
                         {
-                            coinRed[i].active = false; // Eliminar objeto tocado
+                            shieldB[i].active = false; // Eliminar objeto tocado
+                            object = 1;
+                            showQuestion = true;
+                            PlaySound(soundcoin);
+                        }
+                    }
+                    // municion
+                    if (municiones[i].active)
+                    {
+                        municiones[i].position.y += AMMO_SPEED;
+                        if (municiones[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
+                        {
+                            municiones[i].active = false; // Eliminar al salir de la pantalla
+                        }
+
+                        // Detectar colisión con jugador y aumentar el contador de puntos
+                        if (CheckCollision(playerPosition, playRadius, municiones[i].position, COINS_RADIUS))
+                        {
+                            municiones[i].active = false; // Eliminar objeto tocado
+                            object = 2;
                             showQuestion = true;
                             PlaySound(soundcoin);
                         }
                     }
                 }
+
                 /*----- Corazon (Vida adicional) -----*/
                 for (i = 0; i < MAX_HEART; i++)
                 {
@@ -466,7 +508,7 @@ int main()
 
                 if (showQuestion) // Si tomo moneda de pregunta
                 {
-                    drawQuestion(&showQuestion, &correctAnswers, &shieldActive, &totalMunicion);
+                    drawQuestion(&showQuestion, &correctAnswers, &shieldActive, &totalMunicion, object);
                     continuar = true;
                     contin = 1;
                 }
@@ -476,7 +518,7 @@ int main()
                 totalseconds = timeseconds;
                 minutesT = totalseconds / 60;
                 secondsT = totalseconds % 60;
-                Levels(&score, &level, &elapsedTime, &playerPosition, &lives, &totalseconds, &timeseconds);
+                Levels(&score, &level, &elapsedTime1, &playerPosition, &lives, &totalseconds, &timeseconds);
 
                 if (gameOver)
                 {

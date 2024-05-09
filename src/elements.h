@@ -28,6 +28,11 @@ const float BROWN_METEOR_RADIUS = 40; // Tamaño
 #define COINS_SPEED 8.0f       // Velocidad de caida
 const float COINS_RADIUS = 20; // Tamaño
 
+#define MAX_OBJECT 1            // Maximas monedas en pantalla
+#define AMMO_SPEED 6.5f       // Velocidad de caida
+#define SHIELD_SPEED 5.0f       // Velocidad de caida
+
+
 /*---- CORAZONES ----*/
 short MAX_HEART = MAX_HEART_LV1;
 #define HEARTS_SPEED 9.0f       // Velocidad de caida
@@ -75,7 +80,8 @@ typedef struct _preguntas
 TGameObject grayMeteors[MAX_METEOR_LV3];
 TGameObject brownMeteors[MAX_METEOR_LV3];
 TGameObject coinGold[MAX_COINS];
-TGameObject coinRed[MAX_COINS];
+TGameObject shieldB[MAX_OBJECT];
+TGameObject municiones[MAX_OBJECT];
 TGameObject hearts[MAX_HEART_LV3];
 Tshot shots[MAX_SHOTS];
 Tpregunta preguntas[TOTAL_PREG];

@@ -47,7 +47,7 @@ void DrawScoresTable(const char *filename);
 void mezclarArray(char array[][20], int size);
 void seleccPreguntas();
 int busqSecuencial(int vect[], int m, int num);
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion);
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion, short object);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -342,9 +342,16 @@ void drawObjects(Texture2D coinsTx, Texture2D heartsTx)
             coinCenter.y = coinGold[i].position.y - coinsTx.height / 2;
             DrawTextureV(coinsTx, coinCenter, WHITE);
         }
-        if (coinRed[i].active)
+    }
+    for (int i = 0; i < MAX_OBJECT; i++)
+    {
+        if (shieldB[i].active)
         {
-            DrawCircle(coinRed[i].position.x, coinRed[i].position.y, COINS_RADIUS, RED);
+            DrawCircle(shieldB[i].position.x, shieldB[i].position.y, COINS_RADIUS, BLUE);
+        }
+        if (municiones[i].active)
+        {
+            DrawCircle(municiones[i].position.x, municiones[i].position.y, COINS_RADIUS, YELLOW);
         }
     }
     // Dibujar corazones
@@ -640,9 +647,13 @@ void resetItems(Vector2 *playPosition)
     {
         coinGold[i].active = false;
     }
-    for (i = 0; i < MAX_COINS; i++) // RED COIN
+    for (i = 0; i < MAX_OBJECT; i++) // RED COIN
     {
-        coinRed[i].active = false;
+        shieldB[i].active = false;
+    }
+    for (i = 0; i < MAX_OBJECT; i++) // MUNICIONES
+    {
+        municiones[i].active = false;
     }
     // Limpiar corazones
     for (i = 0; i < MAX_HEART; i++)
@@ -664,6 +675,7 @@ void resetStats(short *lives, short *score, short *level, short *correctAns, sho
     *level = 1;
     *correctAns = 0;
     *timeSeconds = 0;
+    *municion = 10;
     MAX_GRAY = MAX_METEOR_LV1;
     MAX_BROWN = MAX_METEOR_LV1;
     MAX_HEART = MAX_HEART_LV1;
@@ -824,7 +836,7 @@ int busqSecuencial(int vect[], int m, int num)
     return -1;
 }
 
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion)
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion, short object)
 {
     int indicePregunta = rand() % PREG_SELEC;
     Tpregunta preguntaActual = preguntas[indicePregunta];
@@ -852,8 +864,14 @@ void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, shor
                 if (strcmp(opcionesBarajadas[i], preguntaActual.opciones[preguntaActual.respuestaCorrecta]) == 0)
                 {
                     drawTextCenter("¡Correcto!", 0, 650, 45, GREEN);
-                    *shield = 2;
-                    (*municion)++;
+                    if (object == 1)
+                    {
+                        *shield = 2;
+                    }
+                    if (object == 2)
+                    {
+                        (*municion) += 3;
+                    }
                     (*correctAnswers)++;
                 }
                 else
