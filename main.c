@@ -22,7 +22,7 @@ int main()
     bool isPlaying = false;
     bool gameOver = false;
 
-    /* JUEGO */                                                                                                
+    /* JUEGO */
     short int i, score = 0, lives = 5, level = 0, correctAnswers = 0, shieldActive = 0, totalMunicion = 9, object;
     float elapsedTime1 = 0.0f, elapsedTime2 = 0.0f, rotationMeteor = 0.0f;
     float playerRotation = 0.0;
@@ -261,7 +261,7 @@ int main()
                         // Detectar colisión con jugador
                         grayCenter.x = grayMeteors[i].position.x - grayMeteor.width / 2;
                         grayCenter.y = grayMeteors[i].position.y - grayMeteor.height / 2;
-                        if (CheckCollision(playerPosition, playRadius, grayCenter, GRAY_METEOR_RADIUS))
+                        if (CheckCollision(&playerPosition, playRadius, &grayCenter, GRAY_METEOR_RADIUS))
                         {
                             grayMeteors[i].active = false; // Eliminar objeto tocado
                             if (shieldActive <= 0)
@@ -293,7 +293,7 @@ int main()
                         // Detectar colisión con jugador
                         brownCenter.x = brownMeteors[i].position.x - brownMeteor.width / 2;
                         brownCenter.y = brownMeteors[i].position.y - brownMeteor.height / 2;
-                        if (CheckCollision(playerPosition, playRadius, brownCenter, BROWN_METEOR_RADIUS))
+                        if (CheckCollision(&playerPosition, playRadius, &brownCenter, BROWN_METEOR_RADIUS))
                         {
                             brownMeteors[i].active = false; // Eliminar objeto tocado
                             if (shieldActive <= 0)
@@ -321,8 +321,8 @@ int main()
                         {
                             coinGold[i].active = false; // Eliminar al salir de la pantalla
                         }
-                            // Detectar colisión con jugador y aumentar el contador de puntos
-                        if (CheckCollision(playerPosition, playRadius, coinGold[i].position, COINS_RADIUS))
+                        // Detectar colisión con jugador y aumentar el contador de puntos
+                        if (CheckCollision(&playerPosition, playRadius, &coinGold[i].position, COINS_RADIUS))
                         {
                             coinGold[i].active = false; // Eliminar objeto tocado
                             score += 10;                // Aumentar el puntaje
@@ -332,7 +332,7 @@ int main()
                 }
                 for (i = 0; i < MAX_OBJECT; i++)
                 {
-                        // Escudos (Pregunta)
+                    // Escudos (Pregunta)
                     if (shieldB[i].active)
                     {
                         shieldB[i].position.y += SHIELD_SPEED;
@@ -342,7 +342,7 @@ int main()
                         }
 
                         // Detectar colisión con jugador y aumentar el contador de puntos
-                        if (CheckCollision(playerPosition, playRadius, shieldB[i].position, COINS_RADIUS))
+                        if (CheckCollision(&playerPosition, playRadius, &shieldB[i].position, COINS_RADIUS))
                         {
                             shieldB[i].active = false; // Eliminar objeto tocado
                             object = 1;
@@ -350,7 +350,7 @@ int main()
                             PlaySound(soundcoin);
                         }
                     }
-                        // municion
+                    // municion
                     if (municiones[i].active)
                     {
                         municiones[i].position.y += AMMO_SPEED;
@@ -359,7 +359,7 @@ int main()
                             municiones[i].active = false; // Eliminar al salir de la pantalla
                         }
                         // Detectar colisión con jugador y aumentar el contador de puntos
-                        if (CheckCollision(playerPosition, playRadius, municiones[i].position, COINS_RADIUS))
+                        if (CheckCollision(&playerPosition, playRadius, &municiones[i].position, COINS_RADIUS))
                         {
                             municiones[i].active = false; // Eliminar objeto tocado
                             object = 2;
@@ -381,7 +381,7 @@ int main()
                         }
 
                         // Detectar colisión con jugador y aumentar vidas
-                        if (CheckCollision(playerPosition, playRadius, hearts[i].position, HEARTS_RADIUS))
+                        if (CheckCollision(&playerPosition, playRadius, &hearts[i].position, HEARTS_RADIUS))
                         {
                             hearts[i].active = false; // Eliminar objeto tocado
                             lives++;                  // Gana una vida
@@ -424,7 +424,7 @@ int main()
                                     grayCenter.x = grayMeteors[j].position.x - grayMeteor.width / 2;
                                     grayCenter.y = grayMeteors[j].position.y - grayMeteor.height / 2;
                                     //  Colision con meteoro gris
-                                    if (CheckCollision(shots[i].position, SHOT_RADIUS, grayCenter, GRAY_METEOR_RADIUS))
+                                    if (CheckCollision(&shots[i].position, SHOT_RADIUS, &grayCenter, GRAY_METEOR_RADIUS))
                                     {
                                         PlaySound(burstMisil);
                                         StopSound(shotSound);
@@ -443,7 +443,7 @@ int main()
                                     brownCenter.x = brownMeteors[j].position.x - brownMeteor.width / 2;
                                     brownCenter.y = brownMeteors[j].position.y - brownMeteor.height / 2;
                                     //  Colisión con meteoro café
-                                    if (CheckCollision(shots[i].position, SHOT_RADIUS, brownCenter, BROWN_METEOR_RADIUS))
+                                    if (CheckCollision(&shots[i].position, SHOT_RADIUS, &brownCenter, BROWN_METEOR_RADIUS))
                                     {
                                         PlaySound(burstMisil);
                                         StopSound(shotSound);
@@ -463,7 +463,7 @@ int main()
                 /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
                 BeginDrawing();
                 // Dibujar interfaz de la partida
-                drawGameInterface(hearthF[currentFrameExp], hearthE[currentFrame], shield, &lives, &score, &level, data.name, &correctAnswers, &shieldActive, totalMunicion, &minutesT, &secondsT); // Dibujar objetos de la partida
+                drawGameInterface(hearthF[currentFrameExp], hearthE[currentFrame], shield, lives, score, level, data.name, correctAnswers, shieldActive, totalMunicion, minutesT, secondsT); // Dibujar objetos de la partida
                 // Dibuja jugador (nave)
                 drawPlayer(shipTx[currentFrameExp], forceF[currentFrame], &playerPosition, &playerRotation, shieldActive);
                 // Dibuja meteoros en rotacion

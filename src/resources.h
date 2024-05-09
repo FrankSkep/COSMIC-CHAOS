@@ -6,13 +6,13 @@ void loadSounds();
 void unloadSounds();
 
 /*** Texturas ***/
-Texture2D menu, game, gameoverT, scoreboardTx, questionTx, startTx;
+Texture2D menu, game, gameoverT;
 Texture2D hearthE[6], hearthF[3], shield, forceF[6];
 Texture2D shipTx[3], coinsTx[6], heartsTx[3], misil, ammoTx, explosionTx[3];
 Texture2D grayMeteor, brownMeteor;
 
 // Sin usar
-Texture2D cinema[9];
+Texture2D cinema[8];
 
 /*** Sonidos ***/
 Music menuMusic, gameMusic, gameover;
@@ -38,12 +38,6 @@ void loadTextures()
     game = LoadTexture("resources/images/backgrounds/game.png");
     // Fondo gameover
     gameoverT = LoadTexture("resources/images/backgrounds/gameover.png");
-    // Fondo tabla de estadisticas
-    scoreboardTx = LoadTexture("resources/images/backgrounds/scorebg.png");
-    // Fondo pregunta
-    questionTx = LoadTexture("resources/images/backgrounds/questionbg.png");
-    // Fondo pantalla inicial
-    startTx = LoadTexture("resources/images/backgrounds/startbg.png");
 
     // Corazones de vidas llenos
     hearthF[0] = LoadTexture("resources/images/hearts/hearthF_00.png");
@@ -72,15 +66,14 @@ void loadTextures()
     forceF[5] = LoadTexture("resources/images/shield/forceField_05.png");
 
     // Presentador
-    cinema[0] = LoadTexture("resources/images/backgrounds/cinema1.png");
-    cinema[1] = LoadTexture("resources/images/backgrounds/cinema2.png");
-    cinema[2] = LoadTexture("resources/images/backgrounds/cinema3.png");
-    cinema[3] = LoadTexture("resources/images/backgrounds/cinema4.png");
-    cinema[4] = LoadTexture("resources/images/backgrounds/cinema5.png");
-    cinema[5] = LoadTexture("resources/images/backgrounds/cinema6.png");
-    cinema[6] = LoadTexture("resources/images/backgrounds/cinema7.png");
-    cinema[7] = LoadTexture("resources/images/backgrounds/cinema8.png");
-    cinema[8] = LoadTexture("resources/images/backgrounds/cinema9.png");
+    // cinema[0] = LoadTexture("resources/images/backgrounds/cinema1.png");
+    // cinema[1] = LoadTexture("resources/images/backgrounds/cinema2.png");
+    // cinema[2] = LoadTexture("resources/images/backgrounds/cinema3.png");
+    // cinema[3] = LoadTexture("resources/images/backgrounds/cinema4.png");
+    // cinema[4] = LoadTexture("resources/images/backgrounds/cinema5.png");
+    // cinema[5] = LoadTexture("resources/images/backgrounds/cinema6.png");
+    // cinema[6] = LoadTexture("resources/images/backgrounds/cinema7.png");
+    // cinema[7] = LoadTexture("resources/images/backgrounds/cinema8.png");
     loadingScreen("Cargando....");
 
     // Nave
@@ -124,9 +117,6 @@ void unloadTextures()
     UnloadTexture(menu);
     UnloadTexture(game);
     UnloadTexture(gameoverT);
-    UnloadTexture(scoreboardTx);
-    UnloadTexture(questionTx);
-    UnloadTexture(startTx);
     UnloadTexture(misil);
 
     for (int i = 0; i < 6; i++)
