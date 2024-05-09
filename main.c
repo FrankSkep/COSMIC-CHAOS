@@ -22,7 +22,7 @@ int main()
     bool isPlaying = false;
     bool gameOver = false;
 
-    /* JUEGO */
+    /* JUEGO */                                                                                                
     short int i, score = 0, lives = 5, level = 0, correctAnswers = 0, shieldActive = 0, totalMunicion = 9, object;
     float elapsedTime1 = 0.0f, elapsedTime2 = 0.0f, rotationMeteor = 0.0f;
     float playerRotation = 0.0;
@@ -321,8 +321,7 @@ int main()
                         {
                             coinGold[i].active = false; // Eliminar al salir de la pantalla
                         }
-
-                        // Detectar colisión con jugador y aumentar el contador de puntos
+                            // Detectar colisión con jugador y aumentar el contador de puntos
                         if (CheckCollision(playerPosition, playRadius, coinGold[i].position, COINS_RADIUS))
                         {
                             coinGold[i].active = false; // Eliminar objeto tocado
@@ -333,7 +332,7 @@ int main()
                 }
                 for (i = 0; i < MAX_OBJECT; i++)
                 {
-                    // Moneda tipo 2 (Pregunta)
+                        // Escudos (Pregunta)
                     if (shieldB[i].active)
                     {
                         shieldB[i].position.y += SHIELD_SPEED;
@@ -351,7 +350,7 @@ int main()
                             PlaySound(soundcoin);
                         }
                     }
-                    // municion
+                        // municion
                     if (municiones[i].active)
                     {
                         municiones[i].position.y += AMMO_SPEED;
@@ -359,7 +358,6 @@ int main()
                         {
                             municiones[i].active = false; // Eliminar al salir de la pantalla
                         }
-
                         // Detectar colisión con jugador y aumentar el contador de puntos
                         if (CheckCollision(playerPosition, playRadius, municiones[i].position, COINS_RADIUS))
                         {
@@ -583,7 +581,6 @@ int main()
     {
         appendScoresToFile("record.dat", data);
     }
-
     // Descarga de recursos
     unloadTextures();
     unloadSounds();
