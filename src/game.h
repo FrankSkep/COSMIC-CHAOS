@@ -12,7 +12,7 @@ void aboutTheGame();
 void menuActions(int *seconds, bool *isPlaying);
 
 /* INTERFACES */
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, short municion, int *minutes, int *seconds);
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short lives, short score, short level, const char *nickname, short racha, short shield, short municion, int minutes, int seconds);
 void ingresarNickName(char inputText[]);
 Tdata getDataPlayer();
 void gameOverInterface(short score, short level);
@@ -26,7 +26,7 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 
 /* LOGICA */
 void InitObject(TGameObject *object, const float *objRadius);
-bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius);
+bool CheckCollision(Vector2 *playerPos, float playerRadius, Vector2 *ballPos, float meteorRadius);
 
 void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds);
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, int frame1, int frame2);
@@ -47,7 +47,7 @@ void DrawScoresTable(const char *filename);
 void mezclarArray(char array[][20], int size);
 void seleccPreguntas();
 int busqSecuencial(int vect[], int m, int num);
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion, short object);
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *racha, short *shield, short *municion, short *lives, short object);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -103,13 +103,15 @@ void drawHowToPlay()
 // Dibuja pantalla con informacion acerca del juego
 void aboutTheGame()
 {
+    Texture2D aboutBg = LoadTexture("resources/images/backgrounds/cinema9.png");
+
     while (!IsKeyPressed(KEY_Q)) // Bucle para mostrar la interfaz "about"
     {
         UpdateMusicStream(menuMusic);
         BeginDrawing();
 
         ClearBackground(BLACK);
-        DrawTexture(cinema[8], 400, 280, WHITE);
+        DrawTexture(aboutBg, 400, 280, WHITE);
 
         drawTextCenter("Acerca del juego", 0, 100, 100, RED);
         drawTextCenter("Desarrolladores:", 0, 270, 50, YELLOW);
@@ -118,6 +120,7 @@ void aboutTheGame()
         drawTextCenter("(Q) Volver al menu", 0, 800, 50, GOLD);
         EndDrawing();
     }
+    UnloadTexture(aboutBg);
 }
 
 // Maneja acciones del menu principal
@@ -143,16 +146,16 @@ void menuActions(int *seconds, bool *isPlaying)
 }
 
 // Dibuja la interfaz de partida en curso
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short *lives, short *score, short *level, const char *nickname, short *correctAnsw, short *shield, short municion, int *minutes, int *seconds)
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short lives, short score, short level, const char *nickname, short racha, short shield, short municion, int minutes, int seconds)
 {
     // Dibuja fondo
     DrawTexture(game, 0, 0, WHITE);
 
     // Dibuja puntaje
-    DrawText(TextFormat("Puntos : %04i", *score), SCR_WIDTH - 320, 20, 45, WHITE);
+    DrawText(TextFormat("Puntos : %04i", score), SCR_WIDTH - 320, 20, 45, WHITE);
 
     // Dibuja nivel
-    DrawText(TextFormat("Nivel : %i", *level), 20, 20, 45, WHITE);
+    DrawText(TextFormat("Nivel : %i", level), 20, 20, 45, WHITE);
 
     // ******** Dibujar Nombre jugador *********
     float textWidth = MeasureText(TextFormat("Jugador : %s", nickname), 40);
@@ -160,24 +163,24 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
     DrawText(TextFormat("Jugador : %s", nickname), posX, 20, 40, YELLOW);
 
     // Dibuja vidas restantes
-    DrawText(TextFormat("Vidas : %d", *lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
+    DrawText(TextFormat("Vidas : %d", lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
 
-    DrawText(TextFormat("Resp. Correctas : %d", *correctAnsw), 20, SCR_HEIGHT - 90, 35, WHITE);
+    DrawText(TextFormat("Racha Aciertos : %d", racha), 20, SCR_HEIGHT - 90, 35, WHITE);
     float x;
 
-    for (int i = 0; i < *lives; i++)
+    for (int i = 0; i < lives; i++)
     {
         x = SCR_WIDTH - 65 * (i + 1);
         DrawTexture(hearts, x, SCR_HEIGHT - 65, WHITE);
     }
-    for (int i = *lives; i < 5; i++)
+    for (int i = lives; i < 5; i++)
     {
         x = SCR_WIDTH - 65 * (i + 1);                        // Inicia desde el lado derecho
         DrawTexture(hearthEmpty, x, SCR_HEIGHT - 65, WHITE); // Corazón vacío
     }
-    for (int i = 0; i < *shield; i++)
+    for (int i = 0; i < shield; i++)
     {
-        x = SCR_WIDTH - 65 * (i + 1) - 65 * *lives;
+        x = SCR_WIDTH - 65 * (i + 1) - 65 * lives;
         DrawTexture(shieldTx, x, SCR_HEIGHT - 70, WHITE);
     }
 
@@ -185,7 +188,7 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
     DrawText(TextFormat("MUNICION : %02d", municion), 20, 80, 35, YELLOW);
 
     // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
-    DrawText(TextFormat("%02d:%02d", *minutes, *seconds), 20, SCR_HEIGHT - 50, 50, WHITE);
+    DrawText(TextFormat("%02d:%02d", minutes, seconds), 20, SCR_HEIGHT - 50, 50, WHITE);
 }
 
 void ingresarNickName(char inputText[])
@@ -193,6 +196,8 @@ void ingresarNickName(char inputText[])
     int letterCount = 0; // Contador de caracteres
     int key;             // Captura letra ingresada
 
+    // Fondo pantalla inicial
+    Texture2D startTx = LoadTexture("resources/images/backgrounds/startbg.png");
     while (!IsKeyPressed(KEY_ENTER) && !WindowShouldClose())
     {
         PlayMusicStream(menuMusic);
@@ -238,6 +243,7 @@ void ingresarNickName(char inputText[])
 
         EndDrawing();
     }
+    UnloadTexture(startTx);
 }
 
 // Obtiene datos a guardar del jugador
@@ -403,15 +409,15 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 void InitObject(TGameObject *object, const float *objRadius)
 {
     object->position.x = GetRandomValue(0, SCR_WIDTH);
-    object->position.y = -*objRadius * 2;
+    object->position.y = -(*objRadius) * 2;
     object->active = true;
 }
 
 // Colisiones
-bool CheckCollision(Vector2 playerPos, float playerRadius, Vector2 ballPos, float meteorRadius)
+bool CheckCollision(Vector2 *playerPos, float playerRadius, Vector2 *ballPos, float meteorRadius)
 {
-    float dx = ballPos.x - playerPos.x;
-    float dy = ballPos.y - playerPos.y;
+    float dx = ballPos->x - playerPos->x;
+    float dy = ballPos->y - playerPos->y;
     float distanceSquared = dx * dx + dy * dy;
     float radiusSumSquared = (playerRadius + meteorRadius) * (playerRadius + meteorRadius);
     return distanceSquared < radiusSumSquared;
@@ -736,6 +742,9 @@ void DrawScoresTable(const char *filename)
     int scrollOffset = 0;
     int maxVisibleRows = (tableHeight - 50) / cellHeight; // Calcula el número máximo de filas visibles
 
+    // Fondo tabla de estadisticas
+    Texture2D scoreboardTx = LoadTexture("resources/images/backgrounds/scorebg.png");
+
     while (!IsKeyPressed(KEY_Q))
     {
         UpdateMusicStream(menuMusic);
@@ -782,6 +791,7 @@ void DrawScoresTable(const char *filename)
 
         EndDrawing();
     }
+    UnloadTexture(scoreboardTx);
 }
 
 void mezclarArray(char array[][20], int size)
@@ -836,7 +846,7 @@ int busqSecuencial(int vect[], int m, int num)
     return -1;
 }
 
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion, short object)
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *racha, short *shield, short *municion, short *lives, short object)
 {
     int indicePregunta = rand() % PREG_SELEC;
     Tpregunta preguntaActual = preguntas[indicePregunta];
@@ -845,6 +855,9 @@ void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, shor
     char opcionesBarajadas[4][20];
     memcpy(opcionesBarajadas, preguntaActual.opciones, sizeof(preguntaActual.opciones));
     mezclarArray(opcionesBarajadas, 4);
+
+    // Fondo pregunta
+    Texture2D questionTx = LoadTexture("resources/images/backgrounds/questionbg.png");
 
     do
     {
@@ -866,16 +879,22 @@ void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, shor
                     drawTextCenter("¡Correcto!", 0, 650, 45, GREEN);
                     if (object == 1)
                     {
-                        *shield = 2;
+                        (*shield) += 2;
                     }
                     if (object == 2)
                     {
                         (*municion) += 3;
                     }
                     (*correctAnswers)++;
+                    (*racha)++;
+                    if ((*racha) % 3 == 0) // 1 Vida adicional por cada racha de 3 aciertos
+                    {
+                        (*lives)++;
+                    }
                 }
                 else
                 {
+                    *racha = 0;
                     drawTextCenter("¡Incorrecto!", 0, 650, 45, RED);
                 }
                 *showQuestion = false;
@@ -884,7 +903,7 @@ void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, shor
         }
         EndDrawing();
     } while (*showQuestion);
-
+    UnloadTexture(questionTx);
     // Espera entre cada pregunta
     secondspause(1.5);
 }

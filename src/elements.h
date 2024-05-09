@@ -2,7 +2,7 @@
 #define SCR_HEIGHT 900  // ALTO PANTALLA (Y)
 #define MAX_PLAYERS 100 // MAXIMOS JUGADORES A GUARDAR
 #define MAX_LEN_NAME 30 // LONGITUD MAXIMA DEL NICK
-#define PREG_SELEC 15
+#define PREG_SELEC 20
 #define TOTAL_PREG 22
 
 /*----- CANTIDAD DE OBJETOS POR NIVEL -----*/
@@ -28,10 +28,9 @@ const float BROWN_METEOR_RADIUS = 40; // Tamaño
 #define COINS_SPEED 8.0f       // Velocidad de caida
 const float COINS_RADIUS = 20; // Tamaño
 
-#define MAX_OBJECT 1            // Maximas monedas en pantalla
-#define AMMO_SPEED 6.5f       // Velocidad de caida
-#define SHIELD_SPEED 5.0f       // Velocidad de caida
-
+#define MAX_OBJECT 1      // Maximas monedas en pantalla
+#define AMMO_SPEED 6.5f   // Velocidad de caida
+#define SHIELD_SPEED 5.0f // Velocidad de caida
 
 /*---- CORAZONES ----*/
 short MAX_HEART = MAX_HEART_LV1;
