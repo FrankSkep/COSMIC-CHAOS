@@ -47,7 +47,7 @@ void DrawScoresTable(const char *filename);
 void mezclarArray(char array[][20], int size);
 void seleccPreguntas();
 int busqSecuencial(int vect[], int m, int num);
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion, short object);
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion, short *lives, short object);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -409,7 +409,7 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 void InitObject(TGameObject *object, const float *objRadius)
 {
     object->position.x = GetRandomValue(0, SCR_WIDTH);
-    object->position.y = -*objRadius * 2;
+    object->position.y = -(*objRadius) * 2;
     object->active = true;
 }
 
@@ -846,7 +846,7 @@ int busqSecuencial(int vect[], int m, int num)
     return -1;
 }
 
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion, short object)
+void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, short *municion, short *lives, short object)
 {
     int indicePregunta = rand() % PREG_SELEC;
     Tpregunta preguntaActual = preguntas[indicePregunta];
@@ -879,13 +879,17 @@ void drawQuestion(bool *showQuestion, short *correctAnswers, short *shield, shor
                     drawTextCenter("¡Correcto!", 0, 650, 45, GREEN);
                     if (object == 1)
                     {
-                        *shield = 2;
+                        (*shield) += 2;
                     }
                     if (object == 2)
                     {
                         (*municion) += 3;
                     }
                     (*correctAnswers)++;
+                    if ((*correctAnswers) % 3 == 0) // 1 Vida adicional por cada racha de 3 aciertos
+                    {
+                        (*lives)++;
+                    }
                 }
                 else
                 {

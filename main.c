@@ -231,14 +231,14 @@ int main()
                     {
                         if (!shieldB[i].active)
                         {
-                            InitObject(&shieldB[i], &COINS_RADIUS); // Moneda tipo 2 (Pregunta)                            InitObject(&shieldB[i], &COINS_RADIUS);  // Moneda tipo 2 (Pregunta)
+                            InitObject(&shieldB[i], &COINS_RADIUS); // Moneda tipo 2 (Pregunta)
                         }
                     }
                     for (i = 0; i < MAX_OBJECT; i++)
                     {
                         if (!municiones[i].active)
                         {
-                            InitObject(&municiones[i], &COINS_RADIUS); // Municiones (Pregunta)                            InitObject(&shieldB[i], &COINS_RADIUS);  // Moneda tipo 2 (Pregunta)
+                            InitObject(&municiones[i], &COINS_RADIUS); // Municiones (Pregunta)
                             break;
                         }
                     }
@@ -506,7 +506,7 @@ int main()
 
                 if (showQuestion) // Si tomo moneda de pregunta
                 {
-                    drawQuestion(&showQuestion, &correctAnswers, &shieldActive, &totalMunicion, object);
+                    drawQuestion(&showQuestion, &correctAnswers, &shieldActive, &totalMunicion, &lives, object);
                     continuar = true;
                     contin = 1;
                 }
