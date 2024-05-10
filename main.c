@@ -576,7 +576,7 @@ int main()
         }
     }
 
-    // Agregar estadisticas al archivo .dat
+    // Guardar estadisticas en archivo record.dat
     if (saveProgress)
     {
         appendScoresToFile("record.dat", data);

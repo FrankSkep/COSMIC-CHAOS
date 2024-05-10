@@ -336,7 +336,7 @@ void drawMeteors(float rotation)
 // Dibujar monedas y corazones
 void drawObjects(Texture2D coinsTx, Texture2D heartsTx)
 {
-    Vector2 coinCenter, heartCenter;
+    Vector2 objectCenter, heartCenter;
 
     // Dibujar monedas
     for (int i = 0; i < MAX_COINS; i++)
@@ -344,20 +344,26 @@ void drawObjects(Texture2D coinsTx, Texture2D heartsTx)
         if (coinGold[i].active)
         {
             // Calcular la posición del centro de la moneda
-            coinCenter.x = coinGold[i].position.x - coinsTx.width / 2;
-            coinCenter.y = coinGold[i].position.y - coinsTx.height / 2;
-            DrawTextureV(coinsTx, coinCenter, WHITE);
+            objectCenter.x = coinGold[i].position.x - coinsTx.width / 2;
+            objectCenter.y = coinGold[i].position.y - coinsTx.height / 2;
+            DrawTextureV(coinsTx, objectCenter, WHITE);
         }
     }
     for (int i = 0; i < MAX_OBJECT; i++)
     {
         if (shieldB[i].active)
         {
-            DrawCircle(shieldB[i].position.x, shieldB[i].position.y, COINS_RADIUS, BLUE);
+            // Calcular la posición del centro del escudo
+            objectCenter.x = shieldB[i].position.x - shield.width / 2;
+            objectCenter.y = shieldB[i].position.y - shield.height / 2;
+            DrawTexture(shield, objectCenter.x, objectCenter.y, WHITE);
         }
         if (municiones[i].active)
         {
-            DrawCircle(municiones[i].position.x, municiones[i].position.y, COINS_RADIUS, YELLOW);
+            // Calcular la posición del centro del escudo
+            objectCenter.x = municiones[i].position.x - ammoTx.width / 2;
+            objectCenter.y = municiones[i].position.y - ammoTx.height / 2;
+            DrawTexture(ammoTx, objectCenter.x, objectCenter.y, WHITE);
         }
     }
     // Dibujar corazones
@@ -717,10 +723,6 @@ void appendScoresToFile(const char *filename, Tdata player)
 void DrawScoresTable(const char *filename)
 {
     FILE *file = fopen(filename, "rb");
-    if (file == NULL)
-    {
-        drawTextCenter("No hay registros", 0, (SCR_HEIGHT / 2) + 200, 60, RED);
-    }
     Tdata players[MAX_PLAYERS];
     int numPlayers = 0;
 
@@ -728,7 +730,10 @@ void DrawScoresTable(const char *filename)
     {
         numPlayers++;
     }
-
+    if (numPlayers <= 0)
+    {
+        drawTextCenter("No hay registros", 0, (SCR_HEIGHT / 2) + 200, 50, WHITE);
+    }
     fclose(file);
 
     // Calcular posición y dimensiones de la tabla
