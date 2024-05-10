@@ -6,21 +6,21 @@
 
 /*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
 /* MENUs */
-void drawMainMenu();
-void drawHowToPlay();
-void aboutTheGame();
-void menuActions(int *seconds, bool *isPlaying);
+void drawMainMenu(GameState *gameState);
+void drawHowToPlay(GameState *gameState);
+void aboutTheGame(GameState *gameState);
+void updateGameState(GameState *gameState, int keyPressed, GameStats *stats);
 
 /* INTERFACES */
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short lives, short score, short level, const char *nickname, short racha, short shield, short municion, int minutes, int seconds);
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, GameStats *stats, const char *nickname, short shield, int minutes, int seconds);
 void ingresarNickName(char inputText[]);
 Tdata getDataPlayer();
 void gameOverInterface(short score, short level);
 
 /* DIBUJO OBJETOS */
 void drawPlayer(Texture2D ship, Texture2D forceF, Vector2 *playerPosition, float *playerRotation, short shield);
-void drawMeteors(float rotation);
-void drawObject(Texture2D Textura,TGameObject *objects, int MAX_OBJECTS);
+void drawMeteor(TGameObject Meteor[], short MAX_METEOR, Texture2D meteorTexture, float rotation);
+void drawObject(Texture2D Textura, TGameObject *objects, int MAX_OBJECTS);
 void drawShots(Texture2D shotTx, Texture2D *explosionTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
@@ -28,20 +28,20 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 void InitObject(TGameObject *object, const float *objRadius);
 bool CheckCollision(Vector2 *playerPos, float playerRadius, Vector2 *ballPos, float meteorRadius);
 
-void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds);
+void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *totalseconds);
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, int frame1, int frame2);
 void pausa();
 void screenMessage(const char *text, float seconds, bool background);
 void screenpoints(int *totalseconds, short *score);
 
 void resetItems(Vector2 *playPosition);
-void resetStats(short *lives, short *score, short *level, short *rachaAciertos, short *municion, float *timeSeconds);
+void resetStats(GameStats *stats);
 void secondspause(float seconds);
 
 // Datos jugador
 void getDate(int *dia, int *mes, int *anio);
 void appendScoresToFile(const char *filename, Tdata player);
-void DrawScoresTable(const char *filename);
+void DrawScoresTable(const char *filename, GameState *gameState);
 
 // CUESTIONARIO
 void mezclarArray(char array[][20], int size);
@@ -51,10 +51,9 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
-void drawMainMenu() // PANTALLA DE MENU
+void drawMainMenu(GameState *gameState) // PANTALLA DE MENU
 {
     BeginDrawing();
-
     // Fondo
     DrawTexture(menu, 0, 0, WHITE);
 
@@ -78,97 +77,148 @@ void drawMainMenu() // PANTALLA DE MENU
 
     drawTextCenter("(ESC) Salir", 2, 802, 60, DARKGRAY);
     drawTextCenter("(ESC) Salir", 2, 800, 60, RED);
-
     EndDrawing();
+
+    // if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
+    // {
+    //     *gameState = IN_GAME;
+    // }
+    // if (IsKeyPressed(KEY_A)) // Ir a tutorial como jugar
+    // {
+    //     *gameState = HOW_TO_PLAY;
+    // }
+    // if (IsKeyPressed(KEY_E)) // Ir a acerca del juego
+    // {
+    //     aboutBg = LoadTexture("resources/images/backgrounds/cinema9.png");
+    //     *gameState = ABOUT_GAME;
+    // }
+    // if (IsKeyPressed(KEY_H))
+    // {
+    //     scoreboardTx = LoadTexture("resources/images/backgrounds/scorebg.png");
+    //     *gameState = HISTORY_SCORE;
+    // }
 }
 
 // Dibuja pantalla de como jugar
-void drawHowToPlay()
+void drawHowToPlay(GameState *gameState)
 {
-    while (!IsKeyPressed(KEY_Q))
-    {
-        UpdateMusicStream(menuMusic);
-        BeginDrawing();
-        ClearBackground(BLACK);
-        drawTextCenter("COMO JUGAR: ", 0, 100, 100, BLUE);
-        DrawText("- Muevete con las flechas o WASD", 40, SCR_HEIGHT / 2 + 40, 50, WHITE);
-        DrawText("- Disparar (ESPACIO)", 40, SCR_HEIGHT / 2 + 110, 50, GRAY);
-        DrawText("- PAUSA (P)", 40, SCR_HEIGHT / 2 + 250, 50, RED);
-        DrawText("- Gana puntos, vidas y sobrevive", 40, SCR_HEIGHT / 2 + 180, 50, YELLOW);
-        DrawText("(Q) Volver al menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GREEN);
-        EndDrawing();
-    }
+    BeginDrawing();
+    ClearBackground(BLACK);
+    drawTextCenter("COMO JUGAR: ", 0, 100, 100, BLUE);
+    DrawText("- Muevete con las flechas o WASD", 40, SCR_HEIGHT / 2 + 40, 50, WHITE);
+    DrawText("- Disparar (ESPACIO)", 40, SCR_HEIGHT / 2 + 110, 50, GRAY);
+    DrawText("- PAUSA (P)", 40, SCR_HEIGHT / 2 + 250, 50, RED);
+    DrawText("- Gana puntos, vidas y sobrevive", 40, SCR_HEIGHT / 2 + 180, 50, YELLOW);
+    DrawText("(Q) Volver al menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GREEN);
+    EndDrawing();
+    // if (IsKeyPressed(KEY_Q))
+    // {
+    //     *gameState = MAIN_MENU;
+    // }
 }
 
 // Dibuja pantalla con informacion acerca del juego
-void aboutTheGame()
+void aboutTheGame(GameState *gameState)
 {
-    Texture2D aboutBg = LoadTexture("resources/images/backgrounds/cinema9.png");
+    BeginDrawing();
 
-    while (!IsKeyPressed(KEY_Q)) // Bucle para mostrar la interfaz "about"
-    {
-        UpdateMusicStream(menuMusic);
-        BeginDrawing();
+    ClearBackground(BLACK);
+    DrawTexture(aboutBg, 400, 280, WHITE);
 
-        ClearBackground(BLACK);
-        DrawTexture(aboutBg, 400, 280, WHITE);
+    drawTextCenter("Acerca del juego", 0, 100, 100, RED);
+    drawTextCenter("Desarrolladores:", 0, 270, 50, YELLOW);
+    drawTextCenter("- Francisco Cornejo", 0, 340, 50, GREEN);
+    drawTextCenter("- Diego Ibarra", 0, 400, 50, GREEN);
+    drawTextCenter("(Q) Volver al menu", 0, 800, 50, GOLD);
+    EndDrawing();
 
-        drawTextCenter("Acerca del juego", 0, 100, 100, RED);
-        drawTextCenter("Desarrolladores:", 0, 270, 50, YELLOW);
-        drawTextCenter("- Francisco Cornejo", 0, 340, 50, GREEN);
-        drawTextCenter("- Diego Ibarra", 0, 400, 50, GREEN);
-        drawTextCenter("(Q) Volver al menu", 0, 800, 50, GOLD);
-        EndDrawing();
-    }
-    UnloadTexture(aboutBg);
+    // if (IsKeyPressed(KEY_Q))
+    // {
+    //     UnloadTexture(aboutBg);
+    //     *gameState = MAIN_MENU;
+    // }
 }
 
-// Maneja acciones del menu principal
-void menuActions(int *seconds, bool *isPlaying)
+void updateGameState(GameState *gameState, int keyPressed, GameStats *stats)
 {
-    if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
+    switch (*gameState)
     {
-        *seconds = 0;
-        *isPlaying = true;
-    }
-    if (IsKeyPressed(KEY_A)) // Ir a tutorial como jugar
-    {
-        drawHowToPlay();
-    }
-    if (IsKeyPressed(KEY_E)) // Ir a acerca del juego
-    {
-        aboutTheGame();
-    }
-    if (IsKeyPressed(KEY_H))
-    {
-        DrawScoresTable("record.dat");
+    case MAIN_MENU:
+        switch (keyPressed)
+        {
+        case KEY_ENTER:
+            *gameState = IN_GAME;
+            break;
+
+        case KEY_A:
+            *gameState = HOW_TO_PLAY;
+            break;
+
+        case KEY_E:
+            aboutBg = LoadTexture("resources/images/backgrounds/cinema9.png");
+            *gameState = ABOUT_GAME;
+            break;
+
+        case KEY_H:
+            scoreboardTx = LoadTexture("resources/images/backgrounds/scorebg.png");
+            *gameState = HISTORY_SCORE;
+            break;
+        }
+        break;
+
+    case HOW_TO_PLAY:
+    case ABOUT_GAME:
+    case HISTORY_SCORE:
+        if (keyPressed == KEY_Q)
+        {
+            UnloadTexture(scoreboardTx);
+            UnloadTexture(aboutBg);
+            *gameState = MAIN_MENU;
+        }
+        break;
+
+    case GAME_OVER:
+        if (keyPressed == KEY_ENTER)
+        {
+            resetStats(stats);
+            *gameState = IN_GAME;
+        }
+        else if (keyPressed == KEY_Q)
+        {
+            resetStats(stats);
+            *gameState = MAIN_MENU;
+        }
+        break;
+
+    case IN_GAME:
+        break;
     }
 }
 
 // Dibuja la interfaz de partida en curso
-void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short lives, short score, short level, const char *nickname, short racha, short shield, short municion, int minutes, int seconds)
+void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, GameStats *stats, const char *nickname, short shield, int minutes, int seconds)
 {
     // Dibuja fondo
-    switch(level)
+    switch (stats->level)
     {
-        case 1:
+    case 1:
         DrawTexture(levels[0], 0, 0, WHITE);
         break;
 
-        case 2:
+    case 2:
         DrawTexture(levels[1], 0, 0, WHITE);
         break;
 
-        case 3:
+    case 3:
         DrawTexture(levels[2], 0, 0, WHITE);
         break;
     }
-    
+
     // Dibuja puntaje
-    DrawText(TextFormat("Puntos : %04i", score), SCR_WIDTH - 320, 20, 45, WHITE);
+    DrawText(TextFormat("Puntos : %04d", stats->score), SCR_WIDTH - 320, 20, 45, WHITE);
 
     // Dibuja nivel
-    DrawText(TextFormat("Nivel : %i", level), 20, 20, 45, WHITE);
+    DrawText(TextFormat("Nivel : %d", stats->level), 20, 20, 45, WHITE);
 
     // ******** Dibujar Nombre jugador *********
     float textWidth = MeasureText(TextFormat("Jugador : %s", nickname), 40);
@@ -176,29 +226,29 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
     DrawText(TextFormat("Jugador : %s", nickname), posX, 20, 40, YELLOW);
 
     // Dibuja vidas restantes
-    DrawText(TextFormat("Vidas : %d", lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
+    DrawText(TextFormat("Vidas : %d", stats->lives), SCR_WIDTH - 280, SCR_HEIGHT - 130, 50, WHITE);
 
-    DrawText(TextFormat("Racha Aciertos : %d", racha), 20, SCR_HEIGHT - 90, 35, WHITE);
+    DrawText(TextFormat("Racha Aciertos : %d", stats->rachaAciertos), 20, SCR_HEIGHT - 90, 35, WHITE);
     float x;
 
-    for (int i = 0; i < lives; i++)
+    for (int i = 0; i < stats->lives; i++)
     {
         x = SCR_WIDTH - 65 * (i + 1);
         DrawTexture(hearts, x, SCR_HEIGHT - 65, WHITE);
     }
-    for (int i = lives; i < 5; i++)
+    for (int i = stats->lives; i < 5; i++)
     {
         x = SCR_WIDTH - 65 * (i + 1);                        // Inicia desde el lado derecho
         DrawTexture(hearthEmpty, x, SCR_HEIGHT - 65, WHITE); // Corazón vacío
     }
     for (int i = 0; i < shield; i++)
     {
-        x = SCR_WIDTH - 65 * (i + 1) - 65 * lives;
+        x = SCR_WIDTH - 65 * (i + 1) - 65 * stats->lives;
         DrawTexture(shieldTx, x, SCR_HEIGHT - 70, WHITE);
     }
 
     // Mostrar estado de los powerups
-    DrawText(TextFormat("MUNICION : %02d", municion), 20, 80, 35, YELLOW);
+    DrawText(TextFormat("MUNICION : %02d", stats->totalMunicion), 20, 80, 35, YELLOW);
 
     // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
     DrawText(TextFormat("%02d:%02d", minutes, seconds), 20, SCR_HEIGHT - 50, 50, WHITE);
@@ -262,13 +312,8 @@ void ingresarNickName(char inputText[])
 // Obtiene datos a guardar del jugador
 Tdata getDataPlayer()
 {
-    char name[MAX_LEN_NAME] = "";
-    ingresarNickName(name);
-    Tdata data;
-    strcpy(data.name, name);                   // Usuario
-    data.score = 0;                            // Mejor puntuacion
-    data.maxLevel = 0;                         // Maximo Nivel alcanzado
-    data.rachaAciertos = 0;                    // Racha de respuestas correctas
+    Tdata data = {"", 0, 0, 0, 0, 0, 0};
+    ingresarNickName(data.name);
     getDate(&data.dia, &data.mes, &data.anio); // Fecha del reporte
     return data;
 }
@@ -283,8 +328,8 @@ void gameOverInterface(short score, short level)
     drawTextCenter("FIN DEL JUEGO", 2, 232, 110, WHITE);
     drawTextCenter("FIN DEL JUEGO", 0, 230, 110, RED);
 
-    DrawText(TextFormat("PUNTAJE: %04i", score), SCR_WIDTH / 2 - MeasureText(TextFormat("PUNTAJE: %04i", score), 60) / 2, SCR_HEIGHT / 2 + 10, 60, RAYWHITE);
-    DrawText(TextFormat("NIVEL: %1i", level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", level), 60) / 2, SCR_HEIGHT / 2 - 50, 60, RAYWHITE);
+    DrawText(TextFormat("PUNTAJE: %04d", score), SCR_WIDTH / 2 - MeasureText(TextFormat("PUNTAJE: %04i", score), 60) / 2, SCR_HEIGHT / 2 + 10, 60, RAYWHITE);
+    DrawText(TextFormat("NIVEL: %1d", level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", level), 60) / 2, SCR_HEIGHT / 2 - 50, 60, RAYWHITE);
 
     drawTextCenter("(ENTER) Jugar de nuevo", 2, 582, 60, LIME);
     drawTextCenter("(ENTER) Jugar de nuevo", 0, 580, 60, GREEN);
@@ -312,42 +357,29 @@ void drawPlayer(Texture2D ship, Texture2D forceF, Vector2 *playerPosition, float
 }
 
 // Dibuja meteoros
-void drawMeteors(float rotation)
+void drawMeteor(TGameObject Meteor[],short MAX_METEOR, Texture2D meteorTexture, float rotation)
 {
-    Vector2 grayCenter, brownCenter;
+    // Vector2 grayCenter, brownCenter;
+    Vector2 meteorCenter;
 
-    for (int i = 0; i < MAX_GRAY; i++)
+    for (int i = 0; i < MAX_METEOR; i++)
     {
-        if (grayMeteors[i].active)
+        if (Meteor[i].active)
         {
             // Calcular el punto central
-            grayCenter.x = grayMeteors[i].position.x - grayMeteor.width / 2;
-            grayCenter.y = grayMeteors[i].position.y - grayMeteor.height / 2;
+            meteorCenter.x = Meteor[i].position.x - grayMeteor.width / 2;
+            meteorCenter.y = Meteor[i].position.y - grayMeteor.height / 2;
 
             // Dibujar textura meteoro girando
-            DrawTexturePro(grayMeteor, (Rectangle){0, 0, (float)grayMeteor.width, (float)grayMeteor.height},
-                           (Rectangle){grayCenter.x, grayCenter.y, (float)grayMeteor.width, (float)grayMeteor.height},
-                           (Vector2){(float)grayMeteor.width / 2, (float)grayMeteor.height / 2}, rotation, WHITE);
-        }
-    }
-    for (int i = 0; i < MAX_BROWN; i++)
-    {
-        if (brownMeteors[i].active)
-        {
-            // Calcular el punto central
-            brownCenter.x = brownMeteors[i].position.x - brownMeteor.width / 2;
-            brownCenter.y = brownMeteors[i].position.y - brownMeteor.height / 2;
-
-            // Dibujar textura meteoro girando
-            DrawTexturePro(brownMeteor, (Rectangle){0, 0, (float)brownMeteor.width, (float)brownMeteor.height},
-                           (Rectangle){brownCenter.x, brownCenter.y, (float)brownMeteor.width, (float)brownMeteor.height},
-                           (Vector2){(float)brownMeteor.width / 2, (float)brownMeteor.height / 2}, rotation, WHITE);
+            DrawTexturePro(meteorTexture, (Rectangle){0, 0, (float)meteorTexture.width, (float)meteorTexture.height},
+                           (Rectangle){meteorCenter.x, meteorCenter.y, (float)meteorTexture.width, (float)meteorTexture.height},
+                           (Vector2){(float)meteorTexture.width / 2, (float)meteorTexture.height / 2}, rotation, WHITE);
         }
     }
 }
 
 // Dibujar monedas y corazones
-void drawObject(Texture2D Textura,TGameObject *objects, int MAX_OBJECTS)
+void drawObject(Texture2D Textura, TGameObject *objects, int MAX_OBJECTS)
 {
     Vector2 objectCenter;
 
@@ -415,9 +447,9 @@ bool CheckCollision(Vector2 *playerPos, float playerRadius, Vector2 *ballPos, fl
 }
 
 // Manejo de niveles
-void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPosition, short *lives, int *totalseconds, float *timeseconds)
+void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *totalseconds)
 {
-    if (*score == 0 && *level == 0)
+    if (stats->score == 0 && stats->level == 0)
     {
         // Historia inicial
         // subsCinematicas("   INFORME DE ULTIMO MOMENTO                        Hola a todos son las 11:45 am y aqui su servilleta     Javie Alatorre informandolos.", 45, 7, 2, 4, 5);
@@ -429,18 +461,18 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
         // subsCinematicas("nuestros desarolladores han creado una represent- acion grafica de que es lo que podria estar pasando en este momento aya arriba en el espacio ", 45, 7, 1, 4, 5);
 
         /* Estadisticas Nivel 1 */
-        *level = 1;
-        *score = 0;
-        *lives = 5;
+        stats->level = 1;
+        stats->score = 0;
+        stats->lives = 5;
         *elapsedTime = 0.0f;
-        *timeseconds = 0;
+        stats->timeseconds = 0;
 
         MAX_GRAY = MAX_METEOR_LV1;
         MAX_BROWN = MAX_METEOR_LV1;
         MAX_HEART = MAX_HEART_LV1;
     }
 
-    if (*score >= 50 && *level == 1)
+    if (stats->score >= 50 && stats->level == 1)
     {
         // Limpiar objetos
         resetItems(playPosition);
@@ -452,18 +484,18 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
         screenMessage("NIVEL 2", 2, true);
 
         /* Estadisticas Nivel 2 */
-        *level = 2;
-        *score = 0;
-        *lives = 5;
+        stats->level = 2;
+        stats->score = 0;
+        stats->lives = 5;
         *elapsedTime = 0.0f;
-        *timeseconds = 0;
+        stats->timeseconds = 0;
 
         MAX_GRAY = MAX_METEOR_LV2;
         MAX_BROWN = MAX_METEOR_LV2;
         MAX_HEART = MAX_HEART_LV2;
     }
     // Verificar si el jugador ha alcanzado el nivel 3
-    if (*score >= 50 && *level == 2)
+    if (stats->score >= 50 && stats->level == 2)
     {
         // Limpiar objetos
         resetItems(playPosition);
@@ -471,11 +503,11 @@ void Levels(short *score, short *level, float *elapsedTime, Vector2 *playPositio
         screenMessage("NIVEL 3", 2, true);
 
         /* Estadisticas Nivel 3 */
-        *level = 3;
-        *score = 0;
-        *lives = 5;
+        stats->level = 3;
+        stats->score = 0;
+        stats->lives = 5;
         *elapsedTime = 0.0f;
-        *timeseconds = 0;
+        stats->timeseconds = 0;
 
         MAX_GRAY = MAX_METEOR_LV3;
         MAX_BROWN = MAX_METEOR_LV3;
@@ -665,14 +697,14 @@ void resetItems(Vector2 *playPosition)
 }
 
 // Reinicia estadisticas
-void resetStats(short *lives, short *score, short *level, short *rachaAciertos, short *municion, float *timeSeconds)
+void resetStats(GameStats *stats)
 {
-    *lives = 5;
-    *score = 0;
-    *level = 1;
-    *rachaAciertos = 0;
-    *timeSeconds = 0;
-    *municion = 10;
+    stats->lives = 5;
+    stats->score = 0;
+    stats->level = 1;
+    stats->rachaAciertos = 0;
+    stats->timeseconds = 0;
+    stats->totalMunicion = 10;
     MAX_GRAY = MAX_METEOR_LV1;
     MAX_BROWN = MAX_METEOR_LV1;
     MAX_HEART = MAX_HEART_LV1;
@@ -705,7 +737,7 @@ void appendScoresToFile(const char *filename, Tdata player)
 }
 
 // Dibuja la tabla para mostrar los datos del .dat
-void DrawScoresTable(const char *filename)
+void DrawScoresTable(const char *filename, GameState *gameState)
 {
     FILE *file = fopen(filename, "rb");
     Tdata players[MAX_PLAYERS];
@@ -733,7 +765,7 @@ void DrawScoresTable(const char *filename)
     int maxVisibleRows = (tableHeight - 50) / cellHeight; // Calcula el número máximo de filas visibles
 
     // Fondo tabla de estadisticas
-    Texture2D scoreboardTx = LoadTexture("resources/images/backgrounds/scorebg.png");
+    // Texture2D scoreboardTx = LoadTexture("resources/images/backgrounds/scorebg.png");
 
     while (!IsKeyPressed(KEY_Q))
     {
@@ -780,8 +812,12 @@ void DrawScoresTable(const char *filename)
         }
 
         EndDrawing();
+        if (IsKeyPressed(KEY_Q))
+        {
+            UnloadTexture(scoreboardTx);
+            *gameState = MAIN_MENU;
+        }
     }
-    UnloadTexture(scoreboardTx);
 }
 
 void mezclarArray(char array[][20], int size)
