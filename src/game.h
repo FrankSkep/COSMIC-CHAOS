@@ -20,7 +20,7 @@ void gameOverInterface(short score, short level);
 /* DIBUJO OBJETOS */
 void drawPlayer(Texture2D ship, Texture2D forceF, Vector2 *playerPosition, float *playerRotation, short shield);
 void drawMeteors(float rotation);
-void drawObjects(Texture2D coinsTx, Texture2D heartsTx, Texture2D ballETx);
+void drawObject(Texture2D Textura,TGameObject *objects, int MAX_OBJECTS);
 void drawShots(Texture2D shotTx, Texture2D *explosionTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
@@ -347,47 +347,19 @@ void drawMeteors(float rotation)
 }
 
 // Dibujar monedas y corazones
-void drawObjects(Texture2D coinsTx, Texture2D heartsTx, Texture2D ballETx)
+void drawObject(Texture2D Textura,TGameObject *objects, int MAX_OBJECTS)
 {
-    Vector2 objectCenter, heartCenter;
+    Vector2 objectCenter;
 
     // Dibujar monedas
-    for (int i = 0; i < MAX_COINS; i++)
+    for (int i = 0; i < MAX_OBJECTS; i++)
     {
-        if (coinGold[i].active)
+        if (objects[i].active)
         {
             // Calcular la posición del centro de la moneda
-            objectCenter.x = coinGold[i].position.x - coinsTx.width / 2;
-            objectCenter.y = coinGold[i].position.y - coinsTx.height / 2;
-            DrawTextureV(coinsTx, objectCenter, WHITE);
-        }
-    }
-    for (int i = 0; i < MAX_OBJECT; i++)
-    {
-        if (shieldB[i].active)
-        {
-            // Calcular la posición del centro del escudo
-            objectCenter.x = shieldB[i].position.x - shield.width / 2;
-            objectCenter.y = shieldB[i].position.y - shield.height / 2;
-            DrawTexture(ballETx, objectCenter.x, objectCenter.y, WHITE);
-        }
-        if (municiones[i].active)
-        {
-            // Calcular la posición del centro del escudo
-            objectCenter.x = municiones[i].position.x - ammoTx.width / 2;
-            objectCenter.y = municiones[i].position.y - ammoTx.height / 2;
-            DrawTexture(ammoTx, objectCenter.x, objectCenter.y, WHITE);
-        }
-    }
-    // Dibujar corazones
-    for (int i = 0; i < MAX_HEART; i++)
-    {
-        if (hearts[i].active)
-        {
-            // Calcular la posición del centro del corazon
-            heartCenter.x = (float)((int)hearts[i].position.x - heartsTx.width / 2);
-            heartCenter.y = (float)((int)hearts[i].position.y - heartsTx.height / 2);
-            DrawTextureV(heartsTx, heartCenter, RED);
+            objectCenter.x = objects[i].position.x - Textura.width / 2;
+            objectCenter.y = objects[i].position.y - Textura.height / 2;
+            DrawTextureV(Textura, objectCenter, WHITE);
         }
     }
 }
@@ -897,7 +869,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
                     drawTextCenter("¡Correcto!", 0, 650, 45, GREEN);
                     if (object == 1)
                     {
-                        (*shield) += 2;
+                        (*shield) = 2;
                     }
                     if (object == 2)
                     {
