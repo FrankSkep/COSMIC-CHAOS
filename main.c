@@ -469,7 +469,7 @@ int main()
                 // Dibuja meteoros en rotacion
                 drawMeteors(rotationMeteor);
                 // Dibuja monedas y corazones
-                drawObjects(coinsTx[currentFrame], heartsTx[currentFrameExp]);
+                drawObjects(coinsTx[currentFrame], heartsTx[currentFrameExp], ballE[currentFrameExp]);
                 // Dibuja disparos (misiles)
                 drawShots(misil, &explosionTx[currentFrameExp]);
 

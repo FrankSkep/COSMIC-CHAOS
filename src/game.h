@@ -20,7 +20,7 @@ void gameOverInterface(short score, short level);
 /* DIBUJO OBJETOS */
 void drawPlayer(Texture2D ship, Texture2D forceF, Vector2 *playerPosition, float *playerRotation, short shield);
 void drawMeteors(float rotation);
-void drawObjects(Texture2D coinsTx, Texture2D heartsTx);
+void drawObjects(Texture2D coinsTx, Texture2D heartsTx, Texture2D ballETx);
 void drawShots(Texture2D shotTx, Texture2D *explosionTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
@@ -347,7 +347,7 @@ void drawMeteors(float rotation)
 }
 
 // Dibujar monedas y corazones
-void drawObjects(Texture2D coinsTx, Texture2D heartsTx)
+void drawObjects(Texture2D coinsTx, Texture2D heartsTx, Texture2D ballETx)
 {
     Vector2 objectCenter, heartCenter;
 
@@ -369,7 +369,7 @@ void drawObjects(Texture2D coinsTx, Texture2D heartsTx)
             // Calcular la posición del centro del escudo
             objectCenter.x = shieldB[i].position.x - shield.width / 2;
             objectCenter.y = shieldB[i].position.y - shield.height / 2;
-            DrawTexture(shield, objectCenter.x, objectCenter.y, WHITE);
+            DrawTexture(ballETx, objectCenter.x, objectCenter.y, WHITE);
         }
         if (municiones[i].active)
         {
