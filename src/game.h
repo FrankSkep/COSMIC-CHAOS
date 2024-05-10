@@ -35,7 +35,7 @@ void screenMessage(const char *text, float seconds, bool background);
 void screenpoints(int *totalseconds, short *score);
 
 void resetItems(Vector2 *playPosition);
-void resetStats(short *lives, short *score, short *level, short *correctAns, short *municion, float *timeSeconds);
+void resetStats(short *lives, short *score, short *level, short *rachaAciertos, short *municion, float *timeSeconds);
 void secondspause(float seconds);
 
 // Datos jugador
@@ -47,7 +47,7 @@ void DrawScoresTable(const char *filename);
 void mezclarArray(char array[][20], int size);
 void seleccPreguntas();
 int busqSecuencial(int vect[], int m, int num);
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *racha, short *shield, short *municion, short *lives, short object);
+void drawQuestion(bool *showQuestion, short *racha, short *shield, short *municion, short *lives, short object);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -255,7 +255,7 @@ Tdata getDataPlayer()
     strcpy(data.name, name);                   // Usuario
     data.score = 0;                            // Mejor puntuacion
     data.maxLevel = 0;                         // Maximo Nivel alcanzado
-    data.maxCorrectAnswers = 0;                // Maximas respuestas correctas
+    data.rachaAciertos = 0;                    // Racha de respuestas correctas
     getDate(&data.dia, &data.mes, &data.anio); // Fecha del reporte
     return data;
 }
@@ -674,12 +674,12 @@ void resetItems(Vector2 *playPosition)
 }
 
 // Reinicia estadisticas
-void resetStats(short *lives, short *score, short *level, short *correctAns, short *municion, float *timeSeconds)
+void resetStats(short *lives, short *score, short *level, short *rachaAciertos, short *municion, float *timeSeconds)
 {
     *lives = 5;
     *score = 0;
     *level = 1;
-    *correctAns = 0;
+    *rachaAciertos = 0;
     *timeSeconds = 0;
     *municion = 10;
     MAX_GRAY = MAX_METEOR_LV1;
@@ -774,7 +774,7 @@ void DrawScoresTable(const char *filename)
                 DrawText(players[playerIndex].name, tablePosX + cellWidth * 0.5f - MeasureText(players[playerIndex].name, 20) / 2, textPosY, 20, YELLOW);
                 DrawText(TextFormat("%d", players[playerIndex].maxLevel), tablePosX + cellWidth * 1.5f - MeasureText(TextFormat("%d", players[playerIndex].maxLevel), 20) / 2, textPosY, 20, YELLOW);
                 DrawText(TextFormat("%d", players[playerIndex].score), tablePosX + cellWidth * 2.5f - MeasureText(TextFormat("%d", players[playerIndex].score), 20) / 2, textPosY, 20, YELLOW);
-                DrawText(TextFormat("%d", players[playerIndex].maxCorrectAnswers), tablePosX + cellWidth * 3.5f - MeasureText(TextFormat("%d", players[playerIndex].maxCorrectAnswers), 20) / 2, textPosY, 20, YELLOW); // Nuevo campo
+                DrawText(TextFormat("%d", players[playerIndex].rachaAciertos), tablePosX + cellWidth * 3.5f - MeasureText(TextFormat("%d", players[playerIndex].rachaAciertos), 20) / 2, textPosY, 20, YELLOW); // Nuevo campo
                 DrawText(TextFormat("%02d/%02d/%d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), tablePosX + cellWidth * 4.5f - MeasureText(TextFormat("%02d/%02d/%02d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), 20) / 2, textPosY, 20, YELLOW);
             }
         }
@@ -846,7 +846,7 @@ int busqSecuencial(int vect[], int m, int num)
     return -1;
 }
 
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *racha, short *shield, short *municion, short *lives, short object)
+void drawQuestion(bool *showQuestion, short *racha, short *shield, short *municion, short *lives, short object)
 {
     int indicePregunta = rand() % PREG_SELEC;
     Tpregunta preguntaActual = preguntas[indicePregunta];
@@ -885,7 +885,7 @@ void drawQuestion(bool *showQuestion, short *correctAnswers, short *racha, short
                     {
                         (*municion) += 3;
                     }
-                    (*correctAnswers)++;
+
                     (*racha)++;
                     if ((*racha) % 3 == 0) // 1 Vida adicional por cada racha de 3 aciertos
                     {
