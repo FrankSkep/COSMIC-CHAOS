@@ -7,8 +7,8 @@
 /*--------------------- PROTOTIPOS FUNCIONES ---------------------*/
 /* MENUs */
 void drawMainMenu(GameState *gameState);
-void drawHowToPlay(GameState *gameState);
-void aboutTheGame(GameState *gameState);
+void drawHowToPlay();
+void aboutTheGame();
 void updateGameState(GameState *gameState, int keyPressed, GameStats *stats);
 
 /* INTERFACES */
@@ -41,7 +41,7 @@ void secondspause(float seconds);
 // Datos jugador
 void getDate(int *dia, int *mes, int *anio);
 void appendScoresToFile(const char *filename, Tdata player);
-void DrawScoresTable(const char *filename, GameState *gameState);
+void DrawScoresTable(const char *filename);
 
 // CUESTIONARIO
 void mezclarArray(char array[][20], int size);
@@ -78,29 +78,10 @@ void drawMainMenu(GameState *gameState) // PANTALLA DE MENU
     drawTextCenter("(ESC) Salir", 2, 802, 60, DARKGRAY);
     drawTextCenter("(ESC) Salir", 2, 800, 60, RED);
     EndDrawing();
-
-    // if (IsKeyPressed(KEY_ENTER)) // Iniciar partida
-    // {
-    //     *gameState = IN_GAME;
-    // }
-    // if (IsKeyPressed(KEY_A)) // Ir a tutorial como jugar
-    // {
-    //     *gameState = HOW_TO_PLAY;
-    // }
-    // if (IsKeyPressed(KEY_E)) // Ir a acerca del juego
-    // {
-    //     aboutBg = LoadTexture("resources/images/backgrounds/cinema9.png");
-    //     *gameState = ABOUT_GAME;
-    // }
-    // if (IsKeyPressed(KEY_H))
-    // {
-    //     scoreboardTx = LoadTexture("resources/images/backgrounds/scorebg.png");
-    //     *gameState = HISTORY_SCORE;
-    // }
 }
 
 // Dibuja pantalla de como jugar
-void drawHowToPlay(GameState *gameState)
+void drawHowToPlay()
 {
     BeginDrawing();
     ClearBackground(BLACK);
@@ -111,14 +92,10 @@ void drawHowToPlay(GameState *gameState)
     DrawText("- Gana puntos, vidas y sobrevive", 40, SCR_HEIGHT / 2 + 180, 50, YELLOW);
     DrawText("(Q) Volver al menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GREEN);
     EndDrawing();
-    // if (IsKeyPressed(KEY_Q))
-    // {
-    //     *gameState = MAIN_MENU;
-    // }
 }
 
 // Dibuja pantalla con informacion acerca del juego
-void aboutTheGame(GameState *gameState)
+void aboutTheGame()
 {
     BeginDrawing();
 
@@ -131,12 +108,6 @@ void aboutTheGame(GameState *gameState)
     drawTextCenter("- Diego Ibarra", 0, 400, 50, GREEN);
     drawTextCenter("(Q) Volver al menu", 0, 800, 50, GOLD);
     EndDrawing();
-
-    // if (IsKeyPressed(KEY_Q))
-    // {
-    //     UnloadTexture(aboutBg);
-    //     *gameState = MAIN_MENU;
-    // }
 }
 
 void updateGameState(GameState *gameState, int keyPressed, GameStats *stats)
@@ -737,7 +708,7 @@ void appendScoresToFile(const char *filename, Tdata player)
 }
 
 // Dibuja la tabla para mostrar los datos del .dat
-void DrawScoresTable(const char *filename, GameState *gameState)
+void DrawScoresTable(const char *filename)
 {
     FILE *file = fopen(filename, "rb");
     Tdata players[MAX_PLAYERS];
@@ -763,9 +734,6 @@ void DrawScoresTable(const char *filename, GameState *gameState)
     int cellHeight = 50;
     int scrollOffset = 0;
     int maxVisibleRows = (tableHeight - 50) / cellHeight; // Calcula el número máximo de filas visibles
-
-    // Fondo tabla de estadisticas
-    // Texture2D scoreboardTx = LoadTexture("resources/images/backgrounds/scorebg.png");
 
     while (!IsKeyPressed(KEY_Q))
     {
@@ -812,11 +780,6 @@ void DrawScoresTable(const char *filename, GameState *gameState)
         }
 
         EndDrawing();
-        if (IsKeyPressed(KEY_Q))
-        {
-            UnloadTexture(scoreboardTx);
-            *gameState = MAIN_MENU;
-        }
     }
 }
 

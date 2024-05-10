@@ -92,19 +92,19 @@ int main()
 
         case HOW_TO_PLAY:
             UpdateMusicStream(menuMusic);
-            drawHowToPlay(&gameState);
+            drawHowToPlay();
             keyOption = GetKeyPressed();
             break;
 
         case ABOUT_GAME:
             UpdateMusicStream(menuMusic);
-            aboutTheGame(&gameState);
+            aboutTheGame();
             keyOption = GetKeyPressed();
             break;
 
         case HISTORY_SCORE:
             UpdateMusicStream(menuMusic);
-            DrawScoresTable("record.dat", &gameState);
+            DrawScoresTable("record.dat");
             keyOption = GetKeyPressed();
             break;
 
