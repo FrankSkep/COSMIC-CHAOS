@@ -6,7 +6,7 @@ void loadSounds();
 void unloadSounds();
 
 /*** Texturas ***/
-Texture2D menu, game, gameoverT;
+Texture2D menu, levels[3], gameoverT;
 Texture2D hearthE[6], hearthF[3], shield, forceF[6];
 Texture2D shipTx[3], coinsTx[6], heartsTx[3], misil, ammoTx, explosionTx[3];
 Texture2D grayMeteor, brownMeteor;
@@ -34,8 +34,11 @@ void loadTextures()
     loadingScreen("Cargando.");
     // Fondo menu principal
     menu = LoadTexture("resources/images/backgrounds/menu.png");
-    // Fondo partida
-    game = LoadTexture("resources/images/backgrounds/game.png");
+    // Fondos de partida por nivel
+    levels[0] = LoadTexture("resources/images/backgrounds/nivel1.png");
+    levels[1] = LoadTexture("resources/images/backgrounds/nivel2.png");
+    levels[2] = LoadTexture("resources/images/backgrounds/nivel3.png");
+
     // Fondo gameover
     gameoverT = LoadTexture("resources/images/backgrounds/gameover.png");
 
@@ -115,7 +118,6 @@ void unloadTextures()
 {
     loadingScreen("ADIOS.");
     UnloadTexture(menu);
-    UnloadTexture(game);
     UnloadTexture(gameoverT);
     UnloadTexture(misil);
 
@@ -126,6 +128,7 @@ void unloadTextures()
         UnloadTexture(forceF[i]);
         if (i < 3)
         {
+            UnloadTexture(levels[i]);
             UnloadTexture(shipTx[i]);
             UnloadTexture(hearthF[i]);
             UnloadTexture(heartsTx[i]);

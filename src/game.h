@@ -149,8 +149,21 @@ void menuActions(int *seconds, bool *isPlaying)
 void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short lives, short score, short level, const char *nickname, short racha, short shield, short municion, int minutes, int seconds)
 {
     // Dibuja fondo
-    DrawTexture(game, 0, 0, WHITE);
+    switch(level)
+    {
+        case 1:
+        DrawTexture(levels[0], 0, 0, WHITE);
+        break;
 
+        case 2:
+        DrawTexture(levels[1], 0, 0, WHITE);
+        break;
+
+        case 3:
+        DrawTexture(levels[2], 0, 0, WHITE);
+        break;
+    }
+    
     // Dibuja puntaje
     DrawText(TextFormat("Puntos : %04i", score), SCR_WIDTH - 320, 20, 45, WHITE);
 
