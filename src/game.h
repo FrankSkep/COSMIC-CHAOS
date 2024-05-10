@@ -35,7 +35,7 @@ void screenMessage(const char *text, float seconds, bool background);
 void screenpoints(int *totalseconds, short *score);
 
 void resetItems(Vector2 *playPosition);
-void resetStats(short *lives, short *score, short *level, short *correctAns, short *municion, float *timeSeconds);
+void resetStats(short *lives, short *score, short *level, short *rachaAciertos, short *municion, float *timeSeconds);
 void secondspause(float seconds);
 
 // Datos jugador
@@ -47,7 +47,7 @@ void DrawScoresTable(const char *filename);
 void mezclarArray(char array[][20], int size);
 void seleccPreguntas();
 int busqSecuencial(int vect[], int m, int num);
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *racha, short *shield, short *municion, short *lives, short object);
+void drawQuestion(bool *showQuestion, short *racha, short *shield, short *municion, short *lives, short object);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
 // Dibuja menu principal
@@ -149,8 +149,21 @@ void menuActions(int *seconds, bool *isPlaying)
 void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, short lives, short score, short level, const char *nickname, short racha, short shield, short municion, int minutes, int seconds)
 {
     // Dibuja fondo
-    DrawTexture(game, 0, 0, WHITE);
+    switch(level)
+    {
+        case 1:
+        DrawTexture(levels[0], 0, 0, WHITE);
+        break;
 
+        case 2:
+        DrawTexture(levels[1], 0, 0, WHITE);
+        break;
+
+        case 3:
+        DrawTexture(levels[2], 0, 0, WHITE);
+        break;
+    }
+    
     // Dibuja puntaje
     DrawText(TextFormat("Puntos : %04i", score), SCR_WIDTH - 320, 20, 45, WHITE);
 
@@ -255,7 +268,7 @@ Tdata getDataPlayer()
     strcpy(data.name, name);                   // Usuario
     data.score = 0;                            // Mejor puntuacion
     data.maxLevel = 0;                         // Maximo Nivel alcanzado
-    data.maxCorrectAnswers = 0;                // Maximas respuestas correctas
+    data.rachaAciertos = 0;                    // Racha de respuestas correctas
     getDate(&data.dia, &data.mes, &data.anio); // Fecha del reporte
     return data;
 }
@@ -336,7 +349,7 @@ void drawMeteors(float rotation)
 // Dibujar monedas y corazones
 void drawObjects(Texture2D coinsTx, Texture2D heartsTx)
 {
-    Vector2 coinCenter, heartCenter;
+    Vector2 objectCenter, heartCenter;
 
     // Dibujar monedas
     for (int i = 0; i < MAX_COINS; i++)
@@ -344,20 +357,26 @@ void drawObjects(Texture2D coinsTx, Texture2D heartsTx)
         if (coinGold[i].active)
         {
             // Calcular la posición del centro de la moneda
-            coinCenter.x = coinGold[i].position.x - coinsTx.width / 2;
-            coinCenter.y = coinGold[i].position.y - coinsTx.height / 2;
-            DrawTextureV(coinsTx, coinCenter, WHITE);
+            objectCenter.x = coinGold[i].position.x - coinsTx.width / 2;
+            objectCenter.y = coinGold[i].position.y - coinsTx.height / 2;
+            DrawTextureV(coinsTx, objectCenter, WHITE);
         }
     }
     for (int i = 0; i < MAX_OBJECT; i++)
     {
         if (shieldB[i].active)
         {
-            DrawCircle(shieldB[i].position.x, shieldB[i].position.y, COINS_RADIUS, BLUE);
+            // Calcular la posición del centro del escudo
+            objectCenter.x = shieldB[i].position.x - shield.width / 2;
+            objectCenter.y = shieldB[i].position.y - shield.height / 2;
+            DrawTexture(shield, objectCenter.x, objectCenter.y, WHITE);
         }
         if (municiones[i].active)
         {
-            DrawCircle(municiones[i].position.x, municiones[i].position.y, COINS_RADIUS, YELLOW);
+            // Calcular la posición del centro del escudo
+            objectCenter.x = municiones[i].position.x - ammoTx.width / 2;
+            objectCenter.y = municiones[i].position.y - ammoTx.height / 2;
+            DrawTexture(ammoTx, objectCenter.x, objectCenter.y, WHITE);
         }
     }
     // Dibujar corazones
@@ -674,12 +693,12 @@ void resetItems(Vector2 *playPosition)
 }
 
 // Reinicia estadisticas
-void resetStats(short *lives, short *score, short *level, short *correctAns, short *municion, float *timeSeconds)
+void resetStats(short *lives, short *score, short *level, short *rachaAciertos, short *municion, float *timeSeconds)
 {
     *lives = 5;
     *score = 0;
     *level = 1;
-    *correctAns = 0;
+    *rachaAciertos = 0;
     *timeSeconds = 0;
     *municion = 10;
     MAX_GRAY = MAX_METEOR_LV1;
@@ -717,10 +736,6 @@ void appendScoresToFile(const char *filename, Tdata player)
 void DrawScoresTable(const char *filename)
 {
     FILE *file = fopen(filename, "rb");
-    if (file == NULL)
-    {
-        drawTextCenter("No hay registros", 0, (SCR_HEIGHT / 2) + 200, 60, RED);
-    }
     Tdata players[MAX_PLAYERS];
     int numPlayers = 0;
 
@@ -728,7 +743,10 @@ void DrawScoresTable(const char *filename)
     {
         numPlayers++;
     }
-
+    if (numPlayers <= 0)
+    {
+        drawTextCenter("No hay registros", 0, (SCR_HEIGHT / 2) + 200, 50, WHITE);
+    }
     fclose(file);
 
     // Calcular posición y dimensiones de la tabla
@@ -774,7 +792,7 @@ void DrawScoresTable(const char *filename)
                 DrawText(players[playerIndex].name, tablePosX + cellWidth * 0.5f - MeasureText(players[playerIndex].name, 20) / 2, textPosY, 20, YELLOW);
                 DrawText(TextFormat("%d", players[playerIndex].maxLevel), tablePosX + cellWidth * 1.5f - MeasureText(TextFormat("%d", players[playerIndex].maxLevel), 20) / 2, textPosY, 20, YELLOW);
                 DrawText(TextFormat("%d", players[playerIndex].score), tablePosX + cellWidth * 2.5f - MeasureText(TextFormat("%d", players[playerIndex].score), 20) / 2, textPosY, 20, YELLOW);
-                DrawText(TextFormat("%d", players[playerIndex].maxCorrectAnswers), tablePosX + cellWidth * 3.5f - MeasureText(TextFormat("%d", players[playerIndex].maxCorrectAnswers), 20) / 2, textPosY, 20, YELLOW); // Nuevo campo
+                DrawText(TextFormat("%d", players[playerIndex].rachaAciertos), tablePosX + cellWidth * 3.5f - MeasureText(TextFormat("%d", players[playerIndex].rachaAciertos), 20) / 2, textPosY, 20, YELLOW); // Nuevo campo
                 DrawText(TextFormat("%02d/%02d/%d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), tablePosX + cellWidth * 4.5f - MeasureText(TextFormat("%02d/%02d/%02d", players[playerIndex].dia, players[playerIndex].mes, players[playerIndex].anio), 20) / 2, textPosY, 20, YELLOW);
             }
         }
@@ -846,7 +864,7 @@ int busqSecuencial(int vect[], int m, int num)
     return -1;
 }
 
-void drawQuestion(bool *showQuestion, short *correctAnswers, short *racha, short *shield, short *municion, short *lives, short object)
+void drawQuestion(bool *showQuestion, short *racha, short *shield, short *municion, short *lives, short object)
 {
     int indicePregunta = rand() % PREG_SELEC;
     Tpregunta preguntaActual = preguntas[indicePregunta];
@@ -885,7 +903,7 @@ void drawQuestion(bool *showQuestion, short *correctAnswers, short *racha, short
                     {
                         (*municion) += 3;
                     }
-                    (*correctAnswers)++;
+
                     (*racha)++;
                     if ((*racha) % 3 == 0) // 1 Vida adicional por cada racha de 3 aciertos
                     {

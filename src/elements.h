@@ -62,7 +62,7 @@ typedef struct _playerData
     char name[MAX_LEN_NAME];
     int maxLevel;
     int score;
-    int maxCorrectAnswers;
+    int rachaAciertos;
     int dia;
     int mes;
     int anio;

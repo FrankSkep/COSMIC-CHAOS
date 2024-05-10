@@ -23,7 +23,7 @@ int main()
     bool gameOver = false;
 
     /* JUEGO */
-    short i, score = 0, lives = 5, level = 0, correctAnswers = 0, rachaAciertos = 0, shieldActive = 0, totalMunicion = 9, object;
+    short i, score = 0, lives = 5, level = 0, rachaAciertos = 0, shieldActive = 0, totalMunicion = 9, object;
     float elapsedTime1 = 0.0f, elapsedTime2 = 0.0f, rotationMeteor = 0.0f;
     float playerRotation = 0.0;
     float currentRotation = 0.0f;
@@ -506,7 +506,7 @@ int main()
 
                 if (showQuestion) // Si tomo moneda de pregunta
                 {
-                    drawQuestion(&showQuestion, &correctAnswers, &rachaAciertos, &shieldActive, &totalMunicion, &lives, object);
+                    drawQuestion(&showQuestion, &rachaAciertos, &shieldActive, &totalMunicion, &lives, object);
                     continuar = true;
                     contin = 1;
                 }
@@ -536,10 +536,10 @@ int main()
                     {
                         data.maxLevel = level;
                     }
-                    // Actualizar maximas respuestas correctas
-                    if (correctAnswers > data.maxCorrectAnswers)
+                    // Actualizar maxima racha de respuestas correctas
+                    if (rachaAciertos > data.rachaAciertos)
                     {
-                        data.maxCorrectAnswers = correctAnswers;
+                        data.rachaAciertos = rachaAciertos;
                     }
 
                     StopMusicStream(gameMusic); // Detener musica partida
@@ -559,13 +559,13 @@ int main()
                 // Vuelve a jugar al presionar enter
                 if (IsKeyDown(KEY_ENTER))
                 {
-                    resetStats(&lives, &score, &level, &correctAnswers, &totalMunicion, &timeseconds);
+                    resetStats(&lives, &score, &level, &rachaAciertos, &totalMunicion, &timeseconds);
                     gameOver = false;
                 }
                 // Vuelve al menu al presionar Q
                 if (IsKeyDown(KEY_Q))
                 {
-                    resetStats(&lives, &score, &level, &correctAnswers, &totalMunicion, &timeseconds);
+                    resetStats(&lives, &score, &level, &rachaAciertos, &totalMunicion, &timeseconds);
                     isPlaying = false;
                     gameOver = false;
                 }
@@ -576,7 +576,7 @@ int main()
         }
     }
 
-    // Agregar estadisticas al archivo .dat
+    // Guardar estadisticas en archivo record.dat
     if (saveProgress)
     {
         appendScoresToFile("record.dat", data);
