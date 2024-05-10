@@ -21,7 +21,6 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, int frame1, int frame2);
 void screenpoints(int *totalseconds, short *score);
 void pausa();
-void screenMessage(const char *text, float seconds, bool background);
 
 /*------ DESARROLLO DE LAS FUNCIONES ------*/
 

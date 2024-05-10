@@ -518,26 +518,26 @@ int main()
                 {
                     PlaySound(soundcoin);
                     PlaySound(soundcoin);
-                    screenMessage("¡GO!", 0.5, false);
+                    screenMessage("¡GO!", 0.5, BLANK);
                     contin = 0;
                     continuar = false;
                 }
                 if (contin == 3)
                 {
                     PlaySound(soundcoin);
-                    screenMessage("1", 0.7, false);
+                    screenMessage("1", 0.7, BLANK);
                     contin = 4;
                 }
                 if (contin == 2)
                 {
                     PlaySound(soundcoin);
-                    screenMessage("2", 0.7, false);
+                    screenMessage("2", 0.7, BLANK);
                     contin = 3;
                 }
                 if (contin == 1)
                 {
                     PlaySound(soundcoin);
-                    screenMessage("3", 0.7, false);
+                    screenMessage("3", 0.7, BLANK);
                     contin = 2;
                 }
             }

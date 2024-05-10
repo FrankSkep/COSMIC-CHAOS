@@ -21,7 +21,7 @@ void resetStats(GameStats *stats);
 
 // Espera un tiempo especifico
 void secondspause(float seconds);
-void screenMessage(const char *text, float seconds, bool background);
+void screenMessage(const char *text, float seconds, Color colorbg);
 
 // Recoge Datos jugador
 void ingresarNickName(char inputText[]);
@@ -210,7 +210,7 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
         // subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, 0, 1);
         // subsCinematicas("continuacion de historia", 45, 7, 2, 0, 1);
 
-        screenMessage("NIVEL 2", 2, true);
+        screenMessage("NIVEL 2", 2, BLACK);
 
         /* Estadisticas Nivel 2 */
         stats->level = 2;
@@ -229,7 +229,7 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
         // Limpiar objetos
         resetItems(playPosition);
 
-        screenMessage("NIVEL 3", 2, true);
+        screenMessage("NIVEL 3", 2, BLACK);
 
         /* Estadisticas Nivel 3 */
         stats->level = 3;
@@ -377,14 +377,12 @@ void secondspause(float seconds)
 }
 
 // Mostrar mensaje en pantalla
-void screenMessage(const char *text, float seconds, bool background)
+void screenMessage(const char *text, float seconds, Color colorbg)
 {
     int tamano = 180;
 
-    if (background)
-    {
-        ClearBackground(BLACK);
-    }
+    ClearBackground(colorbg);
+
     DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
     EndDrawing();
     secondspause(seconds);
