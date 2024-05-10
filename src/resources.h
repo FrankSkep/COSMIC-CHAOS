@@ -7,7 +7,7 @@ void unloadSounds();
 
 /*** Texturas ***/
 Texture2D menu, levels[3], gameoverT;
-Texture2D hearthE[6], hearthF[3], shield, forceF[6];
+Texture2D hearthE[6], hearthF[3], shield, forceF[6],ballE[3];
 Texture2D shipTx[3], coinsTx[6], heartsTx[3], misil, ammoTx, explosionTx[3];
 Texture2D grayMeteor, brownMeteor;
 
@@ -58,6 +58,9 @@ void loadTextures()
 
     // power ups
     shield = LoadTexture("resources/images/shield/shield.png");
+    ballE[0] = LoadTexture("resources/images/shield/ballEnergi_00.png");
+    ballE[1] = LoadTexture("resources/images/shield/ballEnergi_01.png");
+    ballE[2] = LoadTexture("resources/images/shield/ballEnergi_02.png");
     ammoTx = LoadTexture("resources/images/shot/ammo.png");
 
     forceF[0] = LoadTexture("resources/images/shield/forceField_00.png");
