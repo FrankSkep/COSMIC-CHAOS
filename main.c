@@ -1,13 +1,13 @@
 #include "raylib.h"
-#include "src/elements.h"
-#include "src/resources.h" // Texturas y sonidos
-Texture2D scoreboardTx, aboutBg;
-#include "src/game.h" // Funciones del juego
+#include "src/elements.h"  // Struct, Enum y Constantes
+#include "src/resources.h" // Carga texturas y sonidos
+#include "src/game.h"      // Funciones logica del juego
+#include "src/drawing.h"   // Funciones de dibujo
 
 int main()
 {
     srand(time(NULL));
-    seleccPreguntas();
+    selecNpreguntas();
     /*------------- CONSTANTES -------------*/
     const int playRadius = 45;       // Tamaño del jugador
     const float playerSpeed = 15.0f; // Velocidad del jugador
@@ -19,18 +19,14 @@ int main()
     const float spawnIntervalPU = 1.2f;
 
     /*--------------- VARIABLES ---------------*/
-    /* ESTADOS DEL JUEGO */
     bool gameOver = false;
 
     /* JUEGO */
-    // score = 0, lives = 5, level = 0, rachaAciertos = 0, totalMunicion = 9,
     short i, shieldActive = 0, object;
     float elapsedTime1 = 0.0f, elapsedTime2 = 0.0f, rotationMeteor = 0.0f;
     float playerRotation = 0.0;
     float currentRotation = 0.0f;
     float targetRotation = 0.0f;
-
-    GameStats stats = {5, 0, 0, 0, 10, 0}; // Estadisticas iniciales
 
     /* CRONOMETRO */
     int totalseconds = 0, minutesT = 0, secondsT = 0;
@@ -45,25 +41,28 @@ int main()
     InitAudioDevice();
     loadSounds();
 
-    /*-------- Ajustes texturas cambiantes --------*/
-    short currentFrame = 0; // indice de la textura actual
-    short currentFrameExp = 0;
-    float frameTimeCounter = 0.0f;
-    float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/8 de segundo)
+    // ------- JUGADOR -------
+    Tdata data = getDataPlayer();          // Entrada de datos
+    GameStats stats = {5, 0, 0, 0, 10, 0}; // Estadisticas iniciales
 
-    // Posicion y centro de jugador
+    /*------- Variables Sprites -------*/
+    short currentFrame = 0;    // Indice tx actual (0, 5)
+    short currentFrameExp = 0; // Indice tx actual (0, 2)
+    float frameTimeCounter = 0.0f;
+    float frameSpeed = 1.0f / 8.0f; // Velocidad de cambio de imagen
+
+    // Posicion centrada de jugador
     Vector2 playerPosition = {(float)SCR_WIDTH / 2 - shipTx[currentFrame].width / 2, (float)SCR_HEIGHT / 1.1f - shipTx[currentFrame].height / 2};
     // Centro textura meteoros
     Vector2 grayCenter, brownCenter;
 
-    // ------- DATOS JUGADOR -------
-    Tdata data = getDataPlayer();
-
     bool saveProgress = false; // Guardar estadisticas de jugador
     bool showQuestion = false; // Mostrar pregunta
-    bool continuar = false;    // Animacion despues de pregunta
+    // Animacion despues de pregunta
+    bool continuar = false;
     int contin = 0;
 
+    // Estado inicial del juego
     GameState gameState = MAIN_MENU;
     int keyOption;
 
@@ -83,10 +82,10 @@ int main()
         switch (gameState)
         {
         case MAIN_MENU:
-            StopMusicStream(gameover); // Detiene musica gameover
+            StopMusicStream(gameover);
             PlayMusicStream(menuMusic);
             UpdateMusicStream(menuMusic);
-            drawMainMenu(&gameState); // Dibuja menu principal
+            drawMainMenu();
             keyOption = GetKeyPressed();
             break;
 
@@ -120,9 +119,9 @@ int main()
             // Pasado el tiempo, cambia imagen
             if (frameTimeCounter >= frameSpeed)
             {
-                currentFrame = (currentFrame + 1) % 6; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
-                currentFrameExp = (currentFrameExp + 1) % 3;
-                frameTimeCounter = 0.0f; // Reiniciar el contador de tiempo
+                currentFrame = (currentFrame + 1) % 6;       // Cambiar entre 0, 1, 2, 3, 4, 5
+                currentFrameExp = (currentFrameExp + 1) % 3; // Cambiar entre 0, 1, 2
+                frameTimeCounter = 0.0f;                     // Reiniciar el contador de tiempo
             }
 
             /*------------------ CONTROLES ------------------*/
@@ -151,6 +150,22 @@ int main()
                     }
                 }
             }
+
+            if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) // Mover hacia arriba
+            {
+                if (playerPosition.y - playRadius > 0)
+                {
+                    playerPosition.y -= playerSpeed;
+                }
+            }
+            if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) // Mover hacia abajo
+            {
+                if (playerPosition.y + playRadius < SCR_HEIGHT)
+                {
+                    playerPosition.y += playerSpeed;
+                }
+            }
+
             // Interpolar la rotación de vuelta a la posición original cuando se suelta la tecla
             if (!IsKeyDown(KEY_RIGHT) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_A))
             {
@@ -181,21 +196,6 @@ int main()
             // Actualizar la rotación del jugador
             playerRotation = currentRotation;
 
-            if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) // Mover hacia arriba
-            {
-                if (playerPosition.y - playRadius > 0)
-                {
-                    playerPosition.y -= playerSpeed;
-                }
-            }
-            if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) // Mover hacia abajo
-            {
-                if (playerPosition.y + playRadius < SCR_HEIGHT)
-                {
-                    playerPosition.y += playerSpeed;
-                }
-            }
-
             if (IsKeyPressed(KEY_SPACE)) // Disparar misil
             {
                 for (i = 0; i < MAX_SHOTS; i++)
@@ -215,7 +215,7 @@ int main()
             }
 
             /*--------------------- GENERACION OBJETOS ---------------------*/
-            elapsedTime1 += GetFrameTime(); // Actualizar temporizador
+            elapsedTime1 += GetFrameTime();
             elapsedTime2 += GetFrameTime();
             if (elapsedTime1 >= spawnInterval)
             {

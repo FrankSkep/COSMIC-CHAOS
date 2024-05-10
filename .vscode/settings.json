@@ -8,7 +8,9 @@
         "resources.h": "c",
         "typeinfo": "c",
         "stdlib.h": "c",
-        "raylib.h": "c"
+        "raylib.h": "c",
+        "drawing.h": "c",
+        "string.h": "c"
     },
     "python.testing.unittestArgs": [
         "-v",
