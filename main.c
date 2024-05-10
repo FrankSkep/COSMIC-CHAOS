@@ -311,7 +311,7 @@ int main()
                         }
                     }
                 }
-                /*----- Moneda tipo 1 (Incrementador de puntos) -----*/
+                /*----- Moneda (Incrementador de puntos) -----*/
                 for (i = 0; i < MAX_COINS; i++)
                 {
                     if (coinGold[i].active)
@@ -332,7 +332,7 @@ int main()
                 }
                 for (i = 0; i < MAX_OBJECT; i++)
                 {
-                    // Escudos (Pregunta)
+                    // Escudo
                     if (shieldB[i].active)
                     {
                         shieldB[i].position.y += SHIELD_SPEED;
@@ -350,7 +350,7 @@ int main()
                             PlaySound(soundcoin);
                         }
                     }
-                    // municion
+                    // Caja de municion
                     if (municiones[i].active)
                     {
                         municiones[i].position.y += AMMO_SPEED;
