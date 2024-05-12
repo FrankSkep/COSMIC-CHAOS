@@ -341,82 +341,30 @@ int main()
                 }
             }
             /*----- Moneda (Incrementador de puntos) -----*/
-            for (i = 0; i < MAX_COINS; i++)
+            if (objectColision(coinGold, COINS_RADIUS, playerPosition, playRadius, MAX_COINS, COINS_SPEED))
             {
-                if (coinGold[i].active)
-                {
-                    coinGold[i].position.y += COINS_SPEED;
-                    if (coinGold[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
-                    {
-                        coinGold[i].active = false; // Eliminar al salir de la pantalla
-                    }
-                    // Detectar colisión con jugador y aumentar el contador de puntos
-                    if (CheckCollision(&playerPosition, playRadius, &coinGold[i].position, COINS_RADIUS))
-                    {
-                        coinGold[i].active = false; // Eliminar objeto tocado
-                        stats.score += 10;          // Aumentar el puntaje
-                        PlaySound(soundcoin);
-                    }
-                }
+                stats.score += 10; // Aumentar el puntaje
+                PlaySound(soundcoin);
             }
-            for (i = 0; i < MAX_OBJECT; i++)
+            // Caja de municion
+            if (objectColision(shieldB, COINS_RADIUS, playerPosition, playRadius, MAX_OBJECT, SHIELD_SPEED))
             {
-                // Escudo
-                if (shieldB[i].active)
-                {
-                    shieldB[i].position.y += SHIELD_SPEED;
-                    if (shieldB[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
-                    {
-                        shieldB[i].active = false; // Eliminar al salir de la pantalla
-                    }
-
-                    // Detectar colisión con jugador y aumentar el contador de puntos
-                    if (CheckCollision(&playerPosition, playRadius, &shieldB[i].position, COINS_RADIUS))
-                    {
-                        shieldB[i].active = false; // Eliminar objeto tocado
-                        object = 1;
-                        showQuestion = true;
-                        PlaySound(soundcoin);
-                    }
-                }
-                // Caja de municion
-                if (municiones[i].active)
-                {
-                    municiones[i].position.y += AMMO_SPEED;
-                    if (municiones[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
-                    {
-                        municiones[i].active = false; // Eliminar al salir de la pantalla
-                    }
-                    // Detectar colisión con jugador y aumentar el contador de puntos
-                    if (CheckCollision(&playerPosition, playRadius, &municiones[i].position, COINS_RADIUS))
-                    {
-                        municiones[i].active = false; // Eliminar objeto tocado
-                        object = 2;
-                        showQuestion = true;
-                        PlaySound(soundcoin);
-                    }
-                }
+                object = 1;
+                showQuestion = true;
+                PlaySound(soundcoin);
             }
-
+            if (objectColision(municiones, COINS_RADIUS, playerPosition, playRadius, MAX_OBJECT, AMMO_SPEED))
+            {
+                object = 2;
+                showQuestion = true;
+                PlaySound(soundcoin);
+            }
             /*----- Corazon (Vida adicional) -----*/
-            for (i = 0; i < MAX_HEART; i++)
+            if (objectColision(hearts, HEARTS_RADIUS, playerPosition, playRadius, MAX_HEART, HEARTS_SPEED))
             {
-                if (hearts[i].active)
-                {
-                    hearts[i].position.y += HEARTS_SPEED;
-                    if (hearts[i].position.y > SCR_HEIGHT + HEARTS_RADIUS * 2)
-                    {
-                        hearts[i].active = false; // Eliminar al salir de la pantalla
-                    }
-
-                    // Detectar colisión con jugador y aumentar vidas
-                    if (CheckCollision(&playerPosition, playRadius, &hearts[i].position, HEARTS_RADIUS))
-                    {
-                        hearts[i].active = false; // Eliminar objeto tocado
-                        stats.lives++;            // Gana una vida
-                    }
-                }
+                stats.lives++; // Gana una vida
             }
+
             /*----- Disparos -----*/
             for (i = 0; i < MAX_SHOTS; i++)
             {

@@ -17,6 +17,8 @@ void drawObject(Texture2D Textura, TGameObject *objects, int MAX_OBJECTS);
 void drawShots(Texture2D shotTx, Texture2D *explosionTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
+bool objectColision(TGameObject *object, int Object_radio, Vector2 playerPosition, int playRadius, int Max_object, int speed);
+
 /* PANTALLAS */
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, int frame1, int frame2);
 void screenpoints(int *totalseconds, short *score);
@@ -514,4 +516,28 @@ void pausa()
             EndDrawing();
         } while (!IsKeyPressed(KEY_ENTER));
     }
+}
+
+bool objectColision(TGameObject *object, int Object_radio, Vector2 playerPosition, int playRadius, int Max_object, int speed)
+{
+    short i;
+    for (i = 0; i < Max_object; i++)
+    {
+        if (object[i].active)
+        {
+            object[i].position.y += speed;
+            if (object[i].position.y > SCR_HEIGHT + Object_radio * 2)
+            {
+                object[i].active = false; // Eliminar al salir de la pantalla
+            }
+
+            // Detectar colisión con jugador y aumentar vidas
+            if (CheckCollision(&playerPosition, playRadius, &object[i].position, Object_radio))
+            {
+                object[i].active = false; // Eliminar objeto tocado
+                return true;
+            }
+        }
+    }
+    return false;
 }
