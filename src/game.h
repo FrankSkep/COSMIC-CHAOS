@@ -17,6 +17,7 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
 
 // Reinicia juego
 void resetItems(Vector2 *playPosition);
+void objectfalse(TGameObject *object, int Max_object);
 void resetStats(GameStats *stats);
 
 // Espera un tiempo especifico
@@ -253,38 +254,27 @@ void resetItems(Vector2 *playPosition)
     short i;
 
     // Limpiar meteoros
-    for (i = 0; i < MAX_GRAY; i++)
-    {
-        grayMeteors[i].active = false;
-    }
-    for (i = 0; i < MAX_BROWN; i++)
-    {
-        brownMeteors[i].active = false;
-    }
+    objectfalse(grayMeteors, MAX_GRAY);
+    objectfalse(brownMeteors, MAX_BROWN);
     // Limpiar Objetos
-    for (i = 0; i < MAX_COINS; i++)
-    {
-        coinGold[i].active = false;
-    }
-    for (i = 0; i < MAX_OBJECT; i++)
-    {
-        shieldB[i].active = false;
-    }
-    for (i = 0; i < MAX_OBJECT; i++)
-    {
-        municiones[i].active = false;
-    }
-    for (i = 0; i < MAX_HEART; i++)
-    {
-        hearts[i].active = false;
-    }
+    objectfalse(coinGold, MAX_COINS);
+    objectfalse(shieldB, MAX_OBJECT);
+    objectfalse(municiones, MAX_OBJECT);
+    objectfalse(hearts, MAX_HEART);
     // Limpiar disparos
     for (i = 0; i < MAX_SHOTS; i++)
     {
         shots[i].active = false;
     }
 }
-
+void objectfalse(TGameObject *object, int Max_object)
+{
+    short i;
+    for (i = 0; i < Max_object; i++)
+    {
+        object[i].active = false;
+    }
+}
 // Reinicia estadisticas
 void resetStats(GameStats *stats)
 {
