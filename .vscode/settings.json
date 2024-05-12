@@ -6,7 +6,11 @@
         "game.h": "c",
         "elements.h": "c",
         "resources.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "stdlib.h": "c",
+        "raylib.h": "c",
+        "drawing.h": "c",
+        "string.h": "c"
     },
     "python.testing.unittestArgs": [
         "-v",

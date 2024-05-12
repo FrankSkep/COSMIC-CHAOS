@@ -6,7 +6,7 @@ void loadSounds();
 void unloadSounds();
 
 /*** Texturas ***/
-Texture2D menu, levels[3], gameoverT;
+Texture2D menu, levels[3], gameoverT, scoreboardTx, aboutBg;
 Texture2D hearthE[6], hearthF[3], shield, forceF[6],ballE[3];
 Texture2D shipTx[3], coinsTx[6], heartsTx[3], misil, ammoTx, explosionTx[3];
 Texture2D grayMeteor, brownMeteor;

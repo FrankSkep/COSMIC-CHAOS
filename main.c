@@ -1,12 +1,13 @@
 #include "raylib.h"
-#include "src/elements.h"
-#include "src/resources.h" // Texturas y sonidos
-#include "src/game.h"      // Funciones del juego
+#include "src/elements.h"  // Struct, Enum y Constantes
+#include "src/resources.h" // Carga texturas y sonidos
+#include "src/game.h"      // Funciones logica del juego
+#include "src/drawing.h"   // Funciones de dibujo
 
 int main()
 {
     srand(time(NULL));
-    seleccPreguntas();
+    selecNpreguntas();
     /*------------- CONSTANTES -------------*/
     const int playRadius = 45;       // Tamaño del jugador
     const float playerSpeed = 15.0f; // Velocidad del jugador
@@ -18,12 +19,10 @@ int main()
     const float spawnIntervalPU = 1.2f;
 
     /*--------------- VARIABLES ---------------*/
-    /* ESTADOS DEL JUEGO */
-    bool isPlaying = false;
     bool gameOver = false;
 
     /* JUEGO */
-    short i, score = 0, lives = 5, level = 0, rachaAciertos = 0, shieldActive = 0, totalMunicion = 9, object;
+    short i, shieldActive = 0, object;
     float elapsedTime1 = 0.0f, elapsedTime2 = 0.0f, rotationMeteor = 0.0f;
     float playerRotation = 0.0;
     float currentRotation = 0.0f;
@@ -42,24 +41,30 @@ int main()
     InitAudioDevice();
     loadSounds();
 
-    /*-------- Ajustes texturas cambiantes --------*/
-    short currentFrame = 0; // indice de la textura actual
-    short currentFrameExp = 0;
-    float frameTimeCounter = 0.0f;
-    float frameSpeed = 1.0f / 8.0f; // velocidad de cambio de imagen (cada 1/8 de segundo)
+    // ------- JUGADOR -------
+    Tdata data = getDataPlayer();          // Entrada de datos
+    GameStats stats = {5, 0, 0, 0, 10, 0}; // Estadisticas iniciales
 
-    // Posicion y centro de jugador
+    /*------- Variables Sprites -------*/
+    short currentFrame = 0;    // Indice tx actual (0, 5)
+    short currentFrameExp = 0; // Indice tx actual (0, 2)
+    float frameTimeCounter = 0.0f;
+    float frameSpeed = 1.0f / 8.0f; // Velocidad de cambio de imagen
+
+    // Posicion centrada de jugador
     Vector2 playerPosition = {(float)SCR_WIDTH / 2 - shipTx[currentFrame].width / 2, (float)SCR_HEIGHT / 1.1f - shipTx[currentFrame].height / 2};
     // Centro textura meteoros
     Vector2 grayCenter, brownCenter;
 
-    // ------- DATOS JUGADOR -------
-    Tdata data = getDataPlayer();
-
     bool saveProgress = false; // Guardar estadisticas de jugador
     bool showQuestion = false; // Mostrar pregunta
-    bool continuar = false;    // Animacion despues de pregunta
+    // Animacion despues de pregunta
+    bool continuar = false;
     int contin = 0;
+
+    // Estado inicial del juego
+    GameState gameState = MAIN_MENU;
+    int keyOption;
 
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
@@ -69,513 +74,529 @@ int main()
             ToggleFullscreen();
         }
 
-        if (!isPlaying) // Menu principal
+        // Actualizar estado del juego
+        updateGameState(&gameState, keyOption, &stats);
+        keyOption = -1;
+
+        // ESTADOS DEL JUEGO
+        switch (gameState)
         {
-            StopMusicStream(gameover); // Detiene musica gameover
+        case MAIN_MENU:
+            StopMusicStream(gameover);
             PlayMusicStream(menuMusic);
             UpdateMusicStream(menuMusic);
-            drawMainMenu();                     // Dibuja menu principal
-            menuActions(&secondsT, &isPlaying); // Acciones menu
-        }
-        else
-        { /*-------------------- PARTIDA --------------------*/
-            if (!gameOver)
+            drawMainMenu();
+            keyOption = GetKeyPressed();
+            break;
+
+        case HOW_TO_PLAY:
+            UpdateMusicStream(menuMusic);
+            drawHowToPlay();
+            keyOption = GetKeyPressed();
+            break;
+
+        case ABOUT_GAME:
+            UpdateMusicStream(menuMusic);
+            aboutTheGame();
+            keyOption = GetKeyPressed();
+            break;
+
+        case HISTORY_SCORE:
+            UpdateMusicStream(menuMusic);
+            DrawScoresTable("record.dat");
+            keyOption = GetKeyPressed();
+            break;
+
+        case IN_GAME:
+            gameOver = false;
+            StopMusicStream(menuMusic);
+            StopMusicStream(gameover);  // Detiene musica de gameover
+            PlayMusicStream(gameMusic); // Reproduce musica de la partida
+            UpdateMusicStream(gameMusic);
+
+            /***** SPRITES *****/
+            frameTimeCounter += GetFrameTime();
+            // Pasado el tiempo, cambia imagen
+            if (frameTimeCounter >= frameSpeed)
             {
-                StopMusicStream(menuMusic);
-                StopMusicStream(gameover); // Detiene musica de gameover
-                UpdateMusicStream(gameMusic);
-                PlayMusicStream(gameMusic); // Reproduce musica de la partida
+                currentFrame = (currentFrame + 1) % 6;       // Cambiar entre 0, 1, 2, 3, 4, 5
+                currentFrameExp = (currentFrameExp + 1) % 3; // Cambiar entre 0, 1, 2
+                frameTimeCounter = 0.0f;                     // Reiniciar el contador de tiempo
+            }
 
-                /***** SPRITES *****/
-                frameTimeCounter += GetFrameTime();
-                // Pasado el tiempo, cambia imagen
-                if (frameTimeCounter >= frameSpeed)
+            /*------------------ CONTROLES ------------------*/
+            if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) // Mover hacia la derecha
+            {
+                if (playerPosition.x + playRadius < SCR_WIDTH)
                 {
-                    currentFrame = (currentFrame + 1) % 6; // Cambiar al siguiente marco (0, 1, 2, 0, 1, 2, ...)
-                    currentFrameExp = (currentFrameExp + 1) % 3;
-                    frameTimeCounter = 0.0f; // Reiniciar el contador de tiempo
-                }
-
-                /*------------------ CONTROLES ------------------*/
-                if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) // Mover hacia la derecha
-                {
-                    if (playerPosition.x + playRadius < SCR_WIDTH)
+                    playerPosition.x += playerSpeed;
+                    // Rotacion hacia la derecha
+                    if (currentRotation < maxRotation)
                     {
-                        playerPosition.x += playerSpeed;
-                        // Rotacion hacia la derecha
-                        if (currentRotation < maxRotation)
-                        {
-                            currentRotation += rotationSpeed;
-                        }
+                        currentRotation += rotationSpeed;
                     }
                 }
-                if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) // Mover hacia la izquierda
+            }
+            if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) // Mover hacia la izquierda
+            {
+                if (playerPosition.x - playRadius > 0)
                 {
-                    if (playerPosition.x - playRadius > 0)
-                    {
-                        playerPosition.x -= playerSpeed;
+                    playerPosition.x -= playerSpeed;
 
-                        // Rotacion hacia la izquierda
-                        if (currentRotation > minRotation)
-                        {
-                            currentRotation -= rotationSpeed;
-                        }
+                    // Rotacion hacia la izquierda
+                    if (currentRotation > minRotation)
+                    {
+                        currentRotation -= rotationSpeed;
                     }
                 }
-                // Interpolar la rotación de vuelta a la posición original cuando se suelta la tecla
-                if (!IsKeyDown(KEY_RIGHT) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_A))
+            }
+
+            if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) // Mover hacia arriba
+            {
+                if (playerPosition.y - playRadius > 0)
                 {
-                    // Si la rotación actual no es igual a la rotación objetivo, interpola hacia la rotación objetivo
-                    if (currentRotation != targetRotation)
+                    playerPosition.y -= playerSpeed;
+                }
+            }
+            if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) // Mover hacia abajo
+            {
+                if (playerPosition.y + playRadius < SCR_HEIGHT)
+                {
+                    playerPosition.y += playerSpeed;
+                }
+            }
+
+            // Interpolar la rotación de vuelta a la posición original cuando se suelta la tecla
+            if (!IsKeyDown(KEY_RIGHT) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_A))
+            {
+                // Si la rotación actual no es igual a la rotación objetivo, interpola hacia la rotación objetivo
+                if (currentRotation != targetRotation)
+                {
+                    if (currentRotation < targetRotation)
                     {
-                        if (currentRotation < targetRotation)
+                        currentRotation += rotationInterpolationSpeed * GetFrameTime();
+                        if (currentRotation > targetRotation)
                         {
-                            currentRotation += rotationInterpolationSpeed * GetFrameTime();
-                            if (currentRotation > targetRotation)
+                            currentRotation = targetRotation;
+                        }
+                    }
+                    else
+                    {
+                        if (currentRotation > targetRotation)
+                        {
+                            currentRotation -= rotationInterpolationSpeed * GetFrameTime();
+                            if (currentRotation < targetRotation)
                             {
                                 currentRotation = targetRotation;
                             }
                         }
-                        else
-                        {
-                            if (currentRotation > targetRotation)
-                            {
-                                currentRotation -= rotationInterpolationSpeed * GetFrameTime();
-                                if (currentRotation < targetRotation)
-                                {
-                                    currentRotation = targetRotation;
-                                }
-                            }
-                        }
                     }
                 }
-                // Actualizar la rotación del jugador
-                playerRotation = currentRotation;
+            }
+            // Actualizar la rotación del jugador
+            playerRotation = currentRotation;
 
-                if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) // Mover hacia arriba
+            if (IsKeyPressed(KEY_SPACE)) // Disparar misil
+            {
+                for (i = 0; i < MAX_SHOTS; i++)
                 {
-                    if (playerPosition.y - playRadius > 0)
+                    if (!shots[i].active)
                     {
-                        playerPosition.y -= playerSpeed;
-                    }
-                }
-                if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) // Mover hacia abajo
-                {
-                    if (playerPosition.y + playRadius < SCR_HEIGHT)
-                    {
-                        playerPosition.y += playerSpeed;
-                    }
-                }
-
-                if (IsKeyPressed(KEY_SPACE)) // Disparar misil
-                {
-                    for (i = 0; i < MAX_SHOTS; i++)
-                    {
-                        if (!shots[i].active)
+                        if (stats.totalMunicion > 0)
                         {
-                            if (totalMunicion > 0)
-                            {
-                                shots[i].active = true;
-                                shots[i].position = playerPosition; // Posición inicial del disparo
-                                PlaySound(shotSound);
-                                totalMunicion--;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                /*--------------------- GENERACION OBJETOS ---------------------*/
-                elapsedTime1 += GetFrameTime(); // Actualizar temporizador
-                elapsedTime2 += GetFrameTime();
-                if (elapsedTime1 >= spawnInterval)
-                {
-                    for (i = 0; i < MAX_GRAY; i++)
-                    {
-                        if (!grayMeteors[i].active)
-                        {
-                            InitObject(&grayMeteors[i], &GRAY_METEOR_RADIUS);
+                            shots[i].active = true;
+                            shots[i].position = playerPosition; // Posición inicial del disparo
+                            PlaySound(shotSound);
+                            stats.totalMunicion--;
                             break;
                         }
                     }
-                    for (i = 0; i < MAX_BROWN; i++)
-                    {
-                        if (!brownMeteors[i].active)
-                        {
-                            InitObject(&brownMeteors[i], &BROWN_METEOR_RADIUS);
-                            break;
-                        }
-                    }
-                    for (i = 0; i < MAX_COINS; i++)
-                    {
-                        if (!coinGold[i].active)
-                        {
-                            InitObject(&coinGold[i], &COINS_RADIUS); // Moneda tipo 1
-                            break;
-                        }
-                    }
-
-                    for (i = 0; i < MAX_HEART; i++)
-                    {
-                        if (!hearts[i].active)
-                        {
-                            InitObject(&hearts[i], &HEARTS_RADIUS);
-                            break;
-                        }
-                    }
-                    elapsedTime1 = 0.0f; // Reiniciar el temporizador
                 }
-                if (elapsedTime2 >= spawnIntervalPU)
-                {
-                    for (i = 0; i < MAX_OBJECT; i++)
-                    {
-                        if (!shieldB[i].active)
-                        {
-                            InitObject(&shieldB[i], &COINS_RADIUS); // Moneda tipo 2 (Pregunta)
-                        }
-                    }
-                    for (i = 0; i < MAX_OBJECT; i++)
-                    {
-                        if (!municiones[i].active)
-                        {
-                            InitObject(&municiones[i], &COINS_RADIUS); // Municiones (Pregunta)
-                            break;
-                        }
-                    }
-                    elapsedTime2 = 0.0f; // Reiniciar el temporizador
-                }
+            }
 
-                /*--------------------- FISICAS Y COLISIONES ---------------------*/
-
-                /*----- Meteoro gris -----*/
+            /*--------------------- GENERACION OBJETOS ---------------------*/
+            elapsedTime1 += GetFrameTime();
+            elapsedTime2 += GetFrameTime();
+            if (elapsedTime1 >= spawnInterval)
+            {
                 for (i = 0; i < MAX_GRAY; i++)
                 {
-                    if (grayMeteors[i].active)
+                    if (!grayMeteors[i].active)
                     {
-                        grayMeteors[i].position.y += GRAY_METEOR_SPEED;
-                        if (grayMeteors[i].position.y > SCR_HEIGHT + GRAY_METEOR_RADIUS * 2)
-                        {
-                            grayMeteors[i].active = false; // Eliminar al salir de la pantalla
-                        }
-
-                        // Detectar colisión con jugador
-                        grayCenter.x = grayMeteors[i].position.x - grayMeteor.width / 2;
-                        grayCenter.y = grayMeteors[i].position.y - grayMeteor.height / 2;
-                        if (CheckCollision(&playerPosition, playRadius, &grayCenter, GRAY_METEOR_RADIUS))
-                        {
-                            grayMeteors[i].active = false; // Eliminar objeto tocado
-                            if (shieldActive <= 0)
-                            {
-                                lives--; // Pierde una vida
-                                if (lives <= 0)
-                                {
-                                    gameOver = true;
-                                }
-                            }
-                            else
-                            {
-                                shieldActive--;
-                            }
-                        }
+                        InitObject(&grayMeteors[i], &GRAY_METEOR_RADIUS);
+                        break;
                     }
                 }
-                // /*----- Meteoro cafe -----*/
                 for (i = 0; i < MAX_BROWN; i++)
                 {
-                    if (brownMeteors[i].active)
+                    if (!brownMeteors[i].active)
                     {
-                        brownMeteors[i].position.y += BROWN_METEOR_SPEED;
-                        if (brownMeteors[i].position.y > SCR_HEIGHT + BROWN_METEOR_RADIUS * 2)
-                        {
-                            brownMeteors[i].active = false; // Eliminar al salir de la pantalla
-                        }
-
-                        // Detectar colisión con jugador
-                        brownCenter.x = brownMeteors[i].position.x - brownMeteor.width / 2;
-                        brownCenter.y = brownMeteors[i].position.y - brownMeteor.height / 2;
-                        if (CheckCollision(&playerPosition, playRadius, &brownCenter, BROWN_METEOR_RADIUS))
-                        {
-                            brownMeteors[i].active = false; // Eliminar objeto tocado
-                            if (shieldActive <= 0)
-                            {
-                                lives--; // Pierde una vida
-                                if (lives <= 0)
-                                {
-                                    gameOver = true;
-                                }
-                            }
-                            else
-                            {
-                                shieldActive--;
-                            }
-                        }
+                        InitObject(&brownMeteors[i], &BROWN_METEOR_RADIUS);
+                        break;
                     }
                 }
-                /*----- Moneda tipo 1 (Incrementador de puntos) -----*/
                 for (i = 0; i < MAX_COINS; i++)
                 {
-                    if (coinGold[i].active)
+                    if (!coinGold[i].active)
                     {
-                        coinGold[i].position.y += COINS_SPEED;
-                        if (coinGold[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
-                        {
-                            coinGold[i].active = false; // Eliminar al salir de la pantalla
-                        }
-                        // Detectar colisión con jugador y aumentar el contador de puntos
-                        if (CheckCollision(&playerPosition, playRadius, &coinGold[i].position, COINS_RADIUS))
-                        {
-                            coinGold[i].active = false; // Eliminar objeto tocado
-                            score += 10;                // Aumentar el puntaje
-                            PlaySound(soundcoin);
-                        }
+                        InitObject(&coinGold[i], &COINS_RADIUS); // Moneda tipo 1
+                        break;
+                    }
+                }
+
+                for (i = 0; i < MAX_HEART; i++)
+                {
+                    if (!hearts[i].active)
+                    {
+                        InitObject(&hearts[i], &HEARTS_RADIUS);
+                        break;
+                    }
+                }
+                elapsedTime1 = 0.0f; // Reiniciar el temporizador
+            }
+            if (elapsedTime2 >= spawnIntervalPU)
+            {
+                for (i = 0; i < MAX_OBJECT; i++)
+                {
+                    if (!shieldB[i].active)
+                    {
+                        InitObject(&shieldB[i], &COINS_RADIUS); // Moneda tipo 2 (Pregunta)
                     }
                 }
                 for (i = 0; i < MAX_OBJECT; i++)
                 {
-                    // Escudos (Pregunta)
-                    if (shieldB[i].active)
+                    if (!municiones[i].active)
                     {
-                        shieldB[i].position.y += SHIELD_SPEED;
-                        if (shieldB[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
-                        {
-                            shieldB[i].active = false; // Eliminar al salir de la pantalla
-                        }
-
-                        // Detectar colisión con jugador y aumentar el contador de puntos
-                        if (CheckCollision(&playerPosition, playRadius, &shieldB[i].position, COINS_RADIUS))
-                        {
-                            shieldB[i].active = false; // Eliminar objeto tocado
-                            object = 1;
-                            showQuestion = true;
-                            PlaySound(soundcoin);
-                        }
-                    }
-                    // municion
-                    if (municiones[i].active)
-                    {
-                        municiones[i].position.y += AMMO_SPEED;
-                        if (municiones[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
-                        {
-                            municiones[i].active = false; // Eliminar al salir de la pantalla
-                        }
-                        // Detectar colisión con jugador y aumentar el contador de puntos
-                        if (CheckCollision(&playerPosition, playRadius, &municiones[i].position, COINS_RADIUS))
-                        {
-                            municiones[i].active = false; // Eliminar objeto tocado
-                            object = 2;
-                            showQuestion = true;
-                            PlaySound(soundcoin);
-                        }
+                        InitObject(&municiones[i], &COINS_RADIUS); // Municiones (Pregunta)
+                        break;
                     }
                 }
+                elapsedTime2 = 0.0f; // Reiniciar el temporizador
+            }
 
-                /*----- Corazon (Vida adicional) -----*/
-                for (i = 0; i < MAX_HEART; i++)
+            /*--------------------- FISICAS Y COLISIONES ---------------------*/
+
+            /*----- Meteoro gris -----*/
+            for (i = 0; i < MAX_GRAY; i++)
+            {
+                if (grayMeteors[i].active)
                 {
-                    if (hearts[i].active)
+                    grayMeteors[i].position.y += GRAY_METEOR_SPEED;
+                    if (grayMeteors[i].position.y > SCR_HEIGHT + GRAY_METEOR_RADIUS * 2)
                     {
-                        hearts[i].position.y += HEARTS_SPEED;
-                        if (hearts[i].position.y > SCR_HEIGHT + HEARTS_RADIUS * 2)
-                        {
-                            hearts[i].active = false; // Eliminar al salir de la pantalla
-                        }
-
-                        // Detectar colisión con jugador y aumentar vidas
-                        if (CheckCollision(&playerPosition, playRadius, &hearts[i].position, HEARTS_RADIUS))
-                        {
-                            hearts[i].active = false; // Eliminar objeto tocado
-                            lives++;                  // Gana una vida
-                        }
+                        grayMeteors[i].active = false; // Eliminar al salir de la pantalla
                     }
-                }
-                /*----- Disparos -----*/
-                for (i = 0; i < MAX_SHOTS; i++)
-                {
-                    if (shots[i].active)
-                    {
-                        if (shots[i].collided)
-                        {
-                            // Disminuir el temporizador de la explosión
-                            shots[i].explosionTimer -= GetFrameTime();
 
-                            if (shots[i].explosionTimer <= 0)
+                    // Detectar colisión con jugador
+                    grayCenter.x = grayMeteors[i].position.x - grayMeteor.width / 2;
+                    grayCenter.y = grayMeteors[i].position.y - grayMeteor.height / 2;
+                    if (CheckCollision(&playerPosition, playRadius, &grayCenter, GRAY_METEOR_RADIUS))
+                    {
+                        grayMeteors[i].active = false; // Eliminar objeto tocado
+                        if (shieldActive <= 0)
+                        {
+                            stats.lives--; // Pierde una vida
+                            if (stats.lives <= 0)
                             {
-                                // Desactivar el disparo después de la animación de explosión
-                                shots[i].active = false;
-                                shots[i].collided = false;
+                                gameOver = true;
                             }
                         }
                         else
                         {
-                            // Mover el disparo hacia arriba
-                            shots[i].position.y -= SHOT_SPEED * GetFrameTime();
+                            shieldActive--;
+                        }
+                    }
+                }
+            }
+            // /*----- Meteoro cafe -----*/
+            for (i = 0; i < MAX_BROWN; i++)
+            {
+                if (brownMeteors[i].active)
+                {
+                    brownMeteors[i].position.y += BROWN_METEOR_SPEED;
+                    if (brownMeteors[i].position.y > SCR_HEIGHT + BROWN_METEOR_RADIUS * 2)
+                    {
+                        brownMeteors[i].active = false; // Eliminar al salir de la pantalla
+                    }
 
-                            // Comprobar si el disparo está fuera de la pantalla y desactivarlo
-                            if (shots[i].position.y < 0)
+                    // Detectar colisión con jugador
+                    brownCenter.x = brownMeteors[i].position.x - brownMeteor.width / 2;
+                    brownCenter.y = brownMeteors[i].position.y - brownMeteor.height / 2;
+                    if (CheckCollision(&playerPosition, playRadius, &brownCenter, BROWN_METEOR_RADIUS))
+                    {
+                        brownMeteors[i].active = false; // Eliminar objeto tocado
+                        if (shieldActive <= 0)
+                        {
+                            stats.lives--; // Pierde una vida
+                            if (stats.lives <= 0)
                             {
-                                shots[i].active = false;
+                                gameOver = true;
                             }
+                        }
+                        else
+                        {
+                            shieldActive--;
+                        }
+                    }
+                }
+            }
+            /*----- Moneda (Incrementador de puntos) -----*/
+            for (i = 0; i < MAX_COINS; i++)
+            {
+                if (coinGold[i].active)
+                {
+                    coinGold[i].position.y += COINS_SPEED;
+                    if (coinGold[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
+                    {
+                        coinGold[i].active = false; // Eliminar al salir de la pantalla
+                    }
+                    // Detectar colisión con jugador y aumentar el contador de puntos
+                    if (CheckCollision(&playerPosition, playRadius, &coinGold[i].position, COINS_RADIUS))
+                    {
+                        coinGold[i].active = false; // Eliminar objeto tocado
+                        stats.score += 10;          // Aumentar el puntaje
+                        PlaySound(soundcoin);
+                    }
+                }
+            }
+            for (i = 0; i < MAX_OBJECT; i++)
+            {
+                // Escudo
+                if (shieldB[i].active)
+                {
+                    shieldB[i].position.y += SHIELD_SPEED;
+                    if (shieldB[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
+                    {
+                        shieldB[i].active = false; // Eliminar al salir de la pantalla
+                    }
 
-                            for (int j = 0; j < MAX_GRAY; j++)
+                    // Detectar colisión con jugador y aumentar el contador de puntos
+                    if (CheckCollision(&playerPosition, playRadius, &shieldB[i].position, COINS_RADIUS))
+                    {
+                        shieldB[i].active = false; // Eliminar objeto tocado
+                        object = 1;
+                        showQuestion = true;
+                        PlaySound(soundcoin);
+                    }
+                }
+                // Caja de municion
+                if (municiones[i].active)
+                {
+                    municiones[i].position.y += AMMO_SPEED;
+                    if (municiones[i].position.y > SCR_HEIGHT + COINS_RADIUS * 2)
+                    {
+                        municiones[i].active = false; // Eliminar al salir de la pantalla
+                    }
+                    // Detectar colisión con jugador y aumentar el contador de puntos
+                    if (CheckCollision(&playerPosition, playRadius, &municiones[i].position, COINS_RADIUS))
+                    {
+                        municiones[i].active = false; // Eliminar objeto tocado
+                        object = 2;
+                        showQuestion = true;
+                        PlaySound(soundcoin);
+                    }
+                }
+            }
+
+            /*----- Corazon (Vida adicional) -----*/
+            for (i = 0; i < MAX_HEART; i++)
+            {
+                if (hearts[i].active)
+                {
+                    hearts[i].position.y += HEARTS_SPEED;
+                    if (hearts[i].position.y > SCR_HEIGHT + HEARTS_RADIUS * 2)
+                    {
+                        hearts[i].active = false; // Eliminar al salir de la pantalla
+                    }
+
+                    // Detectar colisión con jugador y aumentar vidas
+                    if (CheckCollision(&playerPosition, playRadius, &hearts[i].position, HEARTS_RADIUS))
+                    {
+                        hearts[i].active = false; // Eliminar objeto tocado
+                        stats.lives++;            // Gana una vida
+                    }
+                }
+            }
+            /*----- Disparos -----*/
+            for (i = 0; i < MAX_SHOTS; i++)
+            {
+                if (shots[i].active)
+                {
+                    if (shots[i].collided)
+                    {
+                        // Disminuir el temporizador de la explosión
+                        shots[i].explosionTimer -= GetFrameTime();
+
+                        if (shots[i].explosionTimer <= 0)
+                        {
+                            // Desactivar el disparo después de la animación de explosión
+                            shots[i].active = false;
+                            shots[i].collided = false;
+                        }
+                    }
+                    else
+                    {
+                        // Mover el disparo hacia arriba
+                        shots[i].position.y -= SHOT_SPEED * GetFrameTime();
+
+                        // Comprobar si el disparo está fuera de la pantalla y desactivarlo
+                        if (shots[i].position.y < 0)
+                        {
+                            shots[i].active = false;
+                        }
+
+                        for (int j = 0; j < MAX_GRAY; j++)
+                        {
+                            if (grayMeteors[j].active)
                             {
-                                if (grayMeteors[j].active)
+                                // Calcula punto de collision
+                                grayCenter.x = grayMeteors[j].position.x - grayMeteor.width / 2;
+                                grayCenter.y = grayMeteors[j].position.y - grayMeteor.height / 2;
+                                //  Colision con meteoro gris
+                                if (CheckCollision(&shots[i].position, SHOT_RADIUS, &grayCenter, GRAY_METEOR_RADIUS))
                                 {
-                                    // Calcula punto de collision
-                                    grayCenter.x = grayMeteors[j].position.x - grayMeteor.width / 2;
-                                    grayCenter.y = grayMeteors[j].position.y - grayMeteor.height / 2;
-                                    //  Colision con meteoro gris
-                                    if (CheckCollision(&shots[i].position, SHOT_RADIUS, &grayCenter, GRAY_METEOR_RADIUS))
-                                    {
-                                        PlaySound(burstMisil);
-                                        StopSound(shotSound);
-                                        score += 5;
-                                        grayMeteors[j].active = false;
-                                        shots[i].collided = true;
-                                        shots[i].explosionTimer = 0.4f; // Duracion animacion de explosión (0.4 segundos)
-                                    }
+                                    PlaySound(burstMisil);
+                                    StopSound(shotSound);
+                                    stats.score += 5;
+                                    grayMeteors[j].active = false;
+                                    shots[i].collided = true;
+                                    shots[i].explosionTimer = 0.4f; // Duracion animacion de explosión (0.4 segundos)
                                 }
                             }
-                            for (int j = 0; j < MAX_BROWN; j++)
+                        }
+                        for (int j = 0; j < MAX_BROWN; j++)
+                        {
+                            if (brownMeteors[j].active)
                             {
-                                if (brownMeteors[j].active)
+                                // Calcula punto de collision
+                                brownCenter.x = brownMeteors[j].position.x - brownMeteor.width / 2;
+                                brownCenter.y = brownMeteors[j].position.y - brownMeteor.height / 2;
+                                //  Colisión con meteoro café
+                                if (CheckCollision(&shots[i].position, SHOT_RADIUS, &brownCenter, BROWN_METEOR_RADIUS))
                                 {
-                                    // Calcula punto de collision
-                                    brownCenter.x = brownMeteors[j].position.x - brownMeteor.width / 2;
-                                    brownCenter.y = brownMeteors[j].position.y - brownMeteor.height / 2;
-                                    //  Colisión con meteoro café
-                                    if (CheckCollision(&shots[i].position, SHOT_RADIUS, &brownCenter, BROWN_METEOR_RADIUS))
-                                    {
-                                        PlaySound(burstMisil);
-                                        StopSound(shotSound);
-                                        score += 5;
-                                        brownMeteors[j].active = false;
-                                        shots[i].collided = true;
-                                        shots[i].explosionTimer = 0.4f; // Duracion animacion de explosión (0.4 segundos)
-                                    }
+                                    PlaySound(burstMisil);
+                                    StopSound(shotSound);
+                                    stats.score += 5;
+                                    brownMeteors[j].active = false;
+                                    shots[i].collided = true;
+                                    shots[i].explosionTimer = 0.4f; // Duracion animacion de explosión (0.4 segundos)
                                 }
                             }
                         }
                     }
                 }
-                rotationMeteor += 2.5f; // Velocidad de rotacion meteoros
-                pausa();                // Verifica si se pulso 'P', para pausar el juego
-
-                /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
-                BeginDrawing();
-                // Dibujar interfaz de la partida
-                drawGameInterface(hearthF[currentFrameExp], hearthE[currentFrame], shield, lives, score, level, data.name, rachaAciertos, shieldActive, totalMunicion, minutesT, secondsT); // Dibujar objetos de la partida
-                // Dibuja jugador (nave)
-                drawPlayer(shipTx[currentFrameExp], forceF[currentFrame], &playerPosition, &playerRotation, shieldActive);
-                // Dibuja meteoros en rotacion
-                drawMeteors(rotationMeteor);
-                // Dibuja monedas y corazones
-                drawObject(coinsTx[currentFrame], coinGold, MAX_COINS);
-                drawObject(heartsTx[currentFrameExp], hearts, MAX_HEART);
-                drawObject(ballE[currentFrameExp], shieldB, MAX_OBJECT);
-                drawObject(ammoTx, municiones, MAX_OBJECT);
-                // Dibuja disparos (misiles)
-                drawShots(misil, &explosionTx[currentFrameExp]);
-
-                // Animacion despues de responder pregunta
-                if (continuar)
-                {
-                    if (contin == 4)
-                    {
-                        PlaySound(soundcoin);
-                        PlaySound(soundcoin);
-                        screenMessage("¡GO!", 0.5, false);
-                        contin = 0;
-                        continuar = false;
-                    }
-                    if (contin == 3)
-                    {
-                        PlaySound(soundcoin);
-                        screenMessage("1", 0.7, false);
-                        contin = 4;
-                    }
-                    if (contin == 2)
-                    {
-                        PlaySound(soundcoin);
-                        screenMessage("2", 0.7, false);
-                        contin = 3;
-                    }
-                    if (contin == 1)
-                    {
-                        PlaySound(soundcoin);
-                        screenMessage("3", 0.7, false);
-                        contin = 2;
-                    }
-                }
-
-                if (showQuestion) // Si tomo moneda de pregunta
-                {
-                    drawQuestion(&showQuestion, &rachaAciertos, &shieldActive, &totalMunicion, &lives, object);
-                    continuar = true;
-                    contin = 1;
-                }
-
-                /*-------- TIEMPO TRANSCURRIDO --------*/
-                timeseconds += GetFrameTime(); // Obtener el tiempo transcurrido en segundos
-                totalseconds = timeseconds;
-                minutesT = totalseconds / 60;
-                secondsT = totalseconds % 60;
-                Levels(&score, &level, &elapsedTime1, &playerPosition, &lives, &totalseconds, &timeseconds);
-
-                if (gameOver)
-                {
-                    minutesT = 0, secondsT = 0, totalseconds = 0, timeseconds = 0;
-                    rotationMeteor = 0;          // Reiniciar rotacion
-                    resetItems(&playerPosition); // Reinicia posicion y desactiva objetos
-
-                    saveProgress = true; // Al terminar almenos un juego, ya puede guardar progreso
-
-                    // Actualizar mejor puntaje
-                    if (score > data.score)
-                    {
-                        data.score = score;
-                    }
-                    // Actualizar maximo nivel alcanzado
-                    if (level > data.maxLevel)
-                    {
-                        data.maxLevel = level;
-                    }
-                    // Actualizar maxima racha de respuestas correctas
-                    if (rachaAciertos > data.rachaAciertos)
-                    {
-                        data.rachaAciertos = rachaAciertos;
-                    }
-
-                    StopMusicStream(gameMusic); // Detener musica partida
-                    PlayMusicStream(gameover);  // Reproducir musica gameover
-                }
-            } /*-------------------- FIN DE PARTIDA --------------------*/
-            else
-            { /*------------------ GAMEOVER ------------------*/
-                // Reproducir musica gameover
-                UpdateMusicStream(gameover);
-
-                StopMusicStream(menuMusic);
-
-                // Dibuja interfaz
-                gameOverInterface(score, level);
-
-                // Vuelve a jugar al presionar enter
-                if (IsKeyDown(KEY_ENTER))
-                {
-                    resetStats(&lives, &score, &level, &rachaAciertos, &totalMunicion, &timeseconds);
-                    gameOver = false;
-                }
-                // Vuelve al menu al presionar Q
-                if (IsKeyDown(KEY_Q))
-                {
-                    resetStats(&lives, &score, &level, &rachaAciertos, &totalMunicion, &timeseconds);
-                    isPlaying = false;
-                    gameOver = false;
-                }
-                /*---------------------------------------------------*/
             }
-            DrawFPS(20, SCR_HEIGHT - 40);
+            rotationMeteor += 2.5f; // Velocidad de rotacion meteoros
+            pausa();                // Verifica si se pulso 'P', para pausar el juego
+
+            /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
+            BeginDrawing();
+
+            // Dibujar interfaz de la partida
+            drawGameInterface(hearthF[currentFrameExp], hearthE[currentFrame], shield, &stats, data.name, shieldActive, minutesT, secondsT); // Dibujar objetos de la partida
+
+            // Dibuja jugador (nave)
+            drawPlayer(shipTx[currentFrameExp], forceF[currentFrame], &playerPosition, &playerRotation, shieldActive);
+
+            // Dibuja meteoros
+            drawMeteor(grayMeteors, MAX_GRAY, grayMeteor, rotationMeteor);
+            drawMeteor(brownMeteors, MAX_GRAY, brownMeteor, rotationMeteor);
+
+            // Dibuja monedas, corazones y powerUps
+            drawObject(coinsTx[currentFrame], coinGold, MAX_COINS);
+            drawObject(heartsTx[currentFrameExp], hearts, MAX_HEART);
+            drawObject(ballE[currentFrameExp], shieldB, MAX_OBJECT);
+            drawObject(ammoTx, municiones, MAX_OBJECT);
+
+            // Dibuja misiles
+            drawShots(misil, &explosionTx[currentFrameExp]);
+
+            // Animacion despues de responder pregunta
+            if (continuar)
+            {
+                if (contin == 4)
+                {
+                    PlaySound(soundcoin);
+                    PlaySound(soundcoin);
+                    screenMessage("¡GO!", 0.5, BLANK);
+                    contin = 0;
+                    continuar = false;
+                }
+                if (contin == 3)
+                {
+                    PlaySound(soundcoin);
+                    screenMessage("1", 0.7, BLANK);
+                    contin = 4;
+                }
+                if (contin == 2)
+                {
+                    PlaySound(soundcoin);
+                    screenMessage("2", 0.7, BLANK);
+                    contin = 3;
+                }
+                if (contin == 1)
+                {
+                    PlaySound(soundcoin);
+                    screenMessage("3", 0.7, BLANK);
+                    contin = 2;
+                }
+            }
+
+            if (showQuestion) // Si tomo moneda de pregunta
+            {
+                drawQuestion(&showQuestion, &stats.rachaAciertos, &shieldActive, &stats.totalMunicion, &stats.lives, object);
+                continuar = true;
+                contin = 1;
+            }
+
+            /*-------- TIEMPO TRANSCURRIDO --------*/
+            timeseconds += GetFrameTime(); // Obtener el tiempo transcurrido en segundos
+            totalseconds = timeseconds;
+            minutesT = totalseconds / 60;
+            secondsT = totalseconds % 60;
+            Levels(&stats, &elapsedTime1, &playerPosition, &totalseconds);
+
+            if (gameOver)
+            {
+                minutesT = 0, secondsT = 0, totalseconds = 0;
+                rotationMeteor = 0;          // Reiniciar rotacion
+                resetItems(&playerPosition); // Reinicia posicion y desactiva objetos
+
+                saveProgress = true; // Al terminar almenos un juego, ya puede guardar progreso
+
+                // Actualizar mejor puntaje
+                if (stats.score > data.score)
+                {
+                    data.score = stats.score;
+                }
+                // Actualizar maximo nivel alcanzado
+                if (stats.level > data.maxLevel)
+                {
+                    data.maxLevel = stats.level;
+                }
+                // Actualizar maxima racha de respuestas correctas
+                if (stats.rachaAciertos > data.rachaAciertos)
+                {
+                    data.rachaAciertos = stats.rachaAciertos;
+                }
+
+                StopMusicStream(gameMusic); // Detener musica partida
+                PlayMusicStream(gameover);  // Reproducir musica gameover
+                gameState = GAME_OVER;
+            }
             EndDrawing();
+            break;
+
+        case GAME_OVER:
+            UpdateMusicStream(gameover);
+
+            // Dibuja interfaz
+            BeginDrawing();
+            gameOverInterface(stats.score, stats.level);
+            EndDrawing();
+
+            keyOption = GetKeyPressed();
+            break;
         }
     }
 

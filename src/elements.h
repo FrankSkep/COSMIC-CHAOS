@@ -42,7 +42,29 @@ const float HEARTS_RADIUS = 20; // Tamaño
 #define SHOT_SPEED 900.0f // Velocidad del misil
 #define SHOT_RADIUS 6     // Tamaño
 
+// ENUM Estados del juego
+typedef enum
+{
+    MAIN_MENU,
+    IN_GAME,
+    GAME_OVER,
+    HOW_TO_PLAY,
+    ABOUT_GAME,
+    HISTORY_SCORE,
+} GameState;
+
 /*--------- STRUCTS ---------*/
+
+typedef struct
+{
+    short lives;
+    short score;
+    short level;
+    short rachaAciertos;
+    short totalMunicion;
+    float timeseconds;
+} GameStats;
+
 typedef struct _object
 {
     Vector2 position;
