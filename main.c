@@ -309,35 +309,38 @@ int main()
                 }
             }
             // /*----- Meteoro cafe -----*/
-            for (i = 0; i < MAX_BROWN; i++)
-            {
-                if (brownMeteors[i].active)
-                {
-                    brownMeteors[i].position.y += BROWN_METEOR_SPEED;
-                    if (brownMeteors[i].position.y > SCR_HEIGHT + BROWN_METEOR_RADIUS * 2)
-                    {
-                        brownMeteors[i].active = false; // Eliminar al salir de la pantalla
-                    }
+            // for (i = 0; i < MAX_BROWN; i++)
+            // {
+            //     if (brownMeteors[i].active)
+            //     {
+            //         brownMeteors[i].position.y += BROWN_METEOR_SPEED;
+            //         if (brownMeteors[i].position.y > SCR_HEIGHT + BROWN_METEOR_RADIUS * 2)
+            //         {
+            //             brownMeteors[i].active = false; // Eliminar al salir de la pantalla
+            //         }
 
-                    // Detectar colisión con jugador
-                    brownCenter.x = brownMeteors[i].position.x - brownMeteor.width / 2;
-                    brownCenter.y = brownMeteors[i].position.y - brownMeteor.height / 2;
-                    if (CheckCollision(&playerPosition, playRadius, &brownCenter, BROWN_METEOR_RADIUS))
+            //         // Detectar colisión con jugador
+            //         brownCenter.x = brownMeteors[i].position.x - brownMeteor.width / 2;
+            //         brownCenter.y = brownMeteors[i].position.y - brownMeteor.height / 2;
+            //         if (CheckCollision(&playerPosition, playRadius, &brownCenter, BROWN_METEOR_RADIUS))
+            //         {
+            //             brownMeteors[i].active = false; // Eliminar objeto tocado
+            //         }
+            //     }
+            // }
+            if (objectColision(brownMeteors, BROWN_METEOR_RADIUS, playerPosition, playRadius, MAX_BROWN, BROWN_METEOR_SPEED))
+            {
+                if (shieldActive <= 0)
+                {
+                    stats.lives--; // Pierde una vida
+                    if (stats.lives <= 0)
                     {
-                        brownMeteors[i].active = false; // Eliminar objeto tocado
-                        if (shieldActive <= 0)
-                        {
-                            stats.lives--; // Pierde una vida
-                            if (stats.lives <= 0)
-                            {
-                                gameOver = true;
-                            }
-                        }
-                        else
-                        {
-                            shieldActive--;
-                        }
+                        gameOver = true;
                     }
+                }
+                else
+                {
+                    shieldActive--;
                 }
             }
             /*----- Moneda (Incrementador de puntos) -----*/
