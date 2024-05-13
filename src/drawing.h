@@ -491,8 +491,6 @@ void textQuestion(const char *text, int tamano, float positionY, int frecuencia,
 
             x += MeasureText(TextFormat("%c", text[j]), tamano) + 10;
         }
-        DrawText(TextFormat(" "), x+10, y, tamano, YELLOW);
-
         EndDrawing();
     }
     secondspause(1);
