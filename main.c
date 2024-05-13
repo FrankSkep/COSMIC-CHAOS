@@ -219,26 +219,26 @@ int main()
             elapsedTime2 += GetFrameTime();
             if (elapsedTime1 >= spawnInterval)
             {
-                drawmaxobject(grayMeteors, MAX_GRAY, GRAY_METEOR_RADIUS);
+                generateObjects(grayMeteors, MAX_GRAY, GRAY_METEOR_RADIUS);
 
-                drawmaxobject(brownMeteors, MAX_BROWN, BROWN_METEOR_RADIUS);
+                generateObjects(brownMeteors, MAX_BROWN, BROWN_METEOR_RADIUS);
 
-                drawmaxobject(coinGold, MAX_COINS, COINS_RADIUS);
+                generateObjects(coinGold, MAX_COINS, COINS_RADIUS);
 
-                drawmaxobject(hearts, MAX_HEART, HEARTS_RADIUS);
+                generateObjects(hearts, MAX_HEART, HEARTS_RADIUS);
 
                 elapsedTime1 = 0.0f; // Reiniciar el temporizador
             }
             if (elapsedTime2 >= spawnIntervalPU)
             {
-                drawmaxobject(shieldB, MAX_OBJECT, COINS_RADIUS);
+                generateObjects(shieldB, MAX_OBJECT, COINS_RADIUS);
 
-                drawmaxobject(municiones, MAX_OBJECT, COINS_RADIUS);
+                generateObjects(municiones, MAX_OBJECT, COINS_RADIUS);
                 elapsedTime2 = 0.0f; // Reiniciar el temporizador
             }
 
             /*--------------------- FISICAS Y COLISIONES ---------------------*/
-            if (objectColision(grayMeteors, GRAY_METEOR_RADIUS, playerPosition, playRadius, MAX_GRAY, GRAY_METEOR_SPEED, 1, 1))
+            if (objectColision(grayMeteors, MAX_GRAY, GRAY_METEOR_SPEED, GRAY_METEOR_RADIUS, &playerPosition, playRadius, &grayMeteor, true))
             {
                 if (shieldActive <= 0)
                 {
@@ -253,7 +253,7 @@ int main()
                     shieldActive--;
                 }
             }
-            if (objectColision(brownMeteors, BROWN_METEOR_RADIUS, playerPosition, playRadius, MAX_BROWN, BROWN_METEOR_SPEED, 1, 1))
+            if (objectColision(brownMeteors, MAX_BROWN, BROWN_METEOR_SPEED, BROWN_METEOR_RADIUS, &playerPosition, playRadius, &brownMeteor, true))
             {
                 if (shieldActive <= 0)
                 {
@@ -269,26 +269,26 @@ int main()
                 }
             }
             /*----- Moneda (Incrementador de puntos) -----*/
-            if (objectColision(coinGold, COINS_RADIUS, playerPosition, playRadius, MAX_COINS, COINS_SPEED, 0, 0))
+            if (objectColision(coinGold, MAX_COINS, COINS_SPEED, COINS_RADIUS, &playerPosition, playRadius, &coinsTx[currentFrame], false))
             {
                 stats.score += 10; // Aumentar el puntaje
                 PlaySound(soundcoin);
             }
             // Caja de municion
-            if (objectColision(shieldB, COINS_RADIUS, playerPosition, playRadius, MAX_OBJECT, SHIELD_SPEED, 0, 0))
+            if (objectColision(shieldB, MAX_OBJECT, SHIELD_SPEED, COINS_RADIUS, &playerPosition, playRadius, &shield, false))
             {
                 object = 1;
                 showQuestion = true;
                 PlaySound(soundcoin);
             }
-            if (objectColision(municiones, COINS_RADIUS, playerPosition, playRadius, MAX_OBJECT, AMMO_SPEED, 0, 0))
+            if (objectColision(municiones, MAX_OBJECT, AMMO_SPEED, COINS_RADIUS, &playerPosition, playRadius, &ammoTx, false))
             {
                 object = 2;
                 showQuestion = true;
                 PlaySound(soundcoin);
             }
             /*----- Corazon (Vida adicional) -----*/
-            if (objectColision(hearts, HEARTS_RADIUS, playerPosition, playRadius, MAX_HEART, HEARTS_SPEED, 0, 0))
+            if (objectColision(hearts, MAX_HEART, HEARTS_SPEED, HEARTS_RADIUS, &playerPosition, playRadius, &heartsTx[currentFrameExp], false))
             {
                 if (stats.lives < 5)
                 {

@@ -17,9 +17,6 @@ void drawObject(Texture2D Textura, TGameObject *objects, int MAX_OBJECTS);
 void drawShots(Texture2D shotTx, Texture2D *explosionTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
-bool objectColision(TGameObject *object, int Object_radio, Vector2 playerPosition, int playRadius, int Max_object, int speed, short ismeteor, short tipo);
-void drawmaxobject(TGameObject *object, int max_object, float radio);
-
 /* PANTALLAS */
 void subsCinematicas(const char *text, int tamano, float positionY, int frecuencia, float seconds, int frame1, int frame2, Texture2D *cinema);
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo);
@@ -329,18 +326,17 @@ void drawPlayer(Texture2D ship, Texture2D forceF, Vector2 *playerPosition, float
 // Dibuja meteoros
 void drawMeteor(TGameObject Meteor[], short MAX_METEOR, Texture2D meteorTexture, float rotation)
 {
-    // Vector2 grayCenter, brownCenter;
     Vector2 meteorCenter;
 
     for (int i = 0; i < MAX_METEOR; i++)
     {
         if (Meteor[i].active)
         {
-            // Calcular el punto central
-            meteorCenter.x = Meteor[i].position.x - grayMeteor.width / 2;
-            meteorCenter.y = Meteor[i].position.y - grayMeteor.height / 2;
+            // Calculo punto central
+            meteorCenter.x = Meteor[i].position.x - meteorTexture.width / 2;
+            meteorCenter.y = Meteor[i].position.y - meteorTexture.height / 2;
 
-            // Dibujar textura meteoro girando
+            // Dibujar textura girando
             DrawTexturePro(meteorTexture, (Rectangle){0, 0, (float)meteorTexture.width, (float)meteorTexture.height},
                            (Rectangle){meteorCenter.x, meteorCenter.y, (float)meteorTexture.width, (float)meteorTexture.height},
                            (Vector2){(float)meteorTexture.width / 2, (float)meteorTexture.height / 2}, rotation, WHITE);
@@ -552,62 +548,5 @@ void pausa()
             DrawText(text2, SCR_WIDTH / 2 - MeasureText(text2, 80) / 2, (SCR_HEIGHT / 2) + 150, 80, WHITE);
             EndDrawing();
         } while (!IsKeyPressed(KEY_ENTER));
-    }
-}
-// tipo 1. brown, 2. gray
-bool objectColision(TGameObject *object, int Object_radio, Vector2 playerPosition, int playRadius, int Max_object, int speed, short ismeteor, short tipo)
-{
-    short i;
-    for (i = 0; i < Max_object; i++)
-    {
-        if (object[i].active)
-        {
-            object[i].position.y += speed;
-            if (object[i].position.y > SCR_HEIGHT + Object_radio * 2)
-            {
-                object[i].active = false; // Eliminar al salir de la pantalla
-            }
-            if (ismeteor)
-            {
-                int meteorW, meteorH;
-                if (tipo == 1)
-                {
-                    meteorW = brownMeteor.width / 2;
-                    meteorH = brownMeteor.height / 2;
-                }
-                else
-                {
-                    meteorW = grayMeteor.width / 2;
-                    meteorH = grayMeteor.height / 2;
-                }
-                objectCenter.x = object[i].position.x - meteorW;
-                objectCenter.y = object[i].position.y - meteorH;
-                if (CheckCollision(&playerPosition, playRadius, &objectCenter, Object_radio))
-                {
-                    object[i].active = false; // Eliminar objeto tocado
-                    return true;
-                }
-            }
-            else
-            {
-                if (CheckCollision(&playerPosition, playRadius, &object[i].position, Object_radio))
-                {
-                    object[i].active = false; // Eliminar objeto tocado
-                    return true;
-                }
-            }
-        }
-    }
-    return false;
-}
-void drawmaxobject(TGameObject *object, int max_object, float radio)
-{
-    for (int i = 0; i < max_object; i++)
-    {
-        if (!object[i].active)
-        {
-            InitObject(&object[i], &radio);
-            break;
-        }
     }
 }

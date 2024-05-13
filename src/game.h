@@ -15,9 +15,13 @@ void updateGameState(GameState *gameState, int keyPressed, GameStats *stats);
 // Niveles
 void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *totalseconds);
 
+// Fisicas objetos del juego
+bool objectColision(TGameObject object[], int maxObjects, int objSpeed, float objRadius, Vector2 *playerPosition, int playRadius, Texture2D *texture, bool isMeteor);
+void generateObjects(TGameObject *object, int maxObjects, float radius);
+
 // Reinicia juego
 void resetItems(Vector2 *playPosition);
-void objectfalse(TGameObject *object, int Max_object);
+void objectfalse(TGameObject *object, int maxObjects);
 void resetStats(GameStats *stats);
 
 // Espera un tiempo especifico
@@ -245,6 +249,54 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
     }
 }
 
+bool objectColision(TGameObject object[], int maxObjects, int objSpeed, float objRadius, Vector2 *playerPosition, int playRadius, Texture2D *texture, bool isMeteor)
+{
+    short i;
+    Vector2 objectPos;
+
+    for (i = 0; i < maxObjects; i++)
+    {
+        if (object[i].active)
+        {
+            object[i].position.y += objSpeed;
+            if (object[i].position.y > SCR_HEIGHT + objRadius * 2)
+            {
+                object[i].active = false; // Eliminar al salir de la pantalla
+            }
+            // Posicion correspondiente
+            if (isMeteor)
+            {
+                objectPos.x = object[i].position.x - (texture->width / 2);
+                objectPos.y = object[i].position.y - (texture->height / 2);
+            }
+            else
+            {
+                objectPos.x = object[i].position.x;
+                objectPos.y = object[i].position.y;
+            }
+            // Deteccion colision
+            if (CheckCollision(playerPosition, playRadius, &objectPos, objRadius))
+            {
+                object[i].active = false; // Eliminar objeto tocado
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void generateObjects(TGameObject *object, int maxObjects, float radius)
+{
+    for (int i = 0; i < maxObjects; i++)
+    {
+        if (!object[i].active)
+        {
+            InitObject(&object[i], &radius);
+            break;
+        }
+    }
+}
+
 // Reiniciar posicion de elementos y jugador
 void resetItems(Vector2 *playPosition)
 {
@@ -267,14 +319,15 @@ void resetItems(Vector2 *playPosition)
         shots[i].active = false;
     }
 }
-void objectfalse(TGameObject *object, int Max_object)
+void objectfalse(TGameObject *object, int maxObjects)
 {
     short i;
-    for (i = 0; i < Max_object; i++)
+    for (i = 0; i < maxObjects; i++)
     {
         object[i].active = false;
     }
 }
+
 // Reinicia estadisticas
 void resetStats(GameStats *stats)
 {
