@@ -17,7 +17,8 @@ void drawObject(Texture2D Textura, TGameObject *objects, int MAX_OBJECTS);
 void drawShots(Texture2D shotTx, Texture2D *explosionTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
-bool objectColision(TGameObject *object, int Object_radio, Vector2 playerPosition, int playRadius, int Max_object, int speed);
+bool objectColision(TGameObject *object, int Object_radio, Vector2 playerPosition, int playRadius, int Max_object, int speed, short ismeteor, short tipo);
+void drawmaxobject(TGameObject *object, int max_object, float radio);
 
 /* PANTALLAS */
 void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, int frame1, int frame2);
@@ -517,8 +518,8 @@ void pausa()
         } while (!IsKeyPressed(KEY_ENTER));
     }
 }
-
-bool objectColision(TGameObject *object, int Object_radio, Vector2 playerPosition, int playRadius, int Max_object, int speed)
+// tipo 1. brown, 2. gray
+bool objectColision(TGameObject *object, int Object_radio, Vector2 playerPosition, int playRadius, int Max_object, int speed, short ismeteor, short tipo)
 {
     short i;
     for (i = 0; i < Max_object; i++)
@@ -530,14 +531,47 @@ bool objectColision(TGameObject *object, int Object_radio, Vector2 playerPositio
             {
                 object[i].active = false; // Eliminar al salir de la pantalla
             }
-
-            // Detectar colisión con jugador y aumentar vidas
-            if (CheckCollision(&playerPosition, playRadius, &object[i].position, Object_radio))
+            if (ismeteor)
             {
-                object[i].active = false; // Eliminar objeto tocado
-                return true;
+                int meteorW, meteorH;
+                if (tipo == 1)
+                {
+                    meteorW = brownMeteor.width / 2;
+                    meteorH = brownMeteor.height / 2;
+                }
+                else
+                {
+                    meteorW = grayMeteor.width / 2;
+                    meteorH = grayMeteor.height / 2;
+                }
+                objectCenter.x = object[i].position.x - meteorW;
+                objectCenter.y = object[i].position.y - meteorH;
+                if (CheckCollision(&playerPosition, playRadius, &objectCenter, Object_radio))
+                {
+                    object[i].active = false; // Eliminar objeto tocado
+                    return true;
+                }
+            }
+            else
+            {
+                if (CheckCollision(&playerPosition, playRadius, &object[i].position, Object_radio))
+                {
+                    object[i].active = false; // Eliminar objeto tocado
+                    return true;
+                }
             }
         }
     }
     return false;
+}
+void drawmaxobject(TGameObject *object, int max_object, float radio)
+{
+    for (int i = 0; i < max_object; i++)
+                {
+                    if (!object[i].active)
+                    {
+                        InitObject(&object[i], &radio);
+                        break;
+                    }
+                }
 }

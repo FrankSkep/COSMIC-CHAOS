@@ -28,7 +28,7 @@ const float BROWN_METEOR_RADIUS = 40; // Tamaño
 #define COINS_SPEED 8.0f       // Velocidad de caida
 const float COINS_RADIUS = 20; // Tamaño
 
-#define MAX_OBJECT 1      // Maximas monedas en pantalla
+#define MAX_OBJECT 1      // Maximas POWER-UPS
 #define AMMO_SPEED 6.5f   // Velocidad de caida
 #define SHIELD_SPEED 5.0f // Velocidad de caida
 
