@@ -185,15 +185,6 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
 {
     if (stats->score == 0 && stats->level == 0)
     {
-        // Historia inicial
-        // subsCinematicas("   INFORME DE ULTIMO MOMENTO                        Hola a todos son las 11:45 am y aqui su servilleta     Javie Alatorre informandolos.", 45, 7, 2, 4, 5);
-        // subsCinematicas("Desde la NASA nos llega el informe de que se acaba  de descubrir un asteroide con un color amarillo el    cual tiene a los cientificos conmosionados ", 45, 7, 4, 0, 1);
-        // subsCinematicas("Se rumora que podria contener gran cantidad de oro en su interior y en este momento organizaciones de   todo el mundo estan investigando este suceso ", 45, 7, 4, 0, 1);
-        // subsCinematicas("  Un momento!  Nos informan que el asteroide acaba   de colisionar contra el cinturon de asteroides", 45, 7, 3, 2, 3);
-        // subsCinematicas("y efectivamene, contiene gran cantidad de oro, esto deja a las organzaciones en una carrera para ver    quien sera el que se apropie de el ", 45, 7, 4, 2, 3);
-        // subsCinematicas("Olvidenlo, nos informan que españa es el primer      aventado en ir por el, como dicta la historia oro del que lo tenga oro se lo queda ", 45, 7, 4, 6, 7);
-        // subsCinematicas("nuestros desarolladores han creado una represent- acion grafica de que es lo que podria estar pasando en este momento aya arriba en el espacio ", 45, 7, 1, 4, 5);
-
         /* Estadisticas Nivel 1 */
         stats->level = 1;
         stats->score = 0;
@@ -210,10 +201,6 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
     {
         // Limpiar objetos
         resetItems(playPosition);
-        // screenpoints(totalseconds, score);
-
-        // subsCinematicas("aqui iria la cinematica de descanso", 45, 7, 1, 0, 1);
-        // subsCinematicas("continuacion de historia", 45, 7, 2, 0, 1);
 
         screenMessage("NIVEL 2", 2, BLACK);
 
@@ -308,6 +295,7 @@ void resetItems(Vector2 *playPosition)
     // Limpiar meteoros
     objectfalse(grayMeteors, MAX_GRAY);
     objectfalse(brownMeteors, MAX_BROWN);
+
     // Limpiar Objetos
     objectfalse(coinGold, MAX_COINS);
     objectfalse(shieldB, MAX_OBJECT);
