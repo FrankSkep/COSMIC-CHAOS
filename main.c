@@ -232,7 +232,7 @@ int main()
             if (elapsedTime2 >= spawnIntervalPU)
             {
                 drawmaxobject(shieldB, MAX_OBJECT, COINS_RADIUS);
-               
+
                 drawmaxobject(municiones, MAX_OBJECT, COINS_RADIUS);
                 elapsedTime2 = 0.0f; // Reiniciar el temporizador
             }
@@ -290,7 +290,10 @@ int main()
             /*----- Corazon (Vida adicional) -----*/
             if (objectColision(hearts, HEARTS_RADIUS, playerPosition, playRadius, MAX_HEART, HEARTS_SPEED, 0, 0))
             {
-                stats.lives++; // Gana una vida
+                if (stats.lives < 5)
+                {
+                    stats.lives++; // Gana una vida
+                }
             }
 
             /*----- Disparos -----*/

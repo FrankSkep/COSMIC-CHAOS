@@ -21,7 +21,8 @@ bool objectColision(TGameObject *object, int Object_radio, Vector2 playerPositio
 void drawmaxobject(TGameObject *object, int max_object, float radio);
 
 /* PANTALLAS */
-void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, int frame1, int frame2);
+void subsCinematicas(const char *text, int tamano, float positionY, int frecuencia, float seconds, int frame1, int frame2, Texture2D *cinema);
+void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo);
 void screenpoints(int *totalseconds, short *score);
 void pausa();
 
@@ -159,11 +160,14 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
     // Fondo pregunta
     Texture2D questionTx = LoadTexture("resources/images/backgrounds/questionbg.png");
 
+    BeginDrawing();
+    // subsCinematicas(preguntaActual.pregunta, 45, 200, 7, 0.5, 1, 1, questionTx);
+    // DrawTexture(questionTx, 0, 0, WHITE);
+    // drawTextCenter(preguntaActual.pregunta, 0, 280, 55, YELLOW);
+    textQuestion(preguntaActual.pregunta, 70, 200, 7, &questionTx);
     do
     {
-        BeginDrawing();
-        DrawTexture(questionTx, 0, 0, WHITE);
-        drawTextCenter(preguntaActual.pregunta, 0, 280, 55, YELLOW);
+
         for (int i = 0; i < 4; i++)
         {
             char opcionLabel = 'A' + i;
@@ -395,12 +399,12 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 }
 
 // Maximo 160 caracteres - tamaño - frecuencia - tiempo - textura - frame1 y frame2
-void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds, int frame1, int frame2)
+void subsCinematicas(const char *text, int tamano, float positionY, int frecuencia, float seconds, int frame1, int frame2, Texture2D *cinema)
 {
     int longitud = strlen(text);
     int i, limiteH = 45, acumulador = 0;
     bool cambio = true;
-    float x, y;
+    float x;
 
     for (i = 0; i < longitud; i++)
     {
@@ -422,15 +426,15 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
 
         if (cambio)
         {
-            DrawTexture(cinema[frame1], 288, 0, WHITE);
+            DrawTexture(cinema[frame1], 0, 0, WHITE);
         }
         else
         {
-            DrawTexture(cinema[frame2], 288, 0, WHITE);
+            DrawTexture(cinema[frame2], 0, 0, WHITE);
         }
 
         x = limiteH;
-        y = (SCR_HEIGHT / 2) * 1.6;
+        // positionY = (SCR_HEIGHT / 2) * 1.6;
 
         for (int j = 0; j <= i; j++)
         {
@@ -442,10 +446,10 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
             if (x + MeasureText(TextFormat("%c", text[j]), tamano) > SCR_WIDTH - limiteH)
             {
                 x = limiteH;
-                y += tamano + 5;
+                positionY += tamano + 5;
             }
-            DrawText(TextFormat("%c", text[j]), x + 6, y + 6, tamano, BLACK);
-            DrawText(TextFormat("%c", text[j]), x, y, tamano, YELLOW);
+            DrawText(TextFormat("%c", text[j]), x + 6, positionY + 6, tamano, BLACK);
+            DrawText(TextFormat("%c", text[j]), x, positionY, tamano, YELLOW);
 
             x += MeasureText(TextFormat("%c", text[j]), tamano) + 10;
         }
@@ -458,6 +462,40 @@ void subsCinematicas(const char *text, int tamano, int frecuencia, float seconds
 
     while (GetTime() - startTime2 < seconds) // Pausa entre cada texto
         ;
+}
+
+void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo)
+{
+    int longitud = strlen(text);
+    int i, limiteH = 45;
+    float x, y;
+
+    for (i = 0; i < longitud; i++)
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawTexture(*fondo, 0, 0, WHITE);
+
+        x = limiteH;
+        y = positionY;
+
+        for (int j = 0; j <= i; j++)
+        {
+            if (x + MeasureText(TextFormat("%c", text[j]), tamano) > SCR_WIDTH - limiteH)
+            {
+                x = limiteH;
+                y += tamano + 5;
+            }
+            DrawText(TextFormat("%c", text[j]), x + 6, y + 6, tamano, BLACK);
+            DrawText(TextFormat("%c", text[j]), x, y, tamano, YELLOW);
+
+            x += MeasureText(TextFormat("%c", text[j]), tamano) + 10;
+        }
+        DrawText(TextFormat(" "), x+10, y, tamano, YELLOW);
+
+        EndDrawing();
+    }
+    secondspause(1);
 }
 // Mostrar pantalla de puntos
 void screenpoints(int *totalseconds, short *score)
@@ -567,11 +605,11 @@ bool objectColision(TGameObject *object, int Object_radio, Vector2 playerPositio
 void drawmaxobject(TGameObject *object, int max_object, float radio)
 {
     for (int i = 0; i < max_object; i++)
-                {
-                    if (!object[i].active)
-                    {
-                        InitObject(&object[i], &radio);
-                        break;
-                    }
-                }
+    {
+        if (!object[i].active)
+        {
+            InitObject(&object[i], &radio);
+            break;
+        }
+    }
 }
