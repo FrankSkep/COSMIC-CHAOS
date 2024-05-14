@@ -78,8 +78,10 @@ int main()
 
         // Actualizar estado del juego
         updateGameState(&gameState, keyOption, &stats, &muteMusic);
+        keyOption = -1; // Reiniciar valor de tecla
+
+        // Actualizar musica en cada modo
         updateMusic(gameState, muteMusic);
-        keyOption = -1;
 
         // ESTADOS DEL JUEGO
         switch (gameState)
