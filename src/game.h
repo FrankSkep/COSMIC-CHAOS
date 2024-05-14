@@ -10,7 +10,7 @@ void InitObject(TGameObject *object, const float *objRadius);
 bool CheckCollision(Vector2 *playerPos, float playerRadius, Vector2 *ballPos, float meteorRadius);
 
 // Actualiza estados del juego
-void updateGameState(GameState *gameState, int keyPressed, GameStats *stats);
+void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, bool *muteMusic);
 
 // Niveles
 void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *totalseconds);
@@ -42,7 +42,7 @@ void selecNpreguntas();
 int busqSecuencial(int vect[], int m, int num);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
-void updateGameState(GameState *gameState, int keyPressed, GameStats *stats)
+void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, bool *muteMusic)
 {
     switch (*gameState)
     {
@@ -66,6 +66,9 @@ void updateGameState(GameState *gameState, int keyPressed, GameStats *stats)
             scoreboardTx = LoadTexture("resources/images/backgrounds/scorebg.png");
             *gameState = HISTORY_SCORE;
             break;
+        
+        case KEY_M:
+            *muteMusic = !(*muteMusic);
         }
         break;
 

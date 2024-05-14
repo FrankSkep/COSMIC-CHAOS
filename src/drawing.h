@@ -8,7 +8,7 @@ void aboutTheGame();
 void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, GameStats *stats, const char *nickname, short shield, int minutes, int seconds);
 void drawQuestion(bool *showQuestion, short *racha, short *shield, short *municion, short *lives, short object);
 void gameOverInterface(short score, short level);
-void DrawScoresTable(const char *filename);
+void DrawScoresTable(const char *filename, bool muteMusic);
 
 /* OBJETOS */
 void drawPlayer(Texture2D ship, Texture2D forceF, Vector2 *playerPosition, float *playerRotation, short shield);
@@ -49,6 +49,9 @@ void drawMainMenu() // PANTALLA DE MENU
 
     drawTextCenter("(H) Historial de juego", 2, 722, 60, SKYBLUE);
     drawTextCenter("(H) Historial de juego", 0, 720, 60, BLUE);
+
+    DrawText("(M) Apagar Musica", 20, 840, 50, DARKGRAY);
+    DrawText("(M) Apagar Musica", 23, 843, 50, RED);
 
     drawTextCenter("(ESC) Salir", 2, 802, 60, DARKGRAY);
     drawTextCenter("(ESC) Salir", 2, 800, 60, RED);
@@ -233,7 +236,7 @@ void gameOverInterface(short score, short level)
 }
 
 // Dibuja la tabla para mostrar los datos del .dat
-void DrawScoresTable(const char *filename)
+void DrawScoresTable(const char *filename, bool muteMusic)
 {
     FILE *file = fopen(filename, "rb");
     Tdata players[MAX_PLAYERS];
@@ -262,7 +265,7 @@ void DrawScoresTable(const char *filename)
 
     while (!IsKeyPressed(KEY_Q))
     {
-        UpdateMusicStream(menuMusic);
+        if(!muteMusic)UpdateMusicStream(menuMusic);
         BeginDrawing();
         DrawTexture(scoreboardTx, 0, 0, WHITE);
         drawTextCenter("HISTORIAL DE JUEGOS", 0, 50, 50, WHITE);

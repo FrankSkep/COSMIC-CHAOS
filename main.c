@@ -61,6 +61,7 @@ int main()
     // Animacion despues de pregunta
     bool continuar = false;
     int contin = 0;
+    bool muteMusic = false;
 
     // Estado inicial del juego
     GameState gameState = MAIN_MENU;
@@ -75,44 +76,59 @@ int main()
         }
 
         // Actualizar estado del juego
-        updateGameState(&gameState, keyOption, &stats);
+        updateGameState(&gameState, keyOption, &stats, &muteMusic);
         keyOption = -1;
 
         // ESTADOS DEL JUEGO
         switch (gameState)
         {
         case MAIN_MENU:
-            StopMusicStream(gameover);
-            PlayMusicStream(menuMusic);
-            UpdateMusicStream(menuMusic);
+            if (!muteMusic)
+            {
+                StopMusicStream(gameover);
+                PlayMusicStream(menuMusic);
+                UpdateMusicStream(menuMusic);
+            }
             drawMainMenu();
             keyOption = GetKeyPressed();
             break;
 
         case HOW_TO_PLAY:
-            UpdateMusicStream(menuMusic);
+            if (!muteMusic)
+            {
+                UpdateMusicStream(menuMusic);
+            }
             drawHowToPlay();
             keyOption = GetKeyPressed();
             break;
 
         case ABOUT_GAME:
-            UpdateMusicStream(menuMusic);
+            if (!muteMusic)
+            {
+                UpdateMusicStream(menuMusic);
+            }
             aboutTheGame();
             keyOption = GetKeyPressed();
             break;
 
         case HISTORY_SCORE:
-            UpdateMusicStream(menuMusic);
-            DrawScoresTable("record.dat");
+            if (!muteMusic)
+            {
+                UpdateMusicStream(menuMusic);
+            }
+            DrawScoresTable("record.dat", muteMusic);
             keyOption = GetKeyPressed();
             break;
 
         case IN_GAME:
             gameOver = false;
-            StopMusicStream(menuMusic);
-            StopMusicStream(gameover);  // Detiene musica de gameover
-            PlayMusicStream(gameMusic); // Reproduce musica de la partida
-            UpdateMusicStream(gameMusic);
+            if (!muteMusic)
+            {
+                StopMusicStream(menuMusic);
+                StopMusicStream(gameover);  // Detiene musica de gameover
+                PlayMusicStream(gameMusic); // Reproduce musica de la partida
+                UpdateMusicStream(gameMusic);
+            }
 
             /***** SPRITES *****/
             frameTimeCounter += GetFrameTime();
@@ -459,16 +475,21 @@ int main()
                     data.rachaAciertos = stats.rachaAciertos;
                 }
 
-                StopMusicStream(gameMusic); // Detener musica partida
-                PlayMusicStream(gameover);  // Reproducir musica gameover
+                if (!muteMusic)
+                {
+                    StopMusicStream(gameMusic); // Detener musica partida
+                    PlayMusicStream(gameover);  // Reproducir musica gameover
+                }
                 gameState = GAME_OVER;
             }
             EndDrawing();
             break;
 
         case GAME_OVER:
-            UpdateMusicStream(gameover);
-
+            if (!muteMusic)
+            {
+                UpdateMusicStream(gameover);
+            }
             // Dibuja interfaz
             BeginDrawing();
             gameOverInterface(stats.score, stats.level);
