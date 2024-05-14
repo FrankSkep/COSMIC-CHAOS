@@ -50,8 +50,8 @@ void drawMainMenu() // PANTALLA DE MENU
     drawTextCenter("(H) Historial de juego", 2, 722, 60, SKYBLUE);
     drawTextCenter("(H) Historial de juego", 0, 720, 60, BLUE);
 
-    DrawText("(M) Apagar Musica", 20, 840, 50, DARKGRAY);
-    DrawText("(M) Apagar Musica", 23, 843, 50, RED);
+    DrawText("(M) Apagar Musica", 20, 840, 45, DARKGRAY);
+    DrawText("(M) Apagar Musica", 23, 843, 45, YELLOW);
 
     drawTextCenter("(ESC) Salir", 2, 802, 60, DARKGRAY);
     drawTextCenter("(ESC) Salir", 2, 800, 60, RED);

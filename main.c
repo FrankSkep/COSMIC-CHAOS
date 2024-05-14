@@ -18,49 +18,50 @@ int main()
     const float spawnInterval = 0.2f;               // Intervalo de tiempo entre la aparición de objetos
     const float spawnIntervalPU = 1.2f;
 
-    /*--------------- VARIABLES ---------------*/
+    // Variables del juego
     bool gameOver = false;
-
-    /* JUEGO */
     short i, shieldActive = 0, object;
     float elapsedTime1 = 0.0f, elapsedTime2 = 0.0f, rotationMeteor = 0.0f;
-    float playerRotation = 0.0;
+    float playerRotation = 0.0f;
     float currentRotation = 0.0f;
     float targetRotation = 0.0f;
 
-    /* CRONOMETRO */
+    // Variables del cronómetro
     int totalseconds = 0, minutesT = 0, secondsT = 0;
     float timeseconds = 0;
     int tuto = 0, tutob = 1, tutostate = 1;
 
-    /*----------- CONFIGURACION VENTANA -----------*/
+    // Configuración de la ventana
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.4");
     SetTargetFPS(75);
 
-    /*------- Carga de texturas y sonidos -------*/
+    // Carga de texturas y sonidos
     loadTextures();
     InitAudioDevice();
     loadSounds();
 
-    // ------- JUGADOR -------
+    // Jugador
     Tdata data = getDataPlayer();          // Entrada de datos
-    GameStats stats = {5, 0, 0, 0, 10, 0}; // Estadisticas iniciales
+    GameStats stats = {5, 0, 0, 0, 10, 0}; // Estadísticas iniciales
 
-    /*------- Variables Sprites -------*/
-    short currentFrame = 0;    // Indice tx actual (0, 5)
-    short currentFrameExp = 0; // Indice tx actual (0, 2)
+    // Variables de sprites
+    short currentFrame = 0;    // Índice de textura actual (0, 5)
+    short currentFrameExp = 0; // Índice de textura actual (0, 2)
     float frameTimeCounter = 0.0f;
     float frameSpeed = 1.0f / 8.0f; // Velocidad de cambio de imagen
 
-    // Posicion centrada de jugador
-    Vector2 playerPosition = {(float)SCR_WIDTH / 2 - shipTx[currentFrame].width / 2, (float)SCR_HEIGHT / 1.1f - shipTx[currentFrame].height / 2};
-    // Centro textura meteoros
+    // Posición centrada del jugador
+    Vector2 playerPosition = {
+        (float)SCR_WIDTH / 2 - shipTx[currentFrame].width / 2,
+        (float)SCR_HEIGHT / 1.1f - shipTx[currentFrame].height / 2};
+
+    // Centro de textura de meteoros
     Vector2 grayCenter, brownCenter;
 
-    bool saveProgress = false; // Guardar estadisticas de jugador
+    // Variables de estado
+    bool saveProgress = false; // Guardar estadísticas del jugador
     bool showQuestion = false; // Mostrar pregunta
-    // Animacion despues de pregunta
-    bool continuar = false;
+    bool continuar = false;    // Animación después de pregunta
     int contin = 0;
     bool muteMusic = false;
 
