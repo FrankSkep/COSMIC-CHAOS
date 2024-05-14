@@ -20,6 +20,7 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 /* PANTALLAS */
 void subsCinematicas(const char *text, int tamano, float positionY, int frecuencia, float seconds, int frame1, int frame2, Texture2D *cinema);
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, float secondsPause, Texture2D *fondo);
+void esperarTecla();
 void screenpoints(int *totalseconds, short *score);
 void pausa();
 
@@ -265,7 +266,8 @@ void DrawScoresTable(const char *filename, bool muteMusic)
 
     while (!IsKeyPressed(KEY_Q))
     {
-        if(!muteMusic)UpdateMusicStream(menuMusic);
+        if (!muteMusic)
+            UpdateMusicStream(menuMusic);
         BeginDrawing();
         DrawTexture(scoreboardTx, 0, 0, WHITE);
         drawTextCenter("HISTORIAL DE JUEGOS", 0, 50, 50, WHITE);
@@ -478,8 +480,17 @@ void textQuestion(const char *text, int tamano, float positionY, int frecuencia,
         x = limiteH;
         y = positionY;
 
+        if (IsKeyPressed(KEY_S))
+        {
+            return;
+        }
+
         for (int j = 0; j <= i; j++)
         {
+            if (IsKeyPressed(KEY_S))
+            {
+                return;
+            }
             if (x + MeasureText(TextFormat("%c", text[j]), tamano) > SCR_WIDTH - limiteH)
             {
                 x = limiteH;
@@ -494,6 +505,20 @@ void textQuestion(const char *text, int tamano, float positionY, int frecuencia,
     }
     secondspause(secondsPause);
 }
+
+void esperarTecla()
+{
+    while (true)
+    {
+        BeginDrawing();
+        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_RIGHT))
+        {
+            break;
+        }
+        EndDrawing();
+    }
+}
+
 // Mostrar pantalla de puntos
 void screenpoints(int *totalseconds, short *score)
 {
