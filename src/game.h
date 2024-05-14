@@ -8,7 +8,7 @@
 /* LOGICA */
 void InitObject(TGameObject *object, const float *objRadius);
 bool CheckCollision(Vector2 *playerPos, float playerRadius, Vector2 *ballPos, float meteorRadius);
-
+bool waitForMovementKey();
 // Actualiza estados del juego
 void updateGameState(GameState *gameState, int keyPressed, GameStats *stats);
 
@@ -417,4 +417,18 @@ void screenMessage(const char *text, float seconds, Color colorbg)
     DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
     EndDrawing();
     secondspause(seconds);
+}
+bool waitForMovementKey()
+{
+      while (true) // Bucle infinito
+    {
+        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_RIGHT) ||
+            IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D))
+        {
+            return true; // Retorna true cuando se presiona una tecla de movimiento
+        }
+        
+        // Espera un poco para no saturar el procesador
+        // Puedes ajustar el tiempo de espera según sea necesario
+    }
 }

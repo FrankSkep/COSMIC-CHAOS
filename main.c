@@ -31,6 +31,7 @@ int main()
     /* CRONOMETRO */
     int totalseconds = 0, minutesT = 0, secondsT = 0;
     float timeseconds = 0;
+    int tuto = 0, tutob = 1, tutostate = 1;
 
     /*----------- CONFIGURACION VENTANA -----------*/
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.4");
@@ -393,7 +394,7 @@ int main()
             // Animacion despues de responder pregunta
             if (continuar)
             {
-                if (contin == 4)
+                if (contin == 5)
                 {
                     PlaySound(soundcoin);
                     PlaySound(soundcoin);
@@ -401,22 +402,34 @@ int main()
                     contin = 0;
                     continuar = false;
                 }
-                if (contin == 3)
+                if (contin == 4)
                 {
                     PlaySound(soundcoin);
                     screenMessage("1", 0.7, BLANK);
+                    contin = 5;
+                }
+                if (contin == 3)
+                {
+                    PlaySound(soundcoin);
+                    screenMessage("2", 0.7, BLANK);
                     contin = 4;
                 }
                 if (contin == 2)
                 {
+                    if (tutostate)
+                    {
+                        textQuestion("ACABAS DE CHOCAR CON UNO DE LOS POWER UPS ", 40, SCR_HEIGHT - 300, 3, 1, &tutotx1);
+                        textQuestion("imagen central de los power-ups ", 100, SCR_HEIGHT - 500, 3, 1, &tutotx1);
+                        textQuestion("SI RESPONDES BIEN PODRAS USARLO ", 40, SCR_HEIGHT - 250, 3, 5, &tutotx1);
+                        textQuestion("continuemos ", 60, SCR_HEIGHT - 500, 3, 3, &tutotx1);
+                        tutostate = 0;
+                    }
                     PlaySound(soundcoin);
-                    screenMessage("2", 0.7, BLANK);
+                    screenMessage("3", 0.7, BLANK);
                     contin = 3;
                 }
                 if (contin == 1)
                 {
-                    PlaySound(soundcoin);
-                    screenMessage("3", 0.7, BLANK);
                     contin = 2;
                 }
             }
@@ -426,6 +439,46 @@ int main()
                 drawQuestion(&showQuestion, &stats.rachaAciertos, &shieldActive, &stats.totalMunicion, &stats.lives, object);
                 continuar = true;
                 contin = 1;
+            }
+
+            tuto++;
+            if (tutob) // ESTO IRA EN FUNCIO TRANQUI CORNEJO
+            {
+                switch (tuto)
+                {
+                case 60:
+                    textQuestion("hola gran viajero bienvenido a 'COSMIC-CAOS'", 40, SCR_HEIGHT - 300, 3, 3, &tutotx1);
+                    break;
+                case 70:
+                    textQuestion("Utiliza las flacha de tu teclado para moverte en la direccion de desees Y ATRAPAR ESAS MONEDAS", 40, SCR_HEIGHT - 300, 3, 4, &tutotx1);
+                    break;
+                case 90:
+                    textQuestion("PERO NO TAN RAPIDO ", 40, SCR_HEIGHT - 300, 3, 3, &tutotx1);
+                    textQuestion("TIENES QUE SABER QUE ESOS METEORITOS PODRIAN CHOCAR CONTIGO, ESQUIVALOS!! ", 40, SCR_HEIGHT - 250, 3, 3, &tutotx1);
+                    break;
+                case 140:
+                    textQuestion("MUY BIEN, PERO CUIDA TUS CORAZONES  ", 40, SCR_HEIGHT - 300, 3, 3, &tutotx1);
+                    textQuestion("PUEDES TOMAR UNA DE LAS VIDAS QUE CAEN PARA PODER SOBREVIVIR MAS TIEMPO ", 40, SCR_HEIGHT - 250, 3, 3, &tutotx1);
+                    break;
+                case 280:
+                    textQuestion("VAS BIEN YA TE ESTAS ADAPTANDO ", 40, SCR_HEIGHT - 300, 3, 3, &tutotx1);
+                    textQuestion("VEAMOS QUE PASA SI CAMTURAS UNA DE ESAS ESFERAS AZULES ", 40, SCR_HEIGHT - 250, 3, 3, &tutotx1);
+                    break;
+                case 500:
+                    textQuestion("ULTIMO (SIGUIRNTES) ", 40, SCR_HEIGHT - 300, 3, 3, &tutotx1);
+                    break;
+                case 501:
+                    break;
+                case 1010:
+                    tutob = 0;
+                    UnloadTexture(tutotx);
+                    UnloadTexture(tutotx1);
+
+                    break;
+
+                default:
+                    break;
+                }
             }
 
             /*-------- TIEMPO TRANSCURRIDO --------*/

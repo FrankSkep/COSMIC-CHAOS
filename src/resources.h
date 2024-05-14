@@ -7,6 +7,8 @@ void unloadSounds();
 
 /*** Texturas ***/
 Texture2D menu, levels[3], gameoverT, scoreboardTx, aboutBg;
+Texture2D tutotx;
+Texture2D tutotx1;
 Texture2D hearthE[6], hearthF[3], shield, forceF[6], ballE[3];
 Texture2D shipTx[3], coinsTx[6], heartsTx[3], misil, ammoTx, explosionTx[3];
 Texture2D grayMeteor, brownMeteor;
@@ -39,7 +41,8 @@ void loadTextures()
     levels[0] = LoadTexture("resources/images/backgrounds/nivel1.png");
     levels[1] = LoadTexture("resources/images/backgrounds/nivel2.png");
     levels[2] = LoadTexture("resources/images/backgrounds/nivel3.png");
-
+    tutotx = LoadTexture("resources/images/backgrounds/tuto00.png");
+    tutotx1 = LoadTexture("resources/images/backgrounds/tuto01.png");
     // Fondo gameover
     gameoverT = LoadTexture("resources/images/backgrounds/gameover.png");
 

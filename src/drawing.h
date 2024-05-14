@@ -19,7 +19,7 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 
 /* PANTALLAS */
 void subsCinematicas(const char *text, int tamano, float positionY, int frecuencia, float seconds, int frame1, int frame2, Texture2D *cinema);
-void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo);
+void textQuestion(const char *text, int tamano, float positionY, int frecuencia, float secondsPause, Texture2D *fondo);
 void screenpoints(int *totalseconds, short *score);
 void pausa();
 
@@ -161,7 +161,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
     // subsCinematicas(preguntaActual.pregunta, 45, 200, 7, 0.5, 1, 1, questionTx);
     // DrawTexture(questionTx, 0, 0, WHITE);
     // drawTextCenter(preguntaActual.pregunta, 0, 280, 55, YELLOW);
-    textQuestion(preguntaActual.pregunta, 70, 200, 7, &questionTx);
+    textQuestion(preguntaActual.pregunta, 70, 200, 7, 1, &questionTx);
     do
     {
 
@@ -400,7 +400,7 @@ void subsCinematicas(const char *text, int tamano, float positionY, int frecuenc
     int longitud = strlen(text);
     int i, limiteH = 45, acumulador = 0;
     bool cambio = true;
-    float x;
+    float x, y;
 
     for (i = 0; i < longitud; i++)
     {
@@ -430,6 +430,7 @@ void subsCinematicas(const char *text, int tamano, float positionY, int frecuenc
         }
 
         x = limiteH;
+        y = positionY;
         // positionY = (SCR_HEIGHT / 2) * 1.6;
 
         for (int j = 0; j <= i; j++)
@@ -442,10 +443,10 @@ void subsCinematicas(const char *text, int tamano, float positionY, int frecuenc
             if (x + MeasureText(TextFormat("%c", text[j]), tamano) > SCR_WIDTH - limiteH)
             {
                 x = limiteH;
-                positionY += tamano + 5;
+                y += tamano + 5;
             }
-            DrawText(TextFormat("%c", text[j]), x + 6, positionY + 6, tamano, BLACK);
-            DrawText(TextFormat("%c", text[j]), x, positionY, tamano, YELLOW);
+            DrawText(TextFormat("%c", text[j]), x + 6, y + 6, tamano, BLACK);
+            DrawText(TextFormat("%c", text[j]), x, y, tamano, YELLOW);
 
             x += MeasureText(TextFormat("%c", text[j]), tamano) + 10;
         }
@@ -460,7 +461,7 @@ void subsCinematicas(const char *text, int tamano, float positionY, int frecuenc
         ;
 }
 
-void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo)
+void textQuestion(const char *text, int tamano, float positionY, int frecuencia, float secondsPause, Texture2D *fondo)
 {
     int longitud = strlen(text);
     int i, limiteH = 45;
@@ -469,7 +470,6 @@ void textQuestion(const char *text, int tamano, float positionY, int frecuencia,
     for (i = 0; i < longitud; i++)
     {
         BeginDrawing();
-        ClearBackground(BLACK);
         DrawTexture(*fondo, 0, 0, WHITE);
 
         x = limiteH;
@@ -489,7 +489,7 @@ void textQuestion(const char *text, int tamano, float positionY, int frecuencia,
         }
         EndDrawing();
     }
-    secondspause(1);
+    secondspause(secondsPause);
 }
 // Mostrar pantalla de puntos
 void screenpoints(int *totalseconds, short *score)
