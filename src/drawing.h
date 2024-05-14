@@ -19,7 +19,7 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 
 /* PANTALLAS */
 void subsCinematicas(const char *text, int tamano, float positionY, int frecuencia, float seconds, int frame1, int frame2, Texture2D *cinema);
-void textQuestion(const char *text, int tamano, float positionY, int frecuencia, float secondsPause, Texture2D *fondo);
+void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo);
 void esperarTecla();
 void screenpoints(int *totalseconds, short *score);
 void pausa();
@@ -165,7 +165,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
     // subsCinematicas(preguntaActual.pregunta, 45, 200, 7, 0.5, 1, 1, questionTx);
     // DrawTexture(questionTx, 0, 0, WHITE);
     // drawTextCenter(preguntaActual.pregunta, 0, 280, 55, YELLOW);
-    textQuestion(preguntaActual.pregunta, 70, 200, 7, 1, &questionTx);
+    textQuestion(preguntaActual.pregunta, 70, 200, 7, &questionTx);
     do
     {
 
@@ -466,7 +466,7 @@ void subsCinematicas(const char *text, int tamano, float positionY, int frecuenc
         ;
 }
 
-void textQuestion(const char *text, int tamano, float positionY, int frecuencia, float secondsPause, Texture2D *fondo)
+void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo)
 {
     int longitud = strlen(text);
     int i, limiteH = 45;
@@ -503,7 +503,6 @@ void textQuestion(const char *text, int tamano, float positionY, int frecuencia,
         }
         EndDrawing();
     }
-    secondspause(secondsPause);
 }
 
 void esperarTecla()

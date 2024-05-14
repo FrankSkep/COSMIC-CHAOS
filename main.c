@@ -413,10 +413,14 @@ int main()
                 {
                     if (tutostate)
                     {
-                        textQuestion("ACABAS DE CHOCAR CON UNO DE LOS POWER UPS ", 40, SCR_HEIGHT - 300, 3, 1, &tutotx1);
-                        textQuestion("imagen central de los power-ups ", 100, SCR_HEIGHT - 500, 3, 1, &tutotx1);
-                        textQuestion("SI RESPONDES BIEN PODRAS USARLO ", 40, SCR_HEIGHT - 250, 3, 5, &tutotx1);
-                        textQuestion("continuemos ", 60, SCR_HEIGHT - 500, 3, 3, &tutotx1);
+                        textQuestion("ACABAS DE CHOCAR CON UNO DE LOS POWER UPS ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
+                        esperarTecla();
+                        textQuestion("imagen central de los power-ups ", 100, SCR_HEIGHT - 500, 3, &tutotx1);
+                        esperarTecla();
+                        textQuestion("SI RESPONDES BIEN, LO OBTENDRAS ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
+                        esperarTecla();
+                        textQuestion("continuemos ", 60, SCR_HEIGHT - 500, 3, &tutotx1);
+                        esperarTecla();
                         tutostate = 0;
                     }
                     PlaySound(soundcoin);
@@ -442,33 +446,33 @@ int main()
                 switch (tuto)
                 {
                 case 60:
-                    textQuestion("hola gran viajero bienvenido a 'COSMIC-CAOS'", 40, SCR_HEIGHT - 300, 3, 0, &tutotx1);
+                    textQuestion("hola gran viajero bienvenido a 'COSMIC-CAOS'", 40, SCR_HEIGHT - 300, 3, &tutotx1);
                     esperarTecla();
                     break;
                 case 70:
-                    textQuestion("Utiliza las flacha de tu teclado para moverte en la direccion de desees Y ATRAPAR ESAS MONEDAS", 40, SCR_HEIGHT - 300, 3, 0, &tutotx1);
+                    textQuestion("Utiliza las flacha de tu teclado para moverte en la direccion de desees Y ATRAPAR ESAS MONEDAS", 40, SCR_HEIGHT - 300, 3, &tutotx1);
                     esperarTecla();
                     break;
                 case 90:
-                    textQuestion("PERO NO TAN RAPIDO ", 40, SCR_HEIGHT - 300, 3, 0, &tutotx1);
+                    textQuestion("PERO NO TAN RAPIDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
                     esperarTecla();
-                    textQuestion("TIENES QUE SABER QUE ESOS METEORITOS PODRIAN CHOCAR CONTIGO, ESQUIVALOS!! ", 40, SCR_HEIGHT - 250, 3, 0, &tutotx1);
+                    textQuestion("TIENES QUE SABER QUE ESOS METEORITOS PODRIAN CHOCAR CONTIGO, ESQUIVALOS!! ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
                     esperarTecla();
                     break;
                 case 140:
-                    textQuestion("MUY BIEN, PERO CUIDA TUS CORAZONES  ", 40, SCR_HEIGHT - 300, 3, 0, &tutotx1);
+                    textQuestion("MUY BIEN, PERO CUIDA TUS CORAZONES  ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
                     esperarTecla();
-                    textQuestion("PUEDES TOMAR UNA DE LAS VIDAS QUE CAEN PARA PODER SOBREVIVIR MAS TIEMPO ", 40, SCR_HEIGHT - 250, 3, 0, &tutotx1);
+                    textQuestion("PUEDES TOMAR UNA DE LAS VIDAS QUE CAEN PARA PODER SOBREVIVIR MAS TIEMPO ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
                     esperarTecla();
                     break;
                 case 280:
-                    textQuestion("VAS BIEN YA TE ESTAS ADAPTANDO ", 40, SCR_HEIGHT - 300, 3, 0, &tutotx1);
+                    textQuestion("VAS BIEN YA TE ESTAS ADAPTANDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
                     esperarTecla();
-                    textQuestion("VEAMOS QUE PASA SI CAMTURAS UNA DE ESAS ESFERAS AZULES ", 40, SCR_HEIGHT - 250, 3, 0, &tutotx1);
+                    textQuestion("VEAMOS QUE PASA SI CAPTURAS UNO DE ESOS OBJETOS AZULES ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
                     esperarTecla();
                     break;
                 case 500:
-                    textQuestion("ULTIMO (SIGUIRNTES) ", 40, SCR_HEIGHT - 300, 3, 0, &tutotx1);
+                    textQuestion("ULTIMO (SIGUIENTES) ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
                     esperarTecla();
                     break;
                 case 501:
