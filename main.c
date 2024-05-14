@@ -121,7 +121,7 @@ int main()
             }
 
             /*------------------ CONTROLES ------------------*/
-            if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) // Mover hacia la derecha
+            if (IsKeyDown(KEY_RIGHT)) // Mover hacia la derecha
             {
                 if (playerPosition.x + playRadius < SCR_WIDTH)
                 {
@@ -133,7 +133,7 @@ int main()
                     }
                 }
             }
-            if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) // Mover hacia la izquierda
+            if (IsKeyDown(KEY_LEFT)) // Mover hacia la izquierda
             {
                 if (playerPosition.x - playRadius > 0)
                 {
@@ -147,14 +147,14 @@ int main()
                 }
             }
 
-            if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) // Mover hacia arriba
+            if (IsKeyDown(KEY_UP)) // Mover hacia arriba
             {
                 if (playerPosition.y - playRadius > 0)
                 {
                     playerPosition.y -= playerSpeed;
                 }
             }
-            if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) // Mover hacia abajo
+            if (IsKeyDown(KEY_DOWN)) // Mover hacia abajo
             {
                 if (playerPosition.y + playRadius < SCR_HEIGHT)
                 {
@@ -163,7 +163,7 @@ int main()
             }
 
             // Interpolar la rotación de vuelta a la posición original cuando se suelta la tecla
-            if (!IsKeyDown(KEY_RIGHT) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_A))
+            if (!IsKeyDown(KEY_RIGHT) && !IsKeyDown(KEY_LEFT))
             {
                 // Si la rotación actual no es igual a la rotación objetivo, interpola hacia la rotación objetivo
                 if (currentRotation != targetRotation)
