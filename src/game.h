@@ -8,9 +8,11 @@
 /* LOGICA */
 void InitObject(TGameObject *object, const float *objRadius);
 bool CheckCollision(Vector2 *playerPos, float playerRadius, Vector2 *ballPos, float meteorRadius);
-
+bool waitForMovementKey();
 // Actualiza estados del juego
 void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, bool *muteMusic);
+
+void updateMusic(GameState gameState, bool muteMusic);
 
 // Niveles
 void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *totalseconds);
@@ -66,7 +68,7 @@ void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, boo
             scoreboardTx = LoadTexture("resources/images/backgrounds/scorebg.png");
             *gameState = HISTORY_SCORE;
             break;
-        
+
         case KEY_M:
             *muteMusic = !(*muteMusic);
         }
@@ -89,14 +91,49 @@ void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, boo
             resetStats(stats);
             *gameState = IN_GAME;
         }
-        else if (keyPressed == KEY_Q)
+        else
         {
-            resetStats(stats);
-            *gameState = MAIN_MENU;
+            if (keyPressed == KEY_Q)
+            {
+                resetStats(stats);
+                *gameState = MAIN_MENU;
+            }
         }
         break;
 
     case IN_GAME:
+        break;
+    }
+}
+
+void updateMusic(GameState gameState, bool muteMusic)
+{
+    if (muteMusic)
+    {
+        StopMusicStream(menuMusic);
+        StopMusicStream(gameMusic);
+        StopMusicStream(gameover);
+        return;
+    }
+
+    switch (gameState)
+    {
+    case MAIN_MENU:
+    case HOW_TO_PLAY:
+    case ABOUT_GAME:
+    case HISTORY_SCORE:
+        PlayMusicStream(menuMusic);
+        UpdateMusicStream(menuMusic);
+        break;
+    case IN_GAME:
+        StopMusicStream(menuMusic);
+        StopMusicStream(gameover);
+        PlayMusicStream(gameMusic);
+        UpdateMusicStream(gameMusic);
+        break;
+    case GAME_OVER:
+        PlayMusicStream(gameover);
+        UpdateMusicStream(gameover);
         break;
     }
 }
@@ -420,4 +457,18 @@ void screenMessage(const char *text, float seconds, Color colorbg)
     DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
     EndDrawing();
     secondspause(seconds);
+}
+bool waitForMovementKey()
+{
+    while (true) // Bucle infinito
+    {
+        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_RIGHT) ||
+            IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D))
+        {
+            return true; // Retorna true cuando se presiona una tecla de movimiento
+        }
+
+        // Espera un poco para no saturar el procesador
+        // Puedes ajustar el tiempo de espera según sea necesario
+    }
 }
