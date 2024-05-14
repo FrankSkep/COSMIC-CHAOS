@@ -5,13 +5,19 @@ void unloadTextures();
 void loadSounds();
 void unloadSounds();
 
-/*** Texturas ***/
+/*------ Texturas ------*/
+// Fondos
 Texture2D menu, levels[3], gameoverT, scoreboardTx, aboutBg;
-Texture2D tutotx;
-Texture2D tutotx1;
-Texture2D hearthE[6], hearthF[3], shield, forceF[6], ballE[3];
-Texture2D shipTx[3], coinsTx[6], heartsTx[3], misil, ammoTx, explosionTx[3];
-Texture2D grayMeteor, brownMeteor;
+Texture2D tutotx, tutotx1;
+
+// Iconos interfaz
+Texture2D hearthE[6], hearthF[3], shield;
+
+// Nave y relacionados
+Texture2D shipTx[3], forceF[6], misil, explosionTx[3];
+
+// Objetos que caen
+Texture2D grayMeteor, brownMeteor, coinsTx[6], heartsTx[3], ammoTx, ballE[3];
 
 // Sin usar
 Texture2D cinema[8];
