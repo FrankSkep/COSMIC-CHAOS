@@ -71,6 +71,7 @@ void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, boo
 
         case KEY_M:
             *muteMusic = !(*muteMusic);
+            break;
         }
         break;
 

@@ -330,7 +330,7 @@ int main()
                                 //  Colision con meteoro gris
                                 if (CheckCollision(&shots[i].position, SHOT_RADIUS, &grayCenter, GRAY_METEOR_RADIUS))
                                 {
-                                    PlaySound(burstMisil);
+                                    PlaySound(burstShotSound);
                                     StopSound(shotSound);
                                     stats.score += 5;
                                     grayMeteors[j].active = false;
@@ -349,7 +349,7 @@ int main()
                                 //  Colisión con meteoro café
                                 if (CheckCollision(&shots[i].position, SHOT_RADIUS, &brownCenter, BROWN_METEOR_RADIUS))
                                 {
-                                    PlaySound(burstMisil);
+                                    PlaySound(burstShotSound);
                                     StopSound(shotSound);
                                     stats.score += 5;
                                     brownMeteors[j].active = false;
