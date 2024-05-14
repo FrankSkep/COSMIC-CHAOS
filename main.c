@@ -529,10 +529,6 @@ int main()
             break;
 
         case GAME_OVER:
-            if (!muteMusic)
-            {
-                UpdateMusicStream(gameover);
-            }
             // Dibuja interfaz
             BeginDrawing();
             gameOverInterface(stats.score, stats.level);
