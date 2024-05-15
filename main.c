@@ -414,13 +414,13 @@ int main()
                     if (tutostate)
                     {
                         textQuestion("ACABAS DE CHOCAR CON UNO DE LOS POWER UPS ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                        esperarTecla();
-                        textQuestion("imagen central de los power-ups ", 100, SCR_HEIGHT - 500, 3, &tutotx1);
-                        esperarTecla();
-                        textQuestion("SI RESPONDES BIEN, LO OBTENDRAS ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
-                        esperarTecla();
-                        textQuestion("continuemos ", 60, SCR_HEIGHT - 500, 3, &tutotx1);
-                        esperarTecla();
+                        secondspause(4);
+                        textQuestion("imagen central de los power-ups ", 90, SCR_HEIGHT - 500, 3, &tutotx1);
+                        secondspause(4);
+                        textQuestion("SI RESPONDES BIEN A LA PREGUNTA LO OBTENDRAS ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
+                        secondspause(4);
+                        textQuestion("\t\t\tcontinuemos ", 60, SCR_HEIGHT - 600, 3, &tutotx1);
+                        secondspause(4);
                         tutostate = 0;
                     }
                     PlaySound(soundcoin);
@@ -445,35 +445,36 @@ int main()
             {
                 switch (tuto)
                 {
-                case 60:
-                    textQuestion("hola gran viajero bienvenido a 'COSMIC-CAOS'", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                    esperarTecla();
+                case 10:
+                    DrawTexture(tutotx, 0, 0, WHITE);
+                    textQuestion("hola gran viajero bienvenido a \"COSMIC-CAOS\" ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
+                    secondspause(4);
                     break;
-                case 70:
-                    textQuestion("Utiliza las flacha de tu teclado para moverte en la direccion de desees Y ATRAPAR ESAS MONEDAS", 40, SCR_HEIGHT - 300, 3, &tutotx1);
+                case 20:
+                    textQuestion("Utiliza las flechas de tu teclado para moverte en la direccion de deses Y ATRAPAR ESAS MONEDAS ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
                     esperarTecla();
                     break;
                 case 90:
                     textQuestion("PERO NO TAN RAPIDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                    esperarTecla();
+                    secondspause(2);
                     textQuestion("TIENES QUE SABER QUE ESOS METEORITOS PODRIAN CHOCAR CONTIGO, ESQUIVALOS!! ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
-                    esperarTecla();
+                    secondspause(4);
                     break;
                 case 140:
                     textQuestion("MUY BIEN, PERO CUIDA TUS CORAZONES  ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                    esperarTecla();
+                    secondspause(2);
                     textQuestion("PUEDES TOMAR UNA DE LAS VIDAS QUE CAEN PARA PODER SOBREVIVIR MAS TIEMPO ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
-                    esperarTecla();
+                    secondspause(4);
                     break;
                 case 280:
                     textQuestion("VAS BIEN YA TE ESTAS ADAPTANDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                    esperarTecla();
+                    secondspause(2);
                     textQuestion("VEAMOS QUE PASA SI CAPTURAS UNO DE ESOS OBJETOS AZULES ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
-                    esperarTecla();
+                    secondspause(4);
                     break;
                 case 500:
-                    textQuestion("ULTIMO (SIGUIENTES) ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                    esperarTecla();
+                    textQuestion("PRESIONA [ESPACIO] PARA PROTEGERTE DE LOS METEOROS CON LOS MISILES QUE TIENES ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
+                    secondspause(4);
                     break;
                 case 501:
                     break;

@@ -165,7 +165,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
     // subsCinematicas(preguntaActual.pregunta, 45, 200, 7, 0.5, 1, 1, questionTx);
     // DrawTexture(questionTx, 0, 0, WHITE);
     // drawTextCenter(preguntaActual.pregunta, 0, 280, 55, YELLOW);
-    textQuestion(preguntaActual.pregunta, 70, 200, 7, &questionTx);
+    textQuestion(preguntaActual.pregunta, 50, 200, 7, &questionTx);
     do
     {
 
