@@ -29,7 +29,7 @@ int main()
     // Variables del cronómetro
     int totalseconds = 0, minutesT = 0, secondsT = 0;
     float timeseconds = 0;
-    int tuto = 0, tutob = 1, tutostate = 1;
+    int tuto = 0, tutob = 0, tutostate = 1;
 
     // Configuración de la ventana
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.4");
@@ -68,6 +68,9 @@ int main()
     // Estado inicial del juego
     GameState gameState = MAIN_MENU;
     int keyOption;
+
+    float axisX, axisY;
+    int gamepad = 0;
 
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
@@ -121,25 +124,33 @@ int main()
             }
 
             /*------------------ CONTROLES ------------------*/
-            if (IsKeyDown(KEY_RIGHT)) // Mover hacia la derecha
+            // Obtener el movimiento del joystick izquierdo
+            axisX = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X);
+            axisY = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y);
+
+            /*------------------ CONTROLES ------------------*/
+
+            // Movimiento hacia la derecha
+            if (IsKeyDown(KEY_RIGHT) || axisX > 0.1f)
             {
                 if (playerPosition.x + playRadius < SCR_WIDTH)
                 {
                     playerPosition.x += playerSpeed;
-                    // Rotacion hacia la derecha
+                    // Rotación hacia la derecha
                     if (currentRotation < maxRotation)
                     {
                         currentRotation += rotationSpeed;
                     }
                 }
             }
-            if (IsKeyDown(KEY_LEFT)) // Mover hacia la izquierda
+
+            // Movimiento hacia la izquierda
+            if (IsKeyDown(KEY_LEFT) || axisX < -0.1f)
             {
                 if (playerPosition.x - playRadius > 0)
                 {
                     playerPosition.x -= playerSpeed;
-
-                    // Rotacion hacia la izquierda
+                    // Rotación hacia la izquierda
                     if (currentRotation > minRotation)
                     {
                         currentRotation -= rotationSpeed;
@@ -147,14 +158,17 @@ int main()
                 }
             }
 
-            if (IsKeyDown(KEY_UP)) // Mover hacia arriba
+            // Movimiento hacia arriba
+            if (IsKeyDown(KEY_UP) || axisY < -0.1f)
             {
                 if (playerPosition.y - playRadius > 0)
                 {
                     playerPosition.y -= playerSpeed;
                 }
             }
-            if (IsKeyDown(KEY_DOWN)) // Mover hacia abajo
+
+            // Movimiento hacia abajo
+            if (IsKeyDown(KEY_DOWN) || axisY > 0.1f)
             {
                 if (playerPosition.y + playRadius < SCR_HEIGHT)
                 {
@@ -163,7 +177,7 @@ int main()
             }
 
             // Interpolar la rotación de vuelta a la posición original cuando se suelta la tecla
-            if (!IsKeyDown(KEY_RIGHT) && !IsKeyDown(KEY_LEFT))
+            if (!IsKeyDown(KEY_RIGHT) && !IsKeyDown(KEY_LEFT) && fabs(axisX) < 0.1f)
             {
                 // Si la rotación actual no es igual a la rotación objetivo, interpola hacia la rotación objetivo
                 if (currentRotation != targetRotation)
@@ -189,12 +203,14 @@ int main()
                     }
                 }
             }
+
             // Actualizar la rotación del jugador
             playerRotation = currentRotation;
 
-            if (IsKeyPressed(KEY_SPACE)) // Disparar misil
+            // Disparo de misil
+            if (IsKeyPressed(KEY_SPACE) || IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_RIGHT_FACE_DOWN))
             {
-                for (i = 0; i < MAX_SHOTS; i++)
+                for (int i = 0; i < MAX_SHOTS; i++)
                 {
                     if (!shots[i].active)
                     {
