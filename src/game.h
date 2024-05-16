@@ -73,6 +73,10 @@ void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, boo
         case KEY_M:
             *muteMusic = !(*muteMusic);
             break;
+
+        case KEY_F11:
+            ToggleFullscreen();
+            break;
         }
         break;
 

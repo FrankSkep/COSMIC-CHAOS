@@ -75,11 +75,6 @@ int main()
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
     {
-        if (IsKeyPressed(KEY_F11))
-        {
-            ToggleFullscreen();
-        }
-
         // Actualizar estado del juego
         updateGameState(&gameState, keyOption, &stats, &muteMusic);
         keyOption = -1; // Reiniciar valor de tecla
