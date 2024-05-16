@@ -378,7 +378,12 @@ int main()
                 }
             }
             rotationMeteor += 2.5f; // Velocidad de rotacion meteoros
-            pausa();                // Verifica si se pulso 'P', para pausar el juego
+            pausa(gamepad);         // Verifica si se pulso 'P', para pausar el juego
+            if (IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_MIDDLE_LEFT))
+            {
+                resetItems(&playerPosition); // Reinicia posicion y desactiva objetos
+                gameState = MAIN_MENU; // Salir del bucle principal
+            }
 
             /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
             BeginDrawing();

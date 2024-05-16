@@ -22,7 +22,7 @@ void subsCinematicas(const char *text, int tamano, float positionY, int frecuenc
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo);
 void esperarTecla();
 void screenpoints(int *totalseconds, short *score);
-void pausa();
+void pausa(int gamepad);
 
 /*------ DESARROLLO DE LAS FUNCIONES ------*/
 
@@ -160,6 +160,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
 
     // Fondo pregunta
     Texture2D questionTx = LoadTexture("resources/images/backgrounds/questionbg.png");
+    char opciones[] = {'Y', 'B', 'A', 'X'};
 
     BeginDrawing();
     // subsCinematicas(preguntaActual.pregunta, 45, 200, 7, 0.5, 1, 1, questionTx);
@@ -172,12 +173,12 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
         for (int i = 0; i < 4; i++)
         {
             char opcionLabel = 'A' + i;
-            drawTextCenter(TextFormat("%c) %s", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, WHITE);
+            drawTextCenter(TextFormat("(%c) [%c] %s",opciones[i], opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, WHITE);
         }
 
         for (int i = 0; i < 4; i++)
         {
-            if (IsKeyPressed(KEY_A + i))
+            if (IsKeyPressed(KEY_A + i) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_UP + i))
             {
                 if (strcmp(opcionesBarajadas[i], preguntaActual.opciones[preguntaActual.respuestaCorrecta]) == 0)
                 {
@@ -561,19 +562,19 @@ void screenpoints(int *totalseconds, short *score)
     secondspause(2);
 }
 
-void pausa()
+void pausa(int gamepad)
 {
     int tamano = 160;
     const char text[] = "Pausa";
     const char text2[] = "(Enter) Reanudar partida";
 
-    if (IsKeyDown(KEY_P))
+    if (IsKeyDown(KEY_P) || IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_MIDDLE_RIGHT))
     {
         do
         {
             DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 165, tamano, WHITE);
             DrawText(text2, SCR_WIDTH / 2 - MeasureText(text2, 80) / 2, (SCR_HEIGHT / 2) + 150, 80, WHITE);
             EndDrawing();
-        } while (!IsKeyPressed(KEY_ENTER));
+        } while (!IsKeyPressed(KEY_ENTER) && !IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_MIDDLE_LEFT));
     }
 }
