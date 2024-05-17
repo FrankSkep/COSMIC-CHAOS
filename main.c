@@ -29,8 +29,8 @@ int main()
     // Variables del cronómetro
     int totalseconds = 0, minutesT = 0, secondsT = 0;
     float timeseconds = 0;
-    int tuto = 0, tutob = 0, tutostate = 0; // segundo y tercero = 1
-
+    int tuto = 0, tutob = 1, tutostate = 1; // segundo y tercero = 1
+    tutob = !tutob; tutostate = !tutostate;
     // Configuración de la ventana
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
     SetTargetFPS(75);
