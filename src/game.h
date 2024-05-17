@@ -11,7 +11,7 @@ void InitObject(TGameObject *object, const float *objRadius);
 bool CheckCollision(Vector2 *playerPos, float playerRadius, Vector2 *ballPos, float meteorRadius);
 bool waitForMovementKey();
 // Actualiza estados del juego
-void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, bool *muteMusic);
+void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, bool *muteMusic, Vector2 *playPosition);
 
 void updateMusic(GameState gameState, bool muteMusic);
 
@@ -45,18 +45,18 @@ void selecNpreguntas();
 int busqSecuencial(int vect[], int m, int num);
 
 /*-------------------- DESARROLLO DE FUNCIONES --------------------*/
-void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, bool *muteMusic)
+void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, bool *muteMusic, Vector2 *playPosition)
 {
     switch (*gameState)
     {
     case MAIN_MENU:
+        if (IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT))
+        {
+            *gameState = IN_GAME;
+        }
         switch (keyPressed)
         {
         case KEY_ENTER:
-            *gameState = IN_GAME;
-            break;
-
-        case GAMEPAD_BUTTON_MIDDLE_RIGHT:
             *gameState = IN_GAME;
             break;
 
@@ -112,6 +112,23 @@ void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, boo
         break;
 
     case IN_GAME:
+        if ((IsKeyDown(KEY_P) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)))
+        {
+            *gameState = PAUSE;
+        }
+        break;
+
+    case PAUSE:
+        if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT))
+        {
+            *gameState = IN_GAME;
+        }
+        if (IsKeyPressed(KEY_Q) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_LEFT))
+        {
+            resetStats(stats);
+            resetItems(playPosition);
+            *gameState = MAIN_MENU;
+        }
         break;
     }
 }
@@ -145,6 +162,8 @@ void updateMusic(GameState gameState, bool muteMusic)
         PlayMusicStream(gameover);
         UpdateMusicStream(gameover);
         break;
+    case PAUSE:
+        break;
     }
 }
 
@@ -155,7 +174,7 @@ void ingresarNickName(char inputText[])
 
     // Fondo pantalla inicial
     Texture2D startTx = LoadTexture("resources/images/backgrounds/startbg.png");
-    while (!(IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)) && !WindowShouldClose())
+    while (!(IsKeyPressed(KEY_ENTER) || IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) && !WindowShouldClose())
     {
         PlayMusicStream(menuMusic);
         UpdateMusicStream(menuMusic);

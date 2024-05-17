@@ -22,7 +22,6 @@ void subsCinematicas(const char *text, int tamano, float positionY, int frecuenc
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo);
 void esperarTecla();
 void screenpoints(int *totalseconds, short *score);
-void pausa(int gamepad, Vector2 *playPosition, GameState *gameState, bool gameover);
 
 /*------ DESARROLLO DE LAS FUNCIONES ------*/
 
@@ -557,25 +556,4 @@ void screenpoints(int *totalseconds, short *score)
         EndDrawing();
     } while (realScore != tempscore); // Termina al llegar a el puntaje real
     secondspause(2);
-}
-
-void pausa(int gamepad, Vector2 *playPosition, GameState *gameState, bool gameover)
-{
-
-    if ((IsKeyDown(KEY_P) || IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_MIDDLE_RIGHT)) && !gameover)
-    {
-        do
-        {
-            drawTextCenter("PAUSA", 0, (SCR_HEIGHT / 2) - 175, 160, YELLOW);
-            drawTextCenter("[ENTER] Reanudar partida (START) ", 0, (SCR_HEIGHT / 2), 60, GREEN);
-            drawTextCenter("[ESC] Salir al menu (BACK) ", 0, (SCR_HEIGHT / 2) + 100, 60, RED);
-            EndDrawing();
-            if (IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_MIDDLE_LEFT) || IsKeyPressed(KEY_ESCAPE))
-            {
-                resetItems(playPosition);
-                *gameState = MAIN_MENU; // salir al menu
-                break;
-            }
-        } while (!IsKeyPressed(KEY_ENTER) && !IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_MIDDLE_RIGHT));
-    }
 }

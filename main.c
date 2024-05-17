@@ -29,8 +29,8 @@ int main()
     // Variables del cronómetro
     int totalseconds = 0, minutesT = 0, secondsT = 0;
     float timeseconds = 0;
-    int tuto = 0, tutob = 1, tutostate = 0; // segundo y tercero = 1
-
+    int tuto = 0, tutob = 1, tutostate = 1; // segundo y tercero = 1
+    tutob = !tutob; tutostate = !tutostate;
     // Configuración de la ventana
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
     SetTargetFPS(75);
@@ -76,7 +76,7 @@ int main()
     while (!WindowShouldClose())
     {
         // Actualizar estado del juego
-        updateGameState(&gameState, keyOption, &stats, &muteMusic);
+        updateGameState(&gameState, keyOption, &stats, &muteMusic, &playerPosition);
         keyOption = -1; // Reiniciar valor de tecla
 
         // Actualizar musica en cada modo
@@ -106,8 +106,6 @@ int main()
             break;
 
         case IN_GAME:
-            pausa(gamepad, &playerPosition, &gameState, gameOver); // Verifica si se pulso 'P', para pausar el juego
-
             gameOver = false;
 
             /***** SPRITES *****/
@@ -541,6 +539,14 @@ int main()
                 gameState = GAME_OVER;
             }
             EndDrawing();
+            break;
+
+        case PAUSE:
+            drawTextCenter("PAUSA", 0, (SCR_HEIGHT / 2) - 175, 160, YELLOW);
+            drawTextCenter("[ENTER] Reanudar partida (START) ", 0, (SCR_HEIGHT / 2), 60, GREEN);
+            drawTextCenter("[Q] Salir al menu (BACK) ", 0, (SCR_HEIGHT / 2) + 100, 60, RED);
+            EndDrawing();
+            keyOption = GetKeyPressed();
             break;
 
         case GAME_OVER:
