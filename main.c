@@ -76,7 +76,7 @@ int main()
     while (!WindowShouldClose())
     {
         // Actualizar estado del juego
-        updateGameState(&gameState, keyOption, &stats, &muteMusic);
+        updateGameState(&gameState, keyOption, &stats, &muteMusic, &playerPosition);
         keyOption = -1; // Reiniciar valor de tecla
 
         // Actualizar musica en cada modo
@@ -106,8 +106,6 @@ int main()
             break;
 
         case IN_GAME:
-            pausa(gamepad, &playerPosition, &gameState, gameOver); // Verifica si se pulso 'P', para pausar el juego
-
             gameOver = false;
 
             /***** SPRITES *****/
@@ -539,6 +537,14 @@ int main()
                 gameState = GAME_OVER;
             }
             EndDrawing();
+            break;
+
+        case PAUSE:
+            drawTextCenter("PAUSA", 0, (SCR_HEIGHT / 2) - 175, 160, YELLOW);
+            drawTextCenter("[ENTER] Reanudar partida (START) ", 0, (SCR_HEIGHT / 2), 60, GREEN);
+            drawTextCenter("[Q] Salir al menu (BACK) ", 0, (SCR_HEIGHT / 2) + 100, 60, RED);
+            EndDrawing();
+            keyOption = GetKeyPressed();
             break;
 
         case GAME_OVER:

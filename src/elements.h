@@ -51,6 +51,7 @@ typedef enum
     HOW_TO_PLAY,
     ABOUT_GAME,
     HISTORY_SCORE,
+    PAUSE
 } GameState;
 
 /*--------- STRUCTS ---------*/
