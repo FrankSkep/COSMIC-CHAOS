@@ -29,7 +29,7 @@ int main()
     // Variables del cronómetro
     int totalseconds = 0, minutesT = 0, secondsT = 0;
     float timeseconds = 0;
-    int tuto = 0, tutob = 0, tutostate = 0; // segundo y tercero = 1
+    int tuto = 0, tutob = 1, tutostate = 0; // segundo y tercero = 1
 
     // Configuración de la ventana
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
@@ -463,7 +463,9 @@ int main()
                     secondspause(4);
                     break;
                 case 20:
-                    textQuestion("Utiliza las flechas de tu teclado para moverte en la direccion de deses Y ATRAPAR ESAS MONEDAS ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
+                    subsCinematicas("Utiliza las flechas de tu teclado o el joystick izquierdo", 40, SCR_HEIGHT - 300, 1, 1, 2, cinema);
+                    secondspause(1);
+                    subsCinematicas("para moverte en la direccion de deses Y ATRAPAR ESAS MONEDAS ", 40, SCR_HEIGHT - 250, 1, 1, 2, cinema);
                     esperarTecla();
                     break;
                 case 90:

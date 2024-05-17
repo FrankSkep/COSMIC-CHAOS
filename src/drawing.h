@@ -18,7 +18,7 @@ void drawShots(Texture2D shotTx, Texture2D *explosionTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
 /* PANTALLAS */
-void subsCinematicas(const char *text, int tamano, float positionY, int frecuencia, float seconds, int frame1, int frame2, Texture2D *cinema);
+void subsCinematicas(const char *text, int tamano, float positionY, int frecuencia, int frame1, int frame2, Texture2D *cinema);
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo);
 void esperarTecla();
 void screenpoints(int *totalseconds, short *score);
@@ -403,7 +403,7 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 }
 
 // Maximo 160 caracteres - tamaño - frecuencia - tiempo - textura - frame1 y frame2
-void subsCinematicas(const char *text, int tamano, float positionY, int frecuencia, float seconds, int frame1, int frame2, Texture2D *cinema)
+void subsCinematicas(const char *text, int tamano, float positionY, int frecuencia, int frame1, int frame2, Texture2D *cinema)
 {
     int longitud = strlen(text);
     int i, limiteH = 45, acumulador = 0;
@@ -419,7 +419,6 @@ void subsCinematicas(const char *text, int tamano, float positionY, int frecuenc
         }
 
         BeginDrawing();
-        ClearBackground(BLACK);
 
         // Mensaje para saltar cinematica
         DrawText("(S) SKIP", SCR_WIDTH - (250), SCR_HEIGHT - 70, 50, WHITE);
@@ -463,10 +462,6 @@ void subsCinematicas(const char *text, int tamano, float positionY, int frecuenc
         acumulador++;
     }
 
-    double startTime2 = GetTime(); // Obtener el tiempo de inicio
-
-    while (GetTime() - startTime2 < seconds) // Pausa entre cada texto
-        ;
 }
 
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo)
