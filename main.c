@@ -32,7 +32,7 @@ int main()
     int tuto = 0, tutob = 0, tutostate = 0; // segundo y tercero = 1
 
     // Configuración de la ventana
-    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.4");
+    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
     SetTargetFPS(75);
 
     // Carga de texturas y sonidos
@@ -106,6 +106,8 @@ int main()
             break;
 
         case IN_GAME:
+            pausa(gamepad, &playerPosition, &gameState, gameOver); // Verifica si se pulso 'P', para pausar el juego
+
             gameOver = false;
 
             /***** SPRITES *****/
@@ -373,12 +375,6 @@ int main()
                 }
             }
             rotationMeteor += 2.5f; // Velocidad de rotacion meteoros
-            pausa(gamepad);         // Verifica si se pulso 'P', para pausar el juego
-            if (IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_MIDDLE_LEFT))
-            {
-                resetItems(&playerPosition); // Reinicia posicion y desactiva objetos
-                gameState = MAIN_MENU;       // Salir del bucle principal
-            }
 
             /*---------------- DIBUJO PARTIDA EN CURSO ---------------*/
             BeginDrawing();

@@ -56,6 +56,10 @@ void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, boo
             *gameState = IN_GAME;
             break;
 
+        case GAMEPAD_BUTTON_MIDDLE_RIGHT:
+            *gameState = IN_GAME;
+            break;
+
         case KEY_A:
             *gameState = HOW_TO_PLAY;
             break;
@@ -92,14 +96,14 @@ void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, boo
         break;
 
     case GAME_OVER:
-        if (keyPressed == KEY_ENTER)
+        if (keyPressed == KEY_ENTER || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT))
         {
             resetStats(stats);
             *gameState = IN_GAME;
         }
         else
         {
-            if (keyPressed == KEY_Q)
+            if (keyPressed == KEY_Q || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_LEFT))
             {
                 resetStats(stats);
                 *gameState = MAIN_MENU;
@@ -151,12 +155,12 @@ void ingresarNickName(char inputText[])
 
     // Fondo pantalla inicial
     Texture2D startTx = LoadTexture("resources/images/backgrounds/startbg.png");
-    while (!IsKeyPressed(KEY_ENTER) && !WindowShouldClose())
+    while (!(IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)) && !WindowShouldClose())
     {
         PlayMusicStream(menuMusic);
         UpdateMusicStream(menuMusic);
         // Terminar cadena cuando presione enter
-        if (IsKeyPressed(KEY_ENTER) && letterCount < MAX_LEN_NAME)
+        if ((IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)) && letterCount < MAX_LEN_NAME)
         {
             inputText[letterCount] = '\0';
         }
