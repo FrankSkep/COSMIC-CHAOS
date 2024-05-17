@@ -161,6 +161,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
     // Fondo pregunta
     Texture2D questionTx = LoadTexture("resources/images/backgrounds/questionbg.png");
     char opciones[] = {'Y', 'B', 'A', 'X'};
+    Color color[] = {YELLOW, RED, GREEN, BLUE};
 
     BeginDrawing();
     // subsCinematicas(preguntaActual.pregunta, 45, 200, 7, 0.5, 1, 1, questionTx);
@@ -173,7 +174,8 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
         for (int i = 0; i < 4; i++)
         {
             char opcionLabel = 'A' + i;
-            drawTextCenter(TextFormat("(%c) [%c] %s",opciones[i], opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, WHITE);
+            drawTextCenter(TextFormat("      %s  (%c)", opcionesBarajadas[i], opciones[i]), -4, 400 + i * 60, 45, color[i]);
+            drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, WHITE);
         }
 
         for (int i = 0; i < 4; i++)
