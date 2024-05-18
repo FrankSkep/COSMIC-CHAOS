@@ -32,8 +32,9 @@ int main()
     int tuto = 0, tutob = 1, tutostate = 1; // segundo y tercero = 1
 
     // Esto es para no mostrar tutorial, para pruebas
-    // tutob = !tutob;
-    // tutostate = !tutostate;
+    tutob = !tutob;
+    tutostate = !tutostate;
+
     // Configuración de la ventana
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
     SetTargetFPS(75);
@@ -72,8 +73,9 @@ int main()
 
     // Estado inicial del juego
     GameState gameState = MAIN_MENU;
-    int keyOption;
+    int keyOption; // Lee tecla opcion del jugador
 
+    // Configuracion para mando fisico - joystick
     float axisX, axisY;
     int gamepad = 0;
 
@@ -551,6 +553,7 @@ int main()
             break;
 
         case PAUSE:
+            BeginDrawing();
             drawTextCenter("PAUSA", 0, (SCR_HEIGHT / 2) - 175, 160, YELLOW);
             drawTextCenter("[ENTER] Reanudar partida (START) ", 0, (SCR_HEIGHT / 2), 60, GREEN);
             drawTextCenter("[Q] Salir al menu (BACK) ", 0, (SCR_HEIGHT / 2) + 100, 60, RED);
