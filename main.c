@@ -30,7 +30,10 @@ int main()
     int totalseconds = 0, minutesT = 0, secondsT = 0;
     float timeseconds = 0;
     int tuto = 0, tutob = 1, tutostate = 1; // segundo y tercero = 1
-    tutob = !tutob; tutostate = !tutostate;
+
+    // Esto es para no mostrar tutorial, para pruebas
+    // tutob = !tutob;
+    // tutostate = !tutostate;
     // Configuración de la ventana
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
     SetTargetFPS(75);
@@ -65,6 +68,8 @@ int main()
     int contin = 0;
     bool muteMusic = false;
 
+    int showTutorial = 0;
+
     // Estado inicial del juego
     GameState gameState = MAIN_MENU;
     int keyOption;
@@ -79,8 +84,12 @@ int main()
         updateGameState(&gameState, keyOption, &stats, &muteMusic, &playerPosition);
         keyOption = -1; // Reiniciar valor de tecla
 
-        // Actualizar musica en cada modo
+        // Actualizar estado de la musica
         updateMusic(gameState, muteMusic);
+
+        // Mostrar tutorial solo la primera vez que abre el juego
+        // showTutorial = !saveProgress && (access("record.dat", F_OK) == -1);
+        // tutob = tutostate = showTutorial ? 1 : 0;
 
         // ESTADOS DEL JUEGO
         switch (gameState)
@@ -424,13 +433,13 @@ int main()
                     if (tutostate)
                     {
                         textQuestion("ACABAS DE CHOCAR CON UNO DE LOS POWER UPS ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                        secondspause(4);
+                        secondspause(3);
                         textQuestion("imagen central de los power-ups ", 90, SCR_HEIGHT - 500, 3, &tutotx1);
-                        secondspause(4);
+                        secondspause(3);
                         textQuestion("SI RESPONDES BIEN A LA PREGUNTA LO OBTENDRAS ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
-                        secondspause(4);
+                        secondspause(3);
                         textQuestion("\t\t\tcontinuemos ", 60, SCR_HEIGHT - 600, 3, &tutotx1);
-                        secondspause(4);
+                        secondspause(3);
                         tutostate = 0;
                     }
                     PlaySound(soundcoin);
