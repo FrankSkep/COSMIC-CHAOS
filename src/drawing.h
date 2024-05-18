@@ -18,7 +18,6 @@ void drawShots(Texture2D shotTx, Texture2D *explosionTx);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
 /* PANTALLAS */
-void subsCinematicas(const char *text, int tamano, float positionY, int frecuencia, int frame1, int frame2, Texture2D *cinema);
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo);
 void esperarTecla();
 void screenpoints(int *totalseconds, short *score);
@@ -399,68 +398,6 @@ void drawShots(Texture2D shotTx, Texture2D *explosionTx)
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color)
 {
     DrawText(text, SCR_WIDTH / 2 + posX - MeasureText(text, fontSize) / 2 + posX, posY, fontSize, color);
-}
-
-// Maximo 160 caracteres - tamaño - frecuencia - tiempo - textura - frame1 y frame2
-void subsCinematicas(const char *text, int tamano, float positionY, int frecuencia, int frame1, int frame2, Texture2D *cinema)
-{
-    int longitud = strlen(text);
-    int i, limiteH = 45, acumulador = 0;
-    bool cambio = true;
-    float x, y;
-
-    for (i = 0; i < longitud; i++)
-    {
-        if (acumulador >= frecuencia)
-        {
-            cambio = !cambio;
-            acumulador = 0;
-        }
-
-        BeginDrawing();
-
-        // Mensaje para saltar cinematica
-        DrawText("(S) SKIP", SCR_WIDTH - (250), SCR_HEIGHT - 70, 50, WHITE);
-        if (IsKeyPressed(KEY_S))
-        {
-            return; // Saltar cinematica
-        }
-
-        if (cambio)
-        {
-            DrawTexture(cinema[frame1], 0, 0, WHITE);
-        }
-        else
-        {
-            DrawTexture(cinema[frame2], 0, 0, WHITE);
-        }
-
-        x = limiteH;
-        y = positionY;
-        // positionY = (SCR_HEIGHT / 2) * 1.6;
-
-        for (int j = 0; j <= i; j++)
-        {
-            if (IsKeyPressed(KEY_S))
-            {
-                return; // Saltar cinematica
-            }
-
-            if (x + MeasureText(TextFormat("%c", text[j]), tamano) > SCR_WIDTH - limiteH)
-            {
-                x = limiteH;
-                y += tamano + 5;
-            }
-            DrawText(TextFormat("%c", text[j]), x + 6, y + 6, tamano, BLACK);
-            DrawText(TextFormat("%c", text[j]), x, y, tamano, YELLOW);
-
-            x += MeasureText(TextFormat("%c", text[j]), tamano) + 10;
-        }
-        EndDrawing();
-
-        acumulador++;
-    }
-
 }
 
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo)

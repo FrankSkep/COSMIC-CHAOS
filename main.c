@@ -472,9 +472,9 @@ int main()
                     secondspause(4);
                     break;
                 case 20:
-                    subsCinematicas("Utiliza las flechas de tu teclado o el joystick izquierdo", 40, SCR_HEIGHT - 300, 1, 1, 2, cinema);
+                    // subsCinematicas("Utiliza las flechas de tu teclado o el joystick izquierdo", 40, SCR_HEIGHT - 300, 1, 1, 2, 0);
                     secondspause(1);
-                    subsCinematicas("para moverte en la direccion de deses Y ATRAPAR ESAS MONEDAS ", 40, SCR_HEIGHT - 250, 1, 1, 2, cinema);
+                    // subsCinematicas("para moverte en la direccion de deses Y ATRAPAR ESAS MONEDAS ", 40, SCR_HEIGHT - 250, 1, 1, 2, 1);
                     esperarTecla();
                     break;
                 case 90:
