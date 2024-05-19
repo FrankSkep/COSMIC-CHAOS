@@ -85,14 +85,14 @@ void loadTextures()
     forceF[5] = LoadTexture("resources/images/shield/forceField_05.png");
 
     // CINEMATICAS
-     cinema[0] = LoadTexture("resources/images/backgrounds/cinema1.png");
-     cinema[1] = LoadTexture("resources/images/backgrounds/cinema2.png");
-    // cinema[2] = LoadTexture("resources/images/backgrounds/cinema3.png");
-    // cinema[3] = LoadTexture("resources/images/backgrounds/cinema4.png");
-    // cinema[4] = LoadTexture("resources/images/backgrounds/cinema5.png");     //ESTAS DEJAR
-    // cinema[5] = LoadTexture("resources/images/backgrounds/cinema6.png");     //ESTAS DEJAR
-    // cinema[6] = LoadTexture("resources/images/backgrounds/cinema7.png");
-    // cinema[7] = LoadTexture("resources/images/backgrounds/cinema8.png");
+    cinema[0] = LoadTexture("resources/images/backgrounds/cinema1.png");
+    cinema[1] = LoadTexture("resources/images/backgrounds/cinema2.png");
+    cinema[2] = LoadTexture("resources/images/backgrounds/cinema3.png");
+    cinema[3] = LoadTexture("resources/images/backgrounds/cinema4.png");
+    cinema[4] = LoadTexture("resources/images/backgrounds/cinema5.png"); // ESTAS DEJAR
+    cinema[5] = LoadTexture("resources/images/backgrounds/cinema6.png"); // ESTAS DEJAR
+    cinema[6] = LoadTexture("resources/images/backgrounds/cinema7.png");
+    cinema[7] = LoadTexture("resources/images/backgrounds/cinema8.png");
     loadingScreen("Cargando....");
 
     // Nave
