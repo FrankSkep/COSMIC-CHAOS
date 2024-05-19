@@ -32,8 +32,8 @@ int main()
     int tuto = 0, tutob = 1, tutostate = 1; // segundo y tercero = 1
 
     // Esto es para no mostrar tutorial, para pruebas
-    tutob = !tutob;
-    tutostate = !tutostate;
+    // tutob = !tutob;
+    // tutostate = !tutostate;
 
     // Configuración de la ventana
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
@@ -434,13 +434,10 @@ int main()
                 {
                     if (tutostate)
                     {
-                        textQuestion("ACABAS DE CHOCAR CON UNO DE LOS POWER UPS ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                        secondspause(3);
-                        textQuestion("imagen central de los power-ups ", 90, SCR_HEIGHT - 500, 3, &tutotx1);
-                        secondspause(3);
-                        textQuestion("SI RESPONDES BIEN A LA PREGUNTA LO OBTENDRAS ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
-                        secondspause(3);
-                        textQuestion("\t\t\tcontinuemos ", 60, SCR_HEIGHT - 600, 3, &tutotx1);
+                        subsCinematicas("ACABAS DE CHOCAR CON UNO DE LOS POWER UPS                                           ", 40, SCR_HEIGHT - 300, 12, 10, 11);
+                        subsCinematicas("SI RESPONDES BIEN A LA PREGUNTA LO OBTENDRAS                                        ", 40, SCR_HEIGHT - 250, 12, 10, 11);
+                        secondspause(1);
+                        textQuestion("                                  CONTUNUEMOS ! ! ", 100, SCR_HEIGHT / 2, 3, &tutotx1);
                         secondspause(3);
                         tutostate = 0;
                     }
@@ -461,42 +458,49 @@ int main()
                 contin = 1;
             }
 
-            tuto++;
             if (tutob) // ESTO IRA EN FUNCIO TRANQUI CORNEJO
             {
+                tuto++;
                 switch (tuto)
                 {
-                case 10:
+                case 5:
                     DrawTexture(tutotx, 0, 0, WHITE);
                     textQuestion("hola gran viajero bienvenido a \"COSMIC-CAOS\" ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
                     secondspause(4);
                     break;
-                case 20:
-                    subsCinematicas("Utiliza las flechas de tu teclado o el joystick izquierdo                                 ", 40, SCR_HEIGHT - 300, 12, 2, 0);
-                    subsCinematicas("para moverte en la direccion de deses Y ATRAPAR ESAS MONEDAS                              ", 40, SCR_HEIGHT - 250, 12, 2, 1);
+                case 7:
+                    subsCinematicas("Utiliza las flechas de tu teclado o el joystick izquierdo                                 ", 40, SCR_HEIGHT - 300, 12, 0, 1);
+                    secondspause(0.1);
+                    subsCinematicas("para moverte en la direccion de deses Y ATRAPAR ESAS MONEDAS                              ", 40, SCR_HEIGHT - 250, 12, 0, 1);
                     esperarTecla();
                     break;
-                case 90:
+                case 70:
                     textQuestion("PERO NO TAN RAPIDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                    secondspause(2);
-                    subsCinematicas("TIENES QUE SABER QUE ESOS METEORITOS PODRIAN CHOCAR CONTIGO, ESQUIVALOS!! ", 40, SCR_HEIGHT - 250, 12, 2, 3);
+                    secondspause(0.1);
+                    subsCinematicas("TIENES QUE SABER QUE ESOS METEORITOS PODRIAN CHOCAR CONTIGO, ESQUIVALOS!!                 ", 40, SCR_HEIGHT - 250, 12, 2, 3);
                     secondspause(4);
                     break;
-                case 140:
-                    textQuestion("MUY BIEN, PERO CUIDA TUS CORAZONES  ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                    secondspause(2);
-                    textQuestion("PUEDES TOMAR UNA DE LAS VIDAS QUE CAEN PARA PODER SOBREVIVIR MAS TIEMPO ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
+                case 130:
+                    subsCinematicas("MUY BIEN, PERO CUIDA TUS CORAZONES                                                        ", 40, SCR_HEIGHT - 300, 12, 6, 7);
+                    subsCinematicas("PUEDES TOMAR UNA DE LAS VIDAS QUE CAEN PARA PODER SOBREVIVIR MAS TIEMPO                   ", 40, SCR_HEIGHT - 250, 12, 6, 7);
                     secondspause(4);
                     break;
-                case 280:
-                    textQuestion("VAS BIEN YA TE ESTAS ADAPTANDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                    secondspause(2);
-                    textQuestion("VEAMOS QUE PASA SI CAPTURAS UNO DE ESOS OBJETOS AZULES ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
-                    secondspause(4);
+                case 270:
+                    if (tutostate)
+                    {
+                        textQuestion("VAS BIEN YA TE ESTAS ADAPTANDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
+                        secondspause(2);
+                        textQuestion("VEAMOS QUE PASA SI CAPTURAS UNO DE ESOS OBJETOS AZULES ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
+                        secondspause(2);
+                    }
                     break;
                 case 500:
-                    textQuestion("PRESIONA [ESPACIO] PARA PROTEGERTE DE LOS METEOROS CON LOS MISILES QUE TIENES ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                    secondspause(4);
+                    subsCinematicas("PRESIONA [ESPACIO] PARA PROTEGERTE DE LOS METEOROS CON LOS MISILES QUE TIENES             ", 40, SCR_HEIGHT - 300, 12, 8, 9);
+                    secondspause(2);
+                    for (int i = 0; i < totalcinema; i++)
+                    {
+                        UnloadTexture(cinema[i]);
+                    }
                     break;
                 case 501:
                     break;
