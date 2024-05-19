@@ -452,14 +452,14 @@ int main()
                 }
             }
 
-            if (showQuestion) // Si tomo moneda de pregunta
+            if (showQuestion) // Si tomo power-up
             {
                 drawQuestion(&showQuestion, &stats.rachaAciertos, &shieldActive, &stats.totalMunicion, &stats.lives, object);
                 continuar = true;
                 contin = 1;
             }
 
-            if (tutorialActive) // ESTO IRA EN FUNCIO TRANQUI CORNEJO
+            if (tutorialActive) // Mostrar tutorial en juego
             {
                 tutorialShow(&tuto, colisionTutorial, &tutorialActive);
             }
