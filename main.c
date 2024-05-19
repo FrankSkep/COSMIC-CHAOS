@@ -472,15 +472,14 @@ int main()
                     secondspause(4);
                     break;
                 case 20:
-                    // subsCinematicas("Utiliza las flechas de tu teclado o el joystick izquierdo", 40, SCR_HEIGHT - 300, 1, 1, 2, 0);
-                    secondspause(1);
-                    // subsCinematicas("para moverte en la direccion de deses Y ATRAPAR ESAS MONEDAS ", 40, SCR_HEIGHT - 250, 1, 1, 2, 1);
+                    subsCinematicas("Utiliza las flechas de tu teclado o el joystick izquierdo                                 ", 40, SCR_HEIGHT - 300, 12, 2, 0);
+                    subsCinematicas("para moverte en la direccion de deses Y ATRAPAR ESAS MONEDAS                              ", 40, SCR_HEIGHT - 250, 12, 2, 1);
                     esperarTecla();
                     break;
                 case 90:
                     textQuestion("PERO NO TAN RAPIDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
                     secondspause(2);
-                    textQuestion("TIENES QUE SABER QUE ESOS METEORITOS PODRIAN CHOCAR CONTIGO, ESQUIVALOS!! ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
+                    subsCinematicas("TIENES QUE SABER QUE ESOS METEORITOS PODRIAN CHOCAR CONTIGO, ESQUIVALOS!! ", 40, SCR_HEIGHT - 250, 12, 2, 3);
                     secondspause(4);
                     break;
                 case 140:

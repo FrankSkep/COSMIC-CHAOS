@@ -20,7 +20,8 @@ Texture2D shipTx[3], forceF[6], misil, explosionTx[3];
 Texture2D grayMeteor, brownMeteor, coinsTx[6], heartsTx[3], ammoTx, ballE[3];
 
 // Sin usar
-Texture2D cinema[8];
+const short totalcinema = 11;
+Texture2D cinema[totalcinema];
 
 /*** Sonidos ***/
 Music menuMusic, gameMusic, gameover;
@@ -93,6 +94,10 @@ void loadTextures()
     cinema[5] = LoadTexture("resources/images/backgrounds/cinema6.png"); // ESTAS DEJAR
     cinema[6] = LoadTexture("resources/images/backgrounds/cinema7.png");
     cinema[7] = LoadTexture("resources/images/backgrounds/cinema8.png");
+    cinema[8] = LoadTexture("resources/images/backgrounds/cinema10.png");
+    cinema[9] = LoadTexture("resources/images/backgrounds/cinema11.png");
+    cinema[10] = LoadTexture("resources/images/backgrounds/cinema12.png");
+    cinema[11] = LoadTexture("resources/images/backgrounds/cinema13.png");
     loadingScreen("Cargando....");
 
     // Nave
@@ -155,10 +160,10 @@ void unloadTextures()
         }
     }
 
-    // for (int i = 0; i < 9; i++)
-    // {
-    //     UnloadTexture(cinema[i]);
-    // }
+    for (int i = 0; i < 9; i++)
+    {
+        UnloadTexture(cinema[i]);
+    }
     UnloadTexture(shield);
     UnloadTexture(grayMeteor);
     UnloadTexture(brownMeteor);
