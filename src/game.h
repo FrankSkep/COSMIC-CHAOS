@@ -298,7 +298,7 @@ void subsCinematicas(const char *text, int tamano, float posY, int frecuencia, i
             if (x + MeasureText(TextFormat("%c", text[j]), tamano) > SCR_WIDTH - limiteH)
             {
                 x = limiteH;
-                y += tamano + 5;
+                y += tamano + 15;
             }
             DrawText(TextFormat("%c", text[j]), x + 6, y + 6, tamano, BLACK);
             DrawText(TextFormat("%c", text[j]), x, y, tamano, YELLOW);
