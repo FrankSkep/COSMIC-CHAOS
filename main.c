@@ -414,20 +414,20 @@ int main()
                 {
                     PlaySound(soundcoin);
                     PlaySound(soundcoin);
-                    screenMessage("¡GO!", 0.5, BLANK);
+                    screenMessage("¡GO!", 0.5, BLANK, WHITE);
                     contin = 0;
                     continuar = false;
                 }
                 if (contin == 4)
                 {
                     PlaySound(soundcoin);
-                    screenMessage("1", 0.7, BLANK);
+                    screenMessage("1", 0.7, BLANK, WHITE);
                     contin = 5;
                 }
                 if (contin == 3)
                 {
                     PlaySound(soundcoin);
-                    screenMessage("2", 0.7, BLANK);
+                    screenMessage("2", 0.7, BLANK, WHITE);
                     contin = 4;
                 }
                 if (contin == 2)
@@ -443,7 +443,7 @@ int main()
                         colisionTutorial = 0;
                     }
                     PlaySound(soundcoin);
-                    screenMessage("3", 0.7, BLANK);
+                    screenMessage("3", 0.7, BLANK, WHITE);
                     contin = 3;
                 }
                 if (contin == 1)
@@ -473,6 +473,9 @@ int main()
 
             if (gameOver)
             {
+                screenMessage("LOSER", 2, BLANK, RED);
+                stats.score = screenpoints(&totalseconds, &(stats.score));
+
                 minutesT = 0, secondsT = 0, totalseconds = 0;
                 rotationMeteor = 0;          // Reiniciar rotacion
                 resetItems(&playerPosition); // Reinicia posicion y desactiva objetos

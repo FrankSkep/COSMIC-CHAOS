@@ -19,6 +19,7 @@ void updateMusic(GameState gameState, bool muteMusic);
 
 // Niveles
 void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *totalseconds);
+float screenpoints(int *totalseconds, float *core);
 
 // Fisicas objetos del juego
 bool objectColision(TGameObject object[], int maxObjects, int objSpeed, float objRadius, Vector2 *playerPosition, int playRadius, Texture2D *texture, bool isMeteor);
@@ -31,7 +32,7 @@ void resetStats(GameStats *stats);
 
 // Espera un tiempo especifico
 void secondspause(float seconds);
-void screenMessage(const char *text, float seconds, Color colorbg);
+void screenMessage(const char *text, float seconds, Color colorbg, Color colortext);
 
 // Recoge Datos jugador
 void ingresarNickName(char inputText[]);
@@ -269,13 +270,6 @@ void subsCinematicas(const char *text, int tamano, float posY, int frecuencia, i
 
         BeginDrawing();
 
-        // Mensaje para saltar cinematica
-        DrawText("(S) SKIP", SCR_WIDTH - (250), SCR_HEIGHT - 70, 50, WHITE);
-        if (IsKeyPressed(KEY_S))
-        {
-            return; // Saltar cinematica
-        }
-
         if (cambio)
         {
             DrawTexture(cinema[frame1], 0, 0, WHITE);
@@ -316,15 +310,6 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
 {
     if (stats->score == 0 && stats->level == 0)
     {
-        // Historia inicial
-        // subsCinematicas("   INFORME DE ULTIMO MOMENTO                        Hola a todos son las 11:45 am y aqui su servilleta     Javie Alatorre informandolos.", 45, SCR_HEIGHT / 2, 7, 2, 4, 5);
-        // subsCinematicas("Desde la NASA nos llega el informe de que se acaba  de descubrir un asteroide con un color amarillo el    cual tiene a los cientificos conmosionados ", 45, SCR_HEIGHT / 2, 7, 4, 0, 1);
-        // subsCinematicas("Se rumora que podria contener gran cantidad de oro en su interior y en este momento organizaciones de   todo el mundo estan investigando este suceso ", 45, SCR_HEIGHT / 2, 7, 4, 0, 1);
-        // subsCinematicas("  Un momento!  Nos informan que el asteroide acaba   de colisionar contra el cinturon de asteroides", 45, SCR_HEIGHT / 2, 7, 3, 2, 3);
-        // subsCinematicas("y efectivamene, contiene gran cantidad de oro, esto deja a las organzaciones en una carrera para ver    quien sera el que se apropie de el ", 45, SCR_HEIGHT / 2, 7, 4, 2, 3);
-        // subsCinematicas("Olvidenlo, nos informan que españa es el primer      aventado en ir por el, como dicta la historia oro del que lo tenga oro se lo queda ", 45, SCR_HEIGHT / 2, 7, 4, 6, 7);
-        // subsCinematicas("nuestros desarolladores han creado una represent- acion grafica de que es lo que podria estar pasando en este momento aya arriba en el espacio ", 45, SCR_HEIGHT / 2, 7, 1, 4, 5);
-
         /* Estadisticas Nivel 1 */
         stats->level = 1;
         stats->score = 0;
@@ -339,10 +324,13 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
 
     if (stats->score >= 50 && stats->level == 1)
     {
+        screenMessage("WIN", 2, WHITE, GREEN);
+
+        screenpoints(totalseconds, &(stats->score));
+
         // Limpiar objetos
         resetItems(playPosition);
-
-        screenMessage("NIVEL 2", 2, BLACK);
+        screenMessage("NIVEL 2", 2, BLACK, WHITE);
 
         /* Estadisticas Nivel 2 */
         stats->level = 2;
@@ -356,12 +344,12 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
         MAX_HEART = MAX_HEART_LV2;
     }
     // Verificar si el jugador ha alcanzado el nivel 3
-    if (stats->score >= 50 && stats->level == 2)
+    if (stats->score >= 250 && stats->level == 2)
     {
         // Limpiar objetos
         resetItems(playPosition);
 
-        screenMessage("NIVEL 3", 2, BLACK);
+        screenMessage("NIVEL 3", 2, BLACK, WHITE);
 
         /* Estadisticas Nivel 3 */
         stats->level = 3;
@@ -374,6 +362,50 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
         MAX_BROWN = MAX_METEOR_LV3;
         MAX_HEART = MAX_HEART_LV3;
     }
+}
+
+// Mostrar pantalla de puntos
+float screenpoints(int *totalseconds, float score)
+{
+    // Variables para el puntaje real y el tiempo transcurrido
+    float realScore = 0.0, tempscore = (score / (float)(*totalseconds)) * 1.5;
+
+    do
+    {
+        secondspause(0.001); // Esperar
+        if (score > 0)
+        {
+            score -= 2; // Simular una disminución del puntaje
+            if (score <= 0)
+            {
+                score = 0;
+            }
+        }
+        if (*totalseconds > 0)
+        {
+            *totalseconds -= 0.001; // Simular una disminución del tiempo transcurrido
+            if (*totalseconds <= 0)
+            {
+                totalseconds = 0;
+            }
+        }
+        if (realScore <= tempscore)
+        {
+            realScore += 0.01; // simular aumento de puntaje
+            if (realScore >= tempscore)
+            {
+                realScore = tempscore;
+            }
+        }
+        ClearBackground(BLACK);
+        BeginDrawing();
+        DrawText(TextFormat("Tiempo: %02d:%02d", *totalseconds / 60, *totalseconds % 60), 30, 100, 100, WHITE);
+        DrawText(TextFormat("Oro recolectado: %d", score), 30, 220, 100, WHITE);
+        DrawText(TextFormat("Oto total ganado: %3.2f", realScore), 30, 340, 100, WHITE);
+        EndDrawing();
+    } while (realScore != tempscore); // Termina al llegar a el puntaje real
+    secondspause(2);
+    return tempscore;
 }
 
 bool objectColision(TGameObject object[], int maxObjects, int objSpeed, float objRadius, Vector2 *playerPosition, int playRadius, Texture2D *texture, bool isMeteor)
@@ -548,13 +580,13 @@ void secondspause(float seconds)
 }
 
 // Mostrar mensaje en pantalla
-void screenMessage(const char *text, float seconds, Color colorbg)
+void screenMessage(const char *text, float seconds, Color colorbg, Color colortext)
 {
     int tamano = 180;
 
     ClearBackground(colorbg);
 
-    DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, WHITE);
+    DrawText(text, SCR_WIDTH / 2 - MeasureText(text, tamano) / 2, (SCR_HEIGHT / 2) - 100, tamano, colortext);
     EndDrawing();
     secondspause(seconds);
 }

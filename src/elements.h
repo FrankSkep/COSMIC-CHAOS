@@ -59,7 +59,7 @@ typedef enum
 typedef struct
 {
     short lives;
-    short score;
+    float score;
     short level;
     short rachaAciertos;
     short totalMunicion;
