@@ -20,10 +20,8 @@ void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color co
 /* PANTALLAS */
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo);
 void esperarTecla();
-void screenpoints(int *totalseconds, short *score);
 
 void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive);
-
 
 /*------ DESARROLLO DE LAS FUNCIONES ------*/
 
@@ -455,99 +453,57 @@ void esperarTecla()
     }
 }
 
-// Mostrar pantalla de puntos
-void screenpoints(int *totalseconds, short *score)
-{
-    // Variables para el puntaje real y el tiempo transcurrido
-    float realScore = 0.0, tempscore = (*score / (float)(*totalseconds)) * 1.5;
-
-    do
-    {
-        secondspause(0.001); // Esperar
-        if (*score > 0)
-        {
-            *score -= 2; // Simular una disminución del puntaje
-            if (*score <= 0)
-            {
-                *score = 0;
-            }
-        }
-        if (*totalseconds > 0)
-        {
-            *totalseconds -= 0.001; // Simular una disminución del tiempo transcurrido
-            if (*totalseconds <= 0)
-            {
-                *totalseconds = 0;
-            }
-        }
-        if (realScore <= tempscore)
-        {
-            realScore += 0.01; // simular aumento de puntaje
-            if (realScore >= tempscore)
-            {
-                realScore = tempscore;
-            }
-        }
-        ClearBackground(BLACK);
-        BeginDrawing();
-        DrawText(TextFormat("Tiempo: %02d:%02d", *totalseconds / 60, *totalseconds % 60), 30, 100, 100, WHITE);
-        DrawText(TextFormat("Oro recolectado: %d", *score), 30, 220, 100, WHITE);
-        DrawText(TextFormat("Oto total ganado: %3.2f", realScore), 30, 340, 100, WHITE);
-        EndDrawing();
-    } while (realScore != tempscore); // Termina al llegar a el puntaje real
-    secondspause(2);
-}
-
 void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
 {
-                    (*tuto)++;
-                switch (*tuto)
-                {
-                case 5:
-                    DrawTexture(tutotx, 0, 0, WHITE);
-                    textQuestion("hola gran viajero bienvenido a \"COSMIC-CAOS\" ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                    secondspause(4);
-                    break;
-                case 7:
-                    subsCinematicas("Utiliza las FLECHAS de tu teclado o el JOYSTICK          izquierdo ", 40, SCR_HEIGHT - 300, 12, 0, 1);
-                    secondspause(0.1);
-                    subsCinematicas("             para moverte en la direccion que deses Y      ATRAPAR ESAS MONEDAS                                                          ", 40, SCR_HEIGHT - 250, 12, 0, 1);
-                    esperarTecla();
-                    break;
-                case 70:
-                    textQuestion("PERO NO TAN RAPIDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                    secondspause(1);
-                    subsCinematicas("TIENES QUE SABER QUE ESOS METEORITOS PODRIAN    CHOCAR CONTIGO                                                                              ", 40, SCR_HEIGHT - 250, 12, 2, 3);
-                    secondspause(1);
-                    break;
-                case 72:
-                    subsCinematicas("AL COLISIONAR CON ELLOS BAJARA TUS CORAZONES                                                        ", 40, SCR_HEIGHT - 300, 12, 6, 7);
-                    subsCinematicas("PUEDES TOMAR UNAS DE LAS VIDAS QUE CAEN PARA     PODER SOBREVIVIR MAS TIEMPO                   ", 40, SCR_HEIGHT - 250, 12, 6, 7);
-                    secondspause(4);
-                    break;
-                case 260:
-                    if (colisionTutorial)
-                    {
-                        textQuestion("VAS BIEN YA TE ESTAS ADAPTANDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                        secondspause(2);
-                        textQuestion("VEAMOS QUE PASA SI CAPTURAS UNO DE ESOS OBJETOS AZULES ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
-                        secondspause(2);
-                    }
-                    break;
-                case 500:
-                    subsCinematicas(" PRESIONA [ESPACIO] PARA PROTEGERTE DE LOS          METEOROS CON LOS MISILES QUE TIENES             ", 40, SCR_HEIGHT - 300, 12, 8, 9);
-                    secondspause(2);
-                    for (int i = 0; i < totalcinema; i++)
-                    {
-                        UnloadTexture(cinema[i]);
-                    }
-                    break;
-                case 501:
-                    tutorialActive = 0;
-                    UnloadTexture(tutotx);
-                    UnloadTexture(tutotx1);
-                    break;
-                default:
-                    break;
-                }
+    (*tuto)++;
+    switch (*tuto)
+    {
+    case 5:
+        DrawTexture(tutotx, 0, 0, WHITE);
+        textQuestion("hola gran viajero bienvenido a \"COSMIC-CAOS\" ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
+        secondspause(4);
+        break;
+    case 7:
+        subsCinematicas("Utiliza las FLECHAS de tu teclado o el JOYSTICK          izquierdo ", 40, SCR_HEIGHT - 300, 12, 0, 1);
+        secondspause(0.1);
+        subsCinematicas("             para moverte en la direccion que deses Y      ATRAPAR ESAS MONEDAS                                                          ", 40, SCR_HEIGHT - 250, 12, 0, 1);
+        esperarTecla();
+        break;
+    case 70:
+        textQuestion("PERO NO TAN RAPIDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
+        secondspause(1);
+        subsCinematicas("TIENES QUE SABER QUE ESOS METEORITOS PODRIAN    CHOCAR CONTIGO                                                                              ", 40, SCR_HEIGHT - 250, 12, 2, 3);
+        secondspause(1);
+        break;
+    case 72:
+        subsCinematicas("AL COLISIONAR CON ELLOS BAJARA TUS CORAZONES                                                        ", 40, SCR_HEIGHT - 300, 12, 6, 7);
+        subsCinematicas("PUEDES TOMAR UNAS DE LAS VIDAS QUE CAEN PARA     PODER SOBREVIVIR MAS TIEMPO                   ", 40, SCR_HEIGHT - 250, 12, 6, 7);
+        secondspause(4);
+        break;
+    case 260:
+        if (colisionTutorial)
+        {
+            textQuestion("VAS BIEN YA TE ESTAS ADAPTANDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
+            secondspause(2);
+            textQuestion("VEAMOS QUE PASA SI CAPTURAS UNO DE ESOS OBJETOS AZULES ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
+            secondspause(2);
+        }
+        break;
+    case 500:
+        subsCinematicas(" PRESIONA [ESPACIO] PARA PROTEGERTE DE LOS          METEOROS CON LOS MISILES QUE TIENES             ", 40, SCR_HEIGHT - 300, 12, 8, 9);
+        secondspause(2);
+
+        break;
+    case 1000:
+        tutorialActive = 0;
+        for (int i = 0; i < totalcinema; i++)
+        {
+            UnloadTexture(cinema[i]);
+        }
+        UnloadTexture(tutotx);
+        UnloadTexture(tutotx1);
+        break;
+    default:
+        break;
+    }
 }
