@@ -141,7 +141,6 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
 
     // Mostrar estado de los powerups
     DrawText(TextFormat("MUNICION : %02d", stats->totalMunicion), 20, 80, 35, YELLOW);
-    DrawText(TextFormat("ESCUDOS : %02d", shield), 20, 95, 35, YELLOW);
 
     // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
     DrawText(TextFormat("%02d:%02d", minutes, seconds), 20, SCR_HEIGHT - 50, 50, WHITE);
@@ -398,8 +397,6 @@ void drawShots(Texture2D shotTx, Texture2D *explosionTx)
     }
 }
 
-
-
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo)
 {
     int longitud = strlen(text);
@@ -453,7 +450,6 @@ void esperarTecla()
 }
 
 // Mostrar pantalla de puntos
-
 
 void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
 {

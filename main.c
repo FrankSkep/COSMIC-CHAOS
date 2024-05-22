@@ -8,15 +8,29 @@ int main()
 {
     srand(time(NULL));
     selecNpreguntas();
-    /*------------- CONSTANTES -------------*/
-    const int playRadius = 45;       // Tamaño del jugador
-    const float playerSpeed = 15.0f; // Velocidad del jugador
-    const float rotationSpeed = 2.0;
+
+    // Configuración de la ventana
+    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
+    SetTargetFPS(75);
+
+    // Carga de texturas y sonidos
+    loadTextures();
+    InitAudioDevice();
+    loadSounds();
+
+    // Jugador
+    Tdata data = getDataPlayer();          // Entrada de datos
+    GameStats stats = {5, 0, 0, 0, 10, 0}; // Inicializacion de estadisticas
+
+    /*------------- Constantes -------------*/
+    const int playRadius = 45;                      // Tamaño del jugador
+    const float playerSpeed = 15.0f;                // Velocidad del jugador
+    const float rotationSpeed = 2.0;                // Velocidad de rotacion
     const float maxRotation = 20.0f;                // Máxima rotación hacia la derecha
     const float minRotation = -20.0f;               // Máxima rotación hacia la izquierda
     const float rotationInterpolationSpeed = 50.0f; // Definir la velocidad de interpolación para volver a la posición original
     const float spawnInterval = 0.2f;               // Intervalo de tiempo entre la aparición de objetos
-    const float spawnIntervalPU = 1.2f;
+    const float spawnIntervalPU = 1.2f;             // Intervalo entre aparicion de powerUps
 
     // Variables del juego
     bool gameOver = false;
@@ -31,27 +45,14 @@ int main()
     float timeseconds = 0;
     int tuto = 0, tutorialActive = 1, colisionTutorial = 1; // segundo y tercero = 1
 
-    // Esto es para no mostrar tutorial, para pruebas
+    // Descomentar esto para no mostrar tutorial, para pruebas
     // tutorialActive = !tutorialActive;
     // colisionTutorial = !colisionTutorial;
 
-    // Configuración de la ventana
-    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
-    SetTargetFPS(75);
-
-    // Carga de texturas y sonidos
-    loadTextures();
-    InitAudioDevice();
-    loadSounds();
-
-    // Jugador
-    Tdata data = getDataPlayer();          // Entrada de datos
-    GameStats stats = {5, 0, 0, 0, 10, 0}; // Estadísticas iniciales
-
-    // Variables de sprites
-    short currentFrame = 0;    // Índice de textura actual (0, 5)
-    short currentFrameExp = 0; // Índice de textura actual (0, 2)
-    float frameTimeCounter = 0.0f;
+    // Variables para sprites
+    short currentFrame = 0;         // Índice de textura actual (0, 5)
+    short currentFrameExp = 0;      // Índice de textura actual (0, 2)
+    float frameTimeCounter = 0.0f;  // Contador de cuadro
     float frameSpeed = 1.0f / 8.0f; // Velocidad de cambio de imagen
 
     // Posición centrada del jugador
@@ -63,13 +64,12 @@ int main()
     Vector2 grayCenter, brownCenter;
 
     // Variables de estado
-    bool saveProgress = false; // Guardar estadísticas del jugador
-    bool showQuestion = false; // Mostrar pregunta
-    bool continuar = false;    // Animación después de pregunta
-    int contin = 0;
-    bool muteMusic = false;
-
-    int showTutorial = 0;
+    bool saveProgress = false; // Bandera para guardar estadísticas en archivo
+    bool showQuestion = false; // Bandera para mostrar pregunta
+    bool continuar = false;    // Bandera para manejar animacion después de pregunta
+    int contin = 0;            // Frame de la animacion
+    bool muteMusic = false;    // Bandera para desactivar musica
+    int showTutorial = 0;      // Bandera para mostrar tutorial inicial
 
     // Estado inicial del juego
     GameState gameState = MAIN_MENU;
@@ -79,7 +79,7 @@ int main()
     float axisX, axisY;
     int gamepad = 0;
 
-    // Variables para movimiento
+    // Movimiento del jugador
     bool rightPressed, leftPressed, upPressed, downPressed;
 
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
