@@ -93,7 +93,7 @@ typedef struct _playerData
 
 typedef struct _preguntas
 {
-    char pregunta[60];
+    char pregunta[90];
     char opciones[4][20];
     int respuestaCorrecta;
 } Tpregunta;

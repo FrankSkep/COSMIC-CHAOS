@@ -90,7 +90,7 @@ int main()
         updateMusic(gameState, muteMusic);
 
         // Mostrar tutorial solo la primera vez que abre el juego
-        // showTutorial = !saveProgress && (access("record.dat", F_OK) == -1);
+        // showTutorial = !saveProgress && (access("resources/record.dat", F_OK) == -1);
         // tutorialActive = colisionTutorial = showTutorial ? 1 : 0;
 
         // ESTADOS DEL JUEGO
@@ -112,7 +112,7 @@ int main()
             break;
 
         case HISTORY_SCORE:
-            DrawScoresTable("record.dat", muteMusic);
+            DrawScoresTable("resources/record.dat", muteMusic);
             keyOption = GetKeyPressed();
             break;
 
@@ -528,7 +528,7 @@ int main()
     // Guardar estadisticas en archivo record.dat
     if (saveProgress)
     {
-        appendScoresToFile("record.dat", data);
+        appendScoresToFile("resources/record.dat", data);
     }
     // Descarga de recursos
     unloadTextures();
