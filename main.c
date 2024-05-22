@@ -29,11 +29,11 @@ int main()
     // Variables del cronómetro
     int totalseconds = 0, minutesT = 0, secondsT = 0;
     float timeseconds = 0;
-    int tuto = 0, tutob = 1, tutostate = 1; // segundo y tercero = 1
+    int tuto = 0, tutorialActive = 1, colisionTutorial = 1; // segundo y tercero = 1
 
     // Esto es para no mostrar tutorial, para pruebas
-    // tutob = !tutob;
-    // tutostate = !tutostate;
+    // tutorialActive = !tutorialActive;
+    // colisionTutorial = !colisionTutorial;
 
     // Configuración de la ventana
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
@@ -91,7 +91,7 @@ int main()
 
         // Mostrar tutorial solo la primera vez que abre el juego
         // showTutorial = !saveProgress && (access("record.dat", F_OK) == -1);
-        // tutob = tutostate = showTutorial ? 1 : 0;
+        // tutorialActive = colisionTutorial = showTutorial ? 1 : 0;
 
         // ESTADOS DEL JUEGO
         switch (gameState)
@@ -414,35 +414,36 @@ int main()
                 {
                     PlaySound(soundcoin);
                     PlaySound(soundcoin);
-                    screenMessage("¡GO!", 0.5, BLANK, WHITE);
+                    screenMessage("¡GO!", 0.5, BLANK);
                     contin = 0;
                     continuar = false;
                 }
                 if (contin == 4)
                 {
                     PlaySound(soundcoin);
-                    screenMessage("1", 0.7, BLANK, WHITE);
+                    screenMessage("1", 0.7, BLANK);
                     contin = 5;
                 }
                 if (contin == 3)
                 {
                     PlaySound(soundcoin);
-                    screenMessage("2", 0.7, BLANK, WHITE);
+                    screenMessage("2", 0.7, BLANK);
                     contin = 4;
                 }
                 if (contin == 2)
                 {
-                    if (tutostate)
+                    if (colisionTutorial)
                     {
+                        textQuestion("", 100, 0, 0, &tutotx);
                         subsCinematicas("ACABAS DE CHOCAR CON UNO DE LOS POWER UPS                                           ", 40, SCR_HEIGHT - 300, 12, 10, 11);
                         subsCinematicas("SI RESPONDES BIEN A LA PREGUNTA LO OBTENDRAS                                        ", 40, SCR_HEIGHT - 250, 12, 10, 11);
                         secondspause(1);
-                        textQuestion("                                  CONTUNUEMOS ! ! ", 100, SCR_HEIGHT / 2, 3, &tutotx1);
+                        textQuestion("         CONTUNUEMOS  ", 100, SCR_HEIGHT / 2, 3, &tutotx1);
                         secondspause(3);
-                        tutostate = 0;
+                        colisionTutorial = 0;
                     }
                     PlaySound(soundcoin);
-                    screenMessage("3", 0.7, BLANK, WHITE);
+                    screenMessage("3", 0.7, BLANK);
                     contin = 3;
                 }
                 if (contin == 1)
@@ -458,60 +459,9 @@ int main()
                 contin = 1;
             }
 
-            if (tutob) // ESTO IRA EN FUNCIO TRANQUI CORNEJO
+            if (tutorialActive) // ESTO IRA EN FUNCIO TRANQUI CORNEJO
             {
-                tuto++;
-                switch (tuto)
-                {
-                case 5:
-                    DrawTexture(tutotx, 0, 0, WHITE);
-                    textQuestion("hola gran viajero bienvenido a \"COSMIC-CAOS\" ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                    secondspause(4);
-                    break;
-                case 7:
-                    subsCinematicas("Utiliza las flechas de tu teclado o el joystick izquierdo                                 ", 40, SCR_HEIGHT - 300, 12, 0, 1);
-                    secondspause(0.1);
-                    subsCinematicas("para moverte en la direccion de deses Y ATRAPAR ESAS MONEDAS                              ", 40, SCR_HEIGHT - 250, 12, 0, 1);
-                    esperarTecla();
-                    break;
-                case 70:
-                    textQuestion("PERO NO TAN RAPIDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                    secondspause(0.1);
-                    subsCinematicas("TIENES QUE SABER QUE ESOS METEORITOS PODRIAN CHOCAR CONTIGO, ESQUIVALOS!!                 ", 40, SCR_HEIGHT - 250, 12, 2, 3);
-                    secondspause(4);
-                    break;
-                case 130:
-                    subsCinematicas("MUY BIEN, PERO CUIDA TUS CORAZONES                                                        ", 40, SCR_HEIGHT - 300, 12, 6, 7);
-                    subsCinematicas("PUEDES TOMAR UNA DE LAS VIDAS QUE CAEN PARA PODER SOBREVIVIR MAS TIEMPO                   ", 40, SCR_HEIGHT - 250, 12, 6, 7);
-                    secondspause(4);
-                    break;
-                case 270:
-                    if (tutostate)
-                    {
-                        textQuestion("VAS BIEN YA TE ESTAS ADAPTANDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-                        secondspause(2);
-                        textQuestion("VEAMOS QUE PASA SI CAPTURAS UNO DE ESOS OBJETOS AZULES ", 40, SCR_HEIGHT - 250, 3, &tutotx1);
-                        secondspause(2);
-                    }
-                    break;
-                case 500:
-                    subsCinematicas("PRESIONA [ESPACIO] PARA PROTEGERTE DE LOS METEOROS CON LOS MISILES QUE TIENES             ", 40, SCR_HEIGHT - 300, 12, 8, 9);
-                    secondspause(2);
-                    for (int i = 0; i < totalcinema; i++)
-                    {
-                        UnloadTexture(cinema[i]);
-                    }
-                    break;
-                case 501:
-                    break;
-                case 1010:
-                    tutob = 0;
-                    UnloadTexture(tutotx);
-                    UnloadTexture(tutotx1);
-                    break;
-                default:
-                    break;
-                }
+                tutorialShow(&tuto, colisionTutorial, &tutorialActive);
             }
 
             /*-------- TIEMPO TRANSCURRIDO --------*/
@@ -523,9 +473,6 @@ int main()
 
             if (gameOver)
             {
-                screenMessage("LOSER", 2, BLANK, RED);
-                stats.score = screenpoints(&totalseconds, &(stats.score));
-
                 minutesT = 0, secondsT = 0, totalseconds = 0;
                 rotationMeteor = 0;          // Reiniciar rotacion
                 resetItems(&playerPosition); // Reinicia posicion y desactiva objetos

@@ -52,10 +52,6 @@ void loadTextures()
     // Fondo gameover
     gameoverT = LoadTexture("resources/images/backgrounds/gameover.png");
 
-    // Imagenes tutorial
-    tutotx = LoadTexture("resources/images/backgrounds/tuto00.png");
-    tutotx1 = LoadTexture("resources/images/backgrounds/tuto01.png");
-
     // Corazones de vidas llenos
     hearthF[0] = LoadTexture("resources/images/hearts/hearthF_00.png");
     hearthF[1] = LoadTexture("resources/images/hearts/hearthF_01.png");
@@ -85,6 +81,9 @@ void loadTextures()
     forceF[4] = LoadTexture("resources/images/shield/forceField_04.png");
     forceF[5] = LoadTexture("resources/images/shield/forceField_05.png");
 
+    // Imagenes tutorial
+    tutotx = LoadTexture("resources/images/backgrounds/tuto00.png");
+    tutotx1 = LoadTexture("resources/images/backgrounds/tuto01.png");
     // CINEMATICAS
     cinema[0] = LoadTexture("resources/images/backgrounds/cinema1.png");
     cinema[1] = LoadTexture("resources/images/backgrounds/cinema2.png");
