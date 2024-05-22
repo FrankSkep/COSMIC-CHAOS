@@ -15,12 +15,10 @@ void drawPlayer(Texture2D ship, Texture2D forceF, Vector2 *playerPosition, float
 void drawMeteor(TGameObject Meteor[], short MAX_METEOR, Texture2D meteorTexture, float rotation);
 void drawObject(Texture2D Textura, TGameObject *objects, int MAX_OBJECTS);
 void drawShots(Texture2D shotTx, Texture2D *explosionTx);
-void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
 /* PANTALLAS */
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo);
 void esperarTecla();
-void screenpoints(int *totalseconds, short *score);
 
 void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive);
 
@@ -400,11 +398,7 @@ void drawShots(Texture2D shotTx, Texture2D *explosionTx)
     }
 }
 
-// Imprimir texto centrado
-void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color)
-{
-    DrawText(text, SCR_WIDTH / 2 + posX - MeasureText(text, fontSize) / 2 + posX, posY, fontSize, color);
-}
+
 
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo)
 {
@@ -459,47 +453,7 @@ void esperarTecla()
 }
 
 // Mostrar pantalla de puntos
-void screenpoints(int *totalseconds, short *score)
-{
-    // Variables para el puntaje real y el tiempo transcurrido
-    float realScore = 0.0, tempscore = (*score / (float)(*totalseconds)) * 1.5;
 
-    do
-    {
-        secondspause(0.001); // Esperar
-        if (*score > 0)
-        {
-            *score -= 2; // Simular una disminución del puntaje
-            if (*score <= 0)
-            {
-                *score = 0;
-            }
-        }
-        if (*totalseconds > 0)
-        {
-            *totalseconds -= 0.001; // Simular una disminución del tiempo transcurrido
-            if (*totalseconds <= 0)
-            {
-                *totalseconds = 0;
-            }
-        }
-        if (realScore <= tempscore)
-        {
-            realScore += 0.01; // simular aumento de puntaje
-            if (realScore >= tempscore)
-            {
-                realScore = tempscore;
-            }
-        }
-        ClearBackground(BLACK);
-        BeginDrawing();
-        DrawText(TextFormat("Tiempo: %02d:%02d", *totalseconds / 60, *totalseconds % 60), 30, 100, 100, WHITE);
-        DrawText(TextFormat("Oro recolectado: %d", *score), 30, 220, 100, WHITE);
-        DrawText(TextFormat("Oto total ganado: %3.2f", realScore), 30, 340, 100, WHITE);
-        EndDrawing();
-    } while (realScore != tempscore); // Termina al llegar a el puntaje real
-    secondspause(2);
-}
 
 void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
 {
