@@ -32,8 +32,8 @@ int main()
     int tuto = 0, tutorialActive = 1, colisionTutorial = 1; // segundo y tercero = 1
 
     // Esto es para no mostrar tutorial, para pruebas
-    tutorialActive = !tutorialActive;
-    colisionTutorial = !colisionTutorial;
+    // tutorialActive = !tutorialActive;
+    // colisionTutorial = !colisionTutorial;
 
     // Configuración de la ventana
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
