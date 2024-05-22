@@ -143,6 +143,7 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
 
     // Mostrar estado de los powerups
     DrawText(TextFormat("MUNICION : %02d", stats->totalMunicion), 20, 80, 35, YELLOW);
+    DrawText(TextFormat("ESCUDOS : %02d", shield), 20, 95, 35, YELLOW);
 
     // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
     DrawText(TextFormat("%02d:%02d", minutes, seconds), 20, SCR_HEIGHT - 50, 50, WHITE);
@@ -150,8 +151,7 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
 
 void drawQuestion(bool *showQuestion, short *racha, short *shield, short *municion, short *lives, short object)
 {
-    int indicePregunta = rand() % PREG_SELEC;
-    Tpregunta preguntaActual = preguntas[indicePregunta];
+    Tpregunta preguntaActual = preguntas[rand() % PREG_SELEC];
 
     // Hacer una copia de las opciones de respuesta
     char opcionesBarajadas[4][20];
@@ -164,15 +164,11 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
     Color color[] = {YELLOW, RED, GREEN, BLUE};
 
     BeginDrawing();
-    // subsCinematicas(preguntaActual.pregunta, 45, 200, 7, 0.5, 1, 1, questionTx);
-    // DrawTexture(questionTx, 0, 0, WHITE);
-    // drawTextCenter(preguntaActual.pregunta, 0, 280, 55, YELLOW);
     const int gamepad = 0; // Usamos el primer controlador (índice 0)
 
     textQuestion(preguntaActual.pregunta, 50, 200, 7, &questionTx);
     do
     {
-
         for (int i = 0; i < 4; i++)
         {
             char opcionLabel = 'A' + i;
@@ -205,7 +201,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
                     (*racha)++;
                     if ((*racha) % 3 == 0) // 1 Vida adicional por cada racha de 3 aciertos
                     {
-                        (*lives)++;
+                        (*lives) += 2;
                     }
                 }
                 else
