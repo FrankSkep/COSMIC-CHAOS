@@ -511,7 +511,7 @@ void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
         textQuestion("hola gran viajero bienvenido a \"COSMIC-CAOS\" ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
         secondspause(4);
         break;
-    case 7:
+    case 8:
         subsCinematicas("Utiliza las FLECHAS de tu teclado o el JOYSTICK          izquierdo ", 40, SCR_HEIGHT - 300, 12, 0, 1);
         secondspause(0.1);
         subsCinematicas("             para moverte en la direccion que deses Y      ATRAPAR ESAS MONEDAS                                                          ", 40, SCR_HEIGHT - 250, 12, 0, 1);
@@ -523,7 +523,7 @@ void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
         subsCinematicas("TIENES QUE SABER QUE ESOS METEORITOS PODRIAN    CHOCAR CONTIGO                                                                              ", 40, SCR_HEIGHT - 250, 12, 2, 3);
         secondspause(1);
         break;
-    case 72:
+    case 73:
         subsCinematicas("AL COLISIONAR CON ELLOS BAJARA TUS CORAZONES                                                        ", 40, SCR_HEIGHT - 300, 12, 6, 7);
         subsCinematicas("PUEDES TOMAR UNAS DE LAS VIDAS QUE CAEN PARA     PODER SOBREVIVIR MAS TIEMPO                   ", 40, SCR_HEIGHT - 250, 12, 6, 7);
         secondspause(4);
@@ -540,12 +540,13 @@ void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
     case 500:
         subsCinematicas(" PRESIONA [ESPACIO] PARA PROTEGERTE DE LOS          METEOROS CON LOS MISILES QUE TIENES             ", 40, SCR_HEIGHT - 300, 12, 8, 9);
         secondspause(2);
+
+        break;
+    case 1501:
         for (int i = 0; i < totalcinema; i++)
         {
             UnloadTexture(cinema[i]);
         }
-        break;
-    case 501:
         tutorialActive = 0;
         UnloadTexture(tutotx);
         UnloadTexture(tutotx1);

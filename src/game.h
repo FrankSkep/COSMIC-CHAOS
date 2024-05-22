@@ -268,14 +268,6 @@ void subsCinematicas(const char *text, int tamano, float posY, int frecuencia, i
         }
 
         BeginDrawing();
-
-        // Mensaje para saltar cinematica
-        DrawText("(S) SKIP", SCR_WIDTH - (250), SCR_HEIGHT - 70, 50, WHITE);
-        if (IsKeyPressed(KEY_S))
-        {
-            return; // Saltar cinematica
-        }
-
         if (cambio)
         {
             DrawTexture(cinema[frame1], 0, 0, WHITE);
@@ -290,10 +282,6 @@ void subsCinematicas(const char *text, int tamano, float posY, int frecuencia, i
 
         for (int j = 0; j <= i; j++)
         {
-            if (IsKeyPressed(KEY_S))
-            {
-                return; // Saltar cinematica
-            }
 
             if (x + MeasureText(TextFormat("%c", text[j]), tamano) > SCR_WIDTH - limiteH)
             {
