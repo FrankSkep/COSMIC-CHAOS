@@ -79,6 +79,9 @@ int main()
     float axisX, axisY;
     int gamepad = 0;
 
+    // Variables para movimiento
+    bool rightPressed, leftPressed, upPressed, downPressed;
+
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
     {
@@ -136,36 +139,29 @@ int main()
 
             /*------------------ CONTROLES ------------------*/
 
-            // Movimiento hacia la derecha
-            if (IsKeyDown(KEY_RIGHT) || axisX > 0.1f)
+            rightPressed = IsKeyDown(KEY_RIGHT) || axisX > 0.1f;
+            leftPressed = IsKeyDown(KEY_LEFT) || axisX < -0.1f;
+            upPressed = IsKeyDown(KEY_UP) || axisY < -0.1f;
+            downPressed = IsKeyDown(KEY_DOWN) || axisY > 0.1f;
+
+            if (rightPressed)
             {
                 if (playerPosition.x + playRadius < SCR_WIDTH)
                 {
                     playerPosition.x += playerSpeed;
-                    // Rotación hacia la derecha
-                    if (currentRotation < maxRotation)
-                    {
-                        currentRotation += rotationSpeed;
-                    }
+                    currentRotation = fmin(currentRotation + rotationSpeed, maxRotation);
                 }
             }
-
-            // Movimiento hacia la izquierda
-            if (IsKeyDown(KEY_LEFT) || axisX < -0.1f)
+            if (leftPressed)
             {
                 if (playerPosition.x - playRadius > 0)
                 {
                     playerPosition.x -= playerSpeed;
-                    // Rotación hacia la izquierda
-                    if (currentRotation > minRotation)
-                    {
-                        currentRotation -= rotationSpeed;
-                    }
+                    currentRotation = fmax(currentRotation - rotationSpeed, minRotation);
                 }
             }
 
-            // Movimiento hacia arriba
-            if (IsKeyDown(KEY_UP) || axisY < -0.1f)
+            if (upPressed)
             {
                 if (playerPosition.y - playRadius > 0)
                 {
@@ -173,8 +169,7 @@ int main()
                 }
             }
 
-            // Movimiento hacia abajo
-            if (IsKeyDown(KEY_DOWN) || axisY > 0.1f)
+            if (downPressed)
             {
                 if (playerPosition.y + playRadius < SCR_HEIGHT)
                 {
@@ -183,24 +178,26 @@ int main()
             }
 
             // Interpolar la rotación de vuelta a la posición original cuando se suelta la tecla
-            if (!IsKeyDown(KEY_RIGHT) && !IsKeyDown(KEY_LEFT) && fabs(axisX) < 0.1f)
+            if (!rightPressed && !leftPressed)
             {
-                // Si la rotación actual no es igual a la rotación objetivo, interpola hacia la rotación objetivo
-                if (currentRotation != targetRotation)
+                if (fabs(axisX) < 0.1f)
                 {
-                    if (currentRotation < targetRotation)
+                    // Si la rotación actual no es igual a la rotación objetivo, interpola hacia la rotación objetivo
+                    if (currentRotation != targetRotation)
                     {
-                        currentRotation += rotationInterpolationSpeed * GetFrameTime();
-                        if (currentRotation > targetRotation)
+                        float deltaRotation = rotationInterpolationSpeed * GetFrameTime();
+
+                        if (currentRotation < targetRotation)
                         {
-                            currentRotation = targetRotation;
+                            currentRotation += deltaRotation;
+                            if (currentRotation > targetRotation)
+                            {
+                                currentRotation = targetRotation;
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (currentRotation > targetRotation)
+                        else
                         {
-                            currentRotation -= rotationInterpolationSpeed * GetFrameTime();
+                            currentRotation -= deltaRotation;
                             if (currentRotation < targetRotation)
                             {
                                 currentRotation = targetRotation;
