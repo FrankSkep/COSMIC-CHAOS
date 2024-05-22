@@ -107,3 +107,4 @@ TGameObject municiones[MAX_OBJECT];
 TGameObject hearts[MAX_HEART_LV3];
 Tshot shots[MAX_SHOTS];
 Tpregunta preguntas[TOTAL_PREG];
+
