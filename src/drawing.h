@@ -158,10 +158,10 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
     memcpy(opcionesBarajadas, preguntaActual.opciones, sizeof(preguntaActual.opciones));
     mezclarArray(opcionesBarajadas, 4);
 
-    // Fondo pregunta
-    Texture2D questionTx = LoadTexture("resources/images/backgrounds/questionbg.png");
     char opciones[] = {'Y', 'B', 'A', 'X'};
-    Color color[] = {YELLOW, RED, GREEN, BLUE};
+
+    Color color[] = {GOLD, MAROON, DARKGREEN, DARKBLUE};
+    Color color2[] = {YELLOW, RED, GREEN, BLUE};
 
     BeginDrawing();
     const int gamepad = 0; // Usamos el primer controlador (índice 0)
@@ -178,7 +178,16 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
             }
             else
             {
-                drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, WHITE);
+                // Cambiar el tamaño de la fuente si la opción está seleccionada
+                if (IsKeyPressed(KEY_A + i) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_UP + i))
+                {
+                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, Fade(BLANK, 0.5f));
+                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 55, color2[i]);
+                }
+                else
+                {
+                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, color[i]);
+                }
             }
         }
 
@@ -208,6 +217,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
                 {
                     *racha = 0;
                     drawTextCenter("¡Incorrecto!", 0, 650, 45, RED);
+                    drawTextCenter(TextFormat("La respuesta correcta era: %s", preguntaActual.opciones[preguntaActual.respuestaCorrecta]), 0, 700, 45, WHITE);
                 }
                 *showQuestion = false;
                 break;
@@ -215,8 +225,6 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
         }
         EndDrawing();
     } while (*showQuestion);
-    UnloadTexture(questionTx);
-    // Espera entre cada pregunta
     secondspause(1.5);
 }
 

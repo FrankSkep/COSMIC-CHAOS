@@ -7,8 +7,10 @@ void unloadSounds();
 
 /*------ Texturas ------*/
 // Fondos
-Texture2D menu, levels[3], gameoverT, scoreboardTx, aboutBg;
+Texture2D menu, levels[3], gameoverT, scoreboardTx, aboutBg, questionTx;
 Texture2D tutotx, tutotx1;
+
+RenderTexture2D renderTexture;
 
 // Iconos interfaz
 Texture2D hearthE[6], hearthF[3], shield;
@@ -40,6 +42,11 @@ void loadingScreen(const char msg[])
 // ---- Carga texturas ----
 void loadTextures()
 {
+    // Inicializar RenderTexture
+    if (!renderTexture.id)
+    {
+        renderTexture = LoadRenderTexture(SCR_WIDTH, SCR_HEIGHT);
+    }
     loadingScreen("Cargando.");
     // Fondo menu principal
     menu = LoadTexture("resources/images/backgrounds/menu.png");
@@ -51,6 +58,9 @@ void loadTextures()
 
     // Fondo gameover
     gameoverT = LoadTexture("resources/images/backgrounds/gameover.png");
+
+    // Fondo pregunta
+    questionTx = LoadTexture("resources/images/backgrounds/questionbg.png");
 
     // Corazones de vidas llenos
     hearthF[0] = LoadTexture("resources/images/hearts/hearthF_00.png");
@@ -166,6 +176,7 @@ void unloadTextures()
     UnloadTexture(shield);
     UnloadTexture(grayMeteor);
     UnloadTexture(brownMeteor);
+    UnloadTexture(questionTx);
 }
 
 // ---- Carga sonidos ----
