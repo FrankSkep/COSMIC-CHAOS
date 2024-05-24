@@ -468,7 +468,10 @@ int main()
 
             if (gameOver)
             {
+                DrawTexture(tutotx, 0, 0, BLACK);
+                DrawTexture(tutotx, 0, 0, BLACK);
                 screenMessage("TE QUEDASTE SIN VIDAS", 1, BLANK, RED, 100);
+                ClearBackground(BLACK);
                 screenpoints(totalseconds, stats.score);
 
                 minutesT = 0, secondsT = 0, totalseconds = 0;

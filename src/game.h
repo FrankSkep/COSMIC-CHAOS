@@ -320,6 +320,8 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
 
     if (stats->score >= PTS_LEVEL_UP && stats->level == 1)
     {
+        DrawTexture(tutotx, 0, 0, BLACK);
+        DrawTexture(tutotx, 0, 0, BLACK);
         screenMessage("HAS SUPERADO LA META", 1, BLANK, GREEN, 100);
         screenpoints(*totalseconds, stats->score);
         // Limpiar objetos
@@ -341,6 +343,9 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
     // Verificar si el jugador ha alcanzado el nivel 3
     if (stats->score >= PTS_LEVEL_UP && stats->level == 2)
     {
+        DrawTexture(tutotx, 0, 0, BLACK);
+        DrawTexture(tutotx, 0, 0, BLACK);
+        
         screenMessage("HAS SUPERADO LA META", 1, BLANK, GREEN, 100);
         screenpoints(*totalseconds, stats->score);
         // Limpiar objetos
