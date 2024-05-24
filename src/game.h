@@ -318,14 +318,12 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
         MAX_HEART = MAX_HEART_LV1;
     }
 
-    if (stats->score >= 50 && stats->level == 1)
+    if (stats->score >= PTS_LEVEL_UP && stats->level == 1)
     {
-        screenMessage("WIN", 1, BLANK, GREEN);
-
         screenpoints(*totalseconds, stats->score);
         // Limpiar objetos
         resetItems(playPosition);
-        screenMessage("NIVEL 2", 2, BLACK, WHITE);
+        screenMessage("NIVEL 2", 2, BLANK, WHITE);
 
         /* Estadisticas Nivel 2 */
         stats->level = 2;
@@ -339,7 +337,7 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
         MAX_HEART = MAX_HEART_LV2;
     }
     // Verificar si el jugador ha alcanzado el nivel 3
-    if (stats->score >= 50 && stats->level == 2)
+    if (stats->score >= PTS_LEVEL_UP && stats->level == 2)
     {
         screenMessage("WIN", 1, BLANK, GREEN);
         // Limpiar objetos
@@ -568,20 +566,20 @@ void screenpoints(int totalseconds, int score)
         }
         if (realScore <= tempscore)
         {
-            realScore += 0.01; // simular aumento de puntaje
+            realScore += 0.03; // simular aumento de puntaje
             if (realScore >= tempscore)
             {
                 realScore = tempscore;
             }
         }
-        ClearBackground(BLACK);
         BeginDrawing();
+        ClearBackground(BLACK);
         DrawText(TextFormat("Tiempo: %02d:%02d", totalseconds / 60, totalseconds % 60), 30, 100, 100, WHITE);
         DrawText(TextFormat("Oro recolectado: %d", score), 30, 220, 100, WHITE);
         DrawText(TextFormat("Oto total ganado: %3.2f", realScore), 30, 340, 100, WHITE);
         EndDrawing();
     } while (realScore != tempscore); // Termina al llegar a el puntaje real
-    secondspause(2);
+    secondspause(1);
 }
 
 // Imprimir texto centrado

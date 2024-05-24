@@ -109,6 +109,9 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
     // Dibuja puntaje
     DrawText(TextFormat("Puntos : %04d", stats->score), SCR_WIDTH - 320, 20, 45, WHITE);
 
+    // Meta puntos
+    DrawText(TextFormat("Meta : %04d", PTS_LEVEL_UP), SCR_WIDTH - 320, 60, 45, WHITE);
+
     // Dibuja nivel
     DrawText(TextFormat("Nivel : %d", stats->level), 20, 20, 45, WHITE);
 
