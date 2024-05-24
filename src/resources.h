@@ -7,7 +7,7 @@ void unloadSounds();
 
 /*------ Texturas ------*/
 // Fondos
-Texture2D menu, levels[3], gameoverT, scoreboardTx, aboutBg, questionTx;
+Texture2D menu, levels[3], gameoverT, scoreboardTx, aboutBg, questionTx, scoreLevel;
 Texture2D tutotx, tutotx1;
 
 RenderTexture2D renderTexture;
@@ -42,11 +42,6 @@ void loadingScreen(const char msg[])
 // ---- Carga texturas ----
 void loadTextures()
 {
-    // Inicializar RenderTexture
-    if (!renderTexture.id)
-    {
-        renderTexture = LoadRenderTexture(SCR_WIDTH, SCR_HEIGHT);
-    }
     loadingScreen("Cargando.");
     // Fondo menu principal
     menu = LoadTexture("resources/images/backgrounds/menu.png");
@@ -90,6 +85,8 @@ void loadTextures()
     forceF[3] = LoadTexture("resources/images/shield/forceField_03.png");
     forceF[4] = LoadTexture("resources/images/shield/forceField_04.png");
     forceF[5] = LoadTexture("resources/images/shield/forceField_05.png");
+
+    scoreLevel = LoadTexture("resources/images/backgrounds/scoreLevel.png");
 
     // Imagenes tutorial
     tutotx = LoadTexture("resources/images/backgrounds/tuto00.png");
@@ -177,6 +174,7 @@ void unloadTextures()
     UnloadTexture(grayMeteor);
     UnloadTexture(brownMeteor);
     UnloadTexture(questionTx);
+    UnloadTexture(scoreLevel);
 }
 
 // ---- Carga sonidos ----

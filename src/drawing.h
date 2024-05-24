@@ -160,8 +160,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
 
     char opciones[] = {'Y', 'B', 'A', 'X'};
 
-    Color color[] = {GOLD, MAROON, DARKGREEN, DARKBLUE};
-    Color color2[] = {YELLOW, RED, GREEN, BLUE};
+    Color color[] = {YELLOW, RED, GREEN, BLUE};
 
     BeginDrawing();
     const int gamepad = 0; // Usamos el primer controlador (índice 0)
@@ -181,12 +180,12 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
                 // Cambiar el tamaño de la fuente si la opción está seleccionada
                 if (IsKeyPressed(KEY_A + i) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_UP + i))
                 {
-                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, Fade(BLANK, 0.5f));
-                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 55, color2[i]);
+                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, Fade(BLANK, 0.7f));
+                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 7, 400 + i * 60, 55, ORANGE);
                 }
                 else
                 {
-                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, color[i]);
+                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, WHITE);
                 }
             }
         }
@@ -197,7 +196,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
             {
                 if (strcmp(opcionesBarajadas[i], preguntaActual.opciones[preguntaActual.respuestaCorrecta]) == 0)
                 {
-                    drawTextCenter("¡Correcto!", 0, 650, 45, GREEN);
+                    drawTextCenter("¡Correcto!", 0, 680, 45, GREEN);
                     if (object == 1)
                     {
                         (*shield) = 2;
@@ -216,8 +215,8 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
                 else
                 {
                     *racha = 0;
-                    drawTextCenter("¡Incorrecto!", 0, 650, 45, RED);
-                    drawTextCenter(TextFormat("La respuesta correcta era: %s", preguntaActual.opciones[preguntaActual.respuestaCorrecta]), 0, 700, 45, WHITE);
+                    drawTextCenter("¡Incorrecto!", 0, 680, 45, RED);
+                    drawTextCenter(TextFormat("La respuesta correcta era: %s", preguntaActual.opciones[preguntaActual.respuestaCorrecta]), 0, 770, 45, WHITE);
                 }
                 *showQuestion = false;
                 break;
@@ -226,6 +225,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
         EndDrawing();
     } while (*showQuestion);
     secondspause(1.5);
+    ClearBackground(BLACK);
 }
 
 // Dibuja la interfaz de derrota
