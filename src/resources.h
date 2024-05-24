@@ -1,13 +1,13 @@
 /*---------------- PROTOTIPOS ----------------*/
-void loadingScreen(const char msg[]);
 void loadTextures();
 void unloadTextures();
 void loadSounds();
 void unloadSounds();
+void loadingScreen();
 
 /*------ Texturas ------*/
 // Fondos
-Texture2D menu, levels[3], gameoverT, scoreboardTx, aboutBg, questionTx, scoreLevel;
+Texture2D menu, levels[3], gameoverT, scoreboardTx, aboutBg, questionTx, scoreLevel, pausebg, loadingscreen;
 Texture2D tutotx, tutotx1;
 
 RenderTexture2D renderTexture;
@@ -29,20 +29,10 @@ Texture2D cinema[totalcinema];
 Music menuMusic, gameMusic, gameover;
 Sound soundcoin, shotSound, burstShotSound;
 
-// ---- Pantalla de carga inicial ----
-void loadingScreen(const char msg[])
-{
-    BeginDrawing();
-    const int tam = 80;
-    ClearBackground(BLACK);
-    DrawText(msg, SCR_WIDTH / 2 - MeasureText(msg, tam) / 2, (SCR_HEIGHT / 2) - 100, tam, WHITE);
-    EndDrawing();
-}
-
 // ---- Carga texturas ----
 void loadTextures()
 {
-    loadingScreen("Cargando.");
+    loadingScreen();
     // Fondo menu principal
     menu = LoadTexture("resources/images/backgrounds/menu.png");
 
@@ -61,7 +51,6 @@ void loadTextures()
     hearthF[0] = LoadTexture("resources/images/hearts/hearthF_00.png");
     hearthF[1] = LoadTexture("resources/images/hearts/hearthF_01.png");
     hearthF[2] = LoadTexture("resources/images/hearts/hearthF_02.png");
-    loadingScreen("Cargando..");
 
     // Corazones de Vidas Vacios
     hearthE[0] = LoadTexture("resources/images/hearts/hearthE_00.png");
@@ -81,11 +70,11 @@ void loadTextures()
     forceF[0] = LoadTexture("resources/images/shield/forceField_00.png");
     forceF[1] = LoadTexture("resources/images/shield/forceField_01.png");
     forceF[2] = LoadTexture("resources/images/shield/forceField_02.png");
-    loadingScreen("Cargando...");
     forceF[3] = LoadTexture("resources/images/shield/forceField_03.png");
     forceF[4] = LoadTexture("resources/images/shield/forceField_04.png");
     forceF[5] = LoadTexture("resources/images/shield/forceField_05.png");
 
+    pausebg = LoadTexture("resources/images/backgrounds/PauseBg.png");
     scoreLevel = LoadTexture("resources/images/backgrounds/scoreLevel.png");
 
     // Imagenes tutorial
@@ -96,15 +85,14 @@ void loadTextures()
     cinema[1] = LoadTexture("resources/images/backgrounds/cinema2.png");
     cinema[2] = LoadTexture("resources/images/backgrounds/cinema3.png");
     cinema[3] = LoadTexture("resources/images/backgrounds/cinema4.png");
-    cinema[4] = LoadTexture("resources/images/backgrounds/cinema5.png"); // ESTAS DEJAR
-    cinema[5] = LoadTexture("resources/images/backgrounds/cinema6.png"); // ESTAS DEJAR
+    cinema[4] = LoadTexture("resources/images/backgrounds/cinema5.png");
+    cinema[5] = LoadTexture("resources/images/backgrounds/cinema6.png");
     cinema[6] = LoadTexture("resources/images/backgrounds/cinema7.png");
     cinema[7] = LoadTexture("resources/images/backgrounds/cinema8.png");
     cinema[8] = LoadTexture("resources/images/backgrounds/cinema10.png");
     cinema[9] = LoadTexture("resources/images/backgrounds/cinema11.png");
     cinema[10] = LoadTexture("resources/images/backgrounds/cinema12.png");
     cinema[11] = LoadTexture("resources/images/backgrounds/cinema13.png");
-    loadingScreen("Cargando....");
 
     // Nave
     shipTx[0] = LoadTexture("resources/images/ship/ship01.png");
@@ -118,7 +106,6 @@ void loadTextures()
     // Monedas
     coinsTx[0] = LoadTexture("resources/images/coins/coin_01.png");
     coinsTx[1] = LoadTexture("resources/images/coins/coin_02.png");
-    loadingScreen("Cargando.");
     coinsTx[2] = LoadTexture("resources/images/coins/coin_03.png");
     coinsTx[3] = LoadTexture("resources/images/coins/coin_04.png");
     coinsTx[4] = LoadTexture("resources/images/coins/coin_05.png");
@@ -126,24 +113,25 @@ void loadTextures()
 
     // Corazones
     heartsTx[0] = LoadTexture("resources/images/hearts/hearth_01.png");
-    loadingScreen("Cargando..");
     heartsTx[1] = LoadTexture("resources/images/hearts/hearth_01.png");
     heartsTx[2] = LoadTexture("resources/images/hearts/hearth_02.png");
 
     // Disparo
     misil = LoadTexture("resources/images/shot/shot01.png");
-    loadingScreen("Cargando...");
 
     // Explosion misil
     explosionTx[0] = LoadTexture("resources/images/shot/burst01.png");
     explosionTx[1] = LoadTexture("resources/images/shot/burst02.png");
     explosionTx[2] = LoadTexture("resources/images/shot/burst03.png");
+
+    UnloadTexture(loadingscreen);
 }
 
 // ---- Descarga texturas ----
 void unloadTextures()
 {
-    loadingScreen("ADIOS.");
+    ClearBackground(BLACK);
+    DrawText("ADIOS", SCR_HEIGHT / 2 - MeasureText("ADIOS", 90) / 2, SCR_HEIGHT / 2, 90, WHITE);
     UnloadTexture(menu);
     UnloadTexture(gameoverT);
     UnloadTexture(misil);
@@ -175,21 +163,18 @@ void unloadTextures()
     UnloadTexture(brownMeteor);
     UnloadTexture(questionTx);
     UnloadTexture(scoreLevel);
+    UnloadTexture(pausebg);
 }
 
 // ---- Carga sonidos ----
 void loadSounds()
 {
-    loadingScreen("Cargando....");
-    menuMusic = LoadMusicStream("resources/sounds/mainmenu.mp3"); // Musica menu principal
-    gameMusic = LoadMusicStream("resources/sounds/music.mp3");    // Musica partida
-    loadingScreen("Cargando.");
-    gameover = LoadMusicStream("resources/sounds/gameover.mp3"); // Musica gameover
-    soundcoin = LoadSound("resources/sounds/coin.wav");          // Sonido moneda
-    loadingScreen("Cargando..");
+    menuMusic = LoadMusicStream("resources/sounds/mainmenu.mp3");  // Musica menu principal
+    gameMusic = LoadMusicStream("resources/sounds/music.mp3");     // Musica partida
+    gameover = LoadMusicStream("resources/sounds/gameover.mp3");   // Musica gameover
+    soundcoin = LoadSound("resources/sounds/coin.wav");            // Sonido moneda
     shotSound = LoadSound("resources/sounds/shot.mp3");            // Sonido misil
     burstShotSound = LoadSound("resources/sounds/burstMisil.mp3"); // Sonido explosion misil
-    loadingScreen("Cargando...");
 }
 
 // ---- Descarga sonidos ----
@@ -201,4 +186,15 @@ void unloadSounds()
     UnloadSound(soundcoin);
     UnloadSound(shotSound);
     UnloadSound(burstShotSound);
+}
+
+// ---- Pantalla de carga inicial ----
+void loadingScreen()
+{
+    loadingscreen = LoadTexture("resources/images/backgrounds/loading-screen.png");
+    BeginDrawing();
+    DrawTexture(loadingscreen, 0, 0, WHITE);
+    DrawText("COSMIC CHAOS", SCR_WIDTH / 2 - MeasureText("COSMIC CHAOS", 100) / 2, 200, 100, WHITE);
+    DrawText("CARGANDO RECURSOS...", SCR_WIDTH / 2 - MeasureText("CARGANDO RECURSOS...", 90) / 2, SCR_HEIGHT / 2 + 100, 90, WHITE);
+    EndDrawing();
 }

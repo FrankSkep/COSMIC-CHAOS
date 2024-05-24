@@ -28,6 +28,7 @@ void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive);
 void drawMainMenu() // PANTALLA DE MENU
 {
     BeginDrawing();
+    void loadingScreen(const char msg[]);
     // Fondo
     DrawTexture(menu, 0, 0, WHITE);
 
@@ -38,7 +39,7 @@ void drawMainMenu() // PANTALLA DE MENU
 
     char option[20];
     int gamepad = 0;
-    if(IsGamepadAvailable(gamepad))
+    if (IsGamepadAvailable(gamepad))
     {
         strcpy(option, "Start");
     }
@@ -529,8 +530,6 @@ void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
             UnloadTexture(cinema[i]);
         }
         tutorialActive = 0;
-        UnloadTexture(tutotx);
-        UnloadTexture(tutotx1);
         break;
     default:
         break;
