@@ -31,7 +31,7 @@ void resetStats(GameStats *stats);
 
 // Espera un tiempo especifico
 void secondspause(float seconds);
-void screenMessage(const char *text, float seconds, Color fondo, Color colorText);
+void screenMessage(const char *text, float seconds, Color fondo, Color colorText, int fontSize);
 void screenpoints(int totalseconds, int score);
 void drawTextCenter(const char *text, int posX, int posY, int fontSize, Color color);
 
@@ -318,14 +318,14 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
         MAX_HEART = MAX_HEART_LV1;
     }
 
-    if (stats->score >= 50 && stats->level == 1)
+    if (stats->score >= PTS_LEVEL_UP && stats->level == 1)
     {
-        screenMessage("WIN", 1, BLANK, GREEN);
-
+        screenMessage("HAS SUPERADO LA META", 1, BLANK, GREEN, 100);
         screenpoints(*totalseconds, stats->score);
         // Limpiar objetos
         resetItems(playPosition);
-        screenMessage("NIVEL 2", 2, BLACK, WHITE);
+        DrawTexture(levels[1], 0, 0, WHITE);
+        screenMessage("NIVEL 2", 2, BLANK, WHITE, 180);
 
         /* Estadisticas Nivel 2 */
         stats->level = 2;
@@ -339,12 +339,14 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
         MAX_HEART = MAX_HEART_LV2;
     }
     // Verificar si el jugador ha alcanzado el nivel 3
-    if (stats->score >= 50 && stats->level == 2)
+    if (stats->score >= PTS_LEVEL_UP && stats->level == 2)
     {
-        screenMessage("WIN", 1, BLANK, GREEN);
+        screenMessage("HAS SUPERADO LA META", 1, BLANK, GREEN, 100);
+        screenpoints(*totalseconds, stats->score);
         // Limpiar objetos
         resetItems(playPosition);
-        screenMessage("NIVEL 3", 2, BLACK, WHITE);
+        DrawTexture(levels[2], 0, 0, WHITE);
+        screenMessage("NIVEL 3", 2, BLACK, WHITE, 180);
 
         /* Estadisticas Nivel 3 */
         stats->level = 3;
@@ -531,13 +533,11 @@ void secondspause(float seconds)
 }
 
 // Mostrar mensaje en pantalla
-void screenMessage(const char *text, float seconds, Color fondo, Color colorText)
+void screenMessage(const char *text, float seconds, Color fondo, Color colorText, int fontSize)
 {
-    int tamano = 180;
-
     ClearBackground(fondo);
 
-    drawTextCenter(text, 0, (SCR_HEIGHT/2-100), tamano, colorText);
+    drawTextCenter(text, 0, (SCR_HEIGHT / 2 - 100), fontSize, colorText);
     EndDrawing();
     secondspause(seconds);
 }
@@ -568,20 +568,21 @@ void screenpoints(int totalseconds, int score)
         }
         if (realScore <= tempscore)
         {
-            realScore += 0.01; // simular aumento de puntaje
+            realScore += 0.03; // simular aumento de puntaje
             if (realScore >= tempscore)
             {
                 realScore = tempscore;
             }
         }
-        ClearBackground(BLACK);
         BeginDrawing();
+        ClearBackground(BLACK);
+        DrawTexture(scoreLevel, 0, 0, WHITE);
         DrawText(TextFormat("Tiempo: %02d:%02d", totalseconds / 60, totalseconds % 60), 30, 100, 100, WHITE);
         DrawText(TextFormat("Oro recolectado: %d", score), 30, 220, 100, WHITE);
         DrawText(TextFormat("Oto total ganado: %3.2f", realScore), 30, 340, 100, WHITE);
         EndDrawing();
     } while (realScore != tempscore); // Termina al llegar a el puntaje real
-    secondspause(2);
+    secondspause(1);
 }
 
 // Imprimir texto centrado

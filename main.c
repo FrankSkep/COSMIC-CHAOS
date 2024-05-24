@@ -8,15 +8,29 @@ int main()
 {
     srand(time(NULL));
     selecNpreguntas();
-    /*------------- CONSTANTES -------------*/
-    const int playRadius = 45;       // Tamaño del jugador
-    const float playerSpeed = 15.0f; // Velocidad del jugador
-    const float rotationSpeed = 2.0;
+
+    // Configuración de la ventana
+    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
+    SetTargetFPS(75);
+
+    // Carga de texturas y sonidos
+    loadTextures();
+    InitAudioDevice();
+    loadSounds();
+
+    // Jugador
+    Tdata data = getDataPlayer();          // Entrada de datos
+    GameStats stats = {5, 0, 0, 0, 10, 0}; // Inicializacion de estadisticas
+
+    /*------------- Constantes -------------*/
+    const int playRadius = 45;                      // Tamaño del jugador
+    const float playerSpeed = 15.0f;                // Velocidad del jugador
+    const float rotationSpeed = 2.0;                // Velocidad de rotacion
     const float maxRotation = 20.0f;                // Máxima rotación hacia la derecha
     const float minRotation = -20.0f;               // Máxima rotación hacia la izquierda
     const float rotationInterpolationSpeed = 50.0f; // Definir la velocidad de interpolación para volver a la posición original
     const float spawnInterval = 0.2f;               // Intervalo de tiempo entre la aparición de objetos
-    const float spawnIntervalPU = 1.2f;
+    const float spawnIntervalPU = 1.2f;             // Intervalo entre aparicion de powerUps
 
     // Variables del juego
     bool gameOver = false;
@@ -31,27 +45,14 @@ int main()
     float timeseconds = 0;
     int tuto = 0, tutorialActive = 1, colisionTutorial = 1; // segundo y tercero = 1
 
-    // Esto es para no mostrar tutorial, para pruebas
-    // tutorialActive = !tutorialActive;
-    // colisionTutorial = !colisionTutorial;
+    // Descomentar esto para no mostrar tutorial, para pruebas
+    tutorialActive = !tutorialActive;
+    colisionTutorial = !colisionTutorial;
 
-    // Configuración de la ventana
-    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
-    SetTargetFPS(75);
-
-    // Carga de texturas y sonidos
-    loadTextures();
-    InitAudioDevice();
-    loadSounds();
-
-    // Jugador
-    Tdata data = getDataPlayer();          // Entrada de datos
-    GameStats stats = {5, 0, 0, 0, 10, 0}; // Estadísticas iniciales
-
-    // Variables de sprites
-    short currentFrame = 0;    // Índice de textura actual (0, 5)
-    short currentFrameExp = 0; // Índice de textura actual (0, 2)
-    float frameTimeCounter = 0.0f;
+    // Variables para sprites
+    short currentFrame = 0;         // Índice de textura actual (0, 5)
+    short currentFrameExp = 0;      // Índice de textura actual (0, 2)
+    float frameTimeCounter = 0.0f;  // Contador de cuadro
     float frameSpeed = 1.0f / 8.0f; // Velocidad de cambio de imagen
 
     // Posición centrada del jugador
@@ -63,13 +64,12 @@ int main()
     Vector2 grayCenter, brownCenter;
 
     // Variables de estado
-    bool saveProgress = false; // Guardar estadísticas del jugador
-    bool showQuestion = false; // Mostrar pregunta
-    bool continuar = false;    // Animación después de pregunta
-    int contin = 0;
-    bool muteMusic = false;
-
-    int showTutorial = 0;
+    bool saveProgress = false; // Bandera para guardar estadísticas en archivo
+    bool showQuestion = false; // Bandera para mostrar pregunta
+    bool continuar = false;    // Bandera para manejar animacion después de pregunta
+    int contin = 0;            // Frame de la animacion
+    bool muteMusic = false;    // Bandera para desactivar musica
+    int showTutorial = 0;      // Bandera para mostrar tutorial inicial
 
     // Estado inicial del juego
     GameState gameState = MAIN_MENU;
@@ -78,6 +78,9 @@ int main()
     // Configuracion para mando fisico - joystick
     float axisX, axisY;
     int gamepad = 0;
+
+    // Movimiento del jugador
+    bool rightPressed, leftPressed, upPressed, downPressed;
 
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
@@ -136,36 +139,29 @@ int main()
 
             /*------------------ CONTROLES ------------------*/
 
-            // Movimiento hacia la derecha
-            if (IsKeyDown(KEY_RIGHT) || axisX > 0.1f)
+            rightPressed = IsKeyDown(KEY_RIGHT) || axisX > 0.1f;
+            leftPressed = IsKeyDown(KEY_LEFT) || axisX < -0.1f;
+            upPressed = IsKeyDown(KEY_UP) || axisY < -0.1f;
+            downPressed = IsKeyDown(KEY_DOWN) || axisY > 0.1f;
+
+            if (rightPressed)
             {
                 if (playerPosition.x + playRadius < SCR_WIDTH)
                 {
                     playerPosition.x += playerSpeed;
-                    // Rotación hacia la derecha
-                    if (currentRotation < maxRotation)
-                    {
-                        currentRotation += rotationSpeed;
-                    }
+                    currentRotation = fmin(currentRotation + rotationSpeed, maxRotation);
                 }
             }
-
-            // Movimiento hacia la izquierda
-            if (IsKeyDown(KEY_LEFT) || axisX < -0.1f)
+            if (leftPressed)
             {
                 if (playerPosition.x - playRadius > 0)
                 {
                     playerPosition.x -= playerSpeed;
-                    // Rotación hacia la izquierda
-                    if (currentRotation > minRotation)
-                    {
-                        currentRotation -= rotationSpeed;
-                    }
+                    currentRotation = fmax(currentRotation - rotationSpeed, minRotation);
                 }
             }
 
-            // Movimiento hacia arriba
-            if (IsKeyDown(KEY_UP) || axisY < -0.1f)
+            if (upPressed)
             {
                 if (playerPosition.y - playRadius > 0)
                 {
@@ -173,8 +169,7 @@ int main()
                 }
             }
 
-            // Movimiento hacia abajo
-            if (IsKeyDown(KEY_DOWN) || axisY > 0.1f)
+            if (downPressed)
             {
                 if (playerPosition.y + playRadius < SCR_HEIGHT)
                 {
@@ -183,24 +178,26 @@ int main()
             }
 
             // Interpolar la rotación de vuelta a la posición original cuando se suelta la tecla
-            if (!IsKeyDown(KEY_RIGHT) && !IsKeyDown(KEY_LEFT) && fabs(axisX) < 0.1f)
+            if (!rightPressed && !leftPressed)
             {
-                // Si la rotación actual no es igual a la rotación objetivo, interpola hacia la rotación objetivo
-                if (currentRotation != targetRotation)
+                if (fabs(axisX) < 0.1f)
                 {
-                    if (currentRotation < targetRotation)
+                    // Si la rotación actual no es igual a la rotación objetivo, interpola hacia la rotación objetivo
+                    if (currentRotation != targetRotation)
                     {
-                        currentRotation += rotationInterpolationSpeed * GetFrameTime();
-                        if (currentRotation > targetRotation)
+                        float deltaRotation = rotationInterpolationSpeed * GetFrameTime();
+
+                        if (currentRotation < targetRotation)
                         {
-                            currentRotation = targetRotation;
+                            currentRotation += deltaRotation;
+                            if (currentRotation > targetRotation)
+                            {
+                                currentRotation = targetRotation;
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (currentRotation > targetRotation)
+                        else
                         {
-                            currentRotation -= rotationInterpolationSpeed * GetFrameTime();
+                            currentRotation -= deltaRotation;
                             if (currentRotation < targetRotation)
                             {
                                 currentRotation = targetRotation;
@@ -414,20 +411,20 @@ int main()
                 {
                     PlaySound(soundcoin);
                     PlaySound(soundcoin);
-                    screenMessage("¡GO!", 0.5, BLANK, WHITE);
+                    screenMessage("¡GO!", 0.5, BLANK, WHITE, 180);
                     contin = 0;
                     continuar = false;
                 }
                 if (contin == 4)
                 {
                     PlaySound(soundcoin);
-                    screenMessage("1", 0.7, BLANK, WHITE);
+                    screenMessage("1", 0.7, BLANK, WHITE, 180);
                     contin = 5;
                 }
                 if (contin == 3)
                 {
                     PlaySound(soundcoin);
-                    screenMessage("2", 0.7, BLANK, WHITE);
+                    screenMessage("2", 0.7, BLANK, WHITE, 180);
                     contin = 4;
                 }
                 if (contin == 2)
@@ -441,7 +438,7 @@ int main()
                         colisionTutorial = 0;
                     }
                     PlaySound(soundcoin);
-                    screenMessage("3", 0.7, BLANK, WHITE);
+                    screenMessage("3", 0.7, BLANK, WHITE, 180);
                     contin = 3;
                 }
                 if (contin == 1)
@@ -471,7 +468,7 @@ int main()
 
             if (gameOver)
             {
-                screenMessage("LOSER", 1, BLANK, RED);
+                screenMessage("TE QUEDASTE SIN VIDAS", 1, BLANK, RED, 100);
                 screenpoints(totalseconds, stats.score);
 
                 minutesT = 0, secondsT = 0, totalseconds = 0;

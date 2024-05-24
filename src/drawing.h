@@ -109,6 +109,9 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
     // Dibuja puntaje
     DrawText(TextFormat("Puntos : %04d", stats->score), SCR_WIDTH - 320, 20, 45, WHITE);
 
+    // Meta puntos
+    DrawText(TextFormat("Meta : %04d", PTS_LEVEL_UP), SCR_WIDTH - 320, 60, 45, WHITE);
+
     // Dibuja nivel
     DrawText(TextFormat("Nivel : %d", stats->level), 20, 20, 45, WHITE);
 
@@ -141,7 +144,6 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
 
     // Mostrar estado de los powerups
     DrawText(TextFormat("MUNICION : %02d", stats->totalMunicion), 20, 80, 35, YELLOW);
-    DrawText(TextFormat("ESCUDOS : %02d", shield), 20, 95, 35, YELLOW);
 
     // Dibujar el tiempo transcurrido en pantalla con formato de reloj (00:00)
     DrawText(TextFormat("%02d:%02d", minutes, seconds), 20, SCR_HEIGHT - 50, 50, WHITE);
@@ -156,9 +158,8 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
     memcpy(opcionesBarajadas, preguntaActual.opciones, sizeof(preguntaActual.opciones));
     mezclarArray(opcionesBarajadas, 4);
 
-    // Fondo pregunta
-    Texture2D questionTx = LoadTexture("resources/images/backgrounds/questionbg.png");
     char opciones[] = {'Y', 'B', 'A', 'X'};
+
     Color color[] = {YELLOW, RED, GREEN, BLUE};
 
     BeginDrawing();
@@ -172,11 +173,29 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
             char opcionLabel = 'A' + i;
             if (IsGamepadAvailable(gamepad))
             {
-                drawTextCenter(TextFormat("      %s  (%c)", opcionesBarajadas[i], opciones[i]), -4, 400 + i * 60, 45, color[i]);
+                // Cambiar el tamaño de la fuente si la opción está seleccionada
+                if (IsKeyPressed(KEY_A + i) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_UP + i))
+                {
+                    drawTextCenter(TextFormat("      %s  (%c)", opcionesBarajadas[i], opciones[i]), -4, 400 + i * 60, 45, Fade(BLANK, 0.7f));
+                    drawTextCenter(TextFormat("      %s  (%c)", opcionesBarajadas[i], opciones[i]), 0, 400 + i * 60, 55, color[i]);
+                }
+                else
+                {
+                    drawTextCenter(TextFormat("      %s  (%c)", opcionesBarajadas[i], opciones[i]), -4, 400 + i * 60, 45, color[i]);
+                }
             }
             else
             {
-                drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, WHITE);
+                // Cambiar el tamaño de la fuente si la opción está seleccionada
+                if (IsKeyPressed(KEY_A + i))
+                {
+                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, Fade(BLANK, 0.7f));
+                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 7, 400 + i * 60, 55, ORANGE);
+                }
+                else
+                {
+                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, WHITE);
+                }
             }
         }
 
@@ -186,7 +205,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
             {
                 if (strcmp(opcionesBarajadas[i], preguntaActual.opciones[preguntaActual.respuestaCorrecta]) == 0)
                 {
-                    drawTextCenter("¡Correcto!", 0, 650, 45, GREEN);
+                    drawTextCenter("¡Correcto!", 0, 680, 45, GREEN);
                     if (object == 1)
                     {
                         (*shield) = 2;
@@ -205,7 +224,8 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
                 else
                 {
                     *racha = 0;
-                    drawTextCenter("¡Incorrecto!", 0, 650, 45, RED);
+                    drawTextCenter("¡Incorrecto!", 0, 680, 45, RED);
+                    drawTextCenter(TextFormat("La respuesta correcta era: %s", preguntaActual.opciones[preguntaActual.respuestaCorrecta]), 0, 770, 45, WHITE);
                 }
                 *showQuestion = false;
                 break;
@@ -213,9 +233,8 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
         }
         EndDrawing();
     } while (*showQuestion);
-    UnloadTexture(questionTx);
-    // Espera entre cada pregunta
     secondspause(1.5);
+    ClearBackground(BLACK);
 }
 
 // Dibuja la interfaz de derrota
@@ -398,8 +417,6 @@ void drawShots(Texture2D shotTx, Texture2D *explosionTx)
     }
 }
 
-
-
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo)
 {
     int longitud = strlen(text);
@@ -453,7 +470,6 @@ void esperarTecla()
 }
 
 // Mostrar pantalla de puntos
-
 
 void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
 {

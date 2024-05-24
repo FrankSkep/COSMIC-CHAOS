@@ -7,8 +7,10 @@ void unloadSounds();
 
 /*------ Texturas ------*/
 // Fondos
-Texture2D menu, levels[3], gameoverT, scoreboardTx, aboutBg;
+Texture2D menu, levels[3], gameoverT, scoreboardTx, aboutBg, questionTx, scoreLevel;
 Texture2D tutotx, tutotx1;
+
+RenderTexture2D renderTexture;
 
 // Iconos interfaz
 Texture2D hearthE[6], hearthF[3], shield;
@@ -52,6 +54,9 @@ void loadTextures()
     // Fondo gameover
     gameoverT = LoadTexture("resources/images/backgrounds/gameover.png");
 
+    // Fondo pregunta
+    questionTx = LoadTexture("resources/images/backgrounds/questionbg.png");
+
     // Corazones de vidas llenos
     hearthF[0] = LoadTexture("resources/images/hearts/hearthF_00.png");
     hearthF[1] = LoadTexture("resources/images/hearts/hearthF_01.png");
@@ -80,6 +85,8 @@ void loadTextures()
     forceF[3] = LoadTexture("resources/images/shield/forceField_03.png");
     forceF[4] = LoadTexture("resources/images/shield/forceField_04.png");
     forceF[5] = LoadTexture("resources/images/shield/forceField_05.png");
+
+    scoreLevel = LoadTexture("resources/images/backgrounds/scoreLevel.png");
 
     // Imagenes tutorial
     tutotx = LoadTexture("resources/images/backgrounds/tuto00.png");
@@ -166,6 +173,8 @@ void unloadTextures()
     UnloadTexture(shield);
     UnloadTexture(grayMeteor);
     UnloadTexture(brownMeteor);
+    UnloadTexture(questionTx);
+    UnloadTexture(scoreLevel);
 }
 
 // ---- Carga sonidos ----
