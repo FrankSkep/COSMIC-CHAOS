@@ -508,11 +508,24 @@ int main()
 
         case PAUSE:
             BeginDrawing();
+            DrawTexture(pausebg, 0, 0, WHITE);
+
+            char option[20];
+            if (IsGamepadAvailable(gamepad))
+            {
+                strcpy(option, "Start");
+            }
+            else
+            {
+                strcpy(option, "Enter");
+            }
             drawTextCenter("PAUSA", 0, (SCR_HEIGHT / 2) - 175, 160, YELLOW);
-            drawTextCenter("[ENTER] Reanudar partida (START) ", 0, (SCR_HEIGHT / 2), 60, GREEN);
+            drawTextCenter(TextFormat("[%s] Reanudar partida", option), 0, (SCR_HEIGHT / 2), 60, GREEN);
             drawTextCenter("[Q] Salir al menu (BACK) ", 0, (SCR_HEIGHT / 2) + 100, 60, RED);
             EndDrawing();
             keyOption = GetKeyPressed();
+            continuar = true;
+            contin = 5;
             break;
 
         case GAME_OVER:
