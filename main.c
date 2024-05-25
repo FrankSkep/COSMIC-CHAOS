@@ -10,7 +10,7 @@ int main()
     selecNpreguntas();
 
     // Configuración de la ventana
-    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.1");
+    InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.7");
     SetTargetFPS(75);
 
     // Carga de texturas y sonidos
@@ -50,10 +50,10 @@ int main()
     colisionTutorial = !colisionTutorial;
 
     // Variables para sprites
-    short currentFrame = 0;         // Índice de textura actual (0, 5)
-    short currentFrameExp = 0;      // Índice de textura actual (0, 2)
-    float frameTimeCounter = 0.0f;  // Contador de cuadro
-    float frameSpeed = 1.0f / 8.0f; // Velocidad de cambio de imagen
+    short currentFrame = 0;                          // Índice de textura actual (0, 5)
+    short currentFrameExp = 0, currentFrameShip = 0; // Índice de textura actual (0, 2)
+    float frameTimeCounter = 0.0f;                   // Contador de cuadro
+    float frameSpeed = 1.0f / 8.0f;                  // Velocidad de cambio de imagen
 
     // Variables de estado
     bool saveProgress = false; // Bandera para guardar estadísticas en archivo
@@ -129,7 +129,8 @@ int main()
             {
                 currentFrame = (currentFrame + 1) % 6;       // Cambiar entre 0, 1, 2, 3, 4, 5
                 currentFrameExp = (currentFrameExp + 1) % 3; // Cambiar entre 0, 1, 2
-                frameTimeCounter = 0.0f;                     // Reiniciar el contador de tiempo
+                currentFrameShip = (currentFrameShip + 1) % 3;
+                frameTimeCounter = 0.0f; // Reiniciar el contador de tiempo
             }
 
             /*------------------ CONTROLES ------------------*/
@@ -262,6 +263,9 @@ int main()
             {
                 if (shieldActive <= 0)
                 {
+                    currentFrameShip = 3;
+                    PlaySound(burstShotSound);
+                    StopSound(shotSound);
                     stats.lives--; // Pierde una vida
                     if (stats.lives <= 0)
                     {
@@ -279,6 +283,9 @@ int main()
             {
                 if (shieldActive <= 0)
                 {
+                    currentFrameShip = 3;
+                    PlaySound(burstShotSound);
+                    StopSound(shotSound);
                     stats.lives--; // Pierde una vida
                     if (stats.lives <= 0)
                     {
@@ -401,7 +408,7 @@ int main()
             drawGameInterface(hearthF[currentFrameExp], hearthE[currentFrame], shield, &stats, data.name, shieldActive, minutesT, secondsT); // Dibujar objetos de la partida
 
             // Dibuja jugador (nave)
-            drawPlayer(shipTx[currentFrameExp], forceF[currentFrame], &playerPosition, &playerRotation, shieldActive);
+            drawPlayer(shipTx[currentFrameShip], forceF[currentFrame], &playerPosition, &playerRotation, shieldActive);
 
             // Dibuja meteoros
             drawMeteor(grayMeteors, MAX_GRAY, grayMeteor, rotationMeteor);

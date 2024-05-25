@@ -16,7 +16,7 @@ Texture2D shipLoading;
 Texture2D hearthE[6], hearthF[3], shield;
 
 // Nave y relacionados
-Texture2D shipTx[3], forceF[6], misil, explosionTx[3];
+Texture2D shipTx[4], forceF[6], misil, explosionTx[3];
 
 // Objetos que caen
 Texture2D grayMeteor, brownMeteor, coinsTx[6], heartsTx[3], ammoTx, ballE[3];
@@ -147,6 +147,7 @@ void loadTextures()
     shipTx[1] = LoadTexture("resources/images/ship/ship02.png");
     loadingScreen(44 / totalResources);
     shipTx[2] = LoadTexture("resources/images/ship/ship03.png");
+    shipTx[3] = LoadTexture("resources/images/ship/ship04.png");
     loadingScreen(45 / totalResources);
 
     // Meteoros
@@ -277,7 +278,7 @@ void loadingScreen(float progress)
     int barY = SCR_HEIGHT / 2 + 190;
     DrawRectangle(barX, barY, barWidth, barHeight, LIGHTGRAY);
     DrawRectangle(barX, barY, (int)(barWidth * progress), barHeight, SKYBLUE);
-    DrawTexture(shipLoading, (barX + (int)(barWidth * progress)) - shipLoading.width, barY + (30 / 2 - shipLoading.height / 2), WHITE);
+    DrawTexture(shipLoading, (barX + (int)(barWidth * progress))-20, barY + (30 / 2 - shipLoading.height / 2), WHITE);
 
     EndDrawing();
 }
