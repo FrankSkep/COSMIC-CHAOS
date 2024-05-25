@@ -10,7 +10,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
 void gameOverInterface(short score, short level);
 void DrawScoresTable(const char *filename, bool muteMusic);
 
-/* OBJETOS */
+/* OBJETOS DEL JUEGO */
 void drawPlayer(Texture2D ship, Texture2D forceF, Vector2 *playerPosition, float *playerRotation, short shield);
 void drawMeteor(TGameObject Meteor[], short MAX_METEOR, Texture2D meteorTexture, float rotation);
 void drawObject(Texture2D Textura, TGameObject *objects, int MAX_OBJECTS);
@@ -18,9 +18,9 @@ void drawShots(Texture2D shotTx, Texture2D *explosionTx);
 
 /* PANTALLAS */
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo);
-void esperarTecla();
-
+void postAnimationAns(bool *continuar, int *contin, int *colisionTutorial);
 void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive);
+void esperarTecla();
 
 /*------ DESARROLLO DE LAS FUNCIONES ------*/
 
@@ -37,20 +37,13 @@ void drawMainMenu() // PANTALLA DE MENU
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 6 - MeasureText("COSMIC-CHAOS", 180) / 2 + 3, 145, 183, DARKBLUE);
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 12 - MeasureText("COSMIC-CHAOS", 180) / 2 + 6, 140, 180, BLUE);
 
-    char option[20];
+    char optionStart[20];
     int gamepad = 0;
-    if (IsGamepadAvailable(gamepad))
-    {
-        strcpy(option, "Start");
-    }
-    else
-    {
-        strcpy(option, "Enter");
-    }
+    IsGamepadAvailable(gamepad) ? strcpy(optionStart, "Start") : strcpy(optionStart, "Enter");
 
     // Acciones
-    drawTextCenter(TextFormat("(%s) Iniciar", option), 2, 482, 60, LIME);
-    drawTextCenter(TextFormat("(%s) Iniciar", option), 0, 480, 60, GREEN);
+    drawTextCenter(TextFormat("(%s) Iniciar", optionStart), 2, 482, 60, LIME);
+    drawTextCenter(TextFormat("(%s) Iniciar", optionStart), 0, 480, 60, GREEN);
 
     drawTextCenter("(A) Como jugar", 2, 562, 60, DARKPURPLE);
     drawTextCenter("(A) Como jugar", 0, 560, 60, PURPLE);
@@ -102,7 +95,7 @@ void aboutTheGame()
 // Dibuja la interfaz de partida en curso
 void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shieldTx, GameStats *stats, const char *nickname, short shield, int minutes, int seconds)
 {
-    // Dibuja fondo
+    // Dibuja fondo correspondiente al nivel
     switch (stats->level)
     {
     case 1:
@@ -127,7 +120,7 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
     // Dibuja nivel
     DrawText(TextFormat("Nivel : %d", stats->level), 20, 20, 45, WHITE);
 
-    // ******** Dibujar Nombre jugador *********
+    // Dibujar Nombre jugador
     float textWidth = MeasureText(TextFormat("Jugador : %s", nickname), 40);
     float posX = (SCR_WIDTH - textWidth) / 2;
     DrawText(TextFormat("Jugador : %s", nickname), posX, 20, 40, YELLOW);
@@ -161,6 +154,7 @@ void drawGameInterface(Texture2D hearts, Texture2D hearthEmpty, Texture2D shield
     DrawText(TextFormat("%02d:%02d", minutes, seconds), 20, SCR_HEIGHT - 50, 50, WHITE);
 }
 
+// Dibuja la pregunta y respuestas, y maneja logica de respuesta
 void drawQuestion(bool *showQuestion, short *racha, short *shield, short *municion, short *lives, short object)
 {
     Tpregunta preguntaActual = preguntas[rand() % PREG_SELEC];
@@ -262,11 +256,16 @@ void gameOverInterface(short score, short level)
     DrawText(TextFormat("PUNTAJE: %04d", score), SCR_WIDTH / 2 - MeasureText(TextFormat("PUNTAJE: %04i", score), 60) / 2, SCR_HEIGHT / 2 + 10, 60, RAYWHITE);
     DrawText(TextFormat("NIVEL: %1d", level), SCR_WIDTH / 2 - MeasureText(TextFormat("LEVEL: %1i", level), 60) / 2, SCR_HEIGHT / 2 - 50, 60, RAYWHITE);
 
-    drawTextCenter("[ENTER] Jugar de nuevo (START)", 2, 582, 60, LIME);
-    drawTextCenter("[ENTER] Jugar de nuevo (START)", 0, 580, 60, GREEN);
+    int gamepad = 0;
+    char optionPlayAgain[20];
+    IsGamepadAvailable(gamepad) ? strcpy(optionPlayAgain, "Start") : strcpy(optionPlayAgain, "Enter");
+    drawTextCenter(TextFormat("[%s] Jugar de nuevo", optionPlayAgain), 2, 582, 60, LIME);
+    drawTextCenter(TextFormat("[%s] Jugar de nuevo", optionPlayAgain), 0, 580, 60, GREEN);
 
-    drawTextCenter("[Q] Volver al menu (SELECT)", 2, 662, 60, DARKPURPLE);
-    drawTextCenter("[Q] Volver al menu (SELECT)", 0, 660, 60, MAGENTA);
+    char optionBackmenu[20];
+    IsGamepadAvailable(gamepad) ? strcpy(optionBackmenu, "Select") : strcpy(optionBackmenu, "Q");
+    drawTextCenter(TextFormat("[%s] Volver al menu", optionBackmenu), 2, 662, 60, DARKPURPLE);
+    drawTextCenter(TextFormat("[%s] Volver al menu", optionBackmenu), 0, 660, 60, MAGENTA);
 
     drawTextCenter("[ESC] Salir", 2, 742, 60, RED);
     drawTextCenter("[ESC] Salir", 0, 740, 60, MAROON);
@@ -349,6 +348,7 @@ void DrawScoresTable(const char *filename, bool muteMusic)
     }
 }
 
+// Dibuja al jugador
 void drawPlayer(Texture2D ship, Texture2D forceF, Vector2 *playerPosition, float *playerRotation, short shield)
 {
     // Dibujar textura del jugador con rotación
@@ -385,7 +385,7 @@ void drawMeteor(TGameObject Meteor[], short MAX_METEOR, Texture2D meteorTexture,
     }
 }
 
-// Dibujar monedas y corazones
+// Dibuja los objetos del juego (monedas, corazones, powerups)
 void drawObject(Texture2D Textura, TGameObject *objects, int MAX_OBJECTS)
 {
     Vector2 objectCenter;
@@ -403,7 +403,7 @@ void drawObject(Texture2D Textura, TGameObject *objects, int MAX_OBJECTS)
     }
 }
 
-// Dibujar disparos
+// Dibuja disparos
 void drawShots(Texture2D shotTx, Texture2D *explosionTx)
 {
     // Calcular la posición y centro de la bala
@@ -429,6 +429,7 @@ void drawShots(Texture2D shotTx, Texture2D *explosionTx)
     }
 }
 
+// Muestra pregunta con texto animado
 void textQuestion(const char *text, int tamano, float positionY, int frecuencia, Texture2D *fondo)
 {
     int longitud = strlen(text);
@@ -468,6 +469,54 @@ void textQuestion(const char *text, int tamano, float positionY, int frecuencia,
     }
 }
 
+// Animacion despues de responder una pregunta
+void postAnimationAns(bool *continuar, int *contin, int *colisionTutorial)
+{
+    // Animacion despues de responder pregunta
+    if (*continuar)
+    {
+        if (*contin == 5)
+        {
+            PlaySound(soundcoin);
+            PlaySound(soundcoin);
+            screenMessage("¡GO!", 0.5, BLANK, WHITE, 180);
+            *contin = 0;
+            *continuar = false;
+        }
+        if (*contin == 4)
+        {
+            PlaySound(soundcoin);
+            screenMessage("1", 0.7, BLANK, WHITE, 180);
+            *contin = 5;
+        }
+        if (*contin == 3)
+        {
+            PlaySound(soundcoin);
+            screenMessage("2", 0.7, BLANK, WHITE, 180);
+            *contin = 4;
+        }
+        if (*contin == 2)
+        {
+            if (*colisionTutorial)
+            {
+                textQuestion("", 100, 0, 0, &tutotx);
+                subsCinematicas("ACABAS DE CHOCAR CON UNO DE LOS POWER UPS                                           ", 40, SCR_HEIGHT - 300, 12, 10, 11);
+                subsCinematicas("SI RESPONDES BIEN A LA PREGUNTA LO OBTENDRAS                                        ", 40, SCR_HEIGHT - 250, 12, 10, 11);
+                secondspause(1);
+                *colisionTutorial = 0;
+            }
+            PlaySound(soundcoin);
+            screenMessage("3", 0.7, BLANK, WHITE, 180);
+            *contin = 3;
+        }
+        if (*contin == 1)
+        {
+            *contin = 2;
+        }
+    }
+}
+
+// Esperar pulsacion
 void esperarTecla()
 {
     while (true)
@@ -481,8 +530,7 @@ void esperarTecla()
     }
 }
 
-// Mostrar pantalla de puntos
-
+// Mostrar tutorial interactivo
 void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
 {
     (*tuto)++;

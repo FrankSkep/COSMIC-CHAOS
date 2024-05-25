@@ -194,7 +194,7 @@ void loadingScreen()
     loadingscreen = LoadTexture("resources/images/backgrounds/loading-screen.png");
     BeginDrawing();
     DrawTexture(loadingscreen, 0, 0, WHITE);
-    DrawText("COSMIC CHAOS", SCR_WIDTH / 2 - MeasureText("COSMIC CHAOS", 100) / 2, 200, 100, WHITE);
-    DrawText("CARGANDO RECURSOS...", SCR_WIDTH / 2 - MeasureText("CARGANDO RECURSOS...", 90) / 2, SCR_HEIGHT / 2 + 100, 90, WHITE);
+    DrawText("COSMIC CHAOS", SCR_WIDTH / 2 - MeasureText("COSMIC CHAOS", 100) / 2, 120, 100, WHITE);
+    DrawText("CARGANDO...", SCR_WIDTH / 2 - MeasureText("CARGANDO...", 90) / 2, SCR_HEIGHT / 2 + 100, 90, WHITE);
     EndDrawing();
 }

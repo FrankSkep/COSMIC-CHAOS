@@ -5,7 +5,6 @@
 #define PREG_SELEC 20
 #define TOTAL_PREG 22
 
-
 #define PTS_LEVEL_UP 50
 /*----- CANTIDAD DE OBJETOS POR NIVEL -----*/
 #define MAX_METEOR_LV1 5
@@ -101,12 +100,11 @@ typedef struct _preguntas
 } Tpregunta;
 
 /*--------- INSTANCIAS DE STRUCTs ---------*/
-TGameObject grayMeteors[MAX_METEOR_LV3];
-TGameObject brownMeteors[MAX_METEOR_LV3];
-TGameObject coinGold[MAX_COINS];
-TGameObject shieldB[MAX_OBJECT];
-TGameObject municiones[MAX_OBJECT];
-TGameObject hearts[MAX_HEART_LV3];
-Tshot shots[MAX_SHOTS];
-Tpregunta preguntas[TOTAL_PREG];
-
+TGameObject grayMeteors[MAX_METEOR_LV3];  // Meteoros gris
+TGameObject brownMeteors[MAX_METEOR_LV3]; // Meteoros cafe
+TGameObject coinGold[MAX_COINS];          // Monedas
+TGameObject shieldB[MAX_OBJECT];          // Escudos
+TGameObject municiones[MAX_OBJECT];       // Municiones
+TGameObject hearts[MAX_HEART_LV3];        // Corazones (vidas)
+Tshot shots[MAX_SHOTS];                   // Misiles
+Tpregunta preguntas[TOTAL_PREG];          // Preguntas

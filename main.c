@@ -55,14 +55,6 @@ int main()
     float frameTimeCounter = 0.0f;  // Contador de cuadro
     float frameSpeed = 1.0f / 8.0f; // Velocidad de cambio de imagen
 
-    // Posición centrada del jugador
-    Vector2 playerPosition = {
-        (float)SCR_WIDTH / 2 - shipTx[currentFrame].width / 2,
-        (float)SCR_HEIGHT / 1.1f - shipTx[currentFrame].height / 2};
-
-    // Centro de textura de meteoros
-    Vector2 grayCenter, brownCenter;
-
     // Variables de estado
     bool saveProgress = false; // Bandera para guardar estadísticas en archivo
     bool showQuestion = false; // Bandera para mostrar pregunta
@@ -70,6 +62,14 @@ int main()
     int contin = 0;            // Frame de la animacion
     bool muteMusic = false;    // Bandera para desactivar musica
     int showTutorial = 0;      // Bandera para mostrar tutorial inicial
+
+    // Posición centrada del jugador
+    Vector2 playerPosition = {
+        (float)SCR_WIDTH / 2 - shipTx[currentFrame].width / 2,
+        (float)SCR_HEIGHT / 1.1f - shipTx[currentFrame].height / 2};
+
+    // Centro de textura de meteoros
+    Vector2 grayCenter, brownCenter;
 
     // Estado inicial del juego
     GameState gameState = MAIN_MENU;
@@ -80,7 +80,7 @@ int main()
     int gamepad = 0;
 
     // Movimiento del jugador
-    bool rightPressed, leftPressed, upPressed, downPressed;
+    bool rightPressed, leftPressed, upPressed, downPressed, firePressed;
 
     /*------------------------ BUCLE DEL JUEGO ------------------------*/
     while (!WindowShouldClose())
@@ -122,7 +122,7 @@ int main()
         case IN_GAME:
             gameOver = false;
 
-            /***** SPRITES *****/
+            /*------ MANEJO DE SPRITES ------*/
             frameTimeCounter += GetFrameTime();
             // Pasado el tiempo, cambia imagen
             if (frameTimeCounter >= frameSpeed)
@@ -137,14 +137,14 @@ int main()
             axisX = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X);
             axisY = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y);
 
-            /*------------------ CONTROLES ------------------*/
+            // Expresiones logicas de pulsacion de teclas
+            rightPressed = IsKeyDown(KEY_RIGHT) || axisX > 0.1f; // Derecha
+            leftPressed = IsKeyDown(KEY_LEFT) || axisX < -0.1f;  // Izquierda
+            upPressed = IsKeyDown(KEY_UP) || axisY < -0.1f;      // Arriba
+            downPressed = IsKeyDown(KEY_DOWN) || axisY > 0.1f;   // Abajo
+            firePressed = IsKeyPressed(KEY_SPACE) || IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
 
-            rightPressed = IsKeyDown(KEY_RIGHT) || axisX > 0.1f;
-            leftPressed = IsKeyDown(KEY_LEFT) || axisX < -0.1f;
-            upPressed = IsKeyDown(KEY_UP) || axisY < -0.1f;
-            downPressed = IsKeyDown(KEY_DOWN) || axisY > 0.1f;
-
-            if (rightPressed)
+            if (rightPressed) // Mueve nave a la derecha
             {
                 if (playerPosition.x + playRadius < SCR_WIDTH)
                 {
@@ -152,7 +152,7 @@ int main()
                     currentRotation = fmin(currentRotation + rotationSpeed, maxRotation);
                 }
             }
-            if (leftPressed)
+            if (leftPressed) // Mueve nave a la izquierda
             {
                 if (playerPosition.x - playRadius > 0)
                 {
@@ -161,7 +161,7 @@ int main()
                 }
             }
 
-            if (upPressed)
+            if (upPressed) // Mueve nave hacia arriba
             {
                 if (playerPosition.y - playRadius > 0)
                 {
@@ -169,7 +169,7 @@ int main()
                 }
             }
 
-            if (downPressed)
+            if (downPressed) // Mueve nave hacia abajo
             {
                 if (playerPosition.y + playRadius < SCR_HEIGHT)
                 {
@@ -211,7 +211,7 @@ int main()
             playerRotation = currentRotation;
 
             // Disparo de misil
-            if (IsKeyPressed(KEY_SPACE) || IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_RIGHT_FACE_DOWN))
+            if (firePressed)
             {
                 for (int i = 0; i < MAX_SHOTS; i++)
                 {
@@ -229,9 +229,11 @@ int main()
                 }
             }
 
-            /*--------------------- GENERACION OBJETOS ---------------------*/
+            /*--------------------- GENERACION DE OBJETOS ---------------------*/
             elapsedTime1 += GetFrameTime();
             elapsedTime2 += GetFrameTime();
+
+            // Generacion de meteoros y objetos comunes
             if (elapsedTime1 >= spawnInterval)
             {
                 generateObjects(grayMeteors, MAX_GRAY, GRAY_METEOR_RADIUS);
@@ -244,6 +246,8 @@ int main()
 
                 elapsedTime1 = 0.0f; // Reiniciar el temporizador
             }
+
+            // Generacion de PowerUps
             if (elapsedTime2 >= spawnIntervalPU)
             {
                 generateObjects(shieldB, MAX_OBJECT, COINS_RADIUS);
@@ -253,7 +257,8 @@ int main()
             }
 
             /*--------------------- FISICAS Y COLISIONES ---------------------*/
-            if (objectColision(grayMeteors, MAX_GRAY, GRAY_METEOR_SPEED, GRAY_METEOR_RADIUS, &playerPosition, playRadius, &grayMeteor, true))
+            /* Meteoro gris */
+            if (physicAndColision(grayMeteors, MAX_GRAY, GRAY_METEOR_SPEED, GRAY_METEOR_RADIUS, &playerPosition, playRadius, &grayMeteor, true))
             {
                 if (shieldActive <= 0)
                 {
@@ -268,7 +273,9 @@ int main()
                     shieldActive--;
                 }
             }
-            if (objectColision(brownMeteors, MAX_BROWN, BROWN_METEOR_SPEED, BROWN_METEOR_RADIUS, &playerPosition, playRadius, &brownMeteor, true))
+
+            /* Meteoro cafe */
+            if (physicAndColision(brownMeteors, MAX_BROWN, BROWN_METEOR_SPEED, BROWN_METEOR_RADIUS, &playerPosition, playRadius, &brownMeteor, true))
             {
                 if (shieldActive <= 0)
                 {
@@ -283,32 +290,37 @@ int main()
                     shieldActive--;
                 }
             }
-            /*----- Moneda (Incrementador de puntos) -----*/
-            if (objectColision(coinGold, MAX_COINS, COINS_SPEED, COINS_RADIUS, &playerPosition, playRadius, &coinsTx[currentFrame], false))
+
+            /* Moneda (Incrementador de puntos) */
+            if (physicAndColision(coinGold, MAX_COINS, COINS_SPEED, COINS_RADIUS, &playerPosition, playRadius, &coinsTx[currentFrame], false))
             {
                 stats.score += 10; // Aumentar el puntaje
                 PlaySound(soundcoin);
             }
-            // Caja de municion
-            if (objectColision(shieldB, MAX_OBJECT, SHIELD_SPEED, COINS_RADIUS, &playerPosition, playRadius, &shield, false))
-            {
-                object = 1;
-                showQuestion = true;
-                PlaySound(soundcoin);
-            }
-            if (objectColision(municiones, MAX_OBJECT, AMMO_SPEED, COINS_RADIUS, &playerPosition, playRadius, &ammoTx, false))
-            {
-                object = 2;
-                showQuestion = true;
-                PlaySound(soundcoin);
-            }
-            /*----- Corazon (Vida adicional) -----*/
-            if (objectColision(hearts, MAX_HEART, HEARTS_SPEED, HEARTS_RADIUS, &playerPosition, playRadius, &heartsTx[currentFrameExp], false))
+
+            /* Corazon (Vida adicional) */
+            if (physicAndColision(hearts, MAX_HEART, HEARTS_SPEED, HEARTS_RADIUS, &playerPosition, playRadius, &heartsTx[currentFrameExp], false))
             {
                 if (stats.lives < 5)
                 {
                     stats.lives++; // Gana una vida
                 }
+            }
+
+            /* Escudo (Inmunidad a colision) */
+            if (physicAndColision(shieldB, MAX_OBJECT, SHIELD_SPEED, COINS_RADIUS, &playerPosition, playRadius, &shield, false))
+            {
+                object = 1;
+                showQuestion = true;
+                PlaySound(soundcoin);
+            }
+
+            /* Municion */
+            if (physicAndColision(municiones, MAX_OBJECT, AMMO_SPEED, COINS_RADIUS, &playerPosition, playRadius, &ammoTx, false))
+            {
+                object = 2;
+                showQuestion = true;
+                PlaySound(soundcoin);
             }
 
             /*----- Disparos -----*/
@@ -395,7 +407,7 @@ int main()
             drawMeteor(grayMeteors, MAX_GRAY, grayMeteor, rotationMeteor);
             drawMeteor(brownMeteors, MAX_GRAY, brownMeteor, rotationMeteor);
 
-            // Dibuja monedas, corazones y powerUps
+            // Dibuja monedas, corazones y PowerUps
             drawObject(coinsTx[currentFrame], coinGold, MAX_COINS);
             drawObject(heartsTx[currentFrameExp], hearts, MAX_HEART);
             drawObject(ballE[currentFrameExp], shieldB, MAX_OBJECT);
@@ -405,56 +417,16 @@ int main()
             drawShots(misil, &explosionTx[currentFrameExp]);
 
             // Animacion despues de responder pregunta
-            if (continuar)
-            {
-                if (contin == 5)
-                {
-                    PlaySound(soundcoin);
-                    PlaySound(soundcoin);
-                    screenMessage("¡GO!", 0.5, BLANK, WHITE, 180);
-                    contin = 0;
-                    continuar = false;
-                }
-                if (contin == 4)
-                {
-                    PlaySound(soundcoin);
-                    screenMessage("1", 0.7, BLANK, WHITE, 180);
-                    contin = 5;
-                }
-                if (contin == 3)
-                {
-                    PlaySound(soundcoin);
-                    screenMessage("2", 0.7, BLANK, WHITE, 180);
-                    contin = 4;
-                }
-                if (contin == 2)
-                {
-                    if (colisionTutorial)
-                    {
-                        textQuestion("", 100, 0, 0, &tutotx);
-                        subsCinematicas("ACABAS DE CHOCAR CON UNO DE LOS POWER UPS                                           ", 40, SCR_HEIGHT - 300, 12, 10, 11);
-                        subsCinematicas("SI RESPONDES BIEN A LA PREGUNTA LO OBTENDRAS                                        ", 40, SCR_HEIGHT - 250, 12, 10, 11);
-                        secondspause(1);
-                        colisionTutorial = 0;
-                    }
-                    PlaySound(soundcoin);
-                    screenMessage("3", 0.7, BLANK, WHITE, 180);
-                    contin = 3;
-                }
-                if (contin == 1)
-                {
-                    contin = 2;
-                }
-            }
+            postAnimationAns(&continuar, &contin, &colisionTutorial);
 
-            if (showQuestion) // Si tomo moneda de pregunta
+            if (showQuestion) // Si tomo un PowerUp
             {
                 drawQuestion(&showQuestion, &stats.rachaAciertos, &shieldActive, &stats.totalMunicion, &stats.lives, object);
                 continuar = true;
                 contin = 1;
             }
 
-            if (tutorialActive) // ESTO IRA EN FUNCIO TRANQUI CORNEJO
+            if (tutorialActive) // Muestra tutorial
             {
                 tutorialShow(&tuto, colisionTutorial, &tutorialActive);
             }
@@ -464,9 +436,11 @@ int main()
             totalseconds = timeseconds;
             minutesT = totalseconds / 60;
             secondsT = totalseconds % 60;
+
+            // Gestion de niveles
             Levels(&stats, &elapsedTime1, &playerPosition, &totalseconds);
 
-            if (gameOver)
+            if (gameOver) // Acciones a ejecutar solo una vez, por cada Gameover
             {
                 DrawTexture(tutotx, 0, 0, BLACK);
                 DrawTexture(tutotx, 0, 0, BLACK);
@@ -474,9 +448,10 @@ int main()
                 ClearBackground(BLACK);
                 screenpoints(totalseconds, stats.score);
 
-                minutesT = 0, secondsT = 0, totalseconds = 0;
+                minutesT = 0, secondsT = 0, totalseconds = 0; // Reinicia tiempo
+
                 rotationMeteor = 0;          // Reiniciar rotacion
-                resetItems(&playerPosition); // Reinicia posicion y desactiva objetos
+                resetItems(&playerPosition); // Reinicia posiciones y desactiva objetos
 
                 saveProgress = true; // Al terminar almenos un juego, ya puede guardar progreso
 
@@ -509,16 +484,8 @@ int main()
         case PAUSE:
             BeginDrawing();
             DrawTexture(pausebg, 0, 0, WHITE);
-
-            char option[20];
-            if (IsGamepadAvailable(gamepad))
-            {
-                strcpy(option, "Start");
-            }
-            else
-            {
-                strcpy(option, "Enter");
-            }
+            char option[15];
+            IsGamepadAvailable(gamepad) ? strcpy(option, "Start") : strcpy(option, "Enter");
             drawTextCenter("PAUSA", 0, (SCR_HEIGHT / 2) - 175, 160, YELLOW);
             drawTextCenter(TextFormat("[%s] Reanudar partida", option), 0, (SCR_HEIGHT / 2), 60, GREEN);
             drawTextCenter("[Q] Salir al menu (BACK) ", 0, (SCR_HEIGHT / 2) + 100, 60, RED);
@@ -533,7 +500,6 @@ int main()
             BeginDrawing();
             gameOverInterface(stats.score, stats.level);
             EndDrawing();
-
             keyOption = GetKeyPressed();
             break;
         }

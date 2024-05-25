@@ -14,14 +14,13 @@ void subsCinematicas(const char *text, int tamano, float posY, int frecuencia, i
 
 // Actualiza estados del juego
 void updateGameState(GameState *gameState, int keyPressed, GameStats *stats, bool *muteMusic, Vector2 *playPosition);
-
 void updateMusic(GameState gameState, bool muteMusic);
 
 // Niveles
 void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *totalseconds);
 
 // Fisicas objetos del juego
-bool objectColision(TGameObject object[], int maxObjects, int objSpeed, float objRadius, Vector2 *playerPosition, int playRadius, Texture2D *texture, bool isMeteor);
+bool physicAndColision(TGameObject object[], int maxObjects, int objSpeed, float objRadius, Vector2 *playerPosition, int playRadius, Texture2D *texture, bool isMeteor);
 void generateObjects(TGameObject *object, int maxObjects, float radius);
 
 // Reinicia juego
@@ -171,6 +170,7 @@ void updateMusic(GameState gameState, bool muteMusic)
     }
 }
 
+// Logica para ingresar nombre de usuario
 void ingresarNickName(char inputText[])
 {
     int letterCount = 0; // Contador de caracteres
@@ -243,7 +243,7 @@ void InitObject(TGameObject *object, const float *objRadius)
     object->active = true;
 }
 
-// Colisiones
+// Colision
 bool CheckCollision(Vector2 *playerPos, float playerRadius, Vector2 *ballPos, float meteorRadius)
 {
     float dx = ballPos->x - playerPos->x;
@@ -253,7 +253,7 @@ bool CheckCollision(Vector2 *playerPos, float playerRadius, Vector2 *ballPos, fl
     return distanceSquared < radiusSumSquared;
 }
 
-// Maximo 160 caracteres - tamaño - frecuencia - tiempo - textura - frame1 y frame2
+// Imprime subtitulos
 void subsCinematicas(const char *text, int tamano, float posY, int frecuencia, int frame1, int frame2)
 {
     int longitud = strlen(text);
@@ -345,7 +345,7 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
     {
         DrawTexture(tutotx, 0, 0, BLACK);
         DrawTexture(tutotx, 0, 0, BLACK);
-        
+
         screenMessage("HAS SUPERADO LA META", 1, BLANK, GREEN, 100);
         screenpoints(*totalseconds, stats->score);
         // Limpiar objetos
@@ -366,7 +366,8 @@ void Levels(GameStats *stats, float *elapsedTime, Vector2 *playPosition, int *to
     }
 }
 
-bool objectColision(TGameObject object[], int maxObjects, int objSpeed, float objRadius, Vector2 *playerPosition, int playRadius, Texture2D *texture, bool isMeteor)
+// Maneja fisicas y colision de los objetos
+bool physicAndColision(TGameObject object[], int maxObjects, int objSpeed, float objRadius, Vector2 *playerPosition, int playRadius, Texture2D *texture, bool isMeteor)
 {
     short i;
     Vector2 objectPos;
@@ -402,6 +403,7 @@ bool objectColision(TGameObject object[], int maxObjects, int objSpeed, float ob
     return false;
 }
 
+// Genera / inicializa objetos del juego
 void generateObjects(TGameObject *object, int maxObjects, float radius)
 {
     for (int i = 0; i < maxObjects; i++)
@@ -414,7 +416,7 @@ void generateObjects(TGameObject *object, int maxObjects, float radius)
     }
 }
 
-// Reiniciar posicion de elementos y jugador
+// Reiniciar posicion y desactiva los elementos del juego
 void resetItems(Vector2 *playPosition)
 {
     // Reiniciar posicion nave
@@ -431,12 +433,15 @@ void resetItems(Vector2 *playPosition)
     objectfalse(shieldB, MAX_OBJECT);
     objectfalse(municiones, MAX_OBJECT);
     objectfalse(hearts, MAX_HEART);
+
     // Limpiar disparos
     for (i = 0; i < MAX_SHOTS; i++)
     {
         shots[i].active = false;
     }
 }
+
+// Desactiva cualquier objeto del juego
 void objectfalse(TGameObject *object, int maxObjects)
 {
     short i;
@@ -478,12 +483,13 @@ void appendScoresToFile(const char *filename, Tdata player)
     fclose(file);
 }
 
+// Selecciona N preguntas aleatorias a utilizar del archivo
 void selecNpreguntas()
 {
     FILE *pregsArch = fopen("resources/preguntas.dat", "rb");
     int posiciones[PREG_SELEC];
 
-    // Gen. posiciones sin repetir, para selec. preguntas
+    // Genera posiciones sin repetir, para selec. preguntas
     int pos;
     for (int i = 0; i < PREG_SELEC; i++)
     {
@@ -503,6 +509,7 @@ void selecNpreguntas()
     fclose(pregsArch);
 }
 
+// Busqueda secuencial
 int busqSecuencial(int vect[], int m, int num)
 {
     for (int i = 0; i < m; i++)
@@ -515,6 +522,7 @@ int busqSecuencial(int vect[], int m, int num)
     return -1;
 }
 
+// Mezcla arreglo
 void mezclarArray(char array[][20], int size)
 {
     char temp[20];
@@ -530,6 +538,7 @@ void mezclarArray(char array[][20], int size)
     }
 }
 
+// Pausa determinados segundos
 void secondspause(float seconds)
 {
     double startTime2 = GetTime();
@@ -547,6 +556,7 @@ void screenMessage(const char *text, float seconds, Color fondo, Color colorText
     secondspause(seconds);
 }
 
+// Pantalla de logros obtenidos en cada nivel
 void screenpoints(int totalseconds, int score)
 {
     // Variables para el puntaje real y el tiempo transcurrido
