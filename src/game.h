@@ -594,7 +594,7 @@ void screenpoints(int totalseconds, int score)
         DrawTexture(scoreLevel, 0, 0, WHITE);
         DrawText(TextFormat("Tiempo: %02d:%02d", totalseconds / 60, totalseconds % 60), 30, 100, 100, WHITE);
         DrawText(TextFormat("Oro recolectado: %d", score), 30, 220, 100, WHITE);
-        DrawText(TextFormat("Oto total ganado: %3.2f", realScore), 30, 340, 100, WHITE);
+        DrawText(TextFormat("Oro total ganado: %3.2f", realScore), 30, 340, 100, WHITE);
         EndDrawing();
     } while (realScore != tempscore); // Termina al llegar a el puntaje real
     secondspause(1);
