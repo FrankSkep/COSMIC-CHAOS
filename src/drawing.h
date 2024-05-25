@@ -28,7 +28,6 @@ void esperarTecla();
 void drawMainMenu() // PANTALLA DE MENU
 {
     BeginDrawing();
-    void loadingScreen(const char msg[]);
     // Fondo
     DrawTexture(menu, 0, 0, WHITE);
 
