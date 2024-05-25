@@ -518,10 +518,16 @@ void postAnimationAns(bool *continuar, int *contin, int *colisionTutorial)
 // Esperar pulsacion
 void esperarTecla()
 {
+    float axisX,axisY;
     while (true)
     {
         BeginDrawing();
-        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_RIGHT))
+
+        axisX = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
+        axisY = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
+
+        // Expresiones logicas de pulsacion de teclas
+        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_RIGHT)||axisX > 0.1f||axisX < -0.1f||axisY < -0.1f|| axisY > 0.1f)
         {
             break;
         }

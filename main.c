@@ -46,8 +46,8 @@ int main()
     int tuto = 0, tutorialActive = 1, colisionTutorial = 1; // segundo y tercero = 1
 
     // Descomentar esto para no mostrar tutorial, para pruebas
-    tutorialActive = !tutorialActive;
-    colisionTutorial = !colisionTutorial;
+    // tutorialActive = !tutorialActive;
+    // colisionTutorial = !colisionTutorial;
 
     // Variables para sprites
     short currentFrame = 0;                          // Índice de textura actual (0, 5)
@@ -61,7 +61,7 @@ int main()
     bool continuar = false;    // Bandera para manejar animacion después de pregunta
     int contin = 0;            // Frame de la animacion
     bool muteMusic = false;    // Bandera para desactivar musica
-    int showTutorial = 0;      // Bandera para mostrar tutorial inicial
+    //int showTutorial = 0;      // Bandera para mostrar tutorial inicial
 
     // Posición centrada del jugador
     Vector2 playerPosition = {
@@ -455,7 +455,7 @@ int main()
                 ClearBackground(BLACK);
                 screenpoints(totalseconds, stats.score);
 
-                minutesT = 0, secondsT = 0, totalseconds = 0; // Reinicia tiempo
+                minutesT = 0, secondsT = 0, timeseconds = 0; // Reinicia tiempo
 
                 rotationMeteor = 0;          // Reiniciar rotacion
                 resetItems(&playerPosition); // Reinicia posiciones y desactiva objetos
