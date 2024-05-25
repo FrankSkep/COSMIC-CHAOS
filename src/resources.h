@@ -29,11 +29,12 @@ Texture2D cinema[totalcinema];
 Music menuMusic, gameMusic, gameover;
 Sound soundcoin, shotSound, burstShotSound;
 
-float totalResources = 66.0f; // Total de texturas a cargar
+float totalResources = 67.0f; // Total de texturas a cargar
 
 // ---- Carga texturas ----
 void loadTextures()
 {
+    loadingscreen = LoadTexture("resources/images/backgrounds/loading-screen.png");
     shipLoading = LoadTexture("resources/images/backgrounds/shipLoading.png");
     loadingScreen(0.0f); // Mostrar pantalla de carga inicial
     // Fondo menu principal
@@ -189,8 +190,6 @@ void loadTextures()
     loadingScreen(59 / totalResources);
     explosionTx[2] = LoadTexture("resources/images/shot/burst03.png");
     loadingScreen(60 / totalResources);
-
-    UnloadTexture(loadingscreen); // Descarga la textura de la pantalla de carga
 }
 
 // ---- Descarga texturas ----
@@ -230,7 +229,6 @@ void unloadTextures()
     UnloadTexture(questionTx);
     UnloadTexture(scoreLevel);
     UnloadTexture(pausebg);
-    UnloadTexture(shipLoading);
 }
 
 // ---- Carga sonidos ----
@@ -249,6 +247,10 @@ void loadSounds()
     loadingScreen(65 / totalResources);
     burstShotSound = LoadSound("resources/sounds/burstMisil.mp3"); // Sonido explosion misil
     loadingScreen(66 / totalResources);
+
+    // Descargar texturas de pantalla de carga
+    UnloadTexture(shipLoading);
+    UnloadTexture(loadingscreen);
 }
 
 // ---- Descarga sonidos ----
@@ -265,7 +267,6 @@ void unloadSounds()
 // ---- Pantalla de carga inicial ----
 void loadingScreen(float progress)
 {
-    loadingscreen = LoadTexture("resources/images/backgrounds/loading-screen.png");
     BeginDrawing();
     DrawTexture(loadingscreen, 0, 0, WHITE);
     DrawText("COSMIC CHAOS", SCR_WIDTH / 2 - MeasureText("COSMIC CHAOS", 100) / 2, 120, 100, WHITE);
@@ -278,7 +279,7 @@ void loadingScreen(float progress)
     int barY = SCR_HEIGHT / 2 + 190;
     DrawRectangle(barX, barY, barWidth, barHeight, LIGHTGRAY);
     DrawRectangle(barX, barY, (int)(barWidth * progress), barHeight, SKYBLUE);
-    DrawTexture(shipLoading, (barX + (int)(barWidth * progress))-20, barY + (30 / 2 - shipLoading.height / 2), WHITE);
+    DrawTexture(shipLoading, (barX + (int)(barWidth * progress)) - 20, barY + (30 / 2 - shipLoading.height / 2), WHITE);
 
     EndDrawing();
 }

@@ -195,7 +195,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
                 if (IsKeyPressed(KEY_A + i))
                 {
                     drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 0, 400 + i * 60, 45, Fade(BLANK, 0.7f));
-                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 7, 400 + i * 60, 55, ORANGE);
+                    drawTextCenter(TextFormat("[%c]  %s      ", opcionLabel, opcionesBarajadas[i]), 7, 400 + i * 60, 55, GREEN);
                 }
                 else
                 {
