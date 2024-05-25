@@ -28,6 +28,7 @@ void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive);
 void drawMainMenu() // PANTALLA DE MENU
 {
     BeginDrawing();
+    void loadingScreen(const char msg[]);
     // Fondo
     DrawTexture(menu, 0, 0, WHITE);
 
@@ -36,9 +37,20 @@ void drawMainMenu() // PANTALLA DE MENU
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 6 - MeasureText("COSMIC-CHAOS", 180) / 2 + 3, 145, 183, DARKBLUE);
     DrawText("COSMIC-CHAOS", SCR_WIDTH / 2 + 12 - MeasureText("COSMIC-CHAOS", 180) / 2 + 6, 140, 180, BLUE);
 
+    char option[20];
+    int gamepad = 0;
+    if (IsGamepadAvailable(gamepad))
+    {
+        strcpy(option, "Start");
+    }
+    else
+    {
+        strcpy(option, "Enter");
+    }
+
     // Acciones
-    drawTextCenter("(ENTER) Iniciar", 2, 482, 60, LIME);
-    drawTextCenter("(ENTER) Iniciar", 0, 480, 60, GREEN);
+    drawTextCenter(TextFormat("(%s) Iniciar", option), 2, 482, 60, LIME);
+    drawTextCenter(TextFormat("(%s) Iniciar", option), 0, 480, 60, GREEN);
 
     drawTextCenter("(A) Como jugar", 2, 562, 60, DARKPURPLE);
     drawTextCenter("(A) Como jugar", 0, 560, 60, PURPLE);
@@ -518,8 +530,6 @@ void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
             UnloadTexture(cinema[i]);
         }
         tutorialActive = 0;
-        UnloadTexture(tutotx);
-        UnloadTexture(tutotx1);
         break;
     default:
         break;
