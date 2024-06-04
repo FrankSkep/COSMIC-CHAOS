@@ -67,13 +67,23 @@ void drawHowToPlay()
     BeginDrawing();
     ClearBackground(BLACK);
     drawTextCenter("COMO JUGAR: ", 0, 100, 100, BLUE);
-    DrawText("- Muevete con las flechas o WASD", 40, SCR_HEIGHT / 2 + 40, 50, WHITE);
-    DrawText("- Disparar (ESPACIO)", 40, SCR_HEIGHT / 2 + 110, 50, GRAY);
-    DrawText("- PAUSA (P)", 40, SCR_HEIGHT / 2 + 250, 50, RED);
-    DrawText("- Gana puntos, vidas y sobrevive", 40, SCR_HEIGHT / 2 + 180, 50, YELLOW);
-    DrawText("(Q) Volver al menu", SCR_WIDTH / 2 - MeasureText("(Q) Back to menu", 50) / 2, SCR_HEIGHT / 2 + 350, 50, GREEN);
+
+    int yOffset = 270; // Ajuste para comenzar después del título
+    int lineHeight = 60; // Altura entre líneas
+
+    DrawText("- Muevete con las flechas o Joystick Fisico", 40, yOffset, 45, WHITE);
+    DrawText("- Disparar a los meteoros para conseguir puntos", 40, yOffset + lineHeight, 45, GRAY);
+    DrawText("- Gana puntos, vidas y sobrevive", 40, yOffset + 2 * lineHeight, 45, YELLOW);
+    DrawText("- Sube de nivel conforme consigues puntos", 40, yOffset + 3 * lineHeight, 45, RED);
+    DrawText("- Responde preguntas correctamente para obtener powerups", 40, yOffset + 4 * lineHeight, 45, ORANGE);
+    DrawText("- Consulta tu historial de partidas", 40, yOffset + 5 * lineHeight, 45, PURPLE);
+    DrawText("- Pausa el juego pulsando la tecla P", 40, yOffset + 6 * lineHeight, 45, DARKGREEN);
+    DrawText("(Q) Volver al menu", SCR_WIDTH / 2 - MeasureText("(Q) Volver al menu", 45) / 2, yOffset + 7 * lineHeight + 100, 45, GREEN);
+
     EndDrawing();
 }
+
+
 
 // Dibuja pantalla con informacion acerca del juego
 void aboutTheGame()
