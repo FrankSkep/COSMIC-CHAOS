@@ -5,7 +5,7 @@
 #define PREG_SELEC 20
 #define TOTAL_PREG 22
 
-#define PTS_LEVEL_UP 50
+#define PTS_LEVEL_UP 80
 /*----- CANTIDAD DE OBJETOS POR NIVEL -----*/
 #define MAX_METEOR_LV1 5
 #define MAX_METEOR_LV2 15

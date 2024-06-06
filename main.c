@@ -61,7 +61,7 @@ int main()
     bool continuar = false;    // Bandera para manejar animacion después de pregunta
     int contin = 0;            // Frame de la animacion
     bool muteMusic = false;    // Bandera para desactivar musica
-    int showTutorial = 0;       // Bandera para mostrar tutorial inicial
+    int showTutorial = 0;      // Bandera para mostrar tutorial inicial
 
     // Posición centrada del jugador
     Vector2 playerPosition = {
