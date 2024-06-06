@@ -50,7 +50,7 @@
 
 #### Windows:
 
-1. Descarga el archivo instalador [`Cosmic_Chaos_Setup.exe`](https://github.com/FrankSkep/COSMIC_CHAOS-C/releases/tag/v1.0.0) desde la página de lanzamientos en este repositorio..
+1. Descarga el archivo instalador [`Cosmic_Chaos_Setup.exe`](https://github.com/FrankSkep/COSMIC_CHAOS-C/releases/tag/v1.0.0) desde la página de lanzamientos en este repositorio.
 2. Ejecuta el instalador y sigue las instrucciones.
 3. Una vez instalado, se te creara un acceso directo en el escritorio.
 4. Has doble click al acceso directo para jugar.
@@ -63,20 +63,20 @@
 
 ### Controles
 
-| Acción                | Tecla |
-| --------------------- | ----- |
-| Jugar                 | ENTER |
-| Instrucciones         | A     |
-| Información del juego | E     |
-| Historial de juegos   | H     |
-| Volver al menú        | Q     |
-| Mover hacia arriba    | W o ↑ |
-| Mover hacia abajo     | S o ↓ |
-| Mover hacia la izq.   | A o ← |
-| Mover hacia la der.   | D o → |
-| Disparar              | SPACE |
-| Pausar                | P     |
-| Salir                 | ESC   |
+| Acción                | Tecla | Control |
+| --------------------- | ----- | ------- |
+| Jugar                 | ENTER |  START
+| Instrucciones         | A     | - |
+| Información del juego | E     | - |
+| Historial de juegos   | H     | - |
+| Volver al menú        | Q     | - |
+| Mover hacia arriba    | TECLA  ↑ | JOY IZQ ARRIBA |
+| Mover hacia abajo     | TECLA  ↓ | JOY IZQ ABAJO |
+| Mover hacia la izq.   | TECLA ← | JOY IZQ IZQUIERDA |
+| Mover hacia la der.   | TECLA → | JOY IZQ DERECHA |
+| Disparar              | SPACE | A
+| Pausar                | P     | STAR
+| Salir                 | ESC   | - |
 
 ## Créditos
 
