@@ -50,7 +50,7 @@
 
 #### Windows:
 
-1. Descarga el archivo instalador [`Cosmic-Chaos.exe`](aquiPonerURLdeRelease) desde la página de lanzamientos en este repositorio..
+1. Descarga el archivo instalador [`Cosmic-Chaos.exe`](https://github.com/FrankSkep/COSMIC_CHAOS-C/releases/tag/v1.0) desde la página de lanzamientos en este repositorio..
 2. Ejecuta el instalador y sigue las instrucciones.
 3. Una vez instalado, se te creara un acceso directo en el escritorio.
 4. Has doble click al acceso directo para jugar.
