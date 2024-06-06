@@ -562,7 +562,7 @@ void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
     case 5:
         DrawTexture(tutotx, 0, 0, WHITE);
         textQuestion("hola gran viajero bienvenido a \"COSMIC-CAOS\" ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
-        secondspause(4);
+        secondspause(2);
         break;
     case 8:
         subsCinematicas("Utiliza las FLECHAS de tu teclado o el JOYSTICK          izquierdo ", 40, SCR_HEIGHT - 300, 12, 0, 1);
@@ -574,12 +574,12 @@ void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
         textQuestion("PERO NO TAN RAPIDO ", 40, SCR_HEIGHT - 300, 3, &tutotx1);
         secondspause(1);
         subsCinematicas("TIENES QUE SABER QUE ESOS METEORITOS PODRIAN    CHOCAR CONTIGO                                                                              ", 40, SCR_HEIGHT - 250, 12, 2, 3);
-        secondspause(1);
+        secondspause(0.5);
         break;
     case 73:
         subsCinematicas("AL COLISIONAR CON ELLOS BAJARA TUS CORAZONES                                                        ", 40, SCR_HEIGHT - 300, 12, 6, 7);
         subsCinematicas("PUEDES TOMAR UNAS DE LAS VIDAS QUE CAEN PARA     PODER SOBREVIVIR MAS TIEMPO                   ", 40, SCR_HEIGHT - 250, 12, 6, 7);
-        secondspause(4);
+        secondspause(3);
         break;
     case 260:
         if (colisionTutorial)

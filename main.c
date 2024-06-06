@@ -61,7 +61,7 @@ int main()
     bool continuar = false;    // Bandera para manejar animacion después de pregunta
     int contin = 0;            // Frame de la animacion
     bool muteMusic = false;    // Bandera para desactivar musica
-    // int showTutorial = 0;      // Bandera para mostrar tutorial inicial
+    int showTutorial = 0;       // Bandera para mostrar tutorial inicial
 
     // Posición centrada del jugador
     Vector2 playerPosition = {
@@ -93,8 +93,8 @@ int main()
         updateMusic(gameState, muteMusic);
 
         // Mostrar tutorial solo la primera vez que abre el juego
-        // showTutorial = !saveProgress && (access("resources/record.dat", F_OK) == -1);
-        // tutorialActive = colisionTutorial = showTutorial ? 1 : 0;
+        showTutorial = !saveProgress && (access("resources/record.dat", F_OK) == -1);
+        tutorialActive = colisionTutorial = showTutorial ? 1 : 0;
 
         // ESTADOS DEL JUEGO
         switch (gameState)
