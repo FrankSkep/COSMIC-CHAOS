@@ -68,7 +68,7 @@ void drawHowToPlay()
     ClearBackground(BLACK);
     drawTextCenter("COMO JUGAR: ", 0, 100, 100, BLUE);
 
-    int yOffset = 270; // Ajuste para comenzar después del título
+    int yOffset = 270;   // Ajuste para comenzar después del título
     int lineHeight = 60; // Altura entre líneas
 
     DrawText("- Muevete con las flechas o Joystick Fisico", 40, yOffset, 45, WHITE);
@@ -82,8 +82,6 @@ void drawHowToPlay()
 
     EndDrawing();
 }
-
-
 
 // Dibuja pantalla con informacion acerca del juego
 void aboutTheGame()
@@ -178,6 +176,14 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
     Color color[] = {YELLOW, RED, GREEN, BLUE};
 
     BeginDrawing();
+    for (short i = 0; i < 30; i++)
+    {
+        BeginDrawing();
+        DrawTexture(tutotx, 0, 0, WHITE);
+        secondspause(0.01);
+        EndDrawing();
+    }
+
     const int gamepad = 0; // Usamos el primer controlador (índice 0)
 
     textQuestion(preguntaActual.pregunta, 50, 200, 7, &questionTx);
@@ -220,6 +226,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
             {
                 if (strcmp(opcionesBarajadas[i], preguntaActual.opciones[preguntaActual.respuestaCorrecta]) == 0)
                 {
+                    PlaySound(correct);
                     drawTextCenter("¡Correcto!", 0, 680, 45, GREEN);
                     if (object == 1)
                     {
@@ -239,6 +246,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
                 else
                 {
                     *racha = 0;
+                    PlaySound(error);
                     drawTextCenter("¡Incorrecto!", 0, 680, 45, RED);
                     drawTextCenter(TextFormat("La respuesta correcta era: %s", preguntaActual.opciones[preguntaActual.respuestaCorrecta]), 0, 770, 45, WHITE);
                 }
@@ -528,7 +536,7 @@ void postAnimationAns(bool *continuar, int *contin, int *colisionTutorial)
 // Esperar pulsacion
 void esperarTecla()
 {
-    float axisX,axisY;
+    float axisX, axisY;
     while (true)
     {
         BeginDrawing();
@@ -537,7 +545,7 @@ void esperarTecla()
         axisY = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
 
         // Expresiones logicas de pulsacion de teclas
-        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_RIGHT)||axisX > 0.1f||axisX < -0.1f||axisY < -0.1f|| axisY > 0.1f)
+        if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_RIGHT) || axisX > 0.1f || axisX < -0.1f || axisY < -0.1f || axisY > 0.1f)
         {
             break;
         }

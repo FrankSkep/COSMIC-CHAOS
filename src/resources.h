@@ -27,7 +27,7 @@ Texture2D cinema[totalcinema];
 
 /*** Sonidos ***/
 Music menuMusic, gameMusic, gameover;
-Sound soundcoin, shotSound, burstShotSound;
+Sound soundcoin, shotSound, burstShotSound, colision, correct, error, liveX, p_Up, liveFull;
 
 float totalResources = 67.0f; // Total de texturas a cargar
 
@@ -237,16 +237,22 @@ void loadSounds()
     // ---- Carga sonidos ----
     menuMusic = LoadMusicStream("resources/sounds/mainmenu.mp3"); // Musica menu principal
     loadingScreen(61 / totalResources);
-    gameMusic = LoadMusicStream("resources/sounds/music.mp3"); // Musica partida
-    loadingScreen(62 / totalResources);
+    gameMusic = LoadMusicStream("resources/sounds/music.mp3");   // Musica partida
     gameover = LoadMusicStream("resources/sounds/gameover.mp3"); // Musica gameover
-    loadingScreen(63 / totalResources);
+    loadingScreen(62 / totalResources);
     soundcoin = LoadSound("resources/sounds/coin.wav"); // Sonido moneda
-    loadingScreen(64 / totalResources);
     shotSound = LoadSound("resources/sounds/shot.mp3"); // Sonido misil
-    loadingScreen(65 / totalResources);
+    loadingScreen(63 / totalResources);
     burstShotSound = LoadSound("resources/sounds/burstMisil.mp3"); // Sonido explosion misil
+    colision = LoadSound("resources/sounds/colision.mp3");
+    loadingScreen(64 / totalResources);
+    correct = LoadSound("resources/sounds/correct.mp3");
+    error = LoadSound("resources/sounds/error.mp3");
+    loadingScreen(65 / totalResources);
+    liveX = LoadSound("resources/sounds/liveX.mp3");
+    p_Up = LoadSound("resources/sounds/pUp.mp3");
     loadingScreen(66 / totalResources);
+    liveFull = LoadSound("resources/sounds/liveFull.mp3");
 
     // Descargar texturas de pantalla de carga
     UnloadTexture(shipLoading);
@@ -262,6 +268,12 @@ void unloadSounds()
     UnloadSound(soundcoin);
     UnloadSound(shotSound);
     UnloadSound(burstShotSound);
+    UnloadSound(colision);
+    UnloadSound(correct);
+    UnloadSound(error);
+    UnloadSound(liveX);
+    UnloadSound(p_Up);
+    UnloadSound(liveFull);
 }
 
 // ---- Pantalla de carga inicial ----

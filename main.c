@@ -61,7 +61,7 @@ int main()
     bool continuar = false;    // Bandera para manejar animacion después de pregunta
     int contin = 0;            // Frame de la animacion
     bool muteMusic = false;    // Bandera para desactivar musica
-    //int showTutorial = 0;      // Bandera para mostrar tutorial inicial
+    // int showTutorial = 0;      // Bandera para mostrar tutorial inicial
 
     // Posición centrada del jugador
     Vector2 playerPosition = {
@@ -261,11 +261,10 @@ int main()
             /* Meteoro gris */
             if (physicAndColision(grayMeteors, MAX_GRAY, GRAY_METEOR_SPEED, GRAY_METEOR_RADIUS, &playerPosition, playRadius, &grayMeteor, true))
             {
+                PlaySound(colision);
                 if (shieldActive <= 0)
                 {
                     currentFrameShip = 3;
-                    PlaySound(burstShotSound);
-                    StopSound(shotSound);
                     stats.lives--; // Pierde una vida
                     if (stats.lives <= 0)
                     {
@@ -281,11 +280,10 @@ int main()
             /* Meteoro cafe */
             if (physicAndColision(brownMeteors, MAX_BROWN, BROWN_METEOR_SPEED, BROWN_METEOR_RADIUS, &playerPosition, playRadius, &brownMeteor, true))
             {
+                PlaySound(colision);
                 if (shieldActive <= 0)
                 {
                     currentFrameShip = 3;
-                    PlaySound(burstShotSound);
-                    StopSound(shotSound);
                     stats.lives--; // Pierde una vida
                     if (stats.lives <= 0)
                     {
@@ -310,7 +308,12 @@ int main()
             {
                 if (stats.lives < 5)
                 {
+                    PlaySound(liveX);
                     stats.lives++; // Gana una vida
+                }
+                else
+                {
+                    PlaySound(liveFull);
                 }
             }
 
@@ -319,7 +322,7 @@ int main()
             {
                 object = 1;
                 showQuestion = true;
-                PlaySound(soundcoin);
+                PlaySound(p_Up);
             }
 
             /* Municion */
@@ -327,7 +330,7 @@ int main()
             {
                 object = 2;
                 showQuestion = true;
-                PlaySound(soundcoin);
+                PlaySound(p_Up);
             }
 
             /*----- Disparos -----*/
