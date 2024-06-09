@@ -616,7 +616,7 @@ void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
         {
             UnloadTexture(cinema[i]);
         }
-        tutorialActive = 0;
+        *tutorialActive = 0;
         break;
     default:
         break;

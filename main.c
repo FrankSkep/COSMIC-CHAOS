@@ -46,8 +46,8 @@ int main()
     int tuto = 0, tutorialActive = 1, colisionTutorial = 1; // segundo y tercero = 1
 
     // Descomentar esto para no mostrar tutorial, para pruebas
-    tutorialActive = !tutorialActive;
-    colisionTutorial = !colisionTutorial;
+    // tutorialActive = !tutorialActive;
+    // colisionTutorial = !colisionTutorial;
 
     // Variables para sprites
     short currentFrame = 0;                          // Índice de textura actual (0, 5)
@@ -94,7 +94,8 @@ int main()
 
         // Mostrar tutorial solo la primera vez que abre el juego
         showTutorial = !saveProgress && (access("resources/record.dat", F_OK) == -1);
-        tutorialActive = colisionTutorial = showTutorial ? 1 : 0;
+        
+        tutorialActive = showTutorial ? 1 : 0;
 
         // ESTADOS DEL JUEGO
         switch (gameState)
