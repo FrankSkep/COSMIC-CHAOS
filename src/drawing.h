@@ -71,13 +71,29 @@ void drawHowToPlay()
     int yOffset = 270;   // Ajuste para comenzar después del título
     int lineHeight = 60; // Altura entre líneas
 
-    DrawText("- Muevete con las flechas o Joystick Fisico", 40, yOffset, 45, WHITE);
-    DrawText("- Disparar a los meteoros para conseguir puntos", 40, yOffset + lineHeight, 45, GRAY);
-    DrawText("- Gana puntos, vidas y sobrevive", 40, yOffset + 2 * lineHeight, 45, YELLOW);
+    int gamepad = 0;
+    const char *control, *pausa, *disparo;
+
+    if (IsGamepadAvailable(gamepad))
+    {
+        control = "el Joystick";
+        disparo = "con (A)";
+        pausa = "(Start)";
+    }
+    else
+    {
+        control = "las flechas";
+        disparo = "con (Space)";
+        pausa = "(P)";
+    }
+
+    DrawText(TextFormat("- Muevete con %s", control), 40, yOffset, 45, WHITE);
+    DrawText("- Gana puntos, vidas y sobrevive", 40, yOffset + lineHeight, 45, YELLOW);
+    DrawText(TextFormat("- Dispara a los meteoros con %s para protegerte", disparo), 40, yOffset + 2 * lineHeight, 45, GRAY);
     DrawText("- Sube de nivel conforme consigues puntos", 40, yOffset + 3 * lineHeight, 45, RED);
-    DrawText("- Responde preguntas correctamente para obtener powerups", 40, yOffset + 4 * lineHeight, 45, ORANGE);
+    DrawText("- Responde las preguntas correctamente para obtener ventajas", 40, yOffset + 4 * lineHeight, 45, ORANGE);
     DrawText("- Consulta tu historial de partidas", 40, yOffset + 5 * lineHeight, 45, PURPLE);
-    DrawText("- Pausa el juego pulsando la tecla P", 40, yOffset + 6 * lineHeight, 45, DARKGREEN);
+    DrawText(TextFormat("- Pausa el juego pulsando %s", pausa), 40, yOffset + 6 * lineHeight, 45, DARKGREEN);
     DrawText("(Q) Volver al menu", SCR_WIDTH / 2 - MeasureText("(Q) Volver al menu", 45) / 2, yOffset + 7 * lineHeight + 100, 45, GREEN);
 
     EndDrawing();
@@ -234,7 +250,7 @@ void drawQuestion(bool *showQuestion, short *racha, short *shield, short *munici
                     }
                     if (object == 2)
                     {
-                        (*municion) += 3;
+                        (*municion) += 5;
                     }
 
                     (*racha)++;
