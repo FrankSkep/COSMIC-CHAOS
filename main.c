@@ -94,7 +94,7 @@ int main()
 
         // Mostrar tutorial solo la primera vez que abre el juego
         showTutorial = !saveProgress && (access("resources/record.dat", F_OK) == -1);
-        
+
         tutorialActive = showTutorial ? 1 : 0;
 
         // ESTADOS DEL JUEGO
