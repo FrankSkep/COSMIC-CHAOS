@@ -11,6 +11,8 @@ int main()
 
     // Configuración de la ventana
     InitWindow(SCR_WIDTH, SCR_HEIGHT, "BETA 0.9.6.7");
+    // SetConfigFlags(FLAG_VSYNC_HINT);
+
     SetTargetFPS(75);
 
     // Carga de texturas y sonidos
@@ -495,11 +497,26 @@ int main()
         case PAUSE:
             BeginDrawing();
             DrawTexture(pausebg, 0, 0, WHITE);
-            char option[15];
-            IsGamepadAvailable(gamepad) ? strcpy(option, "Start") : strcpy(option, "Enter");
+            char startOption[15], backMenuOption[15];
+
+            if (IsGamepadAvailable(gamepad))
+            {
+                strcpy(startOption, "Start");
+                strcpy(backMenuOption, "BACK");
+            }
+            else
+            {
+                strcpy(startOption, "Enter");
+                strcpy(backMenuOption, "Q");
+            }
+
             drawTextCenter("PAUSA", 0, (SCR_HEIGHT / 2) - 175, 160, YELLOW);
-            drawTextCenter(TextFormat("[%s] Reanudar partida", option), 0, (SCR_HEIGHT / 2), 60, GREEN);
-            drawTextCenter("[Q] Salir al menu (BACK) ", 0, (SCR_HEIGHT / 2) + 100, 60, RED);
+            drawTextCenter(TextFormat("[%s] Reanudar partida", startOption), 3, (SCR_HEIGHT / 2)+3, 60, DARKGRAY);
+            drawTextCenter(TextFormat("[%s] Reanudar partida", startOption), 0, (SCR_HEIGHT / 2), 60, GREEN);
+
+            drawTextCenter(TextFormat("[%s] Salir al menu", backMenuOption), 3, (SCR_HEIGHT / 2) + 103, 60, DARKGRAY);
+            drawTextCenter(TextFormat("[%s] Salir al menu", backMenuOption), 0, (SCR_HEIGHT / 2) + 100, 60, RED);
+
             EndDrawing();
             keyOption = GetKeyPressed();
             continuar = true;

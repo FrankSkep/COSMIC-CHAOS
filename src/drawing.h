@@ -58,6 +58,9 @@ void drawMainMenu() // PANTALLA DE MENU
 
     drawTextCenter("(ESC) Salir", 2, 802, 60, DARKGRAY);
     drawTextCenter("(ESC) Salir", 2, 800, 60, RED);
+
+    drawTextCenter("(F11) Pantalla Completa", 263, 843, 45, DARKGRAY);
+    drawTextCenter("(F11) Pantalla Completa", 260, 840, 45, YELLOW);
     EndDrawing();
 }
 
@@ -611,7 +614,7 @@ void tutorialShow(int *tuto, int colisionTutorial, int *tutorialActive)
         secondspause(2);
 
         break;
-    case 1501:
+    case 2501:
         for (int i = 0; i < totalcinema; i++)
         {
             UnloadTexture(cinema[i]);
